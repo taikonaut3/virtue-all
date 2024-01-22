@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.astro</groupId>
+    <artifactId>virtue-all</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>virtue-common</module>
+        <module>virtue-config</module>
+        <module>virtue-demo</module>
+        <module>virtue-rpc</module>
+        <module>virtue-proxy</module>
+        <module>virtue-eventhub</module>
+        <module>virtue-governance</module>
+        <module>virtue-registry</module>
+        <module>virtue-serialization</module>
+        <module>virtue-transport</module>
+        <module>virtue-dependencies-bom</module>
+        <module>virtue-spring</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.0-SNAPSHOT</revision>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.astro</groupId>
+                <artifactId>virtue-dependencies-bom</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

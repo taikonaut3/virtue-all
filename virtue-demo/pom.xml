@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.astro</groupId>
+        <artifactId>virtue-all</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>virtue-demo</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>provider</module>
+        <module>consumer</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.astro</groupId>
+            <artifactId>virtue-boot-starter</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.astro</groupId>
+            <artifactId>virtue-proxy-cglib</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.astro</groupId>
+            <artifactId>virtue-proxy-bytebuddy</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

@@ -1,0 +1,39 @@
+package io.github.astro.virtue.transport;
+
+import io.github.astro.virtue.common.constant.Key;
+import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.common.util.DateUtil;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
+
+@Data
+@Accessors(fluent = true)
+public class Request implements Envelope {
+
+    private static final AtomicLong INCREASE = new AtomicLong(0);
+
+    private Long id;
+
+    private boolean oneway;
+
+    private URL url;
+
+    private Object message;
+
+    public Request() {
+    }
+
+    public Request(URL url, Object message) {
+        id = INCREASE.getAndIncrement();
+        String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
+        url.addParameter(Key.TIMESTAMP, timestamp);
+        url.addParameter(Key.UNIQUE_ID, String.valueOf(id));
+        this.url = url;
+        this.message = message;
+
+    }
+
+}
