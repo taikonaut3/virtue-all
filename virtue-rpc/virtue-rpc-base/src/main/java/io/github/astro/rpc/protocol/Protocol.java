@@ -17,14 +17,14 @@ import static io.github.astro.virtue.common.constant.Components.Protocol.VIRTUE;
 public interface Protocol {
 
     /**
-     *  this protocol.
+     *  This protocol.
      *
      * @return
      */
     String protocol();
 
     /**
-     * Creates a new request for the given URL and message body.
+     * Create a new request for the given URL and message body.
      *
      * @param url     the URL to which the request is sent
      * @param payload the message payload of the request
@@ -33,7 +33,7 @@ public interface Protocol {
     Object createRequest(URL url, Object payload);
 
     /**
-     * Creates a new response for the given URL and message body.
+     * Create a new response for the given URL and message body.
      *
      * @param url     {@link URL}
      * @param payload the message payload of the response
@@ -46,7 +46,7 @@ public interface Protocol {
     Server openServer(URL url);
 
     /**
-     * Gets Codec used by the server to encode and decode messages for the given URL.
+     * Get Codec used by the server to encode and decode messages for the given URL.
      *
      * @param url {@link URL}
      * @return the codec used by the server
@@ -54,7 +54,7 @@ public interface Protocol {
     Codec getServerCodec(URL url);
 
     /**
-     * Gets codec used by the client to encode and decode messages for the given URL.
+     * Get codec used by the client to encode and decode messages for the given URL.
      *
      * @param url {@link URL}
      * @return the codec used by the client
