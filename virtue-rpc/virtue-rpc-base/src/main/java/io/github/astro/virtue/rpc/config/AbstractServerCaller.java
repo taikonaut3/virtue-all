@@ -1,7 +1,5 @@
 package io.github.astro.virtue.rpc.config;
 
-import io.github.astro.virtue.rpc.ComplexServerInvoker;
-import io.github.astro.virtue.rpc.protocol.Protocol;
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
@@ -15,6 +13,8 @@ import io.github.astro.virtue.config.config.ServerConfig;
 import io.github.astro.virtue.config.manager.ServerConfigManager;
 import io.github.astro.virtue.registry.Registry;
 import io.github.astro.virtue.registry.RegistryFactory;
+import io.github.astro.virtue.rpc.ComplexServerInvoker;
+import io.github.astro.virtue.rpc.protocol.Protocol;
 import io.github.astro.virtue.transport.server.Server;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -35,8 +35,10 @@ import java.util.Map;
 @Accessors(fluent = true)
 public abstract class AbstractServerCaller<T extends Annotation> extends AbstractCaller<T> implements ServerCaller<T> {
 
-    public static final Map<String, Server> hadExportServer = new LinkedHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(AbstractServerCaller.class);
+
+    public static final Map<String, Server> hadExportServer = new LinkedHashMap<>();
+
     protected String desc;
 
     protected AbstractServerCaller(Method method, CallerContainer callerContainer, String protocol, Class<T> annoType) {
@@ -91,8 +93,15 @@ public abstract class AbstractServerCaller<T extends Annotation> extends Abstrac
         ServerConfigManager serverConfigManager = virtue.configManager().serverConfigManager();
         ServerConfig serverConfig = serverConfigManager.get(protocol);
         if (serverConfig == null) {
-            throw new SourceException("Unknown found " + protocol + "'s serverConfig");
+            serverConfig = defaultServerConfig();
+            if (serverConfig == null) {
+                throw new SourceException("Unknown found " + protocol + "'s serverConfig");
+            } else {
+                serverConfigManager.register(serverConfig);
+            }
         }
     }
+
+    protected abstract ServerConfig defaultServerConfig();
 
 }

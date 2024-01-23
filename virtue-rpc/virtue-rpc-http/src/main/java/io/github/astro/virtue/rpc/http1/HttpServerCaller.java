@@ -12,6 +12,7 @@ import io.github.astro.virtue.rpc.http1.config.HttpCallable;
 import java.lang.reflect.Method;
 
 import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
+import static io.github.astro.virtue.common.constant.Constant.DEFAULT_HTTP_PORT;
 
 public class HttpServerCaller extends AbstractServerCaller<HttpCallable> {
 
@@ -42,5 +43,10 @@ public class HttpServerCaller extends AbstractServerCaller<HttpCallable> {
         url.addParameter(Key.CLASS, remoteService().target().getClass().getName());
         url.addParameters(parameterization());
         return url;
+    }
+
+    @Override
+    protected ServerConfig defaultServerConfig() {
+        return new ServerConfig(HTTP,DEFAULT_HTTP_PORT);
     }
 }

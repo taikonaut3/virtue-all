@@ -36,6 +36,9 @@ public interface Constant {
 
     int DEFAULT_PROTOCOL_PORT = 2333;
 
+    int DEFAULT_HTTP_PORT = 9090;
+
+
     int DEFAULT_MAX_MESSAGE_SIZE = 1024 * 32;
 
     String DEFAULT_SERIALIZE = Serialize.KRYO;

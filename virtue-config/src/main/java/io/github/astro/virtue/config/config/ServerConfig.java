@@ -5,7 +5,6 @@ import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.NetUtil;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,7 +15,6 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true, chain = true)
 @Getter
 @Setter
-@AllArgsConstructor
 public class ServerConfig extends UrlTypeConfig {
 
     @Parameter(Key.USERNAME)
