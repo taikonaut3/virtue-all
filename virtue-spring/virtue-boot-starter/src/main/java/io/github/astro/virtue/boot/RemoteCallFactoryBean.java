@@ -1,6 +1,6 @@
 package io.github.astro.virtue.boot;
 
-import io.github.astro.rpc.ComplexRemoteCaller;
+import io.github.astro.virtue.rpc.ComplexRemoteCaller;
 import io.github.astro.virtue.config.RemoteCaller;
 import org.springframework.beans.factory.FactoryBean;
 

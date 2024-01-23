@@ -29,4 +29,12 @@ public class RpcCallArgs implements CallArgs, Serializable {
         this.parameterTypes = caller.method().getGenericParameterTypes();
 
     }
+
+    public Object[] getArgs() {
+        return args();
+    }
+
+    public void setArgs(Object[] args) {
+        args(args);
+    }
 }

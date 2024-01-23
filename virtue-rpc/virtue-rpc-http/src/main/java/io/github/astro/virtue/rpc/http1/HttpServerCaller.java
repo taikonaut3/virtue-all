@@ -1,6 +1,6 @@
 package io.github.astro.virtue.rpc.http1;
 
-import io.github.astro.rpc.config.AbstractServerCaller;
+import io.github.astro.virtue.rpc.config.AbstractServerCaller;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.config.RemoteService;

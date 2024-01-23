@@ -1,8 +1,14 @@
 package io.github.astro;
 
-import io.github.astro.rpc.virtue.config.VirtueCallable;
+import io.github.astro.model2.ParentObject;
+import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
+import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.RemoteService;
 import io.github.astro.virtue.rpc.http1.config.HttpCallable;
+
+import java.util.List;
+
+import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
 
 /**
  * @Author WenBo Zhou
@@ -24,5 +30,10 @@ public class Provider {
     @HttpCallable
     public String httpHello() {
         return "hello";
+    }
+
+    @VirtueCallable(name = "list", config = @Config(serialize = JSON))
+    public List<ParentObject> list(List<ParentObject> list) {
+        return ParentObject.getObjList();
     }
 }

@@ -1,7 +1,5 @@
 package io.github.astro.virtue.rpc.http1;
 
-import io.github.astro.rpc.protocol.Protocol;
-import io.github.astro.rpc.protocol.ProtocolParser;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.spi.ServiceProvider;
 import io.github.astro.virtue.common.url.URL;
@@ -10,12 +8,15 @@ import io.github.astro.virtue.config.Virtue;
 import io.github.astro.virtue.rpc.http1.client.HttpClient;
 import io.github.astro.virtue.rpc.http1.config.HttpMethod;
 import io.github.astro.virtue.rpc.http1.server.HttpServer;
+import io.github.astro.virtue.rpc.protocol.Protocol;
+import io.github.astro.virtue.rpc.protocol.ProtocolParser;
 import io.github.astro.virtue.transport.client.Client;
 import io.github.astro.virtue.transport.code.Codec;
 import io.github.astro.virtue.transport.server.Server;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.client.HttpRequest;
+import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,10 @@ import java.util.Optional;
 import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
 
 /**
- * @Author WenBo Zhou
- * @Date 2024/1/13 19:21
+ * HttpProtocol
  */
 @ServiceProvider(HTTP)
-public class HttpProtocol implements Protocol {
+public class HttpProtocol implements Protocol<HttpRequest<Buffer>, HttpResponse<Buffer>> {
 
     public static final Logger logger = LoggerFactory.getLogger(HttpProtocol.class);
 
@@ -53,7 +53,7 @@ public class HttpProtocol implements Protocol {
     }
 
     @Override
-    public Object createRequest(URL url, Object payload) {
+    public HttpRequest<Buffer> createRequest(URL url, Object payload) {
         String httpMethod = url.getParameter(Key.HTTP_METHOD, HttpMethod.GET);
         io.vertx.core.http.HttpMethod method = io.vertx.core.http.HttpMethod.valueOf(httpMethod);
         HttpRequest<Buffer> request = webClient.request(method, url.port(), url.host(), url.path());
@@ -70,7 +70,7 @@ public class HttpProtocol implements Protocol {
     }
 
     @Override
-    public Object createResponse(URL url, Object payload) {
+    public HttpResponse<Buffer> createResponse(URL url, Object payload) {
         return null;
     }
 
@@ -99,18 +99,17 @@ public class HttpProtocol implements Protocol {
     }
 
     @Override
-    public Codec getServerCodec(URL url) {
-        throw new UnsupportedOperationException();
+    public Codec serverCodec() {
+        throw new UnsupportedOperationException("Used vertx http server");
     }
 
     @Override
-    public Codec getClientCodec(URL url) {
-        throw new UnsupportedOperationException();
+    public Codec clientCodec() {
+        throw new UnsupportedOperationException("Used vertx http client");
     }
 
     @Override
-    public ProtocolParser getParser(URL url) {
+    public ProtocolParser parser() {
         return httpParser;
     }
-
 }

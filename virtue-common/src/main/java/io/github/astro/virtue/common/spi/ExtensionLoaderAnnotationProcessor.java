@@ -7,8 +7,8 @@ import lombok.Getter;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.File;
@@ -38,7 +38,7 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
             if (element instanceof TypeElement typeElement) {
                 List<? extends AnnotationMirror> annotationMirrors = typeElement.getAnnotationMirrors().stream().filter(annotationMirror -> annotationMirror.getAnnotationType().toString().equals("io.github.astro.virtue.common.spi.ServiceProvider")).toList();
                 ServiceProviderWrapper wrapper = new ServiceProviderWrapper(annotationMirrors.get(0));
-                List<String> allInterfaces = getAllInterfaces(typeElement).stream().map(TypeMirror::toString).toList();
+                List<String> allInterfaces = getAllInterfaces(typeElement).stream().map(typeMirror -> getTypeElement(typeMirror).getQualifiedName().toString()).toList();
                 if (wrapper.interfaces().isEmpty()) {
                     for (String interfaceType : allInterfaces) {
                         String path = SPI_FIX_PATH + interfaceType;
@@ -87,18 +87,22 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
     }
 
     private List<TypeMirror> getAllInterfaces(TypeElement typeElement) {
-        Elements elements = processingEnv.getElementUtils();
         List<? extends TypeMirror> typeMirrors = typeElement.getInterfaces().stream().filter(typeMirror -> {
             Element interfaceElement = processingEnv.getTypeUtils().asElement(typeMirror);
             ServiceInterface annotation = interfaceElement.getAnnotation(ServiceInterface.class);
             return annotation != null;
         }).toList();
         List<TypeMirror> interfaces = new ArrayList<>(typeMirrors);
-        Element superElement = elements.getTypeElement(typeElement.getSuperclass().toString());
-        if (superElement instanceof TypeElement superClassElement) {
-            interfaces.addAll(getAllInterfaces(superClassElement));
+        if (typeElement.getSuperclass() instanceof DeclaredType declaredType) {
+            if (declaredType.asElement() instanceof TypeElement superClassElement) {
+                interfaces.addAll(getAllInterfaces(superClassElement));
+            }
         }
         return interfaces;
+    }
+
+    private  TypeElement getTypeElement(TypeMirror typeMirror) {
+        return (TypeElement) processingEnv.getTypeUtils().asElement(typeMirror);
     }
 
     private static class ServiceProviderWrapper {

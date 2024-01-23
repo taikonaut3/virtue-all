@@ -55,7 +55,7 @@ public class HttpClient implements Client {
         Vertx vertx = (Vertx) virtue.getDataOrPut("vertx", Vertx.vertx());
         webClient = WebClient.create(vertx);
         objectMapper = (ObjectMapper) virtue.getDataOrPut("objectMapper", new ObjectMapper());
-        httpParser = (HttpParser) httpProtocol.getParser(url);
+        httpParser = (HttpParser) httpProtocol.parser();
     }
 
     public ResponseFuture send(HttpRequest<Buffer> request, Invocation invocation) {

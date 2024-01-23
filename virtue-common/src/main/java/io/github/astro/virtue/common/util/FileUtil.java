@@ -13,7 +13,7 @@ public interface FileUtil {
                 return;
             }
             if (!targetFile.exists()) {
-                FileUtil.createFileWithParentDirectory(targetFile.getAbsolutePath());
+                createFileWithParentDirectory(targetFile.getAbsolutePath());
             }
             try (RandomAccessFile file = new RandomAccessFile(targetFile, "rw");
                  FileChannel channel = file.getChannel(); FileLock lock = channel.lock()) {

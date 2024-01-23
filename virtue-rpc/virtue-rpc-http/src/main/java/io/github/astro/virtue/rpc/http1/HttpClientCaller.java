@@ -1,6 +1,6 @@
 package io.github.astro.virtue.rpc.http1;
 
-import io.github.astro.rpc.config.AbstractClientCaller;
+import io.github.astro.virtue.rpc.config.AbstractClientCaller;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.url.URL;
@@ -61,7 +61,7 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
         httpMethod = parsedAnnotation.method();
         path = parsedAnnotation.path();
         httpProtocol = (HttpProtocol) protocolInstance;
-        httpParser = (HttpParser) httpProtocol.getParser(url);
+        httpParser = (HttpParser) httpProtocol.parser();
         httpClient = (HttpClient) protocolInstance.openClient(url);
         headers = httpParser.parseHeaders(parsedAnnotation.headers());
         params = httpParser.parseParams(parsedAnnotation.params());
@@ -98,11 +98,10 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ResponseFuture doCall(Invocation invocation) throws RpcException {
         URL url = invocation.url();
         CallArgs callArgs = invocation.callArgs();
-        HttpRequest<Buffer> request = (HttpRequest<Buffer>) httpProtocol.createRequest(url, callArgs);
+        HttpRequest<Buffer> request = httpProtocol.createRequest(url, callArgs);
         try {
             return httpClient.send(request, invocation);
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 package io.github.astro.virtue.boot.processor;
 
-import io.github.astro.rpc.ComplexRemoteService;
+import io.github.astro.virtue.rpc.ComplexRemoteService;
 import io.github.astro.virtue.boot.EnableVirtue;
 import io.github.astro.virtue.config.annotation.RemoteService;
 import org.springframework.beans.BeansException;

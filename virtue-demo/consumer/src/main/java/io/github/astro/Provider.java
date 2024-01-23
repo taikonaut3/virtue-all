@@ -1,5 +1,6 @@
 package io.github.astro;
 
+import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
 import io.github.astro.virtue.config.annotation.RemoteService;
 
 /**
@@ -9,12 +10,12 @@ import io.github.astro.virtue.config.annotation.RemoteService;
 @RemoteService("345")
 public class Provider {
 
-    @io.github.astro.rpc.virtue.config.VirtueCallable(name = "hello")
+    @VirtueCallable(name = "hello")
     public String hello(String world) {
         return "hello" + world;
     }
 
-    @io.github.astro.rpc.virtue.config.VirtueCallable
+    @VirtueCallable
     public String world(String world) {
         return "hello" + world;
     }

@@ -71,8 +71,7 @@ public class ResponseFuture extends CompletableFuture<Object> {
     public Object get() throws InterruptedException, ExecutionException {
         try {
             return super.get(timeout(), TimeUnit.MILLISECONDS);
-        } catch (TimeoutException e) {
-            logger.error("RPC call timeout: " + timeout() + "ms", e);
+        } catch (Exception e) {
             throw new RpcException(e);
         } finally {
             RpcContext.getContext().set("response", response);

@@ -37,6 +37,6 @@ public class ConsumerController {
 
     @GetMapping("list")
     public List<ParentObject> list() {
-        return httpConsumer.list(ParentObject.getObjList());
+        return consumer.list(ParentObject.getObjList());
     }
 }

@@ -31,7 +31,7 @@ public class DefaultDirectory implements Directory {
         URL url = invocation.url();
         for (URL registryUrl : registryConfigs) {
             RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
-            Registry registry = registryFactory.getRegistry(registryUrl);
+            Registry registry = registryFactory.get(registryUrl);
             List<URL> discoverUrls = registry.discover(url);
             if (discoverUrls != null && !discoverUrls.isEmpty()) {
                 for (URL discoverUrl : discoverUrls) {

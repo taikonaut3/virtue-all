@@ -1,6 +1,6 @@
 package io.github.astro.virtue.rpc.http1;
 
-import io.github.astro.rpc.protocol.ProtocolParser;
+import io.github.astro.virtue.rpc.protocol.ProtocolParser;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.CallArgs;
 import io.github.astro.virtue.config.Invocation;

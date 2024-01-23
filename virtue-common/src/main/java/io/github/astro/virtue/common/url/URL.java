@@ -18,26 +18,22 @@ import java.util.stream.Collectors;
  * 1、Rpc Request: {@link RemoteUrl}
  * 2、Connect to Third Party Middleware
  */
+@Getter
 @Accessors(fluent = true)
 public class URL {
 
     private static final Logger logger = LoggerFactory.getLogger(URL.class);
 
-    @Getter
     private List<String> paths;
 
-    @Getter
     private Map<String, String> parameters;
 
-    @Getter
     @Setter
     protected String host;
 
-    @Getter
     @Setter
     protected int port;
 
-    @Getter
     @Setter
     protected String protocol;
 

@@ -10,7 +10,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
     private static final Map<String, Registry> registries = new ConcurrentHashMap<>();
 
     @Override
-    public Registry getRegistry(URL url) {
+    public Registry get(URL url) {
         String uri = url.authority();
         Registry registry = registries.get(uri);
         if (registry == null) {

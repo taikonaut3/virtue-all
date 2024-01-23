@@ -105,7 +105,7 @@ public class Virtue extends AbstractAccessor<Object> implements Lifecycle {
         }
         EventDispatcherConfig eventDispatcherConfig = appConfig.eventDispatcherConfig();
         EventDispatcherFactory eventDispatcherFactory = ExtensionLoader.loadService(EventDispatcherFactory.class, eventDispatcherConfig.type());
-        eventDispatcher = eventDispatcherFactory.create(eventDispatcherConfig.toUrl());
+        eventDispatcher = eventDispatcherFactory.get(eventDispatcherConfig.toUrl());
         for (VirtueConfiguration configuration : configurations) {
             configuration.initAfter(this);
         }
