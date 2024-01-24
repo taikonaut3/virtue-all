@@ -1,7 +1,9 @@
 package io.github.astro.virtue.boot;
 
 import io.github.astro.virtue.config.Virtue;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 
 @EnableConfigurationProperties
@@ -22,9 +24,10 @@ public class VirtueAutoConfiguration {
         return new SpringBootVirtueStarter();
     }
 
-//    @Bean
-//    public MonitorremoteService monitorremoteService(virtueBootStrap virtueBootStrap) {
-//        return new MonitorremoteService(virtueBootStrap);
-//    }
+    @Bean
+    @ConditionalOnClass(DiscoveryClient.class)
+    public ServiceRegistrationPostProcessor serviceRegistrationPostProcessor() {
+        return new ServiceRegistrationPostProcessor();
+    }
 
 }

@@ -1,10 +1,9 @@
 package io.github.astro;
 
 import io.github.astro.model2.ParentObject;
-import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.RemoteService;
-import io.github.astro.virtue.rpc.http1.config.HttpCallable;
+import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class Provider {
         return "hello" + world;
     }
 
-    @HttpCallable
+    //@HttpCallable
     public String httpHello() {
         return "hello";
     }

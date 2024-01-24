@@ -1,14 +1,14 @@
 package io.github.astro.virtue.rpc.virtue;
 
-import io.github.astro.virtue.rpc.virtue.envelope.VirtueEnvelope;
-import io.github.astro.virtue.rpc.virtue.header.Header;
-import io.github.astro.virtue.rpc.virtue.header.VirtueHeader;
 import io.github.astro.virtue.common.constant.Components;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.constant.Mode;
 import io.github.astro.virtue.common.constant.ModeContainer;
 import io.github.astro.virtue.common.exception.CodecException;
 import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.rpc.virtue.envelope.VirtueEnvelope;
+import io.github.astro.virtue.rpc.virtue.header.Header;
+import io.github.astro.virtue.rpc.virtue.header.VirtueHeader;
 import io.github.astro.virtue.serialization.Serializer;
 import io.github.astro.virtue.transport.Request;
 import io.github.astro.virtue.transport.Response;
@@ -48,9 +48,14 @@ public class VirtueCodec implements Codec {
 
     private final Class<?> decodedClass;
 
+    private Constructor<? extends VirtueEnvelope> allArgsConstructor;
+
+    private Constructor<? extends VirtueEnvelope> noArgsConstructor;
+
     public VirtueCodec(Class<? extends VirtueEnvelope> encodedClass, Class<? extends VirtueEnvelope> decodedClass) {
         this.encodedClass = encodedClass;
         this.decodedClass = decodedClass;
+        findDecodedConstructor();
     }
 
     @Override
@@ -110,7 +115,7 @@ public class VirtueCodec implements Codec {
         request.id(id);
         request.oneway(oneway);
         request.url(url);
-        Object message = decodeRequestMessage(request, byteReader.readBytes(byteReader.readableBytes()));
+        Object message = decodeEnvelope(byteReader.readBytes(byteReader.readableBytes()));
         request.message(message);
         return request;
     }
@@ -140,12 +145,12 @@ public class VirtueCodec implements Codec {
         response.id(id);
         response.code(code);
         response.url(url);
-        Object message = decodeResponseMessage(response, byteReader.readBytes(byteReader.readableBytes()));
+        Object message = decodeEnvelope(byteReader.readBytes(byteReader.readableBytes()));
         response.message(message);
         return response;
     }
 
-    protected byte[] encodeRequestMessage(Request request) {
+    private byte[] encodeRequestMessage(Request request) {
         Object message = request.message();
         if (message instanceof VirtueEnvelope virtueEnvelope) {
             return encodeEnvelope(virtueEnvelope);
@@ -154,11 +159,7 @@ public class VirtueCodec implements Codec {
         }
     }
 
-    protected Object decodeRequestMessage(Request request, byte[] messageBytes) {
-        return decodeEnvelope(messageBytes);
-    }
-
-    protected byte[] encodeResponseMessage(Response response) {
+    private byte[] encodeResponseMessage(Response response) {
         Object message = response.message();
         if (message instanceof VirtueEnvelope virtueEnvelope) {
             return encodeEnvelope(virtueEnvelope);
@@ -167,8 +168,17 @@ public class VirtueCodec implements Codec {
         }
     }
 
-    protected Object decodeResponseMessage(Response response, byte[] messageBytes) {
-        return decodeEnvelope(messageBytes);
+    @SuppressWarnings("unchecked")
+    private void findDecodedConstructor() {
+        try {
+            allArgsConstructor = (Constructor<? extends VirtueEnvelope>) decodedClass.getConstructor(Header.class, Object.class);
+        } catch (NoSuchMethodException e) {
+            try {
+                noArgsConstructor = (Constructor<? extends VirtueEnvelope>) decodedClass.getConstructor();
+            } catch (NoSuchMethodException ex) {
+                logger.error("Can't find available Constructor,Need Envelope() or Envelope(Header,Object)", e);
+            }
+        }
     }
 
     private byte[] encodeEnvelope(VirtueEnvelope virtueEnvelope) throws CodecException {
@@ -248,28 +258,18 @@ public class VirtueCodec implements Codec {
 
     }
 
-    @SuppressWarnings("unchecked")
     private VirtueEnvelope createEnvelope(Header header, Object body) {
-        Constructor<? extends VirtueEnvelope> constructor;
         VirtueEnvelope virtueEnvelope;
         try {
-            constructor = (Constructor<? extends VirtueEnvelope>) decodedClass.getConstructor(header.getClass(), Object.class);
-            virtueEnvelope = constructor.newInstance(header, body);
-        } catch (NoSuchMethodException e) {
-            try {
-                constructor = (Constructor<? extends VirtueEnvelope>) decodedClass.getConstructor();
-                virtueEnvelope = constructor.newInstance();
+            if(allArgsConstructor!=null){
+               virtueEnvelope = allArgsConstructor.newInstance(header,body);
+            }else {
+                virtueEnvelope = noArgsConstructor.newInstance();
                 virtueEnvelope.setHeader(header);
                 virtueEnvelope.setBody(body);
-            } catch (NoSuchMethodException ex) {
-                logger.error("Can't find available Constructor,Need Envelope() or Envelope(Header,Object)", e);
-                throw new CodecException(ex);
-            } catch (Exception cause) {
-                logger.error("Create Envelope Error by Envelope(Header,Object) constructor", e);
-                throw new CodecException(cause);
             }
         } catch (Exception e) {
-            logger.error("Create Envelope Error by No-argument constructor", e);
+            logger.error("Create "+decodedClass.getSimpleName()+" Instance Error ", e);
             throw new CodecException(e);
         }
         return virtueEnvelope;

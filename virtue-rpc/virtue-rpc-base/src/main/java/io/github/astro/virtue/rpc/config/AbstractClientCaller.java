@@ -184,7 +184,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
                     throw new IllegalArgumentException(method.getName() + " Async returnType should be CompletableFuture");
                 }
             } else {
-                throw new IllegalArgumentException(method.getName() + "Async returnType should be CompletableFuture");
+                throw new IllegalArgumentException(method.getName() + " Async returnType should be CompletableFuture");
             }
         }
     }

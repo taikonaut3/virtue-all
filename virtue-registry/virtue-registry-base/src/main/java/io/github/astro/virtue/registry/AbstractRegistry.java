@@ -36,7 +36,7 @@ public abstract class AbstractRegistry implements Registry {
             if (noSubscribe) subscribeService(url);
             discoverHealthServices.put(application, serverUrls);
         } else {
-            urls = serverUrls.stream().map(URL::valueOf).toList();
+            urls = serverUrls.stream().map(URL::valueOf).filter(serverUrl -> serverUrl.protocol().equalsIgnoreCase(url.protocol())).toList();
         }
         return urls;
     }

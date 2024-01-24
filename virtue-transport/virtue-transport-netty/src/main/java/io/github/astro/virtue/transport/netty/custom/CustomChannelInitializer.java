@@ -22,17 +22,20 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
 
     private final Codec codec;
 
-    public CustomChannelInitializer(URL url, ChannelHandler handler, Codec codec) {
+    private final boolean isServer;
+
+    public CustomChannelInitializer(URL url, ChannelHandler handler, Codec codec, boolean isServer) {
         this.url = url;
         this.handler = handler;
         this.codec = codec;
+        this.isServer = isServer;
     }
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        NettyCustomCodec nettyCustomCodec = new NettyCustomCodec(url, codec);
+        NettyCustomCodec nettyCustomCodec = new NettyCustomCodec(url, codec, isServer);
         int keepAliveTimeout = url.getIntParameter(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
-        IdleStateHandler idleStateHandler = NettyIdeStateHandler.createClientIdleStateHandler(keepAliveTimeout);
+        IdleStateHandler idleStateHandler = NettyIdeStateHandler.create(keepAliveTimeout, isServer);
         socketChannel.pipeline()
                 .addLast("decoder", nettyCustomCodec.getDecoder())
                 .addLast("encoder", nettyCustomCodec.getEncoder())

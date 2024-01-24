@@ -10,12 +10,16 @@ public class NettyIdeStateHandler extends IdleStateHandler {
         super(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds, TimeUnit.MILLISECONDS);
     }
 
-    public static IdleStateHandler createServerIdleStateHandler(int heartbeatInterval) {
+    protected static IdleStateHandler createServerIdleStateHandler(int heartbeatInterval) {
         return new NettyIdeStateHandler(heartbeatInterval, 0, heartbeatInterval);
     }
 
-    public static IdleStateHandler createClientIdleStateHandler(int heartbeatInterval) {
+    protected static IdleStateHandler createClientIdleStateHandler(int heartbeatInterval) {
         return new NettyIdeStateHandler(0, heartbeatInterval, heartbeatInterval);
+    }
+
+    public static IdleStateHandler create(int heartbeatInterval, boolean isServer) {
+        return isServer ? createServerIdleStateHandler(heartbeatInterval) : createClientIdleStateHandler(heartbeatInterval);
     }
 
 }

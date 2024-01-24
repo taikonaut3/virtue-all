@@ -53,14 +53,14 @@ public final class NetUtil {
         if (!StringUtil.isBlank(localHost)) {
             return localHost;
         }
-        InetAddress localAddress = getLocalAddress();
+        InetAddress localAddress = getFirstLocalAddress();
         if (localAddress != null) {
             return localAddress.getHostAddress();
         }
         return null;
     }
 
-    public static InetAddress getLocalAddress() {
+    public static InetAddress getFirstLocalAddress() {
         if (LOCAL_ADDRESS != null) {
             return LOCAL_ADDRESS;
         }

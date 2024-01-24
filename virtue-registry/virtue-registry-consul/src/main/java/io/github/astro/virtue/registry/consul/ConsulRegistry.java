@@ -3,6 +3,7 @@ package io.github.astro.virtue.registry.consul;
 import io.github.astro.virtue.common.constant.Constant;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.Virtue;
 import io.github.astro.virtue.registry.AbstractRegistry;
 import io.vertx.core.Vertx;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -58,12 +60,14 @@ public class ConsulRegistry extends AbstractRegistry {
         consulClient.deregisterService(application);
         vertx.setPeriodic(0, 5000, ar -> {
             Map<String, String> systemInfo = Virtue.getDefault().newSystemInfo().toMap();
+            HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
+            registryMeta.put(Key.PROTOCOL, url.protocol());
             ServiceOptions opts = new ServiceOptions()
                     .setName(application)
                     .setId(application + "-" + url.protocol() + ":" + url.port())
                     .setAddress(url.host())
                     .setPort(url.port())
-                    .setMeta(systemInfo);
+                    .setMeta(registryMeta);
             if (enableHealthCheck) {
                 int healthCheckInterval = url.getIntParameter(Key.HEALTH_CHECK_INTERVAL,
                         Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
@@ -98,7 +102,9 @@ public class ConsulRegistry extends AbstractRegistry {
                     latch.countDown();
                 } else {
                     for (ServiceEntry entry : serviceEntries) {
-                        if (entry.getService().getId().contains(url.protocol())) {
+                        Service service = entry.getService();
+                        String protocol = service.getMeta().get(Key.PROTOCOL);
+                        if (!StringUtil.isBlank(protocol) && protocol.equalsIgnoreCase(url.protocol())) {
                             urls.add(serviceEntryToUrl(url.protocol(), entry));
                         }
                     }
@@ -123,8 +129,9 @@ public class ConsulRegistry extends AbstractRegistry {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.nextResult().getList();
                 List<String> healthServerUrl = serviceEntries.stream()
-                        .filter(serviceEntry -> serviceEntry.aggregatedStatus() == CheckStatus.PASSING).
-                        map(entry -> serviceEntryToUrl(url.protocol(), entry).toString()).toList();
+                        .filter(serviceEntry -> serviceEntry.aggregatedStatus() == CheckStatus.PASSING
+                                && serviceEntry.getService().getMeta().containsKey(Key.PROTOCOL)).
+                        map(entry -> serviceEntryToUrl(entry.getService().getMeta().get(Key.PROTOCOL), entry).toString()).toList();
                 discoverHealthServices.put(application, healthServerUrl);
             }
         }).start();

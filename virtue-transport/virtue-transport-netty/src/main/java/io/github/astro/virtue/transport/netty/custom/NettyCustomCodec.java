@@ -10,6 +10,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.Getter;
 
 import static io.github.astro.virtue.common.constant.Constant.DEFAULT_MAX_MESSAGE_SIZE;
+import static io.github.astro.virtue.common.constant.Key.CLIENT_MAX_RECEIVE_SIZE;
+import static io.github.astro.virtue.common.constant.Key.MAX_RECEIVE_SIZE;
 
 /**
  * Read the Envelope by data length
@@ -24,16 +26,12 @@ public final class NettyCustomCodec {
 
     private final Codec codec;
 
-    public NettyCustomCodec(URL url, Codec codec) {
+    public NettyCustomCodec(URL url, Codec codec, boolean isServer) {
         this.codec = codec;
-        int maxReceiveSize;
-//        if (codec.getEncodedClass() == Request.class) {
-//            maxReceiveSize = url.getIntParameter(Key.CLIENT_MAX_RECEIVE_SIZE, DEFAULT_MAX_MESSAGE_SIZE);
-//        } else {
-//            maxReceiveSize = url.getIntParameter(Key.SERVER_MAX_RECEIVE_SIZE, DEFAULT_MAX_MESSAGE_SIZE);
-//        }
+        String maxMessageKey = isServer ? MAX_RECEIVE_SIZE : CLIENT_MAX_RECEIVE_SIZE;
+        int maxReceiveSize = url.getIntParameter(maxMessageKey, DEFAULT_MAX_MESSAGE_SIZE);
         encoder = new NettyEncoder();
-        decoder = new NettyDecoder(DEFAULT_MAX_MESSAGE_SIZE);
+        decoder = new NettyDecoder(maxReceiveSize);
     }
 
     class NettyEncoder extends MessageToByteEncoder<Object> {

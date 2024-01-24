@@ -18,7 +18,7 @@ public class ProtocolInitializer {
             case HTTP:
                 return new HttpChannelInitializer(url, handler, isServer);
             default:
-                return new CustomChannelInitializer(url, handler, codec);
+                return new CustomChannelInitializer(url, handler, codec, isServer);
         }
     }
 }

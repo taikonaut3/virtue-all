@@ -33,7 +33,7 @@ public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         int keepAliveTimeout = url.getIntParameter(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
-        IdleStateHandler idleStateHandler = NettyIdeStateHandler.createServerIdleStateHandler(keepAliveTimeout);
+        IdleStateHandler idleStateHandler = NettyIdeStateHandler.create(keepAliveTimeout, isServer);
         socketChannel.pipeline()
                 .addLast("codec", isServer ? new HttpServerCodec() : new HttpClientCodec())
                 .addLast("aggregator", new HttpObjectAggregator(65536))
