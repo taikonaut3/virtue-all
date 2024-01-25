@@ -50,6 +50,8 @@ public interface Components {
 
         String KRYO = "kryo";
 
+        String MSGPACK = "msgpack";
+
     }
 
     interface Transport {

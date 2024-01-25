@@ -71,13 +71,13 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     protected Map<String, Client> clients = new ConcurrentHashMap<>();
 
-    protected AbstractClientCaller(Method method, CallerContainer container, String protocol, Class<T> annoType) {
-        super(method, container, protocol, annoType);
+    protected AbstractClientCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
+        super(method, remoteCaller, protocol, annoType);
     }
 
     @Override
     public void init() {
-        Options ops = options();
+        Options ops = getOptions();
         // check
         checkAsyncReturnType(ops, method);
         checkDirectUrl(ops.url());
@@ -95,6 +95,13 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         clientConfig(ops.client());
         // subclass init
         doInit();
+    }
+
+    private Options getOptions() {
+        if (method.isAnnotationPresent(Options.class)) {
+            return method.getAnnotation(Options.class);
+        }
+        return options();
     }
 
     @Override

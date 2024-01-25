@@ -139,7 +139,7 @@ public class ConsulRegistry extends AbstractRegistry {
 
     @Override
     public void destroy() {
-
+        consulClient.close();
     }
 
     private URL serviceEntryToUrl(String protocol, ServiceEntry entry) {

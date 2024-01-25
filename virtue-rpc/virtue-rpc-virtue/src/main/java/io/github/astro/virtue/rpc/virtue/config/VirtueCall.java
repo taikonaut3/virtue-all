@@ -1,7 +1,7 @@
 package io.github.astro.virtue.rpc.virtue.config;
 
 import io.github.astro.virtue.rpc.virtue.VirtueClientCaller;
-import io.github.astro.virtue.config.annotation.AutoRegister;
+import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
 
@@ -12,7 +12,7 @@ import static io.github.astro.virtue.common.constant.Components.Protocol.VIRTUE;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@AutoRegister(protocol = VIRTUE, clientCaller = VirtueClientCaller.class)
+@BindingCaller(protocol = VIRTUE, clientCaller = VirtueClientCaller.class)
 public @interface VirtueCall {
 
     String service() default "";

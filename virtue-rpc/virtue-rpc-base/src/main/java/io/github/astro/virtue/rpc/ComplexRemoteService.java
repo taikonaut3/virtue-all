@@ -5,7 +5,7 @@ import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.ServerCaller;
-import io.github.astro.virtue.config.annotation.AutoRegister;
+import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.manager.ProtocolRegistryManager;
 import lombok.NonNull;
 import lombok.ToString;
@@ -60,13 +60,13 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
 
     private void parseCallable() {
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
-            AutoRegister autoRegister = ReflectUtil.findAnnotation(method, AutoRegister.class);
-            if (autoRegister != null) {
+            BindingCaller bindingCaller = ReflectUtil.findAnnotation(method, BindingCaller.class);
+            if (bindingCaller != null) {
                 ProtocolRegistryManager registry = virtue.protocolRegistryManager();
-                ServerCaller<?> caller = registry.createServerCaller(autoRegister, method, this);
+                ServerCaller<?> caller = registry.createServerCaller(bindingCaller, method, this);
                 if (caller != null) {
                     callerMap.put(method, caller);
-                    providerCallerMap.put(autoRegister.protocol() + caller.path(), caller);
+                    providerCallerMap.put(bindingCaller.protocol() + caller.path(), caller);
                 }
 
             }

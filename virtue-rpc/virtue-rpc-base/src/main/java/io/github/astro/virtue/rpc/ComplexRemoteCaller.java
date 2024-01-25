@@ -6,7 +6,7 @@ import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.config.Caller;
 import io.github.astro.virtue.config.RemoteCaller;
-import io.github.astro.virtue.config.annotation.AutoRegister;
+import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.manager.ProtocolRegistryManager;
 import io.github.astro.virtue.proxy.ProxyFactory;
 import lombok.NonNull;
@@ -64,10 +64,10 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
 
     private void parseCaller() {
         for (Method method : targetInterface.getDeclaredMethods()) {
-            AutoRegister autoRegister = ReflectUtil.findAnnotation(method, AutoRegister.class);
-            if (autoRegister != null) {
+            BindingCaller bindingCaller = ReflectUtil.findAnnotation(method, BindingCaller.class);
+            if (bindingCaller != null) {
                 ProtocolRegistryManager registry = virtue.protocolRegistryManager();
-                Caller<?> caller = registry.createClientCaller(autoRegister, method, this);
+                Caller<?> caller = registry.createClientCaller(bindingCaller, method, this);
                 if (caller != null) {
                     callerMap.put(method, caller);
                 }

@@ -7,8 +7,12 @@ import org.springframework.cglib.proxy.Enhancer;
 
 import static io.github.astro.virtue.common.constant.Components.ProxyFactory.CGLIB;
 
+
+/**
+ * Create Proxy By CGLIB
+ */
 @ServiceProvider(CGLIB)
-public class CGlibProxyFactory extends AbstractProxyFactory {
+public class CGLibProxyFactory extends AbstractProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -16,7 +20,7 @@ public class CGlibProxyFactory extends AbstractProxyFactory {
         Enhancer enhancer = new Enhancer();
         enhancer.setClassLoader(interfaceClass.getClassLoader());
         enhancer.setSuperclass(interfaceClass);
-        enhancer.setCallback(new CGlibMethodInterceptor(interfaceClass, handler));
+        enhancer.setCallback(new CGLibMethodInterceptor(interfaceClass, handler));
         return (T) enhancer.create();
     }
 
@@ -26,7 +30,7 @@ public class CGlibProxyFactory extends AbstractProxyFactory {
         Enhancer enhancer = new Enhancer();
         enhancer.setClassLoader(target.getClass().getClassLoader());
         enhancer.setSuperclass(target.getClass());
-        enhancer.setCallback(new CGlibMethodInterceptor(target, handler));
+        enhancer.setCallback(new CGLibMethodInterceptor(target, handler));
         return (T) enhancer.create();
     }
 

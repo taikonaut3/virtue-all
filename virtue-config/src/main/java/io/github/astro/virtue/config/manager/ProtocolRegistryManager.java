@@ -2,7 +2,7 @@ package io.github.astro.virtue.config.manager;
 
 import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.config.*;
-import io.github.astro.virtue.config.annotation.AutoRegister;
+import io.github.astro.virtue.config.annotation.BindingCaller;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ public class ProtocolRegistryManager {
 
     private final Map<String, ProtocolRegistryWrapper> confMap = new ConcurrentHashMap<>();
 
-    public ServerCaller<?> createServerCaller(AutoRegister register, Method method, RemoteService<?> remoteService) {
+    public ServerCaller<?> createServerCaller(BindingCaller register, Method method, RemoteService<?> remoteService) {
         ProtocolRegistryWrapper wrapper = confMap.get(register.protocol());
         Class<? extends ServerCaller> serverCaller = register.serverCaller();
         if (wrapper == null) {
@@ -41,7 +41,7 @@ public class ProtocolRegistryManager {
         return null;
     }
 
-    public ClientCaller<?> createClientCaller(AutoRegister register, Method method, RemoteCaller<?> remoteCaller) {
+    public ClientCaller<?> createClientCaller(BindingCaller register, Method method, RemoteCaller<?> remoteCaller) {
         ProtocolRegistryWrapper wrapper = confMap.get(register.protocol());
         Class<? extends ClientCaller> clientCaller = register.clientCaller();
         if (wrapper == null) {
@@ -61,10 +61,10 @@ public class ProtocolRegistryManager {
         return null;
     }
 
-    private ProtocolRegistryWrapper registerProtocol(AutoRegister autoRegister) {
-        String protocol = autoRegister.protocol();
-        Class<? extends ClientCaller> clientCaller = autoRegister.clientCaller();
-        Class<? extends ServerCaller> serverCaller = autoRegister.serverCaller();
+    private ProtocolRegistryWrapper registerProtocol(BindingCaller bindingCaller) {
+        String protocol = bindingCaller.protocol();
+        Class<? extends ClientCaller> clientCaller = bindingCaller.clientCaller();
+        Class<? extends ServerCaller> serverCaller = bindingCaller.serverCaller();
         ProtocolRegistryWrapper wrapper = new ProtocolRegistryWrapper();
         wrapper.protocol(protocol);
         if (!clientCaller.isInterface() && !Modifier.isAbstract(clientCaller.getModifiers())) {

@@ -3,9 +3,14 @@ package io.github.astro.virtue.config.annotation;
 import io.github.astro.virtue.common.constant.Components;
 import io.github.astro.virtue.common.constant.Constant;
 
+import java.lang.annotation.*;
+
 /**
  * Client-side parameter configuration.
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface Options {
 
     /**

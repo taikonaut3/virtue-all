@@ -23,6 +23,7 @@ public class ModeContainer {
         put(Key.SERIALIZE, JSON, (byte) 2);
         put(Key.SERIALIZE, KRYO, (byte) 3);
         put(Key.SERIALIZE, FURY, (byte) 4);
+        put(Key.SERIALIZE, MSGPACK, (byte) 5);
         put(Key.ENVELOPE, REQUEST, (byte) 1);
         put(Key.ENVELOPE, RESPONSE, (byte) 2);
         put(Key.ENVELOPE, HEARTBEAT, (byte) 3);

@@ -1,6 +1,5 @@
 package io.github.astro.virtue.rpc.config;
 
-import io.github.astro.virtue.rpc.protocol.Protocol;
 import io.github.astro.virtue.common.constant.Constant;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
@@ -17,6 +16,7 @@ import io.github.astro.virtue.config.config.RegistryConfig;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterChain;
 import io.github.astro.virtue.config.manager.ConfigManager;
+import io.github.astro.virtue.rpc.protocol.Protocol;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -31,16 +31,24 @@ import java.util.*;
 public abstract class AbstractCaller<T extends Annotation> implements Caller<T> {
 
     protected final Virtue virtue;
+
     protected CallerContainer container;
+
     protected Method method;
+
     protected final List<Filter> filters = new LinkedList<>();
+
     protected final List<RegistryConfig> registryConfigs = new ArrayList<>();
-    protected URL url;
-    protected Protocol<?,?> protocolInstance;
+
+    protected Protocol<?, ?> protocolInstance;
+
     protected FilterChain filterChain;
-    protected volatile boolean isStart = false;
 
     protected T parsedAnnotation;
+
+    protected URL url;
+
+    protected volatile boolean isStart = false;
 
     @Setter
     protected String protocol;
@@ -74,7 +82,7 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
     @Override
     public void start() {
         if (!isStart) {
-            parseConfig(config());
+            parseConfig(getConfig());
             checkRegistryConfig();
             doStart();
             isStart = true;
@@ -105,6 +113,13 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
     private T parseAnnotation(Method method, Class<T> type) {
         AssertUtil.condition(method.isAnnotationPresent(type), "Only support @" + type.getSimpleName() + " modify Method");
         return method.getAnnotation(type);
+    }
+
+    private Config getConfig() {
+        if (method.isAnnotationPresent(Config.class)) {
+            return method.getAnnotation(Config.class);
+        }
+        return config();
     }
 
     private void parseConfig(Config config) {

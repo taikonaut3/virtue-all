@@ -6,16 +6,15 @@ import io.github.astro.virtue.proxy.SuperInvoker;
 import java.lang.reflect.Method;
 
 /**
- * @Author WenBo Zhou
- * @Date 2024/1/17 14:18
+ * JDK InvocationHandler Impl
  */
-public class JdkInvocationHandler implements java.lang.reflect.InvocationHandler {
+public class JDKInvocationHandler implements java.lang.reflect.InvocationHandler {
 
     private final Object target;
 
     private final InvocationHandler handler;
 
-    public JdkInvocationHandler(Object target, InvocationHandler handler) {
+    public JDKInvocationHandler(Object target, InvocationHandler handler) {
         this.target = target;
         this.handler = handler;
     }
@@ -24,9 +23,9 @@ public class JdkInvocationHandler implements java.lang.reflect.InvocationHandler
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (Object.class.equals(method.getDeclaringClass())) {
             return method.invoke(this, args);
-        } else {
-            return handler.invoke(proxy, method, args, superInvoker(method, args));
         }
+        return handler.invoke(proxy, method, args, superInvoker(method, args));
+
     }
 
     private SuperInvoker<?> superInvoker(Method method, Object[] args) {

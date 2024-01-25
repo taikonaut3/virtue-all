@@ -1,6 +1,6 @@
 package io.github.astro.virtue.rpc.http1.config;
 
-import io.github.astro.virtue.config.annotation.AutoRegister;
+import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.rpc.http1.HttpServerCaller;
 
@@ -15,7 +15,7 @@ import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@AutoRegister(protocol = HTTP, serverCaller = HttpServerCaller.class)
+@BindingCaller(protocol = HTTP, serverCaller = HttpServerCaller.class)
 public @interface HttpCallable {
 
     /**

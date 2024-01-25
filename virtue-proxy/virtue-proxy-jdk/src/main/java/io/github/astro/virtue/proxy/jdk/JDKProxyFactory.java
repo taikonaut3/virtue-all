@@ -8,6 +8,9 @@ import java.lang.reflect.Proxy;
 
 import static io.github.astro.virtue.common.constant.Components.ProxyFactory.JDK;
 
+/**
+ * Create Proxy By JDK
+ */
 @ServiceProvider(JDK)
 public class JDKProxyFactory extends AbstractProxyFactory {
 
@@ -15,14 +18,14 @@ public class JDKProxyFactory extends AbstractProxyFactory {
     @SuppressWarnings("unchecked")
     protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) {
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass},
-                new JdkInvocationHandler(interfaceClass, handler));
+                new JDKInvocationHandler(interfaceClass, handler));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected <T> T doCreateProxy(T target, InvocationHandler handler) {
         return (T) Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(),
-                new JdkInvocationHandler(target, handler));
+                new JDKInvocationHandler(target, handler));
     }
 
 }

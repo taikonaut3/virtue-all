@@ -7,7 +7,7 @@ import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
 
 import java.util.List;
 
-import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
+import static io.github.astro.virtue.common.constant.Components.Serialize.MSGPACK;
 
 /**
  * @Author WenBo Zhou
@@ -31,7 +31,7 @@ public class Provider {
         return "hello";
     }
 
-    @VirtueCallable(name = "list", config = @Config(serialize = JSON))
+    @VirtueCallable(name = "list", config = @Config(serialize = MSGPACK))
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }

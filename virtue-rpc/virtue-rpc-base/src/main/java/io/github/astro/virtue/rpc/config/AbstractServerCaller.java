@@ -5,7 +5,6 @@ import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.config.CallArgs;
-import io.github.astro.virtue.config.CallerContainer;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.ServerCaller;
 import io.github.astro.virtue.config.config.RegistryConfig;
@@ -41,8 +40,8 @@ public abstract class AbstractServerCaller<T extends Annotation> extends Abstrac
 
     protected String desc;
 
-    protected AbstractServerCaller(Method method, CallerContainer callerContainer, String protocol, Class<T> annoType) {
-        super(method, callerContainer, protocol, annoType);
+    protected AbstractServerCaller(Method method, RemoteService<?> remoteService, String protocol, Class<T> annoType) {
+        super(method, remoteService, protocol, annoType);
     }
 
     @Override

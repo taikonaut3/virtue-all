@@ -18,6 +18,8 @@
         <module>virtue-serialization-jdk</module>
         <module>virtue-serialization-json</module>
         <module>virtue-serialization-kryo</module>
+        <module>virtue-serialization-msgpack</module>
+        <module>virtue-serialization-protobuf</module>
     </modules>
 
 </project>

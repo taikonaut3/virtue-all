@@ -17,13 +17,4 @@ public class ProviderMain {
         SpringApplication.run(ProviderMain.class, args);
     }
 
-//    @Bean
-//    public ServerConfig serverConfig() {
-//        return new ServerConfig(VIRTUE, 2883);
-//    }
-//
-//    @Bean
-//    public ServerConfig httpServerConfig() {
-//        return new ServerConfig(HTTP, 8086);
-//    }
 }

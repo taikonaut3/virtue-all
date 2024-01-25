@@ -42,8 +42,6 @@ public class HttpServer implements Server {
         // 挂载 Handler，接收所有请求路径和请求方法的请求
         router.route().handler(context -> {
             String s = context.request().absoluteURI();
-            System.out.println("path" + context.request().path());
-            System.out.println("uri" + s);
             // 获取请求的远程地址
             String address = context.request().connection().remoteAddress().toString();
             // 获取请求参数 "name" 的取值

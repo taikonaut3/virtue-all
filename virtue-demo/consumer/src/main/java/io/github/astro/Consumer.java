@@ -1,17 +1,17 @@
 package io.github.astro;
 
 import io.github.astro.model.ParentObject;
-import io.github.astro.virtue.rpc.virtue.config.VirtueCall;
-import io.github.astro.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
 import io.github.astro.virtue.config.annotation.RemoteCaller;
+import io.github.astro.virtue.rpc.virtue.config.VirtueCall;
+import io.github.astro.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.github.astro.virtue.transport.Response;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
+import static io.github.astro.virtue.common.constant.Components.Serialize.MSGPACK;
 
 /**
  * @Author WenBo Zhou
@@ -20,12 +20,13 @@ import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
 @RemoteCaller("provider")
 public interface Consumer {
 
-    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = {"filter2", "test1"}))
+    @Config(filters = {"filter2", "filter1"})
+    @VirtueCall(service = "345", callMethod = "hello")
     String hello(String world);
 
-    @VirtueCall(service = "345", callMethod = "hello"
-            , config = @Config(filters = "test")
-            , options = @Options(async = true))
+    @Config(filters = "test")
+    @Options(async = true)
+    @VirtueCall(service = "345", callMethod = "hello")
     CompletableFuture<String> helloAsync(String world);
 
     @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"), options = @Options(async = true))
@@ -34,6 +35,6 @@ public interface Consumer {
     @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"), options = @Options(async = true))
     CompletableFuture<VirtueResponse> helloDynamicRes(String world);
 
-    @VirtueCall(service = "345",callMethod = "list",config = @Config(serialize = JSON))
+    @VirtueCall(service = "345",callMethod = "list",config = @Config(serialize = MSGPACK))
     List<ParentObject> list(List<ParentObject> list);
 }

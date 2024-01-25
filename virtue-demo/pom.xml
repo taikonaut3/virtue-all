@@ -23,7 +23,11 @@
             <artifactId>virtue-boot-starter</artifactId>
             <version>${revision}</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.github.astro</groupId>
+            <artifactId>virtue-serialization-msgpack</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.astro</groupId>
             <artifactId>virtue-proxy-cglib</artifactId>

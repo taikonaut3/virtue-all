@@ -1,10 +1,15 @@
 package io.github.astro.virtue.config.annotation;
 
+import java.lang.annotation.*;
+
 import static io.github.astro.virtue.common.constant.Components.Serialize;
 
 /**
  * Common config for the client and the server.
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface Config {
 
     /**
