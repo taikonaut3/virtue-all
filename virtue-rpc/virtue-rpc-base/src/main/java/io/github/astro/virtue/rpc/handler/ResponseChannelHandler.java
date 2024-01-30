@@ -6,7 +6,7 @@ import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.transport.Response;
-import io.github.astro.virtue.transport.ResponseFuture;
+import io.github.astro.virtue.transport.RpcFuture;
 import io.github.astro.virtue.transport.base.ChannelHandlerAdapter;
 import io.github.astro.virtue.transport.channel.Channel;
 
@@ -18,7 +18,7 @@ public class ResponseChannelHandler extends ChannelHandlerAdapter {
     @Override
     public void received(Channel channel, Object message) throws RpcException {
         if (message instanceof Response response) {
-            ResponseFuture future = ResponseFuture.getFuture(String.valueOf(response.id()));
+            RpcFuture future = RpcFuture.getFuture(String.valueOf(response.id()));
             // if timeout the future will is null
             if (future != null) {
                 if (response.code() == Response.ERROR) {

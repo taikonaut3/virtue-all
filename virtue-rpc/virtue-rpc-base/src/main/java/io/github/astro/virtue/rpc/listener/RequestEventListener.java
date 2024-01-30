@@ -58,7 +58,6 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
                     if (invokeAfterMargin < timeout) {
                         Response response = new Response(url, result);
                         response.code(Response.SUCCESS);
-                        response.id(request.id());
                         event.getChannel().send(response);
                     }
                 }
@@ -68,7 +67,6 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
             Object message = protocol.createResponse(url, e.getMessage());
             Response response = new Response(url, message);
             response.code(Response.ERROR);
-            response.id(request.id());
             event.getChannel().send(response);
         }
     }

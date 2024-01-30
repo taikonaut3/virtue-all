@@ -8,9 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public final class ReflectUtil {
@@ -28,18 +26,20 @@ public final class ReflectUtil {
             return parameterTypes == null ? type.getConstructor(new Class[]{}).newInstance() :
                     type.getConstructor(parameterTypes).newInstance(args);
         } catch (Exception e) {
-            logger.error("Create Instance Error", e);
+            logger.error("Create Instance Fail", e);
             throw new RuntimeException(e);
         }
 
     }
+
+
 
     public static <T> T createInstance(Constructor<T> constructor, Object... args) {
         T instance = null;
         try {
             instance = constructor.newInstance(args);
         } catch (Exception e) {
-            logger.error("Create Instance Error", e);
+            logger.error("Create Instance Fail", e);
         }
         return instance;
     }

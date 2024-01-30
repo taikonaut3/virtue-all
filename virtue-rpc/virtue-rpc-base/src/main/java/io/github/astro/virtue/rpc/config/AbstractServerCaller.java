@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author WenBo Zhou
@@ -36,7 +36,7 @@ public abstract class AbstractServerCaller<T extends Annotation> extends Abstrac
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractServerCaller.class);
 
-    public static final Map<String, Server> hadExportServer = new LinkedHashMap<>();
+    public static final Map<String, Server> hadExportServer = new ConcurrentHashMap<>();
 
     protected String desc;
 

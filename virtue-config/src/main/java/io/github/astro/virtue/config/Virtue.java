@@ -39,6 +39,7 @@ public class Virtue extends AbstractAccessor<Object> implements Lifecycle {
 
     private EventDispatcher eventDispatcher;
 
+
     private Virtue() {
         configManager = new ConfigManager();
         monitorManager = new MonitorManager();

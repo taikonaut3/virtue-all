@@ -28,7 +28,6 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
             Object message = protocol.createResponse(url, cause.getMessage());
             Response response = new Response(url, message);
             response.code(Response.ERROR);
-            response.id(Long.valueOf(url.getParameter(Key.UNIQUE_ID)));
             event.getChannel().send(response);
         }
     }

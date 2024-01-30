@@ -115,14 +115,14 @@ public class URL {
                 ));
     }
 
-    public String getAddress() {
+    public String address() {
         if (StringUtil.isBlank(host)) {
             return null;
         }
         return host + ":" + port;
     }
 
-    public void setAddress(String address) {
+    public void address(String address) {
         InetSocketAddress inetSocketAddress = NetUtil.toInetSocketAddress(address);
         this.host = inetSocketAddress.getHostString();
         this.port = inetSocketAddress.getPort();
@@ -233,9 +233,13 @@ public class URL {
 
     }
 
+    public String pathAndParams() {
+        String params = mapToUrlString(parameters);
+        return path() + (StringUtil.isBlank(params) ? "" : "?" + params);
+    }
+
     @Override
     public String toString() {
-        String params = mapToUrlString(parameters);
-        return uri() + (StringUtil.isBlank(params) ? "" : "?" + params);
+        return authority() + pathAndParams();
     }
 }

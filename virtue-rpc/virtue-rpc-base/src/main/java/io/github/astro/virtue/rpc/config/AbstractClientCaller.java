@@ -2,18 +2,24 @@ package io.github.astro.virtue.rpc.config;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
+import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.NetUtil;
 import io.github.astro.virtue.common.util.StringUtil;
-import io.github.astro.virtue.config.*;
+import io.github.astro.virtue.config.CallArgs;
+import io.github.astro.virtue.config.ClientCaller;
+import io.github.astro.virtue.config.Invocation;
+import io.github.astro.virtue.config.RemoteCaller;
 import io.github.astro.virtue.config.annotation.Options;
+import io.github.astro.virtue.config.config.ClientConfig;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterScope;
+import io.github.astro.virtue.config.manager.ClientConfigManager;
 import io.github.astro.virtue.rpc.ComplexClientInvoker;
 import io.github.astro.virtue.transport.Request;
-import io.github.astro.virtue.transport.ResponseFuture;
+import io.github.astro.virtue.transport.RpcFuture;
 import io.github.astro.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
@@ -106,6 +112,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     @Override
     protected void doStart() {
+        checkClientConfig();
         url = createUrl();
         invoker = new ComplexClientInvoker(this);
     }
@@ -131,22 +138,24 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         try {
             List<Filter> postFilters = FilterScope.POST.filterScope(filters);
             Invocation filterInvocation = Invocation.create(invocation.url(), invocation.callArgs(), this::doCall);
-            ResponseFuture future = (ResponseFuture) filterChain.filter(filterInvocation, postFilters);
+            RpcFuture future = (RpcFuture) filterChain.filter(filterInvocation, postFilters);
             return async() ? future : future.get();
         } catch (Exception e) {
             throw new RpcException(e);
         }
     }
 
-    protected ResponseFuture doCall(Invocation invocation) {
+    protected RpcFuture doCall(Invocation invocation) {
         URL url = invocation.url();
         CallArgs callArgs = invocation.callArgs();
-        Client client = getClient(url);
+        Client client = getClient(url.address());
         Object message = protocolInstance.createRequest(url, callArgs);
         Request request = new Request(url, message);
+        RpcFuture future = new RpcFuture(url, callArgs);
+        future.client(client);
         // request
         client.send(request);
-        return new ResponseFuture(url, callArgs);
+        return future;
     }
 
     @Override
@@ -166,21 +175,30 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     }
 
     @Override
+    public Class<?> returnClass() {
+        Class<?> returnType = method.getReturnType();
+        if (async()) {
+            return (Class<?>) ((ParameterizedType) returnType()).getRawType();
+        } else {
+            return returnType;
+        }
+    }
+
+    @Override
     public RemoteCaller<?> remoteCaller() {
         return (RemoteCaller<?>) container();
     }
 
-    private Client getClient(URL url) {
-        String address = url.getAddress();
-        Client client = clients.get(address);
-        if (client == null) {
-            client = protocolInstance.openClient(url);
-            clients.put(address, client);
+    private Client getClient(String address) {
+        ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
+        ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
+        URL clientUrl = new URL(protocol, address);
+        if (clientConfig == null) {
+            clientConfig = clientConfigManager.get(protocol);
         }
-        if (!client.isActive()) {
-            client.connect();
-        }
-        return client;
+        clientUrl.addParameters(clientConfig.parameterization());
+        clientUrl.addParameter(Key.MULTIPLEX, String.valueOf(multiplex));
+        return protocolInstance.openClient(clientUrl);
     }
 
     private void checkAsyncReturnType(Options options, Method method) {
@@ -207,6 +225,20 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         }
     }
 
-    protected abstract Options options();
+    private void checkClientConfig() {
+        ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
+        ClientConfig clientConfig = clientConfigManager.get(protocol);
+        if (clientConfig == null) {
+            clientConfig = defaultClientConfig();
+            if (clientConfig == null) {
+                throw new SourceException("Unknown found " + protocol + "'s clientConfig");
+            } else {
+                clientConfigManager.register(clientConfig);
+            }
+        }
+    }
 
+    protected abstract ClientConfig defaultClientConfig();
+
+    protected abstract Options options();
 }

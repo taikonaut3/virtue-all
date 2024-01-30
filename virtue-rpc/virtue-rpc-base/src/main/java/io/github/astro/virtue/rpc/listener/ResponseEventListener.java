@@ -4,7 +4,7 @@ import io.github.astro.virtue.rpc.event.EnvelopeEventListener;
 import io.github.astro.virtue.rpc.event.ResponseEvent;
 import io.github.astro.virtue.common.executor.RpcThreadPool;
 import io.github.astro.virtue.transport.Response;
-import io.github.astro.virtue.transport.ResponseFuture;
+import io.github.astro.virtue.transport.RpcFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +22,10 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
     protected void handEnvelopeEvent(ResponseEvent event) {
         logger.debug("Received Event({})", event.getClass().getSimpleName());
         String id = String.valueOf(event.source().id());
-        ResponseFuture future = ResponseFuture.getFuture(id);
+        RpcFuture future = RpcFuture.getFuture(id);
         Response response = event.source();
         if (future != null) {
-            future.setResponse(response);
+            future.response(response);
             Type returnType = future.returnType();
             if (returnType == response.getClass()) {
                 future.complete(response);

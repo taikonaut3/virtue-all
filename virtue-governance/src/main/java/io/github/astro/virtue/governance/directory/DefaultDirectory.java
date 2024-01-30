@@ -38,7 +38,7 @@ public class DefaultDirectory implements Directory {
                     discoverUrl.addPaths(url.paths());
                     discoverUrl.addParameters(url.parameters());
                     CollectionUtil.addToList(remoteServiceUrls,
-                            (existUrl, newUrl) -> Objects.equals(existUrl.getAddress(), newUrl.getAddress()),
+                            (existUrl, newUrl) -> Objects.equals(existUrl.address(), newUrl.address()),
                             discoverUrl);
                 }
             }

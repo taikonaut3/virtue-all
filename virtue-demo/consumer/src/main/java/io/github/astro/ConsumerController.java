@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @Author WenBo Zhou
@@ -27,11 +29,13 @@ public class ConsumerController {
     Virtue virtue;
 
     @GetMapping("hello/{world}")
-    public String hello(@PathVariable("world") String world) {
-        String hello = consumer.hello(world);
+    public String hello(@PathVariable("world") String world) throws ExecutionException, InterruptedException {
+        CompletableFuture<String> future = consumer.helloAsync(world);
+        String hello = future.get();
         String hello1 = httpConsumer.hello(world);
         String path = httpConsumer.path("22222", "6546546");
-        List<ParentObject> list = httpConsumer.list(ParentObject.getObjList());
+        CompletableFuture<List<ParentObject>> list = httpConsumer.list(ParentObject.getObjList());
+        List<ParentObject> parentObjects = list.get();
         return hello + " " + hello1 + " " + path;
     }
 

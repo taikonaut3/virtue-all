@@ -15,7 +15,7 @@
         <slf4j.version>2.0.9</slf4j.version>
         <logback.version>1.4.14</logback.version>
         <lombok.version>1.18.30</lombok.version>
-        <jackson.version>2.16.1</jackson.version>
+        <jackson.version>2.15.3</jackson.version>
         <kryo.version>5.5.0</kryo.version>
         <fury.version>0.4.1</fury.version>
         <maspack.version>0.9.8</maspack.version>
@@ -23,10 +23,11 @@
         <netty.version>4.1.104.Final</netty.version>
         <disruptor.version>4.0.0</disruptor.version>
         <vertx.version>4.5.1</vertx.version>
-        <spring.boot.version>3.2.1</spring.boot.version>
+        <spring.boot.version>3.2.0</spring.boot.version>
         <spring.cloud.version>2023.0.0</spring.cloud.version>
         <bytebuddy.version>1.14.11</bytebuddy.version>
         <oshi.version>6.4.11</oshi.version>
+        <commons.pool.version>2.12.0</commons.pool.version>
     </properties>
 
     <dependencyManagement>
@@ -42,6 +43,12 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-pool2 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons.pool.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
             <dependency>
@@ -95,16 +102,16 @@
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
             <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
                 <version>${netty.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.lmax</groupId>
-                <artifactId>disruptor</artifactId>
-                <version>${disruptor.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.vertx/vertx-consul-client -->
             <dependency>

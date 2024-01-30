@@ -68,7 +68,7 @@ public class ComplexClientInvoker implements Invoker<Object> {
             return caller.url();
         }
         List<URL> urls = discoveryUrls(invocation);
-        //urls = router.route(urls, callData);
+        urls = router.route(urls, invocation);
         return loadBalance.select(invocation, urls);
     }
 

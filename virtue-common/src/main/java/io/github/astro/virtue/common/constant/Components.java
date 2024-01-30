@@ -64,6 +64,8 @@ public interface Components {
 
         String FAIL_RETRY = "failRetry";
 
+        String FAIL_FAST = "failFast";
+
     }
 
     interface LoadBalance {

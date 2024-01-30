@@ -17,6 +17,11 @@
             <artifactId>virtue-rpc-base</artifactId>
             <version>${revision}</version>
         </dependency>
+            <dependency>
+                <groupId>org.asynchttpclient</groupId>
+                <artifactId>async-http-client</artifactId>
+                <version>3.0.0.Beta3</version>
+            </dependency>
         <dependency>
             <groupId>io.github.astro</groupId>
             <artifactId>virtue-serialization-json</artifactId>

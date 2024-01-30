@@ -1,6 +1,7 @@
 package io.github.astro.virtue.boot;
 
 import io.github.astro.virtue.common.constant.Key;
+import io.github.astro.virtue.config.Virtue;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.client.serviceregistry.RegistrationLifecycle;
 
@@ -12,6 +13,7 @@ public class VirtueRegistrationLifecycle<R extends Registration> implements Regi
     @Override
     public void postProcessBeforeStartRegister(R registration) {
         registration.getMetadata().put(Key.PROTOCOL,HTTP);
+        registration.getMetadata().put(Key.WEIGHT, String.valueOf(Virtue.getDefault().appConfig().weight()));
     }
 
     @Override

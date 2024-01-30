@@ -1,9 +1,9 @@
-package io.github.astro.virtue.rpc.http1.config;
+package io.github.astro.virtue.rpc.http1_1.config;
 
 import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
-import io.github.astro.virtue.rpc.http1.HttpClientCaller;
+import io.github.astro.virtue.rpc.http1_1.HttpClientCaller;
 
 import java.lang.annotation.*;
 

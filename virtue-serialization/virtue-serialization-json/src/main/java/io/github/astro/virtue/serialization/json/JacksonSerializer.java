@@ -26,6 +26,9 @@ public class JacksonSerializer implements Serializer {
 
     @Override
     public byte[] serialize(Object input) throws SerializationException {
+        if (input == null) {
+            return new byte[0];
+        }
         try {
             return objectMapper.writeValueAsBytes(input);
         } catch (Throwable e) {

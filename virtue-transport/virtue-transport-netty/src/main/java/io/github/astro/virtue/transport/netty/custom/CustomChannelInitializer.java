@@ -11,8 +11,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
- * @Author WenBo Zhou
- * @Date 2024/1/10 9:50
+ * Initializes the channel of Netty for Custom Codec
  */
 public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> {
 

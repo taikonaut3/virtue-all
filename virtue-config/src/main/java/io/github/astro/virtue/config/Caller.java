@@ -45,6 +45,9 @@ public interface Caller<T extends Annotation> extends CommonConfig, Lifecycle {
      */
     Type returnType();
 
+
+    Class<?> returnClass();
+
     /**
      * Container holding the caller
      */

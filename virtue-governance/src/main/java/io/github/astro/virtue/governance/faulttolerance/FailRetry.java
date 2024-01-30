@@ -20,11 +20,11 @@ public class FailRetry extends AbstractFaultTolerance {
     public Object doOperation(Invocation invocation) throws RpcException {
         URL url = invocation.url();
         int retries = Integer.parseInt(url.getParameter(Key.RETRIES, String.valueOf(Constant.DEFAULT_RETIRES)));
-        for (int start = 0; start < retries; start++) {
+        for (int start = 0; start <= retries; start++) {
             try {
                 return invocation.invoke();
             } catch (Exception e) {
-                logger.error("调用服务出现异常: " + e.getMessage() + ",开始重试第 " + start + 1 + " 次", e);
+                logger.error("调用服务出现异常: " + e.getMessage() + ",开始重试第 " + start + " 次", e);
             }
         }
         throw new RpcException("调用服务出现异常,重试次数: " + retries);

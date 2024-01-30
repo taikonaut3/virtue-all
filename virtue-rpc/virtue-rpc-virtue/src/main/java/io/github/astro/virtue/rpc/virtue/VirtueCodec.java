@@ -124,7 +124,6 @@ public class VirtueCodec implements Codec {
         ByteWriter byteWriter = ByteWriter.newWriter();
         Mode responseMode = ModeContainer.getMode(Key.ENVELOPE, Components.Envelope.RESPONSE);
         byteWriter.writeByte(responseMode.type());
-        byteWriter.writeLong(response.id());
         byteWriter.writeByte(response.code());
         String url = response.url().toString();
         byteWriter.writeInt(url.length());
@@ -136,13 +135,11 @@ public class VirtueCodec implements Codec {
 
     private Response decodeResponse(byte[] bytes) {
         ByteReader byteReader = ByteReader.newReader(bytes);
-        long id = byteReader.readLong();
         byte code = byteReader.readByte();
         int urlLength = byteReader.readInt();
         CharSequence urlStr = byteReader.readCharSequence(urlLength);
         URL url = URL.valueOf(String.valueOf(urlStr));
         Response response = new Response();
-        response.id(id);
         response.code(code);
         response.url(url);
         Object message = decodeEnvelope(byteReader.readBytes(byteReader.readableBytes()));

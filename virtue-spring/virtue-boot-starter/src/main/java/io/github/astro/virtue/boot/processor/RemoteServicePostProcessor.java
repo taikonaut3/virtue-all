@@ -1,13 +1,11 @@
 package io.github.astro.virtue.boot.processor;
 
-import io.github.astro.virtue.rpc.ComplexRemoteService;
 import io.github.astro.virtue.boot.EnableVirtue;
 import io.github.astro.virtue.config.annotation.RemoteService;
+import io.github.astro.virtue.rpc.ComplexRemoteService;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
@@ -28,7 +26,6 @@ public class RemoteServicePostProcessor implements BeanDefinitionRegistryPostPro
 
     private final String[] exportPackages;
 
-    private BeanFactory beanFactory;
 
     public RemoteServicePostProcessor(EnableVirtue enableVirtue) {
         ArrayList<String> list = new ArrayList<>();
@@ -56,12 +53,6 @@ public class RemoteServicePostProcessor implements BeanDefinitionRegistryPostPro
             }
         }
     }
-
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(RemoteService.class)) {

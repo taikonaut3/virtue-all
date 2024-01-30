@@ -46,7 +46,7 @@ public @interface Options {
     /**
      * Gets the fault tolerance strategy. Default value is Components.FaultTolerance.FAIL_RETRY.
      */
-    String faultTolerance() default Components.FaultTolerance.FAIL_RETRY;
+    String faultTolerance() default Components.FaultTolerance.FAIL_FAST;
 
     /**
      * Directly accesses the specified URL.

@@ -13,6 +13,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.astro</groupId>
             <artifactId>virtue-governance</artifactId>
             <version>${revision}</version>

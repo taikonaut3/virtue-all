@@ -39,6 +39,7 @@ public class ClientConfig extends UrlTypeConfig {
 
     public ClientConfig(String type) {
         type(type);
+        name(type);
     }
 
     @Override

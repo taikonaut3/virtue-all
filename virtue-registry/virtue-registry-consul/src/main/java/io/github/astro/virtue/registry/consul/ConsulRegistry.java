@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -58,21 +57,18 @@ public class ConsulRegistry extends AbstractRegistry {
     public void register(URL url) {
         String application = url.getParameter(Key.APPLICATION);
         consulClient.deregisterService(application);
-        vertx.setPeriodic(0, 5000, ar -> {
-            Map<String, String> systemInfo = Virtue.getDefault().newSystemInfo().toMap();
-            HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
-            registryMeta.put(Key.PROTOCOL, url.protocol());
+        vertx.setPeriodic(0, 50000, ar -> {
             ServiceOptions opts = new ServiceOptions()
                     .setName(application)
                     .setId(application + "-" + url.protocol() + ":" + url.port())
                     .setAddress(url.host())
                     .setPort(url.port())
-                    .setMeta(registryMeta);
+                    .setMeta(metaInfo(url));
             if (enableHealthCheck) {
                 int healthCheckInterval = url.getIntParameter(Key.HEALTH_CHECK_INTERVAL,
                         Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
                 CheckOptions checkOpts = new CheckOptions()
-                        .setTcp(url.getAddress())
+                        .setTcp(url.address())
                         .setId(url.authority())
                         .setDeregisterAfter((healthCheckInterval * 10) + "ms")
                         .setInterval(healthCheckInterval + "ms");

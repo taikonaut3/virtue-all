@@ -9,12 +9,14 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
 
+import static io.github.astro.virtue.common.constant.Constant.DEFAULT_MAX_MESSAGE_SIZE;
+import static io.github.astro.virtue.common.constant.Key.CLIENT_MAX_RECEIVE_SIZE;
+import static io.github.astro.virtue.common.constant.Key.MAX_RECEIVE_SIZE;
+
 /**
- * @Author WenBo Zhou
- * @Date 2024/1/10 9:39
+ * Initializes the channel of Netty for HTTP Codec
  */
 public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -34,9 +36,18 @@ public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         int keepAliveTimeout = url.getIntParameter(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
         IdleStateHandler idleStateHandler = NettyIdeStateHandler.create(keepAliveTimeout, isServer);
+        initClientPipeline(socketChannel, idleStateHandler);
+    }
+
+    private void initClientPipeline(SocketChannel socketChannel, IdleStateHandler idleStateHandler) {
+        String maxMessageKey = isServer ? MAX_RECEIVE_SIZE : CLIENT_MAX_RECEIVE_SIZE;
+        int maxReceiveSize = url.getIntParameter(maxMessageKey, DEFAULT_MAX_MESSAGE_SIZE);
+        EnvelopeConverter converter = new EnvelopeConverter();
         socketChannel.pipeline()
-                .addLast("codec", isServer ? new HttpServerCodec() : new HttpClientCodec())
-                .addLast("aggregator", new HttpObjectAggregator(65536))
+                .addLast("httpClientCodec", new HttpClientCodec())
+                .addLast("requestConverter", converter.requestConverter())
+                .addLast("aggregator", new HttpObjectAggregator(maxReceiveSize))
+                .addLast("responseConverter", converter.responseConverter())
                 .addLast("heartbeat", idleStateHandler)
                 .addLast("handler", handler);
     }

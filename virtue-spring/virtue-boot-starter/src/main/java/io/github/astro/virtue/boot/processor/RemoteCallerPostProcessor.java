@@ -4,10 +4,8 @@ import io.github.astro.virtue.boot.EnableVirtue;
 import io.github.astro.virtue.boot.RemoteCallFactoryBean;
 import io.github.astro.virtue.config.annotation.RemoteCaller;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -30,7 +28,6 @@ public class RemoteCallerPostProcessor implements BeanDefinitionRegistryPostProc
 
     private final String[] remoteCallPackages;
 
-    private BeanFactory beanFactory;
 
     public RemoteCallerPostProcessor(EnableVirtue enableVirtue) {
         ArrayList<String> list = new ArrayList<>();
@@ -59,11 +56,6 @@ public class RemoteCallerPostProcessor implements BeanDefinitionRegistryPostProc
 
             }
         }
-    }
-
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
     }
 
     private static final class RemoteCallScanner extends ClassPathScanningCandidateComponentProvider {

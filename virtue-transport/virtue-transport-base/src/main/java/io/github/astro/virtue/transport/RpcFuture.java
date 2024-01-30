@@ -6,21 +6,25 @@ import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.CallArgs;
+import io.github.astro.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
+@Accessors(fluent = true)
 @Getter
-public class ResponseFuture extends CompletableFuture<Object> {
+public class RpcFuture extends CompletableFuture<Object> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResponseFuture.class);
+    private static final Logger logger = LoggerFactory.getLogger(RpcFuture.class);
 
-    private static final Map<String, ResponseFuture> futures = new ConcurrentHashMap<>();
+    public static final Map<String, RpcFuture> futures = new ConcurrentHashMap<>();
 
     private final String id;
 
@@ -31,14 +35,23 @@ public class ResponseFuture extends CompletableFuture<Object> {
     @Setter
     private Response response;
 
-    public ResponseFuture(URL url, CallArgs data) {
+    @Setter
+    private Client client;
+
+    @Setter
+    private Consumer<RpcFuture> completeConsumer;
+
+    public RpcFuture(URL url, CallArgs data) {
         this.url = url;
         this.callArgs = data;
         this.id = url.getParameter(Key.UNIQUE_ID);
-        addFuture(getId(), this);
+        addFuture(id(), this);
         completeOnTimeout(new TimeoutException("RPC call timeout: " + timeout() + "ms"), timeout(), TimeUnit.MILLISECONDS);
         whenComplete((resp, ex) -> {
-            removeFuture(getId());
+            removeFuture(id());
+            if (completeConsumer != null) {
+                completeConsumer.accept(this);
+            }
         });
         boolean oneway = url.getBooleanParameter(Key.ONEWAY);
         if (oneway) {
@@ -46,7 +59,7 @@ public class ResponseFuture extends CompletableFuture<Object> {
         }
     }
 
-    public static void addFuture(String id, ResponseFuture future) {
+    public static void addFuture(String id, RpcFuture future) {
         if (!StringUtil.isBlank(id)) {
             futures.put(id, future);
         }
@@ -56,7 +69,7 @@ public class ResponseFuture extends CompletableFuture<Object> {
         futures.remove(id);
     }
 
-    public static ResponseFuture getFuture(String id) {
+    public static RpcFuture getFuture(String id) {
         return futures.get(id);
     }
 

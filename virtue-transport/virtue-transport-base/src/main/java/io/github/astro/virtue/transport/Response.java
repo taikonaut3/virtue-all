@@ -12,8 +12,6 @@ public class Response implements Envelope {
 
     private byte code;
 
-    private Long id;
-
     private URL url;
 
     private Object message;

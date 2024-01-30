@@ -1,9 +1,12 @@
-package io.github.astro.virtue.transport.base;
+package io.github.astro.virtue.rpc.handler;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
+import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.NetUtil;
+import io.github.astro.virtue.rpc.event.ServerHandlerExceptionEvent;
 import io.github.astro.virtue.transport.Envelope;
+import io.github.astro.virtue.transport.base.ChannelHandlerAdapter;
 import io.github.astro.virtue.transport.channel.Channel;
 import io.github.astro.virtue.transport.channel.ChannelHandler;
 import io.github.astro.virtue.transport.channel.ChannelHandlerChain;
@@ -22,6 +25,18 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     private final List<ChannelHandler> channelHandlers = new LinkedList<>();
 
     private final Map<String, Channel> channels = new ConcurrentHashMap<>();
+
+    public DefaultChannelHandlerChain() {
+
+    }
+
+    public DefaultChannelHandlerChain(ChannelHandler... handlers) {
+        AssertUtil.notNull(handlers);
+        for (ChannelHandler handler : handlers) {
+            addLast(handler);
+        }
+
+    }
 
     @Override
     public ChannelHandlerChain addLast(ChannelHandler channelHandler) {
@@ -72,6 +87,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     @Override
     public void caught(Channel channel, Throwable cause) throws RpcException {
+        getEventDispatcher().dispatchEvent(new ServerHandlerExceptionEvent(channel, cause));
         channels.remove(NetUtil.getAddress(channel.remoteAddress()));
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.caught(channel, cause);

@@ -64,5 +64,4 @@ public final class NettyChannel extends AbstractChannel {
             logger.warn("Current channel: {} is not Active", this);
         }
     }
-
 }

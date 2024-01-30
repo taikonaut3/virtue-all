@@ -1,25 +1,36 @@
-package io.github.astro.virtue.rpc.http1;
+package io.github.astro.virtue.rpc.http1_1;
 
-import io.github.astro.virtue.rpc.protocol.ProtocolParser;
+import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.CallArgs;
-import io.github.astro.virtue.config.Invocation;
-import io.github.astro.virtue.rpc.http1.config.HttpMethod;
-import io.github.astro.virtue.rpc.http1.config.Param;
-import io.github.astro.virtue.rpc.http1.config.PathVariable;
+import io.github.astro.virtue.config.Caller;
+import io.github.astro.virtue.rpc.http1_1.config.Param;
+import io.github.astro.virtue.rpc.http1_1.config.PathVariable;
+import io.github.astro.virtue.rpc.protocol.ProtocolParser;
+import io.github.astro.virtue.serialization.Serializer;
 import io.github.astro.virtue.transport.Request;
 import io.github.astro.virtue.transport.Response;
+import io.github.astro.virtue.transport.RpcFuture;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.FullHttpResponse;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
+
 /**
- * @Author WenBo Zhou
- * @Date 2024/1/13 19:30
+ * HttpParser
  */
 public class HttpParser implements ProtocolParser {
+
+    private final List<Annotation> paramAnnotations = new LinkedList<>();
+
+    private final List<Annotation> pathVariableAnnotations = new LinkedList<>();
+
     @Override
     public CallArgs parseRequestBody(Request request) {
         return null;
@@ -27,11 +38,34 @@ public class HttpParser implements ProtocolParser {
 
     @Override
     public Object parseResponseBody(Response response) {
-        return null;
+        FullHttpResponse httpResponse = (FullHttpResponse) response.message();
+        ByteBuf byteBuf = httpResponse.content();
+        byte[] bytes = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(bytes);
+        Serializer serializer = ExtensionLoader.loadService(Serializer.class, JSON);
+        RpcFuture future = RpcFuture.getFuture(String.valueOf(response.id()));
+        Caller<?> caller = future.callArgs().caller();
+        Type type = caller.returnType();
+        Object object = serializer.deserialize(bytes, caller.returnClass());
+        return serializer.convert(object, type);
     }
 
     public Map<String, String> parseHeaders(String[] headers) {
         return getStringMap(headers);
+    }
+
+    public List<String> parsePaths(HttpClientCaller caller, CallArgs args) {
+        return pathToList(parsePathVariables(caller.path(), caller.method().getParameters(), args.args()));
+    }
+
+    public Map<String, String> parseParams(HttpClientCaller caller, CallArgs args) {
+        Parameter[] parameters = caller.method().getParameters();
+        Map<String, String> initParams = caller.params();
+        Map<String, String> argParams = parseParams(parameters, args.args());
+        if (initParams != null) {
+            argParams.putAll(initParams);
+        }
+        return argParams;
     }
 
     public Map<String, String> parseParams(String[] params) {
@@ -51,7 +85,7 @@ public class HttpParser implements ProtocolParser {
                 map.put(key, String.valueOf(args[i]));
             }
         }
-        return map.isEmpty() ? null : map;
+        return map;
     }
 
     public String parsePathVariables(String path, Parameter[] parameters, Object[] args) {
@@ -100,15 +134,6 @@ public class HttpParser implements ProtocolParser {
                 ));
     }
 
-    public Object parseRequestBody(String httpMethod, Invocation invocation) {
-        List<String> noBodyMethod = List.of(HttpMethod.GET, HttpMethod.DELETE);
-        if (noBodyMethod.contains(httpMethod)) {
-            return null;
-        }
-        CallArgs callArgs = invocation.callArgs();
-        return parseRequestBody(callArgs.caller().method().getParameters(), callArgs.args());
-    }
-
     public Object parseRequestBody(Parameter[] parameters, Object[] args) {
         List<Class<? extends Annotation>> executed = List.of(Param.class, PathVariable.class);
         for (int i = 0; i < parameters.length; i++) {
@@ -119,7 +144,7 @@ public class HttpParser implements ProtocolParser {
                 return args[i];
             }
             for (Annotation annotation : annotations) {
-                if (!executed.contains(annotation.getClass())) {
+                if (!executed.contains(annotation.annotationType())) {
                     isMatch = true;
                     break;
                 }

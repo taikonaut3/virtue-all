@@ -4,7 +4,7 @@ import io.github.astro.virtue.rpc.event.ClientHandlerExceptionEvent;
 import io.github.astro.virtue.rpc.handler.ClientChannelHandler;
 import io.github.astro.virtue.rpc.handler.ClientHeartBeatChannelHandler;
 import io.github.astro.virtue.common.exception.RpcException;
-import io.github.astro.virtue.transport.base.DefaultChannelHandlerChain;
+import io.github.astro.virtue.rpc.handler.DefaultChannelHandlerChain;
 import io.github.astro.virtue.transport.channel.Channel;
 
 /**

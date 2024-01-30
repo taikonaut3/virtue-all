@@ -102,6 +102,11 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
         return method.getGenericReturnType();
     }
 
+    @Override
+    public Class<?> returnClass() {
+        return method.getReturnType();
+    }
+
     protected abstract Config config();
 
     protected abstract URL createUrl();

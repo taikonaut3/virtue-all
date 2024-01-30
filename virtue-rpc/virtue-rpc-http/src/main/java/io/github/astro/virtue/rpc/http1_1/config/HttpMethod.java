@@ -1,4 +1,4 @@
-package io.github.astro.virtue.rpc.http1.config;
+package io.github.astro.virtue.rpc.http1_1.config;
 
 /**
  * @Author WenBo Zhou
