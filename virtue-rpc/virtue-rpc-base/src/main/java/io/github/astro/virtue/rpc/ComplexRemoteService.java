@@ -1,13 +1,13 @@
 package io.github.astro.virtue.rpc;
 
-import io.github.astro.virtue.rpc.config.AbstractCallerContainer;
 import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
+import io.github.astro.virtue.config.CallerFactory;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.ServerCaller;
-import io.github.astro.virtue.config.annotation.BindingCaller;
-import io.github.astro.virtue.config.manager.ProtocolRegistryManager;
-import lombok.NonNull;
+import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
+import io.github.astro.virtue.config.manager.Virtue;
+import io.github.astro.virtue.rpc.config.AbstractCallerContainer;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
@@ -29,7 +29,9 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
     private String remoteServiceName;
 
     @SuppressWarnings("unchecked")
-    public ComplexRemoteService(@NonNull T target) {
+    public ComplexRemoteService(Virtue virtue, T target) {
+        super(virtue);
+        AssertUtil.notNull(target);
         AssertUtil.condition(checkRemoteService(target.getClass()), "remoteService this Method Only support @RemoteService modifier's Object");
         this.target = target;
         this.remoteServiceClass = (Class<T>) target.getClass();
@@ -45,9 +47,8 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
     public void init() {
         // parse @RemoteService
         parseRemoteService();
-        // parse @Callable
-        parseCallable();
-        virtue.registerRemoteService(this);
+        // parse ServerCaller
+        parseServerCaller();
     }
 
     private void parseRemoteService() {
@@ -58,17 +59,17 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
 
     }
 
-    private void parseCallable() {
+    private void parseServerCaller() {
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
-            BindingCaller bindingCaller = ReflectUtil.findAnnotation(method, BindingCaller.class);
-            if (bindingCaller != null) {
-                ProtocolRegistryManager registry = virtue.protocolRegistryManager();
-                ServerCaller<?> caller = registry.createServerCaller(bindingCaller, method, this);
+            RegistryCallerFactory registryCallerFactory = ReflectUtil.findAnnotation(method, RegistryCallerFactory.class);
+            if (registryCallerFactory != null) {
+                CallerFactory callerFactory = CallerFactory.get(registryCallerFactory.value());
+                ServerCaller<?> caller = callerFactory.createServerCaller(method, this);
                 if (caller != null) {
                     callerMap.put(method, caller);
-                    providerCallerMap.put(bindingCaller.protocol() + caller.path(), caller);
+                    providerCallerMap.put(caller.protocol() + caller.path(), caller);
+                    virtue.configManager().serverConfigManager().neededOpenProtocol(caller.protocol());
                 }
-
             }
         }
     }

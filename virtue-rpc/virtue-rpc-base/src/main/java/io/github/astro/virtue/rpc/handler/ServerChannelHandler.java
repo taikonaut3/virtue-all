@@ -11,7 +11,7 @@ public final class ServerChannelHandler extends ChannelHandlerAdapter {
     @Override
     public void received(Channel channel, Object message) {
         if (message instanceof Request request) {
-            getEventDispatcher().dispatchEvent(new RequestEvent(request, channel));
+            getEventDispatcher(request.url()).dispatchEvent(new RequestEvent(request, channel));
         }
     }
 

@@ -1,12 +1,9 @@
 package io.github.astro.virtue.rpc.virtue;
 
-import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.RemoteCaller;
-import io.github.astro.virtue.config.RemoteUrl;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
-import io.github.astro.virtue.config.config.ClientConfig;
 import io.github.astro.virtue.config.util.GenerateUtil;
 import io.github.astro.virtue.rpc.config.AbstractClientCaller;
 import io.github.astro.virtue.rpc.virtue.config.VirtueCall;
@@ -16,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static io.github.astro.virtue.common.constant.Components.Protocol.VIRTUE;
 
@@ -44,10 +42,6 @@ public class VirtueClientCaller extends AbstractClientCaller<VirtueCall> {
         return parsedAnnotation.config();
     }
 
-    @Override
-    protected ClientConfig defaultClientConfig() {
-        return new ClientConfig(VIRTUE);
-    }
 
     @Override
     protected Options options() {
@@ -55,16 +49,7 @@ public class VirtueClientCaller extends AbstractClientCaller<VirtueCall> {
     }
 
     @Override
-    protected URL createUrl() {
-        String address = remoteApplication;
-        if (!StringUtil.isBlank(directUrl)) {
-            address = directUrl;
-        }
-        RemoteUrl remoteUrl = new RemoteUrl(protocol, address);
-        remoteUrl.addPath(remoteService);
-        remoteUrl.addPath(callMethod);
-        remoteUrl.addParameters(parameterization());
-        return remoteUrl;
+    public List<String> pathList() {
+        return List.of(remoteService, callMethod);
     }
-
 }

@@ -1,5 +1,7 @@
 package io.github.astro.virtue.config;
 
+import io.github.astro.virtue.config.manager.Virtue;
+
 import java.lang.reflect.Method;
 
 /**
@@ -29,6 +31,8 @@ public interface CallerContainer extends Lifecycle {
      * The Caller container Proxy type
      */
     String proxy();
+
+    Virtue virtue();
 
 }
 

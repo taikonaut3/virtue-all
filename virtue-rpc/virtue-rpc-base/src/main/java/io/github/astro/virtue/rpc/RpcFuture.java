@@ -1,4 +1,4 @@
-package io.github.astro.virtue.transport;
+package io.github.astro.virtue.rpc;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
@@ -6,6 +6,7 @@ import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.CallArgs;
+import io.github.astro.virtue.transport.Response;
 import io.github.astro.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,7 +88,7 @@ public class RpcFuture extends CompletableFuture<Object> {
         } catch (Exception e) {
             throw new RpcException(e);
         } finally {
-            RpcContext.getContext().set("response", response);
+            RpcContext.getContext().attribute(Response.ATTRIBUTE_KEY).set(response);
         }
     }
 

@@ -1,9 +1,9 @@
 package io.github.astro.virtue.boot;
 
-import io.github.astro.virtue.config.Virtue;
 import io.github.astro.virtue.config.config.ClientConfig;
 import io.github.astro.virtue.config.config.RegistryConfig;
 import io.github.astro.virtue.config.config.ServerConfig;
+import io.github.astro.virtue.config.manager.Virtue;
 import jakarta.annotation.Resource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

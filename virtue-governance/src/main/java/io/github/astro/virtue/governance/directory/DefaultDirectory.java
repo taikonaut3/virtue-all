@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.astro.virtue.common.constant.Components.Directory.DEFAULT;
+import static io.github.astro.virtue.common.constant.Components.DEFAULT;
 
 /**
  * must open virtue-registry

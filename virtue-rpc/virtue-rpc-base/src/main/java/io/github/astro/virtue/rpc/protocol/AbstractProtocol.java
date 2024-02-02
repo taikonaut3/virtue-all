@@ -1,8 +1,9 @@
 package io.github.astro.virtue.rpc.protocol;
 
+import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.URL;
-import io.github.astro.virtue.config.Virtue;
+import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.transport.Transporter;
 import io.github.astro.virtue.transport.channel.ChannelHandler;
 import io.github.astro.virtue.transport.code.Codec;
@@ -35,7 +36,8 @@ public abstract class AbstractProtocol<Req, Res> implements Protocol<Req, Res> {
         this.clientHandler = clientHandler;
         this.serverHandler = serverHandler;
         this.protocolParser = protocolParser;
-        String transport = Virtue.getDefault().appConfig().transport();
+        Virtue virtue = RpcContext.getContext().attribute(Virtue.ATTRIBUTE_KEY).get();
+        String transport = virtue.configManager().applicationConfig().transport();
         transporter = ExtensionLoader.loadService(Transporter.class, transport);
     }
 

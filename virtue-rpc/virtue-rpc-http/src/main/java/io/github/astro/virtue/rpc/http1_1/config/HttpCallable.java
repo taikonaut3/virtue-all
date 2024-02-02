@@ -1,12 +1,10 @@
 package io.github.astro.virtue.rpc.http1_1.config;
 
-import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.annotation.Config;
-import io.github.astro.virtue.rpc.http1_1.HttpServerCaller;
+import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
+import io.github.astro.virtue.rpc.http1_1.HttpCallerFactory;
 
 import java.lang.annotation.*;
-
-import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
 
 /**
  * @Author WenBo Zhou
@@ -15,7 +13,7 @@ import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@BindingCaller(protocol = HTTP, serverCaller = HttpServerCaller.class)
+@RegistryCallerFactory(HttpCallerFactory.class)
 public @interface HttpCallable {
 
     /**

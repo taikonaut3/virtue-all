@@ -1,22 +1,30 @@
 package io.github.astro.virtue.boot;
 
-import io.github.astro.virtue.rpc.ComplexRemoteCaller;
 import io.github.astro.virtue.config.RemoteCaller;
+import io.github.astro.virtue.config.manager.Virtue;
 import org.springframework.beans.factory.FactoryBean;
 
 public class RemoteCallFactoryBean<T> implements FactoryBean<T> {
 
     private final Class<T> interfaceType;
 
-    private final RemoteCaller<T> remoteCaller;
+    private Virtue virtue;
+
+    private RemoteCaller<T> remoteCaller;
 
     public RemoteCallFactoryBean(Class<T> interfaceType) {
         this.interfaceType = interfaceType;
-        remoteCaller = new ComplexRemoteCaller<>(interfaceType);
+    }
+
+    public void setVirtue(Virtue virtue) {
+        this.virtue = virtue;
     }
 
     @Override
     public T getObject() throws Exception {
+        if (remoteCaller == null) {
+            remoteCaller = virtue.proxy(interfaceType).remoteCaller(interfaceType);
+        }
         return remoteCaller.get();
     }
 

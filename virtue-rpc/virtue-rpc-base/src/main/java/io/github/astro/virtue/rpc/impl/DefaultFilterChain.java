@@ -1,4 +1,4 @@
-package io.github.astro.virtue.rpc.config;
+package io.github.astro.virtue.rpc.impl;
 
 import io.github.astro.virtue.common.spi.ServiceProvider;
 import io.github.astro.virtue.config.Invocation;

@@ -2,7 +2,8 @@ package io.github.astro.virtue.registry;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.URL;
-import io.github.astro.virtue.config.Virtue;
+import io.github.astro.virtue.config.SystemInfo;
+import io.github.astro.virtue.config.manager.Virtue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +45,22 @@ public abstract class AbstractRegistry implements Registry {
     }
 
     public Map<String, String> metaInfo(URL url) {
-        Virtue virtue = Virtue.getDefault();
-        Map<String, String> systemInfo = virtue.newSystemInfo().toMap();
+        Virtue virtue = Virtue.get(url);
+        Map<String, String> systemInfo = new SystemInfo(virtue).toMap();
         HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
         registryMeta.put(Key.PROTOCOL, url.protocol());
-        registryMeta.put(Key.WEIGHT, String.valueOf(virtue.appConfig().weight()));
+        registryMeta.put(Key.WEIGHT, String.valueOf(virtue.configManager().applicationConfig().weight()));
         return registryMeta;
+    }
+
+    public String instanceId(URL url) {
+        String application = url.getParameter(Key.APPLICATION);
+        return application + "-" + url.protocol() + ":" + url.port();
+    }
+
+    public String serviceName(URL url) {
+        String moduleName = this.getClass().getModule().getName();
+        return url.getParameter(Key.APPLICATION, moduleName);
     }
 
     protected abstract void subscribeService(URL url);

@@ -20,6 +20,7 @@
         <fury.version>0.4.1</fury.version>
         <maspack.version>0.9.8</maspack.version>
         <curator.version>5.5.0</curator.version>
+        <nacos.version>2.3.0</nacos.version>
         <netty.version>4.1.104.Final</netty.version>
         <disruptor.version>4.0.0</disruptor.version>
         <vertx.version>4.5.1</vertx.version>
@@ -42,6 +43,12 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
                 <version>${logback.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-pool2 -->
@@ -100,6 +107,13 @@
                 <artifactId>curator-recipes</artifactId>
                 <version>${curator.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.nacos/nacos-client -->
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-client</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
             <dependency>
                 <groupId>com.lmax</groupId>

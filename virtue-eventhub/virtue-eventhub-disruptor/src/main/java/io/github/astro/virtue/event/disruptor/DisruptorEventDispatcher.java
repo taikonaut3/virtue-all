@@ -31,7 +31,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
     private void createDispatcher() {
         Disruptor<EventHolder<?>> disruptor = new Disruptor<>(EventHolder::new, bufferSize,
-                new RpcThreadFactory("Disruptor"));
+                new RpcThreadFactory("event-disruptor"));
         this.ringBuffer = disruptor.getRingBuffer();
         disruptor.handleEventsWith(this::handleEvent);
         disruptor.setDefaultExceptionHandler(new ExceptionHandler<>() {

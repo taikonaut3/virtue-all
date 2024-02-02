@@ -2,14 +2,13 @@ package io.github.astro.virtue.boot.processor;
 
 import io.github.astro.virtue.boot.EnableVirtue;
 import io.github.astro.virtue.config.annotation.RemoteService;
-import io.github.astro.virtue.rpc.ComplexRemoteService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.lang.NonNull;
 import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
@@ -18,14 +17,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class RemoteServicePostProcessor implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
+public class RemoteServicePostProcessor extends PreferentialCreateConfig implements BeanDefinitionRegistryPostProcessor {
 
     private final static List<Class<? extends Annotation>> EXPORT_ANNOTATION_TYPES = List.of(
             RemoteService.class
     );
 
     private final String[] exportPackages;
-
 
     public RemoteServicePostProcessor(EnableVirtue enableVirtue) {
         ArrayList<String> list = new ArrayList<>();
@@ -35,7 +33,7 @@ public class RemoteServicePostProcessor implements BeanDefinitionRegistryPostPro
     }
 
     @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
         ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
         for (Class<? extends Annotation> annotationType : EXPORT_ANNOTATION_TYPES) {
             scanner.addIncludeFilter(new AnnotationTypeFilter(annotationType));
@@ -53,10 +51,11 @@ public class RemoteServicePostProcessor implements BeanDefinitionRegistryPostPro
             }
         }
     }
+
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, @NonNull String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(RemoteService.class)) {
-            new ComplexRemoteService<>(bean);
+            virtue().wrap(bean);
         }
         return bean;
     }

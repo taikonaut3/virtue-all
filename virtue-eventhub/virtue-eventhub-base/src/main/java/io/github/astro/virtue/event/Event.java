@@ -7,7 +7,7 @@ import io.github.astro.virtue.common.extension.Accessor;
  *
  * @param <S> the type of the event source
  */
-public interface Event<S> extends Accessor<Object> {
+public interface Event<S> extends Accessor {
 
     /**
      * Returns the source of the event.

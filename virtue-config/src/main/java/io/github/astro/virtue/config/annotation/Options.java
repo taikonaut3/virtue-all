@@ -31,7 +31,7 @@ public @interface Options {
     /**
      * Gets the service directory. Default value is Components.Directory.DEFAULT.
      */
-    String directory() default Components.Directory.DEFAULT;
+    String directory() default Components.DEFAULT;
 
     /**
      * Gets the router type. Default value is Components.Router.WEIGHT.
@@ -62,6 +62,11 @@ public @interface Options {
      * When multiplex is set to false, a new client will be created using the configuration specified here.
      */
     String client() default "";
+
+    /**
+     * Supports multiple registry configs
+     */
+    String[] registries() default {};
 
 }
 

@@ -9,10 +9,6 @@ import java.util.function.Function;
  */
 public interface Invocation {
 
-    static Invocation create(URL url, CallArgs args, Function<Invocation, Object> function) {
-        return new CallInvocation(url, args, function);
-    }
-
     /**
      * Get the URL of the invocation
      */
@@ -41,5 +37,9 @@ public interface Invocation {
      * @param function
      */
     Invocation turnInvoke(Function<Invocation, Object> function);
+
+    static Invocation create(URL url, CallArgs args, Function<Invocation, Object> function) {
+        return new CallInvocation(url, args, function);
+    }
 
 }

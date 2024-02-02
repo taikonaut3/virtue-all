@@ -1,6 +1,5 @@
 package io.github.astro.virtue.rpc.listener;
 
-import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.event.EventListener;
@@ -20,15 +19,15 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
 
     @Override
     public void onEvent(ServerHandlerExceptionEvent event) {
-        URL url = (URL) event.getChannel().getAttribute(Key.URL);
+        URL url = event.channel().attribute(URL.ATTRIBUTE_KEY).get();
         Throwable cause = event.source();
-        logger.error("Server: {} Exception: {}", event.getChannel(), cause.getMessage());
+        logger.error("Server: {} Exception: {}", event.channel(), cause.getMessage());
         if(url!=null){
             Protocol<?,?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
             Object message = protocol.createResponse(url, cause.getMessage());
             Response response = new Response(url, message);
             response.code(Response.ERROR);
-            event.getChannel().send(response);
+            event.channel().send(response);
         }
     }
 

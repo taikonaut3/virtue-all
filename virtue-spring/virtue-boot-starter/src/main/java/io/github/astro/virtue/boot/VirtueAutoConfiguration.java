@@ -1,6 +1,6 @@
 package io.github.astro.virtue.boot;
 
-import io.github.astro.virtue.config.Virtue;
+import io.github.astro.virtue.config.manager.Virtue;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 

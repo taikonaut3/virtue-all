@@ -2,6 +2,7 @@ package io.github.astro.virtue.config;
 
 import com.sun.management.OperatingSystemMXBean;
 import io.github.astro.virtue.config.manager.RemoteServiceManager;
+import io.github.astro.virtue.config.manager.Virtue;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -33,8 +34,7 @@ public class SystemInfo {
 
     }
 
-    public SystemInfo(long connections) {
-        this.connections = connections;
+    public SystemInfo(Virtue virtue) {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         // 获取服务器 CPU 使用率
@@ -45,7 +45,7 @@ public class SystemInfo {
         long freeMemory = osBean.getFreeMemorySize();
         long usedMemory = totalMemory - freeMemory;
         memoryUsage = Double.parseDouble(decimalFormat.format((double) usedMemory / totalMemory));
-        RemoteServiceManager remoteServiceManager = Virtue.getDefault().configManager().remoteServiceManager();
+        RemoteServiceManager remoteServiceManager = virtue.configManager().remoteServiceManager();
         Collection<RemoteService<?>> remoteServices = remoteServiceManager.getRemoteService();
         services = remoteServices.stream()
                 .mapToInt(remoteService -> remoteService.callers().length)

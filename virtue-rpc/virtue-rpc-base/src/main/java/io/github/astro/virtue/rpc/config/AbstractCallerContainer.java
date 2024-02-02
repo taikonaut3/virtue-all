@@ -1,11 +1,14 @@
 package io.github.astro.virtue.rpc.config;
 
+import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.config.Caller;
 import io.github.astro.virtue.config.CallerContainer;
-import io.github.astro.virtue.config.Virtue;
+import io.github.astro.virtue.config.manager.Virtue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -13,9 +16,11 @@ import java.util.Map;
 
 @Accessors(fluent = true)
 public abstract class AbstractCallerContainer implements CallerContainer {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractServerCaller.class);
 
     protected Map<Method, Caller<?>> callerMap = new HashMap<>();
 
+    @Getter
     protected Virtue virtue;
 
     @Setter
@@ -24,15 +29,9 @@ public abstract class AbstractCallerContainer implements CallerContainer {
     @Getter
     protected String proxy;
 
-    protected AbstractCallerContainer() {
-        virtue = Virtue.getDefault();
-    }
-
-    @Override
-    public void start() {
-        for (Caller<?> caller : callers()) {
-            caller.start();
-        }
+    protected AbstractCallerContainer(Virtue virtue) {
+        AssertUtil.notNull(virtue);
+        this.virtue = virtue;
     }
 
     @Override

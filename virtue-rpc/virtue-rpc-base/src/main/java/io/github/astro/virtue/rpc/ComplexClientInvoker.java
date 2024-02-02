@@ -1,5 +1,6 @@
 package io.github.astro.virtue.rpc;
 
+import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
@@ -8,7 +9,7 @@ import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.ClientCaller;
 import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.Invoker;
-import io.github.astro.virtue.config.config.RegistryConfig;
+import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.config.util.GenerateUtil;
 import io.github.astro.virtue.governance.directory.Directory;
 import io.github.astro.virtue.governance.faulttolerance.FaultTolerance;
@@ -19,10 +20,6 @@ import lombok.ToString;
 
 import java.util.List;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/5 22:18
- */
 @Getter
 @ToString
 public class ComplexClientInvoker implements Invoker<Object> {
@@ -53,7 +50,6 @@ public class ComplexClientInvoker implements Invoker<Object> {
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
         try {
-            // todo 优化调用注册中心的逻辑
             URL url = selectURL(invocation);
             url.addParameters(caller.parameterization());
             invocation.url(url);
@@ -73,7 +69,14 @@ public class ComplexClientInvoker implements Invoker<Object> {
     }
 
     private List<URL> discoveryUrls(Invocation invocation) {
-        URL[] urls = caller.registryConfigs().stream().map(RegistryConfig::toUrl).toArray(URL[]::new);
+        URL[] urls = caller.registryConfigs().stream()
+                .map(config -> {
+                    URL url = config.toUrl();
+                    url.attribute(Virtue.ATTRIBUTE_KEY).set(caller.container().virtue());
+                    url.addParameter(Key.VIRTUE, caller.container().virtue().name());
+                    return url;
+                }).
+                toArray(URL[]::new);
         List<URL> result = directory.list(invocation, urls);
         if (result.isEmpty()) {
             throw new SourceException("Not found available service!,Path:" + GenerateUtil.generateKey(invocation.callArgs()));

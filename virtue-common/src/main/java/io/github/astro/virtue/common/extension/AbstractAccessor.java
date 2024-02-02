@@ -1,50 +1,27 @@
 package io.github.astro.virtue.common.extension;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractAccessor<V> implements Accessor<V> {
+public abstract class AbstractAccessor implements Accessor {
 
-    protected Map<String, V> params = new HashMap<>();
-
-    @Override
-    public void setData(Map<String, V> params) {
-        this.params.putAll(params);
-    }
+    protected Map<AttributeKey<?>, Attribute<?>> accessor = new ConcurrentHashMap<>();
 
     @Override
-    public void replaceAccessor(Map<String, V> params) {
-        this.params = params;
-    }
-
-    @Override
-    public void setData(String key, V value) {
-        params.put(key, value);
-    }
-
-    @Override
-    public V getData(String key) {
-        return params.get(key);
-    }
-
-    @Override
-    public V getData(String key, V defaultValue) {
-        return params.getOrDefault(key, defaultValue);
-    }
-
-    @Override
-    public V getDataOrPut(String key, V value) {
-        V v = params.get(key);
-        if (v == null) {
-            params.put(key, value);
-            v = value;
+    @SuppressWarnings("unchecked")
+    public <T> Attribute<T> attribute(AttributeKey<T> key) {
+        Attribute<?> attribute = accessor.get(key);
+        if (attribute == null) {
+            attribute = new Attribute<T>();
+            accessor.put(key, attribute);
         }
-        return v;
-
+        return (Attribute<T>) attribute;
     }
 
     @Override
-    public Map<String, V> getAccessor() {
-        return params;
+    public Accessor remove(String key) {
+        AttributeKey<Object> attributeKey = AttributeKey.get(key);
+        accessor.remove(attributeKey);
+        return this;
     }
 }

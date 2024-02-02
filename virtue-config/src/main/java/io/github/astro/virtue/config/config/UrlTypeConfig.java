@@ -22,18 +22,17 @@ public abstract class UrlTypeConfig implements Parameterization {
 
     protected int port;
 
-    protected ConfigScope scope = ConfigScope.NONE;
-
     public abstract URL toUrl();
 
     public String getAddress() {
         return NetUtil.getAddress(host, port);
     }
 
-    public void setAddress(String address) {
+    public UrlTypeConfig address(String address) {
         InetSocketAddress inetSocketAddress = NetUtil.toInetSocketAddress(address);
         this.host = inetSocketAddress.getHostString();
         this.port = inetSocketAddress.getPort();
+        return this;
     }
 
     @Override

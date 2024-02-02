@@ -12,6 +12,10 @@ public interface StringUtil {
         return isBlank(target) ? defaultValue : target;
     }
 
+    static String normalizePath(String path) {
+        return path.replaceAll("^/+", "").replaceAll("/+$", "").replaceAll("/+", "/");
+    }
+
     static String simpleClassName(Object o) {
         if (o == null) {
             return "null_object";

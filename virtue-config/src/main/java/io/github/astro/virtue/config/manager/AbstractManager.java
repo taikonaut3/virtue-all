@@ -5,10 +5,13 @@ import java.util.Map;
 
 public abstract class AbstractManager<T> {
 
+    protected final Virtue virtue;
+
     protected Map<String, T> map;
 
-    public AbstractManager() {
-        map = new HashMap<>();
+    protected AbstractManager(Virtue virtue) {
+        this.virtue = virtue;
+        this.map = new HashMap<>();
     }
 
     public void register(String name, T value) {

@@ -21,7 +21,7 @@ import static io.github.astro.virtue.common.constant.Components.Serialize.MSGPAC
 @RemoteCaller("provider")
 public interface Consumer {
 
-    @Config(filters = {"filter2", "filter1"},serialize = JSON)
+    @Config(filters = {"filter2", "filter1"}, serialize = JSON)
     @VirtueCall(service = "345", callMethod = "hello")
     String hello(String world);
 
@@ -38,4 +38,5 @@ public interface Consumer {
 
     @VirtueCall(service = "345",callMethod = "list",config = @Config(serialize = MSGPACK))
     List<ParentObject> list(List<ParentObject> list);
+
 }

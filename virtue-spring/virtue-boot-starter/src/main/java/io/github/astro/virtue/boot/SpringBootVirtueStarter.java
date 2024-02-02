@@ -1,6 +1,6 @@
 package io.github.astro.virtue.boot;
 
-import io.github.astro.virtue.config.Virtue;
+import io.github.astro.virtue.config.manager.Virtue;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -11,8 +11,8 @@ public class SpringBootVirtueStarter implements ApplicationListener<ContextRefre
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Virtue virtueApplication = event.getApplicationContext().getBean(Virtue.class);
-        virtueApplication.start();
+        Virtue virtue = event.getApplicationContext().getBean(Virtue.class);
+        virtue.start();
     }
 
 }

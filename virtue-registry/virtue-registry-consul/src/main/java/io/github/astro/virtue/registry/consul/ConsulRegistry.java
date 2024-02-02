@@ -2,9 +2,12 @@ package io.github.astro.virtue.registry.consul;
 
 import io.github.astro.virtue.common.constant.Constant;
 import io.github.astro.virtue.common.constant.Key;
+import io.github.astro.virtue.common.exception.ConnectException;
+import io.github.astro.virtue.common.extension.Attribute;
+import io.github.astro.virtue.common.extension.AttributeKey;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.StringUtil;
-import io.github.astro.virtue.config.Virtue;
+import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.registry.AbstractRegistry;
 import io.vertx.core.Vertx;
 import io.vertx.ext.consul.*;
@@ -15,11 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConsulRegistry extends AbstractRegistry {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsulRegistry.class);
+
+    private static final AttributeKey<Vertx> VERTX_ATTRIBUTE_KEY = AttributeKey.get("vertx");
     private ConsulClient consulClient;
     private Vertx vertx;
 
@@ -28,7 +34,7 @@ public class ConsulRegistry extends AbstractRegistry {
     }
 
     @Override
-    public boolean isConnected() {
+    public boolean isAvailable() {
         AtomicBoolean isConnected = new AtomicBoolean(false);
         CountDownLatch latch = new CountDownLatch(1);
         consulClient.agentInfo().onComplete(ar -> {
@@ -44,23 +50,33 @@ public class ConsulRegistry extends AbstractRegistry {
     }
 
     @Override
-    public void connect(URL url) {
-        ConsulClientOptions options = new ConsulClientOptions()
-                .setHost(url.host())
-                .setPort(url.port())
-                .setTimeout(url.getIntParameter(Key.CONNECT_TIMEOUT));
-        vertx = (Vertx) Virtue.getDefault().getDataOrPut("vertx", Vertx.vertx());
-        consulClient = ConsulClient.create(vertx, options);
+    public void connect(URL url) throws ConnectException {
+        try {
+            ConsulClientOptions options = new ConsulClientOptions()
+                    .setHost(url.host())
+                    .setPort(url.port())
+                    .setTimeout(url.getIntParameter(Key.CONNECT_TIMEOUT));
+            Attribute<Vertx> vertxAttribute = Virtue.get(url).attribute(VERTX_ATTRIBUTE_KEY);
+            vertx = vertxAttribute.get();
+            if (vertx == null) {
+                vertx = Vertx.vertx();
+                vertxAttribute.set(vertx);
+            }
+            consulClient = ConsulClient.create(vertx, options);
+        } catch (Exception e) {
+            logger.error("Connect to Consul: {} Fail", url.address());
+            throw new ConnectException(e);
+        }
     }
 
     @Override
     public void register(URL url) {
-        String application = url.getParameter(Key.APPLICATION);
-        consulClient.deregisterService(application);
-        vertx.setPeriodic(0, 50000, ar -> {
+        String serviceName = serviceName(url);
+        consulClient.deregisterService(serviceName);
+        Virtue.get(url).scheduler().addPeriodic(() -> {
             ServiceOptions opts = new ServiceOptions()
-                    .setName(application)
-                    .setId(application + "-" + url.protocol() + ":" + url.port())
+                    .setName(serviceName)
+                    .setId(instanceId(url))
                     .setAddress(url.host())
                     .setPort(url.port())
                     .setMeta(metaInfo(url));
@@ -69,28 +85,28 @@ public class ConsulRegistry extends AbstractRegistry {
                         Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
                 CheckOptions checkOpts = new CheckOptions()
                         .setTcp(url.address())
-                        .setId(url.authority())
+                        .setId(instanceId(url))
                         .setDeregisterAfter((healthCheckInterval * 10) + "ms")
                         .setInterval(healthCheckInterval + "ms");
                 opts.setCheckOptions(checkOpts);
             }
             consulClient.registerService(opts, res -> {
                 if (res.succeeded()) {
-                    logger.trace("Register {}: {} success", application, url.authority());
+                    logger.trace("Register {}: {} success", serviceName, url.authority());
                 } else {
-                    logger.error("Register " + application + ": " + url.authority() + " failed", res.cause());
+                    logger.error("Register " + serviceName + ": " + url.authority() + " failed", res.cause());
                 }
             });
-        });
+        }, 0, 5, TimeUnit.SECONDS);
     }
 
     @Override
     protected List<URL> doDiscover(URL url) {
-        String application = url.getParameter(Key.APPLICATION);
+        String serviceName = serviceName(url);
         ArrayList<URL> urls = new ArrayList<>();
         CountDownLatch latch = new CountDownLatch(1);
         // 获取所有健康检查的节点的URL
-        consulClient.healthServiceNodes(application, true).onComplete(res -> {
+        consulClient.healthServiceNodes(serviceName, true).onComplete(res -> {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.result().getList();
                 logger.debug("Found {} services for URL: {},", url, serviceEntries.size());
@@ -107,7 +123,7 @@ public class ConsulRegistry extends AbstractRegistry {
                     latch.countDown();
                 }
             } else {
-                logger.error("Found " + application + " fail", res.cause());
+                logger.error("Found " + serviceName + " fail", res.cause());
             }
         });
         try {
@@ -120,15 +136,15 @@ public class ConsulRegistry extends AbstractRegistry {
 
     @Override
     protected void subscribeService(URL url) {
-        String application = url.getParameter(Key.APPLICATION);
-        Watch.service(application, vertx).setHandler(res -> {
+        String serviceName = serviceName(url);
+        Watch.service(serviceName, vertx).setHandler(res -> {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.nextResult().getList();
-                List<String> healthServerUrl = serviceEntries.stream()
-                        .filter(serviceEntry -> serviceEntry.aggregatedStatus() == CheckStatus.PASSING
-                                && serviceEntry.getService().getMeta().containsKey(Key.PROTOCOL)).
-                        map(entry -> serviceEntryToUrl(entry.getService().getMeta().get(Key.PROTOCOL), entry).toString()).toList();
-                discoverHealthServices.put(application, healthServerUrl);
+                List<String> healthServerUrls = serviceEntries.stream()
+                        .filter(instance -> instance.aggregatedStatus() == CheckStatus.PASSING && instance.getService().getMeta().containsKey(Key.PROTOCOL))
+                        .map(instance -> serviceEntryToUrl(instance.getService().getMeta().get(Key.PROTOCOL), instance).toString())
+                        .toList();
+                discoverHealthServices.put(serviceName, healthServerUrls);
             }
         }).start();
     }

@@ -2,7 +2,7 @@ package io.github.astro.virtue.event;
 
 import io.github.astro.virtue.common.extension.AbstractAccessor;
 
-public abstract class AbstractEvent<S> extends AbstractAccessor<Object> implements Event<S> {
+public abstract class AbstractEvent<S> extends AbstractAccessor implements Event<S> {
 
     protected S data;
 

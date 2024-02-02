@@ -1,9 +1,5 @@
 package io.github.astro.virtue.rpc.listener;
 
-import io.github.astro.virtue.rpc.event.EnvelopeEventListener;
-import io.github.astro.virtue.rpc.event.RequestEvent;
-import io.github.astro.virtue.rpc.protocol.Protocol;
-import io.github.astro.virtue.rpc.protocol.ProtocolParser;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.executor.RpcThreadPool;
 import io.github.astro.virtue.common.extension.RpcContext;
@@ -14,6 +10,10 @@ import io.github.astro.virtue.config.CallArgs;
 import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.Invoker;
 import io.github.astro.virtue.config.ServerCaller;
+import io.github.astro.virtue.rpc.event.EnvelopeEventListener;
+import io.github.astro.virtue.rpc.event.RequestEvent;
+import io.github.astro.virtue.rpc.protocol.Protocol;
+import io.github.astro.virtue.rpc.protocol.ProtocolParser;
 import io.github.astro.virtue.transport.Request;
 import io.github.astro.virtue.transport.Response;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
     private static final Logger logger = LoggerFactory.getLogger(RequestEventListener.class);
 
     public RequestEventListener() {
-        super(RpcThreadPool.defaultIOExecutor("HandleRequest"));
+        super(RpcThreadPool.defaultIOExecutor("handle-request"));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         Invoker<Object> invoker = (Invoker<Object>) serverCaller.invoker();
         boolean oneway = url.getBooleanParameter(Key.ONEWAY);
         try {
-            RpcContext.getContext().set("request", request);
+            RpcContext.getContext().attribute(Request.ATTRIBUTE_KEY).set(request);
             if (oneway) {
                 invoker.invoke(invocation);
             } else {

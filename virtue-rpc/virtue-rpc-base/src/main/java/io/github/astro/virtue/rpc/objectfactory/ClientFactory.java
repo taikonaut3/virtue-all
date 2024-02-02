@@ -1,6 +1,5 @@
 package io.github.astro.virtue.rpc.objectfactory;
 
-import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.transport.Transporter;
@@ -44,7 +43,7 @@ public class ClientFactory implements PooledObjectFactory<Client> {
 
     @Override
     public PooledObject<Client> makeObject() throws Exception {
-        URL url = (URL) RpcContext.getContext().get(Key.URL);
+        URL url = RpcContext.getContext().attribute(URL.ATTRIBUTE_KEY).get();
         Client client = transporter.connect(url, handler, codec);
         return new DefaultPooledObject<>(client);
     }

@@ -1,13 +1,11 @@
 package io.github.astro.virtue.rpc.http1_1.config;
 
-import io.github.astro.virtue.config.annotation.BindingCaller;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
-import io.github.astro.virtue.rpc.http1_1.HttpClientCaller;
+import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
+import io.github.astro.virtue.rpc.http1_1.HttpCallerFactory;
 
 import java.lang.annotation.*;
-
-import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
 
 /**
  * Annotation used to define an HTTP call.
@@ -15,7 +13,7 @@ import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@BindingCaller(protocol = HTTP, clientCaller = HttpClientCaller.class)
+@RegistryCallerFactory(HttpCallerFactory.class)
 public @interface HttpCall {
 
     /**

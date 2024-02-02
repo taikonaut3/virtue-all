@@ -8,6 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class VirtuePostProcessorRegister implements ImportBeanDefinitionRegistra
      * 注册后置处理器
      */
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, @NonNull BeanDefinitionRegistry registry) {
         MergedAnnotation<EnableVirtue> annotation = importingClassMetadata.getAnnotations().get(EnableVirtue.class);
         EnableVirtue enablevirtue = annotation.synthesize();
         registerPostProcessor(registry, enablevirtue);

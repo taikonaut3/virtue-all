@@ -1,11 +1,11 @@
 package io.github.astro.virtue.rpc.listener;
 
-import io.github.astro.virtue.rpc.event.HeartBeatEvent;
 import io.github.astro.virtue.common.constant.Constant;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.config.config.ClientConfig;
 import io.github.astro.virtue.event.EventListener;
+import io.github.astro.virtue.rpc.event.HeartBeatEvent;
 import io.github.astro.virtue.transport.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +24,10 @@ public class HeartBeatEventListener implements EventListener<HeartBeatEvent> {
     @Override
     public void onEvent(HeartBeatEvent event) {
         Channel channel = event.source();
-        URL url = (URL) channel.getAttribute(Key.URL);
-        AtomicInteger readIdleRecord = (AtomicInteger) channel.getAttribute(Key.READER_IDLE_TIMES);
-        AtomicInteger writeIdleRecord = (AtomicInteger) channel.getAttribute(Key.WRITE_IDLE_TIMES);
-        AtomicInteger allIdlerRecord = (AtomicInteger) channel.getAttribute(Key.ALL_IDLE_TIMES);
+        URL url = channel.attribute(URL.ATTRIBUTE_KEY).get();
+        AtomicInteger readIdleRecord = channel.attribute(Key.READER_IDLE_TIMES_ATTRIBUTE_KEY).get();
+        AtomicInteger writeIdleRecord = channel.attribute(Key.WRITE_IDLE_TIMES_ATTRIBUTE_KEY).get();
+        AtomicInteger allIdlerRecord = channel.attribute(Key.ALL_IDLE_TIMES_ATTRIBUTE_KEY).get();
         int spareCloseTimes = Constant.DEFAULT_SPARE_CLOSE_TIMES;
         if (url != null) {
             spareCloseTimes = url.getIntParameter(Key.SPARE_CLOSE_TIMES, Constant.DEFAULT_SPARE_CLOSE_TIMES);

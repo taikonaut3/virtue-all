@@ -1,7 +1,6 @@
 package io.github.astro.virtue.config;
 
 import io.github.astro.virtue.common.url.Parameterization;
-import io.github.astro.virtue.config.config.RegistryConfig;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterChain;
 
@@ -28,11 +27,6 @@ public interface CommonConfig extends Parameterization {
      * Gets the serialization type from the @Config.
      */
     String serialize();
-
-    /**
-     * Gets a list of registry configurations from the @Config.
-     */
-    List<RegistryConfig> registryConfigs();
 
     /**
      * Gets a list of filters from the @Config.

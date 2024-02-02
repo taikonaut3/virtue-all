@@ -2,24 +2,22 @@ package io.github.astro.virtue.rpc.http1_1;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
-import io.github.astro.virtue.common.url.URL;
-import io.github.astro.virtue.common.util.StringUtil;
+import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.config.CallArgs;
 import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.RemoteCaller;
-import io.github.astro.virtue.config.RemoteUrl;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
-import io.github.astro.virtue.config.config.ClientConfig;
+import io.github.astro.virtue.rpc.RpcFuture;
 import io.github.astro.virtue.rpc.config.AbstractClientCaller;
 import io.github.astro.virtue.rpc.http1_1.config.HttpCall;
-import io.github.astro.virtue.transport.RpcFuture;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
@@ -33,6 +31,7 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientCaller.class);
 
+    @Parameter(Key.HTTP_METHOD)
     private String httpMethod;
 
     private Map<String, String> headers;
@@ -62,16 +61,8 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
     }
 
     @Override
-    protected URL createUrl() {
-        String address = remoteApplication;
-        if (!StringUtil.isBlank(directUrl)) {
-            address = directUrl;
-        }
-        RemoteUrl remoteUrl = new RemoteUrl(protocol, address);
-        remoteUrl.addPath(path);
-        remoteUrl.addParameter(Key.HTTP_METHOD, httpMethod);
-        remoteUrl.addParameters(parameterization());
-        return remoteUrl;
+    public List<String> pathList() {
+        return List.of(path);
     }
 
     @Override
@@ -84,11 +75,6 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
         url.replacePaths(httpParser.parsePaths(this, callArgs));
         url.addParameters(httpParser.parseParams(this, callArgs));
         return super.call(callArgs);
-    }
-
-    @Override
-    protected ClientConfig defaultClientConfig() {
-        return new ClientConfig(HTTP);
     }
 
     @Override

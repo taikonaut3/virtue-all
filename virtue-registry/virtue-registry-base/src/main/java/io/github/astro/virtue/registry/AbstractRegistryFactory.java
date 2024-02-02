@@ -17,7 +17,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
             registry = create(url);
             registries.put(uri, registry);
         } else {
-            if (!registry.isConnected()) {
+            if (!registry.isAvailable()) {
                 registry.connect(url);
             }
         }

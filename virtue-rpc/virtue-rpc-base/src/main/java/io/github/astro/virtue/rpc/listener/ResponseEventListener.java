@@ -1,10 +1,10 @@
 package io.github.astro.virtue.rpc.listener;
 
+import io.github.astro.virtue.common.executor.RpcThreadPool;
+import io.github.astro.virtue.rpc.RpcFuture;
 import io.github.astro.virtue.rpc.event.EnvelopeEventListener;
 import io.github.astro.virtue.rpc.event.ResponseEvent;
-import io.github.astro.virtue.common.executor.RpcThreadPool;
 import io.github.astro.virtue.transport.Response;
-import io.github.astro.virtue.transport.RpcFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
     private static final Logger logger = LoggerFactory.getLogger(ResponseEventListener.class);
 
     public ResponseEventListener() {
-        super(RpcThreadPool.defaultCPUExecutor("HandleResponse"));
+        super(RpcThreadPool.defaultCPUExecutor("handle-response"));
     }
 
     @Override

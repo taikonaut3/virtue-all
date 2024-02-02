@@ -4,6 +4,8 @@ public interface Components {
 
     String SPRING = "spring";
 
+    String DEFAULT = "default";
+
     interface EventDispatcher {
 
         String FLOW = "flow";
@@ -35,6 +37,8 @@ public interface Components {
         String ZOOKEEPER = "zookeeper";
 
         String CONSUL = "consul";
+
+        String NACOS = "nacos";
 
         String REDIS = "redis";
 
@@ -81,12 +85,6 @@ public interface Components {
     interface Router {
 
         String WEIGHT = "weight";
-
-    }
-
-    interface Directory {
-
-        String DEFAULT = "default";
 
     }
 

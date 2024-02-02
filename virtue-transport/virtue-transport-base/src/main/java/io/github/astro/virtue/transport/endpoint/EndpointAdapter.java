@@ -6,7 +6,7 @@ public class EndpointAdapter implements Endpoint {
 
     protected InetSocketAddress address;
 
-    protected EndpointAdapter(InetSocketAddress address) {
+    public EndpointAdapter(InetSocketAddress address) {
         this.address = address;
     }
 

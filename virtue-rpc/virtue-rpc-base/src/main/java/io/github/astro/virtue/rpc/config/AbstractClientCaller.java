@@ -2,24 +2,23 @@ package io.github.astro.virtue.rpc.config;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
-import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.common.util.CollectionUtil;
 import io.github.astro.virtue.common.util.NetUtil;
 import io.github.astro.virtue.common.util.StringUtil;
-import io.github.astro.virtue.config.CallArgs;
-import io.github.astro.virtue.config.ClientCaller;
-import io.github.astro.virtue.config.Invocation;
-import io.github.astro.virtue.config.RemoteCaller;
+import io.github.astro.virtue.config.*;
 import io.github.astro.virtue.config.annotation.Options;
 import io.github.astro.virtue.config.config.ClientConfig;
+import io.github.astro.virtue.config.config.RegistryConfig;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterScope;
 import io.github.astro.virtue.config.manager.ClientConfigManager;
+import io.github.astro.virtue.config.manager.ConfigManager;
 import io.github.astro.virtue.rpc.ComplexClientInvoker;
+import io.github.astro.virtue.rpc.RpcFuture;
 import io.github.astro.virtue.transport.Request;
-import io.github.astro.virtue.transport.RpcFuture;
 import io.github.astro.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,10 +30,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Setter
 @Getter
@@ -75,7 +72,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     @Parameter(Key.CLIENT)
     protected String clientConfig;
 
-    protected Map<String, Client> clients = new ConcurrentHashMap<>();
+    protected volatile List<RegistryConfig> registryConfigs;
 
     protected AbstractClientCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
         super(method, remoteCaller, protocol, annoType);
@@ -101,6 +98,16 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         clientConfig(ops.client());
         // subclass init
         doInit();
+        // parse config
+        ConfigManager configManager = virtue.configManager();
+        for (RegistryConfig registryConfig : configManager.registryConfigManager().globalConfigs()) {
+            addRegistryConfig(registryConfig);
+        }
+        String[] registryNames = getOptions().registries();
+        Optional.ofNullable(registryNames).ifPresent(names -> Arrays.stream(names).map(configManager.registryConfigManager()::get).filter(Objects::nonNull).forEach(this::addRegistryConfig));
+        ClientConfig clientConfig = checkAndGetClientConfig();
+        url = createUrl(clientConfig.toUrl());
+        invoker = new ComplexClientInvoker(this);
     }
 
     private Options getOptions() {
@@ -110,11 +117,15 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return options();
     }
 
-    @Override
-    protected void doStart() {
-        checkClientConfig();
-        url = createUrl();
-        invoker = new ComplexClientInvoker(this);
+    public void addRegistryConfig(RegistryConfig... configs) {
+        if (registryConfigs == null) {
+            synchronized (this) {
+                if (registryConfigs == null) {
+                    registryConfigs = new LinkedList<>();
+                }
+            }
+        }
+        CollectionUtil.addToList(this.registryConfigs, (registryConfig, config) -> Objects.equals(config.type(), registryConfig.type()) && config.host().equals(registryConfig.host()) && config.port() == registryConfig.port(), configs);
     }
 
     @Override
@@ -189,6 +200,19 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return (RemoteCaller<?>) container();
     }
 
+    @Override
+    protected URL createUrl(URL clientUrl) {
+        String address = remoteApplication;
+        if (!StringUtil.isBlank(directUrl)) {
+            address = directUrl;
+        }
+        RemoteUrl remoteUrl = new RemoteUrl(protocol, address);
+        remoteUrl.replacePaths(pathList());
+        remoteUrl.addParameters(clientUrl.parameters());
+        remoteUrl.addParameters(parameterization());
+        return remoteUrl;
+    }
+
     private Client getClient(String address) {
         ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
         ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
@@ -225,20 +249,18 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         }
     }
 
-    private void checkClientConfig() {
+    private ClientConfig checkAndGetClientConfig() {
         ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
-        ClientConfig clientConfig = clientConfigManager.get(protocol);
+        ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
         if (clientConfig == null) {
-            clientConfig = defaultClientConfig();
-            if (clientConfig == null) {
-                throw new SourceException("Unknown found " + protocol + "'s clientConfig");
-            } else {
-                clientConfigManager.register(clientConfig);
-            }
+            clientConfig = clientConfigManager.get(protocol);
         }
+        if (clientConfig == null) {
+            clientConfig = new ClientConfig(protocol);
+            clientConfigManager.register(clientConfig);
+        }
+        return clientConfig;
     }
-
-    protected abstract ClientConfig defaultClientConfig();
 
     protected abstract Options options();
 }

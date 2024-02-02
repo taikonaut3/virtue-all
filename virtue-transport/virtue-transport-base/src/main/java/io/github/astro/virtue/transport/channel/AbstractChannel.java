@@ -1,29 +1,29 @@
 package io.github.astro.virtue.transport.channel;
 
 import io.github.astro.virtue.common.exception.NetWorkException;
+import io.github.astro.virtue.common.extension.AbstractAccessor;
 import io.github.astro.virtue.common.util.NetUtil;
+import io.github.astro.virtue.transport.endpoint.Endpoint;
 import io.github.astro.virtue.transport.endpoint.EndpointAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractChannel extends EndpointAdapter implements Channel {
+public abstract class AbstractChannel extends AbstractAccessor implements Channel {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractChannel.class);
 
-    private final Map<String, Object> attributeMap = new ConcurrentHashMap<>();
+    private final Endpoint endpoint;
 
     protected AbstractChannel(InetSocketAddress address) {
-        super(address);
+        this.endpoint = new EndpointAdapter(address);
     }
 
     @Override
     public void close() throws NetWorkException {
         doClose();
-        attributeMap.clear();
+        accessor.clear();
         logger.debug("Closed {}", this);
     }
 
@@ -35,33 +35,27 @@ public abstract class AbstractChannel extends EndpointAdapter implements Channel
     }
 
     @Override
-    public Object getAttribute(String key) {
-        return attributeMap.get(key);
+    public String host() {
+        return endpoint.host();
     }
 
     @Override
-    public Object getAttribute(String key, Object defaultValue) {
-        Object result = getAttribute(key);
-        if (result == null) {
-            attributeMap.put(key, defaultValue);
-            result = defaultValue;
-        }
-        return result;
+    public int port() {
+        return endpoint.port();
     }
 
     @Override
-    public void setAttribute(String key, Object value) {
-        attributeMap.put(key, value);
+    public InetSocketAddress toInetSocketAddress() {
+        return endpoint.toInetSocketAddress();
     }
 
     @Override
-    public void removeAttribute(String key) {
-        attributeMap.remove(key);
+    public String address() {
+        return endpoint.address();
     }
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + " connect to " + NetUtil.getAddress(toInetSocketAddress());
     }
-
 }

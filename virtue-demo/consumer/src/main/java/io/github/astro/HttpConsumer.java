@@ -1,8 +1,6 @@
 package io.github.astro;
 
 import io.github.astro.model.ParentObject;
-import io.github.astro.virtue.config.SystemInfo;
-import io.github.astro.virtue.config.Virtue;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
 import io.github.astro.virtue.config.annotation.RemoteCaller;
@@ -21,10 +19,6 @@ import java.util.concurrent.CompletableFuture;
 @RemoteCaller("provider")
 public interface HttpConsumer {
 
-    public static void main(String[] args) {
-        SystemInfo systemInfo = Virtue.getDefault().newSystemInfo();
-        System.out.println(systemInfo);
-    }
 
     @Options(retires = 0)
     @HttpCall(path = "hello", method = HttpMethod.GET)

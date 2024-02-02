@@ -1,6 +1,7 @@
 package io.github.astro.virtue.transport;
 
 import io.github.astro.virtue.common.constant.Key;
+import io.github.astro.virtue.common.extension.AttributeKey;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.DateUtil;
 import lombok.Data;
@@ -12,6 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @Data
 @Accessors(fluent = true)
 public class Request implements Envelope {
+
+    public static final AttributeKey<Request> ATTRIBUTE_KEY = AttributeKey.get(Key.REQUEST);
 
     private static final AtomicLong INCREASE = new AtomicLong(0);
 
@@ -30,6 +33,7 @@ public class Request implements Envelope {
         id = INCREASE.getAndIncrement();
         String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
         url.addParameter(Key.TIMESTAMP, timestamp);
+        url.addParameter(Key.ENVELOPE, Key.REQUEST);
         url.addParameter(Key.UNIQUE_ID, String.valueOf(id));
         this.url = url;
         this.message = message;

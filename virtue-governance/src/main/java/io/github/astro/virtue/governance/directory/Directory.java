@@ -6,7 +6,7 @@ import io.github.astro.virtue.config.Invocation;
 
 import java.util.List;
 
-import static io.github.astro.virtue.common.constant.Components.Directory.DEFAULT;
+import static io.github.astro.virtue.common.constant.Components.DEFAULT;
 
 /**
  * Directory for listing available services from the registry.

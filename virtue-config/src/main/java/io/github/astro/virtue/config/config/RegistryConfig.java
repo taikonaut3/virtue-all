@@ -13,6 +13,9 @@ import lombok.experimental.Accessors;
 @Setter
 public class RegistryConfig extends UrlTypeConfig {
 
+    @Parameter(Key.GLOBAL)
+    private boolean global = true;
+
     @Parameter(Key.USERNAME)
     private String username;
 
@@ -36,6 +39,21 @@ public class RegistryConfig extends UrlTypeConfig {
 
     @Parameter(Key.HEALTH_CHECK_INTERVAL)
     private int healthCheckInterval = Constant.DEFAULT_HEALTH_CHECK_INTERVAL;
+
+    public RegistryConfig() {
+
+    }
+
+    public RegistryConfig(String type, String address) {
+        type(type);
+        address(address);
+    }
+
+    public RegistryConfig(String authority) {
+        URL url = URL.valueOf(authority);
+        type(url.protocol());
+        address(url.address());
+    }
 
     @Override
     public URL toUrl() {

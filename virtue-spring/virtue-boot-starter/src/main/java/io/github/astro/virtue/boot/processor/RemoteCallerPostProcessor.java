@@ -13,6 +13,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RemoteCallerPostProcessor implements BeanDefinitionRegistryPostProcessor {
+public class RemoteCallerPostProcessor extends PreferentialCreateConfig implements BeanDefinitionRegistryPostProcessor {
 
     private final static List<Class<? extends Annotation>> REMOTE_CALL_ANNOTATION_TYPES = List.of(
             RemoteCaller.class
@@ -37,7 +38,7 @@ public class RemoteCallerPostProcessor implements BeanDefinitionRegistryPostProc
     }
 
     @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
         RemoteCallScanner remoteCallScanner = new RemoteCallScanner();
         for (String pkg : remoteCallPackages) {
             List<? extends Class<?>> RemoteCallInterfaces = remoteCallScanner.findClasses(pkg);
@@ -56,6 +57,14 @@ public class RemoteCallerPostProcessor implements BeanDefinitionRegistryPostProc
 
             }
         }
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
+        if (bean instanceof RemoteCallFactoryBean<?> remoteCallFactoryBean) {
+            remoteCallFactoryBean.setVirtue(virtue());
+        }
+        return bean;
     }
 
     private static final class RemoteCallScanner extends ClassPathScanningCandidateComponentProvider {

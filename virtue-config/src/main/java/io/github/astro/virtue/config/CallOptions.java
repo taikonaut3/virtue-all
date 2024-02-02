@@ -1,5 +1,9 @@
 package io.github.astro.virtue.config;
 
+import io.github.astro.virtue.config.config.RegistryConfig;
+
+import java.util.List;
+
 /**
  * Represents the options for making a remote service call.
  */
@@ -67,6 +71,11 @@ public interface CallOptions extends CommonConfig {
      * @return The client configuration.
      */
     String clientConfig();
+
+    /**
+     * Gets a list of registry configurations from the @Config.
+     */
+    List<RegistryConfig> registryConfigs();
 
 }
 

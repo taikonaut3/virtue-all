@@ -23,11 +23,5 @@ public interface ServerCaller<T extends Annotation> extends Caller<T> {
      */
     String desc();
 
-    /**
-     * Gets the path associated with the server caller.
-     *
-     * @return The path.
-     */
-    String path();
 }
 

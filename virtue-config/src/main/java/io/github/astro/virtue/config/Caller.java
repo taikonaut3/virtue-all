@@ -6,6 +6,7 @@ import io.github.astro.virtue.common.url.URL;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Real caller for the client and server
@@ -57,5 +58,16 @@ public interface Caller<T extends Annotation> extends CommonConfig, Lifecycle {
      * Local invoker
      */
     Invoker<?> invoker();
+
+    List<String> pathList();
+
+    /**
+     * Gets the path associated with the server caller.
+     *
+     * @return The path.
+     */
+    default String path() {
+        return URL.toPath(pathList());
+    }
 
 }

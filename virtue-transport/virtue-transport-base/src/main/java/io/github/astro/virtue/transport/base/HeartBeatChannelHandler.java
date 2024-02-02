@@ -1,6 +1,7 @@
 package io.github.astro.virtue.transport.base;
 
 import io.github.astro.virtue.common.exception.NetWorkException;
+import io.github.astro.virtue.common.extension.AttributeKey;
 import io.github.astro.virtue.transport.channel.Channel;
 
 import java.util.HashSet;
@@ -12,12 +13,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class HeartBeatChannelHandler extends ChannelHandlerAdapter {
 
-    private final Set<String> watchEventKeys = new HashSet<>();
+    private final Set<AttributeKey<AtomicInteger>> watchEventKeys = new HashSet<>();
 
     @Override
     public void received(Channel channel, Object message) throws NetWorkException {
-        for (String watchEventKey : watchEventKeys) {
-            channel.setAttribute(watchEventKey, new AtomicInteger(0));
+        for (AttributeKey<AtomicInteger> watchEventKey : watchEventKeys) {
+            channel.attribute(watchEventKey).set(new AtomicInteger(0));
         }
     }
 
@@ -26,7 +27,7 @@ public class HeartBeatChannelHandler extends ChannelHandlerAdapter {
         super.heartBeat(channel, event);
     }
 
-    public HeartBeatChannelHandler addWatchEventKey(String key) {
+    public HeartBeatChannelHandler addWatchEventKey(AttributeKey<AtomicInteger> key) {
         watchEventKeys.add(key);
         return this;
     }

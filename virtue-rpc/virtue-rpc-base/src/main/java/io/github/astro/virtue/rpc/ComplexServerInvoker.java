@@ -1,7 +1,5 @@
 package io.github.astro.virtue.rpc;
 
-import io.github.astro.virtue.rpc.protocol.Protocol;
-import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.URL;
@@ -12,14 +10,11 @@ import io.github.astro.virtue.config.ServerCaller;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterChain;
 import io.github.astro.virtue.config.filter.FilterScope;
+import io.github.astro.virtue.rpc.protocol.Protocol;
 import lombok.Data;
 
 import java.util.List;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/7 14:51
- */
 @Data
 public class ComplexServerInvoker implements Invoker<Object> {
 
@@ -40,7 +35,7 @@ public class ComplexServerInvoker implements Invoker<Object> {
         List<Filter> filters = FilterScope.PRE.filterScope(caller.filters());
         invocation.turnInvoke(inv -> caller.call(callArgs));
         Object result = filterChain.filter(invocation, filters);
-        url.addParameter(Key.SERIALIZE, caller.serialize());
+        url.addParameters(caller.parameterization());
         return protocol.createResponse(url, result);
     }
 }

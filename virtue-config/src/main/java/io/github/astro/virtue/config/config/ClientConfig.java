@@ -31,6 +31,9 @@ public class ClientConfig extends UrlTypeConfig {
     @Parameter(Key.SO_BACKLOG)
     private int soBacklog = Constant.DEFAULT_SO_BACKLOG;
 
+    @Parameter(Key.SPARE_CLOSE_TIMES)
+    private int spareCloseTimes = Constant.DEFAULT_SPARE_CLOSE_TIMES;
+
     @Parameter(Key.COMPRESSION)
     private boolean compression = true;
 

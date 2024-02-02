@@ -35,4 +35,5 @@ public class Provider {
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }
+
 }

@@ -16,6 +16,7 @@
         <module>virtue-registry-base</module>
         <module>virtue-registry-consul</module>
         <module>virtue-registry-zookeeper</module>
+        <module>virtue-registry-nacos</module>
     </modules>
 
 </project>

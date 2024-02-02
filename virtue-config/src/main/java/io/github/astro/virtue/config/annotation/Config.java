@@ -28,11 +28,6 @@ public @interface Config {
     String serialize() default Serialize.KRYO;
 
     /**
-     * Supports multiple registry configs
-     */
-    String[] registries() default {};
-
-    /**
      * Invoke interceptors
      */
     String[] filters() default {};

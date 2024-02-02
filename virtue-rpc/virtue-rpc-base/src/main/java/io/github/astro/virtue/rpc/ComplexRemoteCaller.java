@@ -1,15 +1,15 @@
 package io.github.astro.virtue.rpc;
 
-import io.github.astro.virtue.rpc.config.AbstractCallerContainer;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
-import io.github.astro.virtue.config.Caller;
+import io.github.astro.virtue.config.CallerFactory;
+import io.github.astro.virtue.config.ClientCaller;
 import io.github.astro.virtue.config.RemoteCaller;
-import io.github.astro.virtue.config.annotation.BindingCaller;
-import io.github.astro.virtue.config.manager.ProtocolRegistryManager;
+import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
+import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.proxy.ProxyFactory;
-import lombok.NonNull;
+import io.github.astro.virtue.rpc.config.AbstractCallerContainer;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
@@ -24,9 +24,11 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
 
     private T proxyInstance;
 
-    public ComplexRemoteCaller(@NonNull Class<T> targetInterface) {
-        AssertUtil.condition(checkRemoteCall(targetInterface), "RemoteCaller's this Method only support @RemoteCall modifier's Interface");
-        this.targetInterface = targetInterface;
+    public ComplexRemoteCaller(Virtue virtue, Class<T> target) {
+        super(virtue);
+        AssertUtil.notNull(target);
+        AssertUtil.condition(checkRemoteCall(target), "RemoteCaller's this Method only support @RemoteCall modifier's Interface");
+        this.targetInterface = target;
         init();
     }
 
@@ -38,12 +40,11 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
     public void init() {
         // parse @RemoteCaller
         parseRemoteCaller();
-        // parse @Call
-        parseCaller();
+        // parse ClientCaller
+        parseClientCaller();
         // create proxy
         ProxyFactory proxyFactory = ExtensionLoader.loadService(ProxyFactory.class, proxy);
         proxyInstance = proxyFactory.createProxy(targetInterface, new ClientInvocationHandler(this));
-        virtue.registerRemoteCaller(this);
     }
 
     @Override
@@ -62,12 +63,12 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
         proxy = remoteCaller.proxy();
     }
 
-    private void parseCaller() {
+    private void parseClientCaller() {
         for (Method method : targetInterface.getDeclaredMethods()) {
-            BindingCaller bindingCaller = ReflectUtil.findAnnotation(method, BindingCaller.class);
-            if (bindingCaller != null) {
-                ProtocolRegistryManager registry = virtue.protocolRegistryManager();
-                Caller<?> caller = registry.createClientCaller(bindingCaller, method, this);
+            RegistryCallerFactory registryCallerFactory = ReflectUtil.findAnnotation(method, RegistryCallerFactory.class);
+            if (registryCallerFactory != null) {
+                CallerFactory callerFactory = CallerFactory.get(registryCallerFactory.value());
+                ClientCaller<?> caller = callerFactory.createClientCaller(method, this);
                 if (caller != null) {
                     callerMap.put(method, caller);
                 }

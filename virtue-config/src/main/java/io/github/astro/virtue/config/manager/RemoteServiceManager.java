@@ -7,6 +7,10 @@ import java.util.Collection;
 
 public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
+    public RemoteServiceManager(Virtue virtue) {
+        super(virtue);
+    }
+
     public Collection<RemoteService<?>> getRemoteService() {
         return map.values();
     }
@@ -21,6 +25,16 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
             if (caller != null) {
                 return caller;
             }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> RemoteService<T> get(Class<T> interfaceType) {
+        if (interfaceType.isAnnotationPresent(io.github.astro.virtue.config.annotation.RemoteService.class)) {
+            io.github.astro.virtue.config.annotation.RemoteService annotation = interfaceType.getAnnotation(io.github.astro.virtue.config.annotation.RemoteService.class);
+            return (RemoteService<T>) get(annotation.value());
+
         }
         return null;
     }

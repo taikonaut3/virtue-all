@@ -1,5 +1,9 @@
 package io.github.astro.virtue.common.constant;
 
+import io.github.astro.virtue.common.extension.AttributeKey;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 public interface Key {
 
     String UNIQUE_ID = "uniqueId";
@@ -80,6 +84,10 @@ public interface Key {
 
     String RETRIES = "retries";
 
+    String REQUEST = "request";
+
+    String RESPONSE = "response";
+
     String FAULT_TOLERANCE = "faultTolerance";
 
     String CHECK = "check";
@@ -128,18 +136,11 @@ public interface Key {
 
     String DESCRIPTION = "description";
 
-    String virtue_BOOTSTRAP = "virtueBootstrap";
-
-    String virtue = "virtue_";
-
-    String PROTOCOL_PREFIX = virtue + "protocols_";
-
-    String REGISTRY_META_PROTOCOL = virtue + "protocols_";
-
-    String REGISTRY_META_WEIGHT = virtue + WEIGHT;
-
-    String REGISTRY_META_MONITOR_ENABLED = virtue + "monitor_enabled";
-
     String CLIENT = "client";
     String HTTP_METHOD = "httpMethod";
+
+    String VIRTUE = "virtue";
+    AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(ALL_IDLE_TIMES);
+    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(WRITE_IDLE_TIMES);
+    AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(READER_IDLE_TIMES);
 }

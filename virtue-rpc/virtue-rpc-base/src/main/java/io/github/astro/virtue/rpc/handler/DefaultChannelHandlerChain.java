@@ -2,8 +2,11 @@ package io.github.astro.virtue.rpc.handler;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
+import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.NetUtil;
+import io.github.astro.virtue.event.Event;
+import io.github.astro.virtue.rpc.event.ClientHandlerExceptionEvent;
 import io.github.astro.virtue.rpc.event.ServerHandlerExceptionEvent;
 import io.github.astro.virtue.transport.Envelope;
 import io.github.astro.virtue.transport.base.ChannelHandlerAdapter;
@@ -57,7 +60,6 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     @Override
     public void connected(Channel channel) throws RpcException {
         channels.putIfAbsent(NetUtil.getAddress(channel.remoteAddress()), channel);
-        virtue.connections().incrementAndGet();
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.connected(channel);
         }
@@ -68,7 +70,6 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     @Override
     public void disconnected(Channel channel) throws RpcException {
         channels.remove(NetUtil.getAddress(channel.remoteAddress()));
-        virtue.connections().decrementAndGet();
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.disconnected(channel);
         }
@@ -78,7 +79,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     @Override
     public void received(Channel channel, Object message) throws RpcException {
         if (message instanceof Envelope envelope) {
-            channel.setAttribute(Key.URL, envelope.url());
+            channel.attribute(URL.ATTRIBUTE_KEY).set(envelope.url());
         }
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.received(channel, message);
@@ -87,7 +88,12 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     @Override
     public void caught(Channel channel, Throwable cause) throws RpcException {
-        getEventDispatcher().dispatchEvent(new ServerHandlerExceptionEvent(channel, cause));
+        URL url = channel.attribute(URL.ATTRIBUTE_KEY).get();
+        if (url != null) {
+            String envelope = url.getParameter(Key.ENVELOPE);
+            Event<?> exceptionEvent = envelope.equals(Key.REQUEST) ? new ServerHandlerExceptionEvent(channel, cause) : new ClientHandlerExceptionEvent(channel, cause);
+            getEventDispatcher(url).dispatchEvent(exceptionEvent);
+        }
         channels.remove(NetUtil.getAddress(channel.remoteAddress()));
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.caught(channel, cause);

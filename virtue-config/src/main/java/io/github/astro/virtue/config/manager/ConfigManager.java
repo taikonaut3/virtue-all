@@ -1,5 +1,6 @@
 package io.github.astro.virtue.config.manager;
 
+import io.github.astro.virtue.config.config.ApplicationConfig;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -19,13 +20,16 @@ public class ConfigManager {
 
     private final FilterManager filterManager;
 
-    public ConfigManager() {
-        remoteServiceManager = new RemoteServiceManager();
-        remoteCallerManager = new RemoteCallerManager();
-        clientConfigManager = new ClientConfigManager();
-        registryConfigManager = new RegistryConfigManager();
-        filterManager = new FilterManager();
-        serverConfigManager = new ServerConfigManager();
+    private final ApplicationConfig applicationConfig;
+
+    public ConfigManager(Virtue virtue) {
+        remoteServiceManager = new RemoteServiceManager(virtue);
+        remoteCallerManager = new RemoteCallerManager(virtue);
+        clientConfigManager = new ClientConfigManager(virtue);
+        registryConfigManager = new RegistryConfigManager(virtue);
+        filterManager = new FilterManager(virtue);
+        serverConfigManager = new ServerConfigManager(virtue);
+        this.applicationConfig = new ApplicationConfig();
     }
 
 }

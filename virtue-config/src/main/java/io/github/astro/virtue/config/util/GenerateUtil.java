@@ -1,6 +1,5 @@
 package io.github.astro.virtue.config.util;
 
-import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.config.CallArgs;
 import io.github.astro.virtue.config.ClientCaller;
@@ -40,9 +39,4 @@ public interface GenerateUtil {
 
         return builder.toString();
     }
-
-    static String generateMetaProtocolKey(String protocol) {
-        return Key.PROTOCOL_PREFIX + protocol;
-    }
-
 }

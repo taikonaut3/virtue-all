@@ -1,6 +1,9 @@
 package io.github.astro.virtue.common.url;
 
+import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.SourceException;
+import io.github.astro.virtue.common.extension.AbstractAccessor;
+import io.github.astro.virtue.common.extension.AttributeKey;
 import io.github.astro.virtue.common.util.NetUtil;
 import io.github.astro.virtue.common.util.StringUtil;
 import lombok.Getter;
@@ -20,7 +23,9 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Accessors(fluent = true)
-public class URL {
+public class URL extends AbstractAccessor {
+
+    public static final AttributeKey<URL> ATTRIBUTE_KEY = AttributeKey.get(Key.URL);
 
     private static final Logger logger = LoggerFactory.getLogger(URL.class);
 
@@ -69,6 +74,7 @@ public class URL {
     public URL(String protocol, String ip, int port, Map<String, String> params) {
         this(protocol, new InetSocketAddress(ip, port), params);
     }
+
 
     public static URL valueOf(String url) {
         if (url == null || url.trim().isEmpty()) {
@@ -128,10 +134,23 @@ public class URL {
         this.port = inetSocketAddress.getPort();
     }
 
+    public static String toPath(List<String> paths) {
+        if (paths == null) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String path : paths) {
+            builder.append("/");
+            builder.append(path);
+        }
+        return builder.toString();
+    }
+
     public void addPath(String path) {
         if (StringUtil.isBlank(path)) {
             logger.warn("Add empty path, will skip");
         } else {
+            path = StringUtil.normalizePath(path);
             paths.add(path);
         }
     }
@@ -140,18 +159,13 @@ public class URL {
         if (StringUtil.isBlank(path)) {
             logger.warn("Add empty path, will skip");
         } else {
+            path = StringUtil.normalizePath(path);
             paths.add(index, path);
         }
     }
 
     public void addPaths(List<String> paths) {
-        this.paths.addAll(paths);
-    }
-
-    public void replacePaths(List<String> paths) {
-        if (paths != null && !paths.isEmpty()) {
-            this.paths = paths;
-        }
+        paths.forEach(this::addPath);
     }
 
     public void removePath(int index) {
@@ -223,13 +237,15 @@ public class URL {
         return authority() + path();
     }
 
-    public String path() {
-        StringBuilder builder = new StringBuilder();
-        for (String path : paths) {
-            builder.append("/");
-            builder.append(path);
+    public void replacePaths(List<String> paths) {
+        if (paths != null && !paths.isEmpty()) {
+            this.paths.clear();
+            addPaths(paths);
         }
-        return builder.toString();
+    }
+
+    public String path() {
+        return toPath(paths);
 
     }
 
