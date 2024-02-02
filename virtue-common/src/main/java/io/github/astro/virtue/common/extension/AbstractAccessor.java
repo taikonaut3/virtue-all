@@ -3,6 +3,9 @@ package io.github.astro.virtue.common.extension;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Accessor Abstract Class.
+ */
 public abstract class AbstractAccessor implements Accessor {
 
     protected Map<AttributeKey<?>, Attribute<?>> accessor = new ConcurrentHashMap<>();

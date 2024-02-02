@@ -1,5 +1,10 @@
 package io.github.astro.virtue.common.url;
 
+/**
+ * Get a singleton service
+ *
+ * @param <T>
+ */
 public abstract class SingleServiceFactory<T> implements ServiceFactory<T> {
     private volatile T service;
 

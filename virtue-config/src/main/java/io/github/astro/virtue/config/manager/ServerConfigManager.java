@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Server Config Manager
+ * ServerConfig Manager
  */
 public class ServerConfigManager extends AbstractManager<ServerConfig> {
 
@@ -21,7 +21,7 @@ public class ServerConfigManager extends AbstractManager<ServerConfig> {
     }
 
     /**
-     * 注册一个ServerConfig,协议类型是唯一的
+     * Register a ServerConfig. The protocol type is unique.
      *
      * @param config
      */

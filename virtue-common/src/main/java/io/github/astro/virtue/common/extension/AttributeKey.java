@@ -3,6 +3,11 @@ package io.github.astro.virtue.common.extension;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Used Get Attribute By Generic.
+ *
+ * @param <T>
+ */
 public class AttributeKey<T> {
 
     private static final Map<String, AttributeKey<?>> KEY_POOL = new ConcurrentHashMap<>();
@@ -13,6 +18,13 @@ public class AttributeKey<T> {
         this.name = name;
     }
 
+    /**
+     * Get an AttributeKey by name, if it doesn't exist, create it and put it into the pool.
+     *
+     * @param name
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static <T> AttributeKey<T> get(String name) {
         AttributeKey<?> key = KEY_POOL.get(name);

@@ -12,7 +12,7 @@ import static io.github.astro.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.github.astro.virtue.common.constant.Components.Serialize.*;
 
 /**
- * Store Mapping: String -> byte
+ * Store Mapping: String -> byte.
  */
 public class ModeContainer {
 

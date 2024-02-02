@@ -68,5 +68,11 @@ public @interface Options {
      */
     String[] registries() default {};
 
+    /**
+     * Is it only when the first call is made that the registration center is actually
+     * connected to Get the available services
+     */
+    boolean lazyDiscover() default false;
+
 }
 

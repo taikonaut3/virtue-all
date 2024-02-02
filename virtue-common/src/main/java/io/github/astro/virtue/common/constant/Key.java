@@ -4,6 +4,9 @@ import io.github.astro.virtue.common.extension.AttributeKey;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Key Constant.
+ */
 public interface Key {
 
     String UNIQUE_ID = "uniqueId";
@@ -65,6 +68,8 @@ public interface Key {
     String MAX_THREADS = "maxThreads";
 
     String ASYNC = "async";
+
+    String LAZY_DISCOVER = "lazyDiscover";
 
     String PROXY = "proxy";
 

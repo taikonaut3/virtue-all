@@ -6,6 +6,7 @@ import java.util.List;
  * Filter scope.
  */
 public enum FilterScope {
+
     /**
      * Before selecting the target address.
      */

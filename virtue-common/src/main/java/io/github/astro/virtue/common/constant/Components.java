@@ -1,5 +1,8 @@
 package io.github.astro.virtue.common.constant;
 
+/**
+ * SPI Implementation Class Constant.
+ */
 public interface Components {
 
     String SPRING = "spring";

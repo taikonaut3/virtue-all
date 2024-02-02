@@ -2,6 +2,9 @@ package io.github.astro.virtue.common.constant;
 
 import static io.github.astro.virtue.common.constant.Components.*;
 
+/**
+ * Default Constant.
+ */
 public interface Constant {
 
     int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);

@@ -8,8 +8,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementing this interface allows converting all fields,
+ * including those annotated with {@link Parameter}, of the object (including All fields from parent classes),
+ * into a map using the {@link Parameterization#parameterization() method.
+ */
 public interface Parameterization {
 
+    /**
+     * Map the fields annotated with {@link Parameter} to a map.
+     *
+     * @return map
+     */
     default Map<String, String> parameterization() {
         HashMap<String, String> map = new HashMap<>();
         List<Field> fields = ReflectUtil.getAllFields(this.getClass());

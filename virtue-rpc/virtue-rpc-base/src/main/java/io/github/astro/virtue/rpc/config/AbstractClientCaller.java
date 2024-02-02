@@ -48,6 +48,9 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     @Parameter(Key.ASYNC)
     protected boolean async;
 
+    @Parameter(Key.LAZY_DISCOVER)
+    protected boolean lazyDiscover;
+
     @Parameter(Key.LOAD_BALANCE)
     protected String loadBalance;
 
@@ -76,6 +79,9 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     protected AbstractClientCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
         super(method, remoteCaller, protocol, annoType);
+        if (!lazyDiscover) {
+            ((ComplexClientInvoker) invoker).discoveryUrls(Invocation.create(url, null, null));
+        }
     }
 
     @Override
@@ -96,6 +102,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         oneWay(returnType().getTypeName().equals("void"));
         multiplex(ops.multiplex());
         clientConfig(ops.client());
+        lazyDiscover(ops.lazyDiscover());
         // subclass init
         doInit();
         // parse config

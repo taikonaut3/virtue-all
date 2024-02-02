@@ -5,6 +5,9 @@ import io.github.astro.virtue.config.ServerCaller;
 
 import java.util.Collection;
 
+/**
+ * RemoteService Manager
+ */
 public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
     public RemoteServiceManager(Virtue virtue) {

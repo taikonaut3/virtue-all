@@ -18,7 +18,7 @@ import java.util.*;
 import static io.github.astro.virtue.common.constant.Constant.SPI_FIX_PATH;
 
 /**
- * Extend JDK SPI
+ * Extend JDK SPI.
  *
  * @see ServiceInterface
  * @see ServiceProvider

@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * RemoteCaller Manager
+ */
 public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> {
 
     public RemoteCallerManager(Virtue virtue) {

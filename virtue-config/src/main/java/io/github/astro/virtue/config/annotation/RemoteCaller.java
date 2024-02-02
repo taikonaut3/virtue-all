@@ -5,7 +5,8 @@ import io.github.astro.virtue.common.constant.Components;
 import java.lang.annotation.*;
 
 /**
- * Client representing a service
+ * Indicates a Remote Caller,
+ * Used on Interface, RemoteCaller can create a proxy for that interface to perform remote invocations.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

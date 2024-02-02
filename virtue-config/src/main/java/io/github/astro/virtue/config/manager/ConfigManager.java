@@ -4,6 +4,9 @@ import io.github.astro.virtue.config.config.ApplicationConfig;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
+/**
+ * All Config Manager
+ */
 @Accessors(fluent = true)
 @Getter
 public class ConfigManager {

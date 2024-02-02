@@ -7,7 +7,9 @@ import io.github.astro.virtue.config.filter.FilterChain;
 
 import java.util.List;
 
-@ServiceProvider("default")
+import static io.github.astro.virtue.common.constant.Components.DEFAULT;
+
+@ServiceProvider(DEFAULT)
 public class DefaultFilterChain implements FilterChain {
 
     @Override

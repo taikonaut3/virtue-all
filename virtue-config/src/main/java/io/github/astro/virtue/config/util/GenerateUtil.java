@@ -1,9 +1,5 @@
 package io.github.astro.virtue.config.util;
 
-import io.github.astro.virtue.common.url.URL;
-import io.github.astro.virtue.config.CallArgs;
-import io.github.astro.virtue.config.ClientCaller;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -11,15 +7,6 @@ import java.lang.reflect.Type;
  * 生成工具类
  */
 public interface GenerateUtil {
-
-    static String generateKey(URL url) {
-        return url.path();
-    }
-
-    static String generateKey(CallArgs callArgs) {
-        ClientCaller<?> caller = (ClientCaller<?>) callArgs.caller();
-        return caller.url().path();
-    }
 
     static String generateKey(Method method) {
         StringBuilder builder = new StringBuilder();

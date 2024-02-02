@@ -14,6 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static io.github.astro.virtue.common.constant.Constant.SPI_FIX_PATH;
 
+/**
+ * Extension Spi Loader.
+ *
+ * @param <S>
+ */
 public class ExtensionLoader<S> {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);

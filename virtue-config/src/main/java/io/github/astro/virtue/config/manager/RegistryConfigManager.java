@@ -6,6 +6,9 @@ import io.github.astro.virtue.config.config.RegistryConfig;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * RegistryConfig Manager
+ */
 public class RegistryConfigManager extends AbstractManager<RegistryConfig> {
 
     public RegistryConfigManager(Virtue virtue) {

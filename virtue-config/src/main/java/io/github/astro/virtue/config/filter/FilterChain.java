@@ -5,10 +5,12 @@ import io.github.astro.virtue.config.Invocation;
 
 import java.util.List;
 
+import static io.github.astro.virtue.common.constant.Components.DEFAULT;
+
 /**
  * The filter chain is used to start the filter.
  */
-@ServiceInterface("default")
+@ServiceInterface(DEFAULT)
 public interface FilterChain {
 
     /**

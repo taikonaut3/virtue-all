@@ -1,7 +1,7 @@
 package io.github.astro.virtue.common.url;
 
 /**
- * Factory for the spi instance created from the Url configuration
+ * Factory for the SPI instance created from the Url configuration
  */
 public interface ServiceFactory<T> {
 

@@ -3,6 +3,9 @@ package io.github.astro.virtue.config.manager;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.config.ClientConfig;
 
+/**
+ * ClientConfig Manager
+ */
 public class ClientConfigManager extends AbstractManager<ClientConfig> {
 
     public ClientConfigManager(Virtue virtue) {

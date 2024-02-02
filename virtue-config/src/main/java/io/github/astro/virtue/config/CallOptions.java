@@ -77,5 +77,11 @@ public interface CallOptions extends CommonConfig {
      */
     List<RegistryConfig> registryConfigs();
 
+    /**
+     * Is it only when the first call is made that the registration center is actually
+     * connected to Get the available services
+     */
+    boolean lazyDiscover();
+
 }
 

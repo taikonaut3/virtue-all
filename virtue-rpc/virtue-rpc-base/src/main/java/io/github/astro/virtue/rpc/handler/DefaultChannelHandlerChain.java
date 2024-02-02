@@ -34,7 +34,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     }
 
     public DefaultChannelHandlerChain(ChannelHandler... handlers) {
-        AssertUtil.notNull(handlers);
+        AssertUtil.notNull((Object) handlers);
         for (ChannelHandler handler : handlers) {
             addLast(handler);
         }

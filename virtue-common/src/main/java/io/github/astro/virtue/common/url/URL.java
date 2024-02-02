@@ -29,7 +29,7 @@ public class URL extends AbstractAccessor {
 
     private static final Logger logger = LoggerFactory.getLogger(URL.class);
 
-    private List<String> paths;
+    private final List<String> paths;
 
     private Map<String, String> parameters;
 

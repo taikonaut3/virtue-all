@@ -4,7 +4,6 @@ public class RpcContext extends AbstractAccessor {
 
     private static final ThreadLocal<RpcContext> threadLocal = new ThreadLocal<>();
 
-
     public static RpcContext getContext() {
         RpcContext context = threadLocal.get();
         if (context == null) {

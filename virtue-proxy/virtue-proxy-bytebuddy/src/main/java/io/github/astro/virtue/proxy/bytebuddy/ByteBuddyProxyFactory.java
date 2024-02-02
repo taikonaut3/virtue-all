@@ -15,6 +15,7 @@ import static io.github.astro.virtue.common.constant.Components.ProxyFactory.BYT
  * Create Proxy  performance is not good
  */
 @ServiceProvider(BYTEBUDDY)
+@SuppressWarnings("unchecked")
 public class ByteBuddyProxyFactory extends AbstractProxyFactory {
 
     @Override

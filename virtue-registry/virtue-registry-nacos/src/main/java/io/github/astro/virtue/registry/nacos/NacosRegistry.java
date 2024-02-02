@@ -37,7 +37,10 @@ public class NacosRegistry extends AbstractRegistry {
     public void connect(URL url) throws ConnectException {
         try {
             namingService = NamingFactory.createNamingService(url.address());
-            System.setProperty("project.name", Virtue.get(url).applicationName());
+            String serviceName = serviceName(url);
+            if (!StringUtil.isBlank(serviceName)) {
+                System.setProperty("project.name", serviceName);
+            }
         } catch (NacosException e) {
             logger.error("Connect to Nacos: {} Fail", url.address());
             throw new ConnectException(e);

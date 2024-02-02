@@ -5,7 +5,8 @@ import io.github.astro.virtue.common.constant.Components;
 import java.lang.annotation.*;
 
 /**
- * Indicates a remote service
+ * Indicates a Remote service,
+ * Methods of the class with RemoteService can be called by the client.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

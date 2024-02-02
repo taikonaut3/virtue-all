@@ -2,6 +2,7 @@ package io.github.astro.virtue.registry;
 
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.SystemInfo;
 import io.github.astro.virtue.config.manager.Virtue;
 
@@ -59,8 +60,9 @@ public abstract class AbstractRegistry implements Registry {
     }
 
     public String serviceName(URL url) {
-        String moduleName = this.getClass().getModule().getName();
-        return url.getParameter(Key.APPLICATION, moduleName);
+        String applicationName = Virtue.get(url).applicationName();
+        applicationName = StringUtil.isBlank(applicationName) ? this.getClass().getModule().getName() : applicationName;
+        return url.getParameter(Key.APPLICATION, applicationName);
     }
 
     protected abstract void subscribeService(URL url);

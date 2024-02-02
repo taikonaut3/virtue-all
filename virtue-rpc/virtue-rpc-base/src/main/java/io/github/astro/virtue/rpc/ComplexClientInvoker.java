@@ -10,7 +10,6 @@ import io.github.astro.virtue.config.ClientCaller;
 import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.Invoker;
 import io.github.astro.virtue.config.manager.Virtue;
-import io.github.astro.virtue.config.util.GenerateUtil;
 import io.github.astro.virtue.governance.directory.Directory;
 import io.github.astro.virtue.governance.faulttolerance.FaultTolerance;
 import io.github.astro.virtue.governance.loadbalance.LoadBalance;
@@ -68,7 +67,7 @@ public class ComplexClientInvoker implements Invoker<Object> {
         return loadBalance.select(invocation, urls);
     }
 
-    private List<URL> discoveryUrls(Invocation invocation) {
+    public List<URL> discoveryUrls(Invocation invocation) {
         URL[] urls = caller.registryConfigs().stream()
                 .map(config -> {
                     URL url = config.toUrl();
@@ -79,7 +78,7 @@ public class ComplexClientInvoker implements Invoker<Object> {
                 toArray(URL[]::new);
         List<URL> result = directory.list(invocation, urls);
         if (result.isEmpty()) {
-            throw new SourceException("Not found available service!,Path:" + GenerateUtil.generateKey(invocation.callArgs()));
+            throw new SourceException("Not found available service!,Path:" + invocation.url().path());
         }
         return result;
     }
