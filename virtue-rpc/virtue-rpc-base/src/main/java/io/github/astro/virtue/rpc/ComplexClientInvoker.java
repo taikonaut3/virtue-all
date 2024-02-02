@@ -78,7 +78,9 @@ public class ComplexClientInvoker implements Invoker<Object> {
                 toArray(URL[]::new);
         List<URL> result = directory.list(invocation, urls);
         if (result.isEmpty()) {
-            throw new SourceException("Not found available service!,Path:" + invocation.url().path());
+            if (caller.lazyDiscover()) {
+                throw new SourceException("Not found available service!,Path:" + invocation.url().path());
+            }
         }
         return result;
     }
