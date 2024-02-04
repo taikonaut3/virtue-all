@@ -1,7 +1,7 @@
 package io.github.astro.virtue.proxy;
 
 /**
- * Represents a functional interface for invoking the original method.
+ * Used invoke the original method.
  *
  * @param <R> The return type of the method.
  */

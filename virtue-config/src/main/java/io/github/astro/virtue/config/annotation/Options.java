@@ -6,7 +6,7 @@ import io.github.astro.virtue.common.constant.Constant;
 import java.lang.annotation.*;
 
 /**
- * Client-side parameter configuration.
+ * Client parameter configuration.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -14,63 +14,70 @@ import java.lang.annotation.*;
 public @interface Options {
 
     /**
-     * Supports asynchronous invocation. Default value is false.
+     * Supports async call,The default is false.
+     * If true,Then the returnType should be {@link java.util.concurrent.CompletableFuture}.
      */
     boolean async() default false;
 
     /**
-     * Timeout duration in milliseconds. Default value is Constant.DEFAULT_TIMEOUT.
+     * The default is false,Unit: ms
      */
     int timeout() default Constant.DEFAULT_TIMEOUT;
 
     /**
-     * Number of retries. Default value is Constant.DEFAULT_RETIRES.
-     */
-    int retires() default Constant.DEFAULT_RETIRES;
-
-    /**
-     * Gets the service directory. Default value is Components.Directory.DEFAULT.
+     * Used {@link io.github.astro.virtue.governance.directory.Directory}.
+     * Default is "default" {@link io.github.astro.virtue.governance.directory.DefaultDirectory}.
      */
     String directory() default Components.DEFAULT;
 
     /**
-     * Gets the router type. Default value is Components.Router.WEIGHT.
+     * Used {@link io.github.astro.virtue.governance.router.Router}.
+     * Default is "weight" {@link io.github.astro.virtue.governance.router.WeightRouter}.
      */
     String router() default Components.Router.WEIGHT;
 
     /**
-     * Gets the load balancing strategy. Default value is Components.LoadBalance.RANDOM.
+     * Used {@link io.github.astro.virtue.governance.loadbalance.LoadBalance}.
+     * Default is "random" {@link io.github.astro.virtue.governance.loadbalance.RandomLoadBalance}.
      */
     String loadBalance() default Components.LoadBalance.RANDOM;
 
     /**
-     * Gets the fault tolerance strategy. Default value is Components.FaultTolerance.FAIL_RETRY.
+     * Used {@link io.github.astro.virtue.governance.faulttolerance.FaultTolerance}.
+     * Default is "failFast" {@link io.github.astro.virtue.governance.faulttolerance.FailFast}.
      */
     String faultTolerance() default Components.FaultTolerance.FAIL_FAST;
 
     /**
-     * Directly accesses the specified URL.
+     * If {@link Options#faultTolerance()} is "failRetry",
+     * Number of retries called when an exception occurred.
+     */
+    int retires() default Constant.DEFAULT_RETIRES;
+
+    /**
+     * Precise direct connection to the url address.
      */
     String url() default "";
 
     /**
-     * Determines whether to reuse the client configuration from the current protocol. Default value is true.
+     * Determines whether to reuse the client configuration from the current protocol.
      */
     boolean multiplex() default true;
 
     /**
-     * When multiplex is set to false, a new client will be created using the configuration specified here.
+     * When {@link Options#multiplex()} is false,
+     * Capable to configure custom clients,Then a client will be created.
      */
     String client() default "";
 
     /**
-     * Supports multiple registry configs
+     * Supports multiple registry configs.
      */
     String[] registries() default {};
 
     /**
-     * Is it only when the first call is made that the registration center is actually
-     * connected to Get the available services
+     * Is it only when the first call is made that the registration center is actually connected to Get the available services.
+     * The default gets available services when {@link io.github.astro.virtue.config.ClientCaller} creation is complete.
      */
     boolean lazyDiscover() default false;
 

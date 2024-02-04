@@ -10,23 +10,20 @@ import java.util.function.Function;
 public class CallInvocation implements Invocation {
 
     private final CallArgs args;
-    private URL url;
-    private Function<Invocation, Object> call;
 
-    public CallInvocation(URL url, CallArgs args, Function<Invocation, Object> call) {
+    private URL url;
+
+    private Function<Invocation, Object> invoke;
+
+    public CallInvocation(URL url, CallArgs args, Function<Invocation, Object> invoke) {
         this.url = url;
         this.args = args;
-        this.call = call;
+        this.invoke = invoke;
     }
 
     @Override
     public URL url() {
         return url;
-    }
-
-    @Override
-    public void url(URL url) {
-        this.url = url;
     }
 
     @Override
@@ -36,12 +33,27 @@ public class CallInvocation implements Invocation {
 
     @Override
     public Object invoke() {
-        return call.apply(this);
+        if (invoke != null) {
+            return invoke.apply(this);
+        }
+        return null;
     }
 
     @Override
-    public Invocation turnInvoke(Function<Invocation, Object> function) {
-        this.call = function;
+    public Invocation revise(URL url) {
+        if (url != null) this.url = url;
+        return this;
+    }
+
+    @Override
+    public Invocation revise(Function<Invocation, Object> invoke) {
+        this.invoke = invoke;
+        return this;
+    }
+
+    @Override
+    public Invocation revise(URL url, Function<Invocation, Object> invoke) {
+        revise(url).revise(invoke);
         return this;
     }
 }

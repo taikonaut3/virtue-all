@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Accessor Abstract Class.
+ * Accessor abstract class.
  */
 public abstract class AbstractAccessor implements Accessor {
 

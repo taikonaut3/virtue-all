@@ -1,7 +1,7 @@
 package io.github.astro.virtue.common.url;
 
 /**
- * Get a singleton service
+ * Get a singleton service.
  *
  * @param <T>
  */

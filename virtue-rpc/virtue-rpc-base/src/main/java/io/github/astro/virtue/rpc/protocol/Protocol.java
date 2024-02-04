@@ -19,7 +19,6 @@ public interface Protocol<Req, Res> {
 
     /**
      *  This protocol.
-     *
      */
     String protocol();
 

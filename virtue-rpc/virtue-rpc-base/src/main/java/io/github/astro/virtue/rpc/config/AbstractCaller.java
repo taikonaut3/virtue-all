@@ -6,9 +6,9 @@ import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.CollectionUtil;
+import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.config.Caller;
 import io.github.astro.virtue.config.CallerContainer;
-import io.github.astro.virtue.config.Invoker;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterChain;
@@ -51,8 +51,7 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
 
     @Setter
     protected String protocol;
-    @Setter
-    protected Invoker<?> invoker;
+
     @Setter
     @Parameter(Key.APPLICATION)
     protected String remoteApplication;
@@ -120,7 +119,10 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
         if (method.isAnnotationPresent(Config.class)) {
             return method.getAnnotation(Config.class);
         }
-        return config();
+        if (config() != null) {
+            return config();
+        }
+        return ReflectUtil.getDefaultInstance(Config.class);
     }
 
     private void parseConfig(Config config) {

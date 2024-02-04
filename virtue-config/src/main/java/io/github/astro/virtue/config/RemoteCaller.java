@@ -10,14 +10,14 @@ public interface RemoteCaller<T> extends CallerContainer {
     /**
      * Gets the target interface of the remote service.
      *
-     * @return The target interface.
+     * @return the target interface
      */
     Class<T> targetInterface();
 
     /**
      * Gets a Proxy instance of the remote service.
      *
-     * @return The remote service instance.
+     * @return proxy instance
      */
     T get();
 

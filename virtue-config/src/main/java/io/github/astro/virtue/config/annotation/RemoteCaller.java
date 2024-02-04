@@ -5,8 +5,8 @@ import io.github.astro.virtue.common.constant.Components;
 import java.lang.annotation.*;
 
 /**
- * Indicates a Remote Caller,
- * Used on Interface, RemoteCaller can create a proxy for that interface to perform remote invocations.
+ * Indicates a remote caller,
+ * Used on interface, remoteCaller can create a proxy for that interface to perform remote invocations.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -14,12 +14,12 @@ import java.lang.annotation.*;
 public @interface RemoteCaller {
 
     /**
-     * The RemoteApplication name
+     * The remoteApplication name
      */
     String value();
 
     /**
-     * The Proxy type
+     * The proxy type
      */
     String proxy() default Components.ProxyFactory.JDK;
 

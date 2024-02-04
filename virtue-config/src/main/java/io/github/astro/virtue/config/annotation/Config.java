@@ -1,5 +1,7 @@
 package io.github.astro.virtue.config.annotation;
 
+import io.github.astro.virtue.common.constant.Components;
+
 import java.lang.annotation.*;
 
 import static io.github.astro.virtue.common.constant.Components.Serialize;
@@ -13,28 +15,29 @@ import static io.github.astro.virtue.common.constant.Components.Serialize;
 public @interface Config {
 
     /**
-     * The group
+     * The group.
      */
     String group() default "";
 
     /**
-     * The version
+     * The version.
      */
     String version() default "";
 
     /**
-     * Serialization type
+     * Serialization type.
      */
     String serialize() default Serialize.KRYO;
 
     /**
-     * Invoke interceptors
+     * Invoke Filter.
+     * @see io.github.astro.virtue.config.filter.Filter
      */
-    String[] filters() default {};
+    String[] filters() default {"jjj"};
 
     /**
      * The filter chain for {@link io.github.astro.virtue.config.Caller}
      */
-    String filterChain() default "default";
+    String filterChain() default Components.DEFAULT;
 }
 

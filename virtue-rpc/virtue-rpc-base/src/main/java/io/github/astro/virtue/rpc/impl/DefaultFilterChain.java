@@ -27,6 +27,6 @@ public class DefaultFilterChain implements FilterChain {
             return invocation.invoke();
         }
         Filter filter = filters.get(index);
-        return filter.doFilter(filterInvocation.turnInvoke(inv -> doFilter(invocation, inv, filters, index + 1)));
+        return filter.doFilter(filterInvocation.revise(inv -> doFilter(invocation, inv, filters, index + 1)));
     }
 }

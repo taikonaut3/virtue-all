@@ -35,8 +35,6 @@ public class DefaultDirectory implements Directory {
             List<URL> discoverUrls = registry.discover(url);
             if (discoverUrls != null && !discoverUrls.isEmpty()) {
                 for (URL discoverUrl : discoverUrls) {
-                    discoverUrl.addPaths(url.paths());
-                    discoverUrl.addParameters(url.parameters());
                     CollectionUtil.addToList(remoteServiceUrls,
                             (existUrl, newUrl) -> Objects.equals(existUrl.address(), newUrl.address()),
                             discoverUrl);

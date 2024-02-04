@@ -1,7 +1,7 @@
 package io.github.astro.virtue.common.constant;
 
 /**
- * System Key Constant.
+ * System key constant.
  */
 public interface SystemKey {
 

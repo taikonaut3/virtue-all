@@ -4,6 +4,7 @@ import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.extension.AbstractAccessor;
 import io.github.astro.virtue.common.extension.AttributeKey;
+import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.NetUtil;
 import io.github.astro.virtue.common.util.StringUtil;
 import lombok.Getter;
@@ -18,8 +19,8 @@ import java.util.stream.Collectors;
 
 /**
  * Basic for:
- * 1、Rpc Request: {@link RemoteUrl}
- * 2、Connect to Third Party Middleware
+ * 1、Rpc Request: {@link RemoteUrl}.
+ * 2、Connect to Third Party Middleware.
  */
 @Getter
 @Accessors(fluent = true)
@@ -42,37 +43,46 @@ public class URL extends AbstractAccessor {
     @Setter
     protected String protocol;
 
+    protected String address;
+
     public URL() {
         this.paths = new LinkedList<>();
         this.parameters = new HashMap<>();
     }
 
-    public URL(String protocol, InetSocketAddress address, Map<String, String> params) {
-        this(protocol, address);
-        this.parameters.putAll(params);
-    }
-
     public URL(String protocol, InetSocketAddress address) {
         this();
+        AssertUtil.notNull(protocol, address);
         this.protocol = protocol;
         this.host = address.getHostString();
         this.port = address.getPort();
+        this.address = NetUtil.getAddress(host, port);
     }
 
-    public URL(String protocol, String address) {
-        this(protocol, NetUtil.toInetSocketAddress(address));
+    public URL(String protocol, InetSocketAddress address, Map<String, String> parameters) {
+        this(protocol, address);
+        addParameters(parameters);
     }
 
     public URL(String protocol, String ip, int port) {
         this(protocol, new InetSocketAddress(ip, port));
     }
 
-    public URL(String protocol, String address, Map<String, String> params) {
-        this(protocol, NetUtil.toInetSocketAddress(address), params);
+    public URL(String protocol, String ip, int port, Map<String, String> parameters) {
+        this(protocol, new InetSocketAddress(ip, port), parameters);
     }
 
-    public URL(String protocol, String ip, int port, Map<String, String> params) {
-        this(protocol, new InetSocketAddress(ip, port), params);
+    public URL(String protocol, String address) {
+        this();
+        AssertUtil.notNull(protocol, address);
+        this.protocol = protocol;
+        address(address);
+    }
+
+    public URL(String protocol, String address, Map<String, String> parameters) {
+        this(protocol, address);
+        addParameters(parameters);
+
     }
 
 
@@ -86,13 +96,8 @@ public class URL extends AbstractAccessor {
         String protocol = fixed.substring(0, protocolStartIndex);
         fixed = fixed.substring(protocolStartIndex + 3);
         String[] addressPath = fixed.split("/");
-        String[] address = addressPath[0].split(":");
-        URL urlObj = new URL();
-        urlObj.protocol(protocol);
-        if (address.length == 2) {
-            urlObj.host(address[0]);
-            urlObj.port(Integer.parseInt(address[1]));
-        }
+        String address = addressPath[0];
+        URL urlObj = new URL(protocol, address);
         if (addressPath.length > 1) {
             for (int i = 1; i < addressPath.length; i++) {
                 urlObj.addPath(addressPath[i]);
@@ -121,19 +126,6 @@ public class URL extends AbstractAccessor {
                 ));
     }
 
-    public String address() {
-        if (StringUtil.isBlank(host)) {
-            return null;
-        }
-        return host + ":" + port;
-    }
-
-    public void address(String address) {
-        InetSocketAddress inetSocketAddress = NetUtil.toInetSocketAddress(address);
-        this.host = inetSocketAddress.getHostString();
-        this.port = inetSocketAddress.getPort();
-    }
-
     public static String toPath(List<String> paths) {
         if (paths == null) {
             return null;
@@ -144,6 +136,15 @@ public class URL extends AbstractAccessor {
             builder.append(path);
         }
         return builder.toString();
+    }
+
+    public void address(String address) {
+        this.address = address;
+        if (NetUtil.isValidIpPort(address)) {
+            InetSocketAddress socketAddress = NetUtil.toInetSocketAddress(address);
+            this.host = socketAddress.getHostString();
+            this.port = socketAddress.getPort();
+        }
     }
 
     public void addPath(String path) {
@@ -186,7 +187,7 @@ public class URL extends AbstractAccessor {
     }
 
     public void addParameters(Map<String, String> parameters) {
-        this.parameters.putAll(parameters);
+        if (parameters != null) this.parameters.putAll(parameters);
     }
 
     public void replaceParameters(Map<String, String> parameters) {
@@ -230,7 +231,7 @@ public class URL extends AbstractAccessor {
     }
 
     public String authority() {
-        return protocol + "://" + host + ":" + port;
+        return protocol + "://" + address;
     }
 
     public String uri() {
@@ -254,8 +255,16 @@ public class URL extends AbstractAccessor {
         return path() + (StringUtil.isBlank(params) ? "" : "?" + params);
     }
 
+    public URL deepCopy() {
+        URL url = new URL(protocol, address(), parameters);
+        url.replacePaths(paths);
+        url.accessor.putAll(this.accessor);
+        return url;
+    }
+
     @Override
     public String toString() {
         return authority() + pathAndParams();
     }
+
 }

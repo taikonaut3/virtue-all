@@ -12,16 +12,8 @@ public interface ClientCaller<T extends Annotation> extends Caller<T>, DirectRem
     /**
      * Gets the remote caller associated with this client caller.
      *
-     * @return The remote caller.
+     * @return remote caller instance
      */
     RemoteCaller<?> remoteCaller();
-
-    /**
-     * Gets the direct URL for making the remote service call.
-     *
-     * @return The direct URL.
-     */
-    String directUrl();
-
 }
 

@@ -21,11 +21,11 @@ import static io.github.astro.virtue.common.constant.Components.Serialize.MSGPAC
 @RemoteCaller("provider")
 public interface Consumer {
 
-    @Config(filters = {"filter2", "filter1"}, serialize = JSON)
+    @Config(filters = {"filter2"}, serialize = JSON)
     @VirtueCall(service = "345", callMethod = "hello")
     String hello(String world);
 
-    @Config(filters = {"filter2", "filter1"},serialize = JSON)
+    @Config(filters = {"filter1"},serialize = JSON)
     @Options(async = true)
     @VirtueCall(service = "345", callMethod = "hello")
     CompletableFuture<String> helloAsync(String world);

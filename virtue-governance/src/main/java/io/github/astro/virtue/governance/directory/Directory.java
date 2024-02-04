@@ -17,9 +17,9 @@ public interface Directory {
     /**
      * Lists all available services from the registry.
      *
-     * @param invocation      The invocation to be used for the service lookup.
-     * @param registryConfigs The registry configurations to be used for the service lookup.
-     * @return A list of URLs representing the available services.
+     * @param invocation      the invocation to be used for the service lookup
+     * @param registryConfigs the registry configurations to be used for the service lookup
+     * @return a list of urls representing the available services
      */
     List<URL> list(Invocation invocation, URL... registryConfigs);
 

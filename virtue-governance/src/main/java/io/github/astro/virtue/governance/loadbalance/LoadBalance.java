@@ -15,11 +15,11 @@ import static io.github.astro.virtue.common.constant.Components.LoadBalance.RAND
 public interface LoadBalance {
 
     /**
-     * Selects a URL for the given invocation from a list of available URLs.
+     * Selects an url for the given invocation from a list of available urls.
      *
-     * @param invocation The invocation to be performed.
-     * @param urls       The list of available URLs.
-     * @return The selected URL.
+     * @param invocation the invocation to be performed
+     * @param urls       the list of available URLs
+     * @return the selected url
      */
     URL select(Invocation invocation, List<URL> urls);
 }

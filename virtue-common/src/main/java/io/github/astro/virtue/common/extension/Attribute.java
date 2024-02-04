@@ -10,16 +10,16 @@ public class Attribute<T> {
     private T attribute;
 
     /**
-     * Get Attribute Object
+     * Get attribute object.
      *
-     * @return Attribute object
+     * @return attribute object
      */
     public T get() {
         return attribute;
     }
 
     /**
-     * Set Attribute Object
+     * Set attribute object.
      *
      * @param attribute
      */

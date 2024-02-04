@@ -5,7 +5,7 @@ import io.github.astro.virtue.common.extension.AttributeKey;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Key Constant.
+ * Key constant.
  */
 public interface Key {
 

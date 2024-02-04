@@ -12,28 +12,28 @@ public interface Endpoint {
     /**
      * Get the host name of the endpoint.
      *
-     * @return
+     * @return host
      */
     String host();
 
     /**
      * Get the port number of the endpoint.
      *
-     * @return
+     * @return port
      */
     int port();
 
     /**
      * Convert the endpoint to an InetSocketAddress object.
      *
-     * @return
+     * @return InetSocketAddress instance
      */
     InetSocketAddress toInetSocketAddress();
 
     /**
      * Convert the endpoint to "host:port".
      *
-     * @return
+     * @return address
      */
     default String address() {
         return NetUtil.getAddress(host(), port());

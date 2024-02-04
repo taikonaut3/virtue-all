@@ -1,85 +1,85 @@
 package io.github.astro.virtue.config;
 
+import io.github.astro.virtue.config.annotation.Options;
 import io.github.astro.virtue.config.config.RegistryConfig;
 
 import java.util.List;
 
 /**
- * Represents the options for making a remote service call.
+ * Mapping {@link io.github.astro.virtue.config.annotation.Options}
  */
 public interface CallOptions extends CommonConfig {
 
     /**
-     * Checks if the call should be executed asynchronously.
-     *
-     * @return true if the call should be executed asynchronously, false otherwise.
+     * Supports async call,The default is false.
+     * If true,Then the returnType should be {@link java.util.concurrent.CompletableFuture}
      */
     boolean async();
 
     /**
-     * Gets the load balancing strategy to be used for the call.
+     * The default is false,Unit: ms.
      *
-     * @return The load balancing strategy.
-     */
-    String loadBalance();
-
-    /**
-     * Gets the directory where the remote service is located.
-     *
-     * @return The directory of the remote service.
-     */
-    String directory();
-
-    /**
-     * Gets the router to be used for routing the call.
-     *
-     * @return The router.
-     */
-    String router();
-
-    /**
-     * Gets the fault tolerance strategy to be used for the call.
-     *
-     * @return The fault tolerance strategy.
-     */
-    String faultTolerance();
-
-    /**
-     * Gets the timeout value for the call in milliseconds.
-     *
-     * @return The timeout value.
+     * @return The timeout value
      */
     int timeout();
 
     /**
-     * Gets the number of retries for the call.
-     *
-     * @return The number of retries.
+     * Used {@link io.github.astro.virtue.governance.directory.Directory}.
+     * Default is "default" {@link io.github.astro.virtue.governance.directory.DefaultDirectory}
+     */
+    String directory();
+
+    /**
+     * Used {@link io.github.astro.virtue.governance.router.Router}.
+     * Default is "weight" {@link io.github.astro.virtue.governance.router.WeightRouter}
+     */
+    String router();
+
+    /**
+     * Used {@link io.github.astro.virtue.governance.loadbalance.LoadBalance}.
+     * Default is "random" {@link io.github.astro.virtue.governance.loadbalance.RandomLoadBalance}.
+     */
+    String loadBalance();
+
+    /**
+     * Used {@link io.github.astro.virtue.governance.faulttolerance.FaultTolerance}.
+     * Default is "failFast" {@link io.github.astro.virtue.governance.faulttolerance.FailFast}.
+     */
+    String faultTolerance();
+
+    /**
+     * If {@link Options#faultTolerance()} is "failRetry",
+     * Number of retries called when an exception occurred.
      */
     int retires();
 
     /**
-     * Checks if multiplexing should be used for the call.
+     * Gets the direct URL for making the remote service call.
      *
-     * @return true if multiplexing should be used, false otherwise.
+     * @return the direct url
+     */
+    String directUrl();
+
+    /**
+     * Determines whether to reuse the client configuration from the current protocol.
      */
     boolean multiplex();
 
     /**
-     * Gets the client configuration for the call.
+     * Gets the client config for the call.
      *
-     * @return The client configuration.
+     * @return clientConfig instance
      */
     String clientConfig();
 
     /**
-     * Gets a list of registry configurations from the @Config.
+     * Gets a list of registry configurations from the {@link Options#registries()}.
      */
     List<RegistryConfig> registryConfigs();
 
     /**
-     * Is it only when the first call is made that the registration center is actually
-     * connected to Get the available services
+     * Is it only when the first call is made that the registration center is actually connected to Get the available services.
+     * The default gets available services when {@link io.github.astro.virtue.config.ClientCaller} creation is complete.
      */
     boolean lazyDiscover();
 

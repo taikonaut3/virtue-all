@@ -12,14 +12,14 @@ import java.lang.annotation.*;
 public @interface ServiceProvider {
 
     /**
-     * Current Implementation class name
+     * Current Implementation class name.
      *
      * @return name
      */
     String value() default "";
 
     /**
-     * Specifies which interface to provide implementation
+     * Specifies which interface to provide implementation.
      *
      * @default: for all @ServiceInterface modified interfaces
      */

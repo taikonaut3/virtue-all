@@ -20,6 +20,7 @@ public class RpcContext extends AbstractAccessor {
 
     public void clear() {
         accessor.clear();
+        threadLocal.remove();
     }
 
 }

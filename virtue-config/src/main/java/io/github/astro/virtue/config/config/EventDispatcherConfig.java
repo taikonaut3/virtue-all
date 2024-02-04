@@ -9,10 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/7 14:00
- */
 @Accessors(fluent = true, chain = true)
 @Getter
 @Setter

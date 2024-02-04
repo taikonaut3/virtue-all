@@ -1,7 +1,7 @@
 package io.github.astro.virtue.common.constant;
 
 /**
- * SPI Implementation Class Constant.
+ * SPI implementation class constant.
  */
 public interface Components {
 

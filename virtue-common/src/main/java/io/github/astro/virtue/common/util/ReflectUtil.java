@@ -4,16 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
 public final class ReflectUtil {
 
     public static final Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
+
+    private static final Map<Class<? extends Annotation>, Annotation> ANNOTATION_MAP = new LinkedHashMap<>();
 
     public static <T> T createInstance(Class<T> type, Object... args) {
         Class<?>[] parameterTypes;
@@ -32,8 +31,6 @@ public final class ReflectUtil {
 
     }
 
-
-
     public static <T> T createInstance(Constructor<T> constructor, Object... args) {
         T instance = null;
         try {
@@ -42,6 +39,25 @@ public final class ReflectUtil {
             logger.error("Create Instance Fail", e);
         }
         return instance;
+    }
+
+    public static <T extends Annotation> T getDefaultInstance(Class<T> annotationType) {
+        Annotation annotation = ANNOTATION_MAP.get(annotationType);
+        if (annotation == null) {
+            annotation = (T) Proxy.newProxyInstance(
+                    annotationType.getClassLoader(),
+                    new Class<?>[]{annotationType},
+                    (proxy, method, args) -> {
+                        if (method.getName().equals("toString")) {
+                            return formatAnnotationToString(annotationType, proxy);
+                        }
+                        // 返回注解的默认属性值
+                        return method.getDefaultValue();
+                    });
+            ANNOTATION_MAP.put(annotationType, annotation);
+        }
+        return (T) annotation;
+
     }
 
     public static Class<?>[] findMatchingConstructor(Class<?> clazz, Object... args) throws NoSuchMethodException {
@@ -140,5 +156,66 @@ public final class ReflectUtil {
         }
         return null;
     }
+
+    public static String formatAnnotationToString(Class<?> annotationType, Object proxy) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('@').append(annotationType.getName()).append('(');
+        Method[] methods = annotationType.getDeclaredMethods();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            try {
+                method.setAccessible(true);
+                Object value = method.invoke(proxy);
+                sb.append(method.getName()).append('=').append(valueToString(value));
+                if (i < methods.length - 1) {
+                    sb.append(", ");
+                }
+            } catch (Exception e) {
+                logger.error("{} toString error", annotationType);
+            }
+        }
+        sb.append(')');
+        return sb.toString();
+    }
+
+    private static String valueToString(Object value) {
+        if (value instanceof String) {
+            return "\"" + value + "\"";
+        } else if (value.getClass().isArray()) {
+            switch (value) {
+                case Object[] objects -> {
+                    return Arrays.deepToString(objects);
+                }
+                case boolean[] booleans -> {
+                    return Arrays.toString(booleans);
+                }
+                case byte[] bytes -> {
+                    return Arrays.toString(bytes);
+                }
+                case char[] chars -> {
+                    return Arrays.toString(chars);
+                }
+                case double[] doubles -> {
+                    return Arrays.toString(doubles);
+                }
+                case float[] floats -> {
+                    return Arrays.toString(floats);
+                }
+                case int[] ints -> {
+                    return Arrays.toString(ints);
+                }
+                case long[] longs -> {
+                    return Arrays.toString(longs);
+                }
+                case short[] shorts -> {
+                    return Arrays.toString(shorts);
+                }
+                default -> {
+                }
+            }
+        }
+        return String.valueOf(value);
+    }
+
 
 }

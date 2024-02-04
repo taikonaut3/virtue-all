@@ -11,11 +11,15 @@ public interface CallerContainer extends Lifecycle {
 
     /**
      * Gets the name of the microservice application used to locate the target IP.
+     *
+     * @return application-name
      */
     String remoteApplication();
 
     /**
      * Gets an array of callers associated with the container.
+     *
+     * @return all caller instance
      */
     Caller<?>[] callers();
 
@@ -29,9 +33,16 @@ public interface CallerContainer extends Lifecycle {
 
     /**
      * The Caller container Proxy type
+     *
+     * @return proxy type
      */
     String proxy();
 
+    /**
+     * The belong to virtue
+     *
+     * @return virtue instance
+     */
     Virtue virtue();
 
 }

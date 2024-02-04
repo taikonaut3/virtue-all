@@ -3,7 +3,7 @@ package io.github.astro.virtue.common.constant;
 import static io.github.astro.virtue.common.constant.Components.*;
 
 /**
- * Default Constant.
+ * Default constant.
  */
 public interface Constant {
 

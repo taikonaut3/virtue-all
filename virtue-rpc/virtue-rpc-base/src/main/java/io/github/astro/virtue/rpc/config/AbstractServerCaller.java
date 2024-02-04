@@ -4,10 +4,12 @@ import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.config.CallArgs;
+import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.ServerCaller;
 import io.github.astro.virtue.config.config.ServerConfig;
-import io.github.astro.virtue.rpc.ComplexServerInvoker;
+import io.github.astro.virtue.config.filter.Filter;
+import io.github.astro.virtue.config.filter.FilterScope;
 import io.github.astro.virtue.transport.server.Server;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -17,13 +19,11 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/5 16:31
- */
+
 @Getter
 @Accessors(fluent = true)
 public abstract class AbstractServerCaller<T extends Annotation> extends AbstractCaller<T> implements ServerCaller<T> {
@@ -47,19 +47,25 @@ public abstract class AbstractServerCaller<T extends Annotation> extends Abstrac
         } else {
             logger.warn("Can't Find [{}]protocol's ServerConfig", protocol);
         }
-        invoker = new ComplexServerInvoker(this);
     }
 
     @Override
-    public Object call(CallArgs args) throws RpcException {
-        method.setAccessible(true);
-        try {
-            return method.invoke(remoteService().target(), args.args());
-        } catch (IllegalAccessException e) {
-            throw new RpcException(e);
-        } catch (InvocationTargetException e) {
-            throw new RpcException(e.getTargetException());
-        }
+    public Object call(URL url, CallArgs args) throws RpcException {
+        List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
+        Invocation invocation = Invocation.create(url, args, inv -> {
+            method.setAccessible(true);
+            try {
+                return method.invoke(remoteService().target(), args.args());
+            } catch (IllegalAccessException e) {
+                throw new RpcException(e);
+            } catch (InvocationTargetException e) {
+                throw new RpcException(e.getTargetException());
+            }
+        });
+        Object result = filterChain.filter(invocation, preFilters);
+        url.addParameters(this.url.parameters());
+        return protocolInstance.createResponse(url, result);
+
     }
 
     @Override

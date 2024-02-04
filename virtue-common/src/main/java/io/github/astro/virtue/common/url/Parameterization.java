@@ -10,8 +10,8 @@ import java.util.Map;
 
 /**
  * Implementing this interface allows converting all fields,
- * including those annotated with {@link Parameter}, of the object (including All fields from parent classes),
- * into a map using the {@link Parameterization#parameterization() method.
+ * Including those annotated with {@link Parameter}, of the object (including All fields from parent classes),
+ * Into a map using the {@link Parameterization#parameterization() method.
  */
 public interface Parameterization {
 

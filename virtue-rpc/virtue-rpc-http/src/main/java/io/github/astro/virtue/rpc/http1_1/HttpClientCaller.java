@@ -3,6 +3,7 @@ package io.github.astro.virtue.rpc.http1_1;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.url.Parameter;
+import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.config.CallArgs;
 import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.RemoteCaller;
@@ -71,15 +72,15 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
     }
 
     @Override
-    public Object call(CallArgs callArgs) throws RpcException {
+    public Object call(URL url,CallArgs callArgs) throws RpcException {
         url.replacePaths(httpParser.parsePaths(this, callArgs));
         url.addParameters(httpParser.parseParams(this, callArgs));
-        return super.call(callArgs);
+        return super.call(url,callArgs);
     }
 
     @Override
-    protected RpcFuture doCall(Invocation invocation) {
-        RpcFuture future = super.doCall(invocation);
+    protected RpcFuture directRemoteCall(Invocation invocation) {
+        RpcFuture future = super.directRemoteCall(invocation);
         future.completeConsumer(f -> ((HttpProtocol) protocolInstance).returnClient(f.client()));
         return future;
     }

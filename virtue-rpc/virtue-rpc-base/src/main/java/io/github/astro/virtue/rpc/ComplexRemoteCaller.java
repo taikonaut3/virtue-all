@@ -3,12 +3,12 @@ package io.github.astro.virtue.rpc;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
-import io.github.astro.virtue.config.CallerFactory;
-import io.github.astro.virtue.config.ClientCaller;
-import io.github.astro.virtue.config.RemoteCaller;
+import io.github.astro.virtue.config.*;
 import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
 import io.github.astro.virtue.config.manager.Virtue;
+import io.github.astro.virtue.proxy.InvocationHandler;
 import io.github.astro.virtue.proxy.ProxyFactory;
+import io.github.astro.virtue.proxy.SuperInvoker;
 import io.github.astro.virtue.rpc.config.AbstractCallerContainer;
 import lombok.ToString;
 
@@ -74,5 +74,25 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
                 }
             }
         }
+    }
+
+    public static class ClientInvocationHandler implements InvocationHandler {
+
+        private final RemoteCaller<?> remoteCaller;
+
+        public ClientInvocationHandler(RemoteCaller<?> remoteCaller) {
+            this.remoteCaller = remoteCaller;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args, SuperInvoker<?> superInvoker) throws Throwable {
+            Caller<?> caller = remoteCaller.getCaller(method);
+            if (caller != null) {
+                RpcCallArgs callArgs = new RpcCallArgs(caller, args);
+                return caller.call(caller.url().deepCopy(),callArgs);
+            }
+            return null;
+        }
+
     }
 }

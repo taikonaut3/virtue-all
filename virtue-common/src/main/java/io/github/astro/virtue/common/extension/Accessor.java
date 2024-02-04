@@ -1,26 +1,26 @@
 package io.github.astro.virtue.common.extension;
 
 /**
- * Object Accessor.
+ * Object accessor.
  *
  * @see AttributeKey
  */
 public interface Accessor {
 
     /**
-     * Get Attribute by AttributeKey.
+     * Get attribute by attributeKey.
      *
      * @param key
      * @param <T>
-     * @return Attribute
+     * @return attribute
      */
     <T> Attribute<T> attribute(AttributeKey<T> key);
 
     /**
-     * Remove Attribute by AttributeKey's name.
+     * Remove attribute by attributeKey's name.
      *
      * @param key
-     * @return current object
+     * @return current instance
      */
     Accessor remove(String key);
 

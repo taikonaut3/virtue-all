@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Used Get Attribute By Generic.
+ * Used get attribute by generic.
  *
  * @param <T>
  */
@@ -19,11 +19,11 @@ public class AttributeKey<T> {
     }
 
     /**
-     * Get an AttributeKey by name, if it doesn't exist, create it and put it into the pool.
+     * Get an attributeKey by name, if it doesn't exist, create it and put it into the pool.
      *
      * @param name
      * @param <T>
-     * @return
+     * @return attributeKey instance
      */
     @SuppressWarnings("unchecked")
     public static <T> AttributeKey<T> get(String name) {

@@ -3,7 +3,7 @@ package io.github.astro.virtue.rpc.virtue;
 import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.annotation.Config;
-import io.github.astro.virtue.config.util.GenerateUtil;
+import io.github.astro.virtue.common.util.GenerateUtil;
 import io.github.astro.virtue.rpc.config.AbstractServerCaller;
 import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
 import lombok.ToString;

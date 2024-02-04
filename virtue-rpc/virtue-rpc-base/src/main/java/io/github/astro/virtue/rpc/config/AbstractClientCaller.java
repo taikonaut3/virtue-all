@@ -1,14 +1,21 @@
 package io.github.astro.virtue.rpc.config;
 
+import io.github.astro.virtue.common.constant.Components;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.RpcException;
+import io.github.astro.virtue.common.exception.SourceException;
 import io.github.astro.virtue.common.extension.RpcContext;
+import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.CollectionUtil;
 import io.github.astro.virtue.common.util.NetUtil;
+import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.common.util.StringUtil;
-import io.github.astro.virtue.config.*;
+import io.github.astro.virtue.config.CallArgs;
+import io.github.astro.virtue.config.ClientCaller;
+import io.github.astro.virtue.config.Invocation;
+import io.github.astro.virtue.config.RemoteCaller;
 import io.github.astro.virtue.config.annotation.Options;
 import io.github.astro.virtue.config.config.ClientConfig;
 import io.github.astro.virtue.config.config.RegistryConfig;
@@ -16,7 +23,11 @@ import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.config.filter.FilterScope;
 import io.github.astro.virtue.config.manager.ClientConfigManager;
 import io.github.astro.virtue.config.manager.ConfigManager;
-import io.github.astro.virtue.rpc.ComplexClientInvoker;
+import io.github.astro.virtue.config.manager.Virtue;
+import io.github.astro.virtue.governance.directory.Directory;
+import io.github.astro.virtue.governance.faulttolerance.FaultTolerance;
+import io.github.astro.virtue.governance.loadbalance.LoadBalance;
+import io.github.astro.virtue.governance.router.Router;
 import io.github.astro.virtue.rpc.RpcFuture;
 import io.github.astro.virtue.transport.Request;
 import io.github.astro.virtue.transport.client.Client;
@@ -80,7 +91,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     protected AbstractClientCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
         super(method, remoteCaller, protocol, annoType);
         if (!lazyDiscover) {
-            ((ComplexClientInvoker) invoker).discoveryUrls(Invocation.create(url, null, null));
+            discoveryUrls(Invocation.create(url, null));
         }
     }
 
@@ -114,14 +125,16 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         Optional.ofNullable(registryNames).ifPresent(names -> Arrays.stream(names).map(configManager.registryConfigManager()::get).filter(Objects::nonNull).forEach(this::addRegistryConfig));
         ClientConfig clientConfig = checkAndGetClientConfig();
         url = createUrl(clientConfig.toUrl());
-        invoker = new ComplexClientInvoker(this);
     }
 
     private Options getOptions() {
         if (method.isAnnotationPresent(Options.class)) {
             return method.getAnnotation(Options.class);
         }
-        return options();
+        if (options() != null) {
+            return options();
+        }
+        return ReflectUtil.getDefaultInstance(Options.class);
     }
 
     public void addRegistryConfig(RegistryConfig... configs) {
@@ -136,12 +149,11 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     }
 
     @Override
-    public Object call(CallArgs callArgs) throws RpcException {
+    public Object call(URL url, CallArgs args) throws RpcException {
         Object result = null;
         try {
             List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
-            Invocation invocation = Invocation.create(url, callArgs,
-                    inv -> ((ComplexClientInvoker) invoker).invoke(inv));
+            Invocation invocation = Invocation.create(url, args, this::governanceCall);
             result = filterChain.filter(invocation, preFilters);
         } catch (RpcException e) {
             logger.error("Remote Call Exception " + this, e);
@@ -155,25 +167,12 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     public Object call(Invocation invocation) throws RpcException {
         try {
             List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-            Invocation filterInvocation = Invocation.create(invocation.url(), invocation.callArgs(), this::doCall);
+            Invocation filterInvocation = Invocation.create(invocation.url(), invocation.callArgs(), this::directRemoteCall);
             RpcFuture future = (RpcFuture) filterChain.filter(filterInvocation, postFilters);
             return async() ? future : future.get();
         } catch (Exception e) {
             throw new RpcException(e);
         }
-    }
-
-    protected RpcFuture doCall(Invocation invocation) {
-        URL url = invocation.url();
-        CallArgs callArgs = invocation.callArgs();
-        Client client = getClient(url.address());
-        Object message = protocolInstance.createRequest(url, callArgs);
-        Request request = new Request(url, message);
-        RpcFuture future = new RpcFuture(url, callArgs);
-        future.client(client);
-        // request
-        client.send(request);
-        return future;
     }
 
     @Override
@@ -213,11 +212,70 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         if (!StringUtil.isBlank(directUrl)) {
             address = directUrl;
         }
-        RemoteUrl remoteUrl = new RemoteUrl(protocol, address);
-        remoteUrl.replacePaths(pathList());
-        remoteUrl.addParameters(clientUrl.parameters());
-        remoteUrl.addParameters(parameterization());
-        return remoteUrl;
+        URL url = new URL(protocol, address);
+        url.replacePaths(pathList());
+        url.addParameters(clientUrl.parameters());
+        url.addParameters(parameterization());
+        return url;
+    }
+
+    protected Object governanceCall(Invocation invocation) {
+        try {
+            URL url = selectURL(invocation);
+            url.addParameters(invocation.url().parameters());
+            invocation.url().address(url.address());
+            String faultToleranceKey = url.getParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_FAST);
+            FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceKey);
+            return faultTolerance.operation(invocation.revise(this::call));
+        } catch (RpcException e) {
+            throw new RpcException(e);
+        }
+    }
+
+    protected RpcFuture directRemoteCall(Invocation invocation) {
+        URL url = invocation.url();
+        CallArgs callArgs = invocation.callArgs();
+        Client client = getClient(url.address());
+        Object message = protocolInstance.createRequest(url, callArgs);
+        Request request = new Request(url, message);
+        RpcFuture future = new RpcFuture(url, callArgs);
+        future.client(client);
+        // request
+        client.send(request);
+        return future;
+    }
+
+    private URL selectURL(Invocation invocation) {
+        URL url = invocation.url();
+        if (!StringUtil.isBlank(directUrl)) {
+            return url;
+        }
+        List<URL> urls = discoveryUrls(invocation);
+        String routerKey = url.getParameter(Key.ROUTER, Components.Router.WEIGHT);
+        Router router = ExtensionLoader.loadService(Router.class, routerKey);
+        urls = router.route(urls, invocation);
+        String loadBalanceKey = url.getParameter(Key.LOAD_BALANCE, Components.LoadBalance.RANDOM);
+        LoadBalance loadBalance = ExtensionLoader.loadService(LoadBalance.class, loadBalanceKey);
+        return loadBalance.select(invocation, urls);
+    }
+
+    private List<URL> discoveryUrls(Invocation invocation) {
+        URL url = invocation.url();
+        URL[] urls = registryConfigs().stream().map(config -> {
+            URL registryUrl = config.toUrl();
+            registryUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
+            registryUrl.addParameter(Key.VIRTUE, virtue.name());
+            return registryUrl;
+        }).toArray(URL[]::new);
+        String directoryKey = url.getParameter(Key.DIRECTORY, Components.DEFAULT);
+        Directory directory = ExtensionLoader.loadService(Directory.class, directoryKey);
+        List<URL> result = directory.list(invocation, urls);
+        if (result.isEmpty()) {
+            if (lazyDiscover) {
+                throw new SourceException("Not found available service!,Path:" + invocation.url().path());
+            }
+        }
+        return result;
     }
 
     private Client getClient(String address) {

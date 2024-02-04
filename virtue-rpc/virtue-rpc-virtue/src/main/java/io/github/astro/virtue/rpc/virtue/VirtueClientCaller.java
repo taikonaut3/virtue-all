@@ -4,7 +4,7 @@ import io.github.astro.virtue.common.util.StringUtil;
 import io.github.astro.virtue.config.RemoteCaller;
 import io.github.astro.virtue.config.annotation.Config;
 import io.github.astro.virtue.config.annotation.Options;
-import io.github.astro.virtue.config.util.GenerateUtil;
+import io.github.astro.virtue.common.util.GenerateUtil;
 import io.github.astro.virtue.rpc.config.AbstractClientCaller;
 import io.github.astro.virtue.rpc.virtue.config.VirtueCall;
 import lombok.Getter;

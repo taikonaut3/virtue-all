@@ -1,7 +1,7 @@
 package io.github.astro.virtue.common.spi;
 
 /**
- * Listen for, when the Service instantiation is Created.
+ * SPI listener, when the Service instantiation is Created.
  *
  * @param <T>
  */

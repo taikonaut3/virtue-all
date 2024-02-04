@@ -6,6 +6,9 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
+/**
+ * The basic CallArgs implementation class
+ */
 @Data
 @Accessors(fluent = true, chain = true)
 public class RpcCallArgs implements CallArgs, Serializable {

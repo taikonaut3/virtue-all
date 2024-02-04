@@ -9,12 +9,36 @@ import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 public final class NetUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(NetUtil.class);
 
     private static volatile InetAddress LOCAL_ADDRESS = null;
+
+    private static final String IP_REGEX = "^((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$";
+    private static final String PORT_REGEX = "^\\d{1,5}$";
+
+    public static boolean isValidIpPort(String ipPort) {
+        String[] parts = ipPort.split(":");
+        if (parts.length != 2) {
+            return false;
+        }
+
+        String ip = parts[0];
+        String port = parts[1];
+
+        return isValidIp(ip) && isValidPort(port);
+    }
+
+    public static boolean isValidIp(String ip) {
+        return Pattern.matches(IP_REGEX, ip);
+    }
+
+    public static boolean isValidPort(String port) {
+        return Pattern.matches(PORT_REGEX, port);
+    }
 
     public static int ipToInt(String ipAddress) {
         String[] ipArr = ipAddress.split("\\.");
@@ -85,6 +109,9 @@ public final class NetUtil {
             logger.error("", e);
         }
         return null;
+    }
+
+    private NetUtil() {
     }
 
 }

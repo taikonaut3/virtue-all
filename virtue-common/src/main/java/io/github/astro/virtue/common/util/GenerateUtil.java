@@ -1,4 +1,4 @@
-package io.github.astro.virtue.config.util;
+package io.github.astro.virtue.common.util;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

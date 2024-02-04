@@ -1,7 +1,7 @@
 package io.github.astro.virtue.common.constant;
 
 /**
- * Designed Only for Mapping: String -> byte,
+ * Designed only for mapping: string -> byte,
  * Convenient network transmission.
  */
 public interface Mode {

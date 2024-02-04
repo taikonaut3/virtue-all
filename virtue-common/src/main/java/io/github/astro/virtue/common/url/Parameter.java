@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 public @interface Parameter {
 
     /**
-     * Put into the map's Key
+     * Put into the map's key.
      *
      * @return key name
      */

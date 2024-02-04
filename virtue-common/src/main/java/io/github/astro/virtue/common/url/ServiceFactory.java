@@ -6,7 +6,7 @@ package io.github.astro.virtue.common.url;
 public interface ServiceFactory<T> {
 
     /**
-     * Get the instance by the Url
+     * Get the instance by the url.
      *
      * @param url
      * @return instance

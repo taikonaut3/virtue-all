@@ -12,14 +12,14 @@ public interface ServerCaller<T extends Annotation> extends Caller<T> {
     /**
      * Gets the remote service associated with this server caller.
      *
-     * @return The remote service.
+     * @return remoteService instance
      */
     RemoteService<?> remoteService();
 
     /**
      * Gets the description of the server caller.
      *
-     * @return The description.
+     * @return method description
      */
     String desc();
 

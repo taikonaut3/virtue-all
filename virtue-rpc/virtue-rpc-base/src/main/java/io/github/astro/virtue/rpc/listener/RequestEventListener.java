@@ -7,8 +7,6 @@ import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.common.util.DateUtil;
 import io.github.astro.virtue.config.CallArgs;
-import io.github.astro.virtue.config.Invocation;
-import io.github.astro.virtue.config.Invoker;
 import io.github.astro.virtue.config.ServerCaller;
 import io.github.astro.virtue.rpc.event.EnvelopeEventListener;
 import io.github.astro.virtue.rpc.event.RequestEvent;
@@ -31,7 +29,6 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void handEnvelopeEvent(RequestEvent event) {
         logger.debug("Received Event({})", event.getClass().getSimpleName());
         Request request = event.source();
@@ -40,20 +37,18 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         ProtocolParser protocolParser = protocol.parser();
         CallArgs callArgs = protocolParser.parseRequestBody(request);
         ServerCaller<?> serverCaller = (ServerCaller<?>) callArgs.caller();
-        Invocation invocation = Invocation.create(url, callArgs, inv -> serverCaller.call(callArgs));
-        Invoker<Object> invoker = (Invoker<Object>) serverCaller.invoker();
         boolean oneway = url.getBooleanParameter(Key.ONEWAY);
         try {
             RpcContext.getContext().attribute(Request.ATTRIBUTE_KEY).set(request);
             if (oneway) {
-                invoker.invoke(invocation);
+                serverCaller.call(url,callArgs);
             } else {
                 long timeout = url.getLongParameter(Key.TIMEOUT);
                 String timestamp = url.getParameter(Key.TIMESTAMP);
                 LocalDateTime localDateTime = DateUtil.parse(timestamp, DateUtil.COMPACT_FORMAT);
                 long margin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
                 if (margin < timeout) {
-                    Object result = invoker.invoke(invocation);
+                    Object result = serverCaller.call(url,callArgs);
                     long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
                     if (invokeAfterMargin < timeout) {
                         Response response = new Response(url, result);

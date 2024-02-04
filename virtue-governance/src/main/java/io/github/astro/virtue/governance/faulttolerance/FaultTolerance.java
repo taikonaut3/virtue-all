@@ -15,9 +15,9 @@ public interface FaultTolerance {
     /**
      * Performs an operation with fault tolerance.
      *
-     * @param invocation The invocation to be performed.
-     * @return The result of the operation.
-     * @throws RpcException If an error occurs during the operation.
+     * @param invocation the invocation to be performed.
+     * @return use invocation.invoke()
+     * @throws RpcException
      */
     Object operation(Invocation invocation) throws RpcException;
 }

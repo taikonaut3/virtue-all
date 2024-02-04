@@ -17,9 +17,9 @@ public interface Router {
     /**
      * Routes the list of URLs based on the given call arguments.
      *
-     * @param urls       The list of available URLs.
-     * @param invocation @param invocation The invocation to be performed.
-     * @return The list of routed URLs.
+     * @param urls       the list of available URLs
+     * @param invocation the invocation to be performed
+     * @return the list of routed urls.
      */
     List<URL> route(List<URL> urls, Invocation invocation);
 }

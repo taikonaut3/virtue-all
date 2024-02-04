@@ -17,6 +17,10 @@ import io.github.astro.virtue.config.config.ServerConfig;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.event.EventDispatcher;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+
 import static io.github.astro.virtue.common.constant.Components.DEFAULT;
 
 /**
@@ -43,30 +47,30 @@ public interface Virtue extends Accessor, Lifecycle {
     Virtue name(String name);
 
     /**
-     * Get ConfigManager
+     * Get configManager
      *
-     * @return ConfigManager
+     * @return configManager
      */
     ConfigManager configManager();
 
     /**
-     * Get EventDispatcher
+     * Get eventDispatcher
      *
-     * @return EventDispatcher
+     * @return eventDispatcher
      */
     EventDispatcher eventDispatcher();
 
     /**
-     * Get Scheduler
+     * Get scheduler
      *
-     * @return Scheduler
+     * @return scheduler
      */
     Scheduler scheduler();
 
     /**
-     * Get MonitorManager
+     * Get monitorManager
      *
-     * @return MonitorManager
+     * @return monitorManager
      */
     MonitorManager monitorManager();
 
@@ -89,94 +93,98 @@ public interface Virtue extends Accessor, Lifecycle {
     <T> Virtue wrap(T target);
 
     /**
-     * Get RemoteCaller by target Interface
+     * Get remoteCaller by target interface
      *
      * @param target
      * @param <T>
-     * @return RemoteCaller
+     * @return remoteCaller
      */
     default <T> RemoteCaller<T> remoteCaller(Class<T> target) {
         return configManager().remoteCallerManager().get(target);
     }
 
     /**
-     * Get RemoteService by target class
+     * Get remoteService by target class
      *
      * @param target
      * @param <T>
-     * @return RemoteService
+     * @return remoteService
      */
     default <T> RemoteService<T> remoteService(Class<T> targetClass) {
         return configManager().remoteServiceManager().get(targetClass);
     }
 
     /**
-     * Register RemoteService into current instance
+     * Register remoteService into current instance
      *
      * @param remoteServices
      * @return current instance
      */
     default Virtue register(RemoteService<?>... remoteServices) {
-        for (RemoteService<?> remoteService : remoteServices) {
-            configManager().remoteServiceManager().register(remoteService);
-        }
+        Optional.ofNullable(remoteServices)
+                .ifPresent(services -> Arrays.stream(services)
+                        .filter(Objects::nonNull)
+                        .forEach(remoteService -> configManager().remoteServiceManager().register(remoteService)));
         return this;
     }
-
     /**
-     * Register RemoteCaller into current instance
+     * Register remoteCaller into current instance
      *
      * @param remoteCallers
      * @return current instance
      */
     default Virtue register(RemoteCaller<?>... remoteCallers) {
-        for (RemoteCaller<?> remoteCaller : remoteCallers) {
-            configManager().remoteCallerManager().register(remoteCaller);
-        }
+        Optional.ofNullable(remoteCallers)
+                .ifPresent(callers -> Arrays.stream(callers)
+                        .filter(Objects::nonNull)
+                        .forEach(remoteCaller -> configManager().remoteCallerManager().register(remoteCaller)));
         return this;
     }
 
     /**
-     * Register ClientConfig into current instance
+     * Register clientConfig into current instance
      *
      * @param configs
      * @return current instance
      */
-    default Virtue register(ClientConfig... configs) {
-        for (ClientConfig config : configs) {
-            configManager().clientConfigManager().register(config);
-        }
+    default Virtue register(ClientConfig... clientConfigs) {
+        Optional.ofNullable(clientConfigs)
+                .ifPresent(configs -> Arrays.stream(configs)
+                        .filter(Objects::nonNull)
+                        .forEach(config -> configManager().clientConfigManager().register(config)));
         return this;
     }
 
     /**
-     * Register ServerConfig into current instance
+     * Register serverConfig into current instance
      *
      * @param configs
      * @return current instance
      */
-    default Virtue register(ServerConfig... configs) {
-        for (ServerConfig config : configs) {
-            configManager().serverConfigManager().register(config);
-        }
+    default Virtue register(ServerConfig... serverConfigs) {
+        Optional.ofNullable(serverConfigs)
+                .ifPresent(configs -> Arrays.stream(configs)
+                        .filter(Objects::nonNull)
+                        .forEach(config -> configManager().serverConfigManager().register(config)));
         return this;
     }
 
     /**
-     * Register RegistryConfig into current instance
+     * Register registryConfig into current instance
      *
      * @param configs
      * @return current instance
      */
-    default Virtue register(RegistryConfig... configs) {
-        for (RegistryConfig config : configs) {
-            configManager().registryConfigManager().register(config);
-        }
+    default Virtue register(RegistryConfig... registryConfigs) {
+        Optional.ofNullable(registryConfigs)
+                .ifPresent(configs -> Arrays.stream(configs)
+                        .filter(Objects::nonNull)
+                        .forEach(config -> configManager().registryConfigManager().register(config)));
         return this;
     }
 
     /**
-     * Register Filter into current instance
+     * Register filter into current instance
      *
      * @param name
      * @param filter
@@ -188,16 +196,16 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Get Application-Name
+     * Get application-name
      *
-     * @return Application-Name
+     * @return application-name
      */
     default String applicationName() {
         return configManager().applicationConfig().applicationName();
     }
 
     /**
-     * Set Application-Name
+     * Set application-name
      *
      * @return current instance
      */
@@ -207,7 +215,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Get Virtue instance from URL
+     * Get virtue instance from url
      *
      * @param url
      * @return Virtue instance
@@ -223,9 +231,9 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Get Default Virtue
+     * Get default virtue instance
      *
-     * @return Default Virtue instance
+     * @return default virtue instance
      * @see io.github.astro.virtue.rpc.impl.DefaultVirtue
      */
     static Virtue getDefault() {

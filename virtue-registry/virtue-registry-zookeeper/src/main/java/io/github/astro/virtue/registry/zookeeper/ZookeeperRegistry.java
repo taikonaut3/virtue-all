@@ -4,7 +4,7 @@
 //import io.github.astro.virtue.common.constant.Key;
 //import io.github.astro.virtue.config.CallArgs;
 //import io.github.astro.virtue.common.url.URL;
-//import io.github.astro.virtue.config.util.GenerateUtil;
+//import io.github.astro.virtue.common.util.GenerateUtil;
 //import io.github.astro.virtue.registry.AbstractRegistry;
 //import org.apache.curator.framework.CuratorFramework;
 //import org.apache.curator.framework.CuratorFrameworkFactory;

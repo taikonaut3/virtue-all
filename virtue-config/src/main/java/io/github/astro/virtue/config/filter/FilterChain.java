@@ -14,11 +14,11 @@ import static io.github.astro.virtue.common.constant.Components.DEFAULT;
 public interface FilterChain {
 
     /**
-     * Applies the list of filters to the given invocation.
+     * Execute filter chain.
      *
-     * @param invocation The invocation to be filtered.
-     * @param filters    The list of filters to be applied.
-     * @return The result of the filtered invocation.
+     * @param invocation
+     * @param filters    The list of filters to be call
+     * @return invocation.invoke()
      */
     Object filter(Invocation invocation, List<Filter> filters);
 
