@@ -4,7 +4,7 @@ import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.util.AssertUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.config.*;
-import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
+import io.github.astro.virtue.config.annotation.CallerFactoryProvider;
 import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.proxy.InvocationHandler;
 import io.github.astro.virtue.proxy.ProxyFactory;
@@ -23,6 +23,8 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
     private final Class<T> targetInterface;
 
     private T proxyInstance;
+
+    private boolean lazyDiscover;
 
     public ComplexRemoteCaller(Virtue virtue, Class<T> target) {
         super(virtue);
@@ -53,6 +55,11 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
     }
 
     @Override
+    public boolean lazyDiscover() {
+        return lazyDiscover;
+    }
+
+    @Override
     public Class<T> targetInterface() {
         return targetInterface;
     }
@@ -61,16 +68,18 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
         io.github.astro.virtue.config.annotation.RemoteCaller remoteCaller = targetInterface.getAnnotation(REMOTE_CALL_CLASS);
         remoteApplication = remoteCaller.value();
         proxy = remoteCaller.proxy();
+        lazyDiscover = remoteCaller.lazyDiscover();
     }
 
     private void parseClientCaller() {
         for (Method method : targetInterface.getDeclaredMethods()) {
-            RegistryCallerFactory registryCallerFactory = ReflectUtil.findAnnotation(method, RegistryCallerFactory.class);
-            if (registryCallerFactory != null) {
-                CallerFactory callerFactory = CallerFactory.get(registryCallerFactory.value());
+            CallerFactoryProvider factoryProvider = ReflectUtil.findAnnotation(method, CallerFactoryProvider.class);
+            if (factoryProvider != null) {
+                CallerFactory callerFactory = ExtensionLoader.loadService(CallerFactory.class, factoryProvider.value());
                 ClientCaller<?> caller = callerFactory.createClientCaller(method, this);
                 if (caller != null) {
                     callerMap.put(method, caller);
+                    identificationCallerMap.put(caller.identification(), caller);
                 }
             }
         }

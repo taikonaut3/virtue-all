@@ -121,6 +121,8 @@ public interface Key {
 
     String URL = "url";
 
+    String HTTP_REQUEST_WRAPPER = "httpRequestWrapper";
+
     String ENVELOPE = "envelope";
 
     String RESPONSE_CODE = "responseCode";
@@ -148,4 +150,5 @@ public interface Key {
     AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(ALL_IDLE_TIMES);
     AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(WRITE_IDLE_TIMES);
     AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(READER_IDLE_TIMES);
+    String VERTX = "vertx";
 }

@@ -9,10 +9,6 @@ import java.util.List;
 
 import static io.github.astro.virtue.common.constant.Components.Serialize.MSGPACK;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/5 18:58
- */
 @RemoteService("345")
 public class Provider {
 

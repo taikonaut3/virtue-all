@@ -7,10 +7,6 @@ import io.github.astro.virtue.config.Invocation;
 import io.github.astro.virtue.config.filter.Filter;
 import org.springframework.stereotype.Component;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/12 20:09
- */
 @Component
 public class Filter2 implements Filter {
 

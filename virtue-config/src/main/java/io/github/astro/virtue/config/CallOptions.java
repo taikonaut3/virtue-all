@@ -73,15 +73,16 @@ public interface CallOptions extends CommonConfig {
     String clientConfig();
 
     /**
+     * Add RegistryConfigs
+     *
+     * @param configs
+     */
+    void addRegistryConfig(RegistryConfig... configs);
+
+    /**
      * Gets a list of registry configurations from the {@link Options#registries()}.
      */
     List<RegistryConfig> registryConfigs();
-
-    /**
-     * Is it only when the first call is made that the registration center is actually connected to Get the available services.
-     * The default gets available services when {@link io.github.astro.virtue.config.ClientCaller} creation is complete.
-     */
-    boolean lazyDiscover();
 
 }
 

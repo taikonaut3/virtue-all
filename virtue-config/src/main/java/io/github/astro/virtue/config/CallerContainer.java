@@ -32,6 +32,14 @@ public interface CallerContainer extends Lifecycle {
     Caller<?> getCaller(Method method);
 
     /**
+     * Gets the caller associated with the specified identification.
+     *
+     * @param identification {@link Caller#identification()}
+     * @return the caller associated with the identification, or null if not found
+     */
+    Caller<?> getCaller(String identification);
+
+    /**
      * The Caller container Proxy type
      *
      * @return proxy type

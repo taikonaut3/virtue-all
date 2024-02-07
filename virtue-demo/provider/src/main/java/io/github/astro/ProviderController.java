@@ -5,11 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/9 16:11
- */
-
 @RestController
 public class ProviderController {
 

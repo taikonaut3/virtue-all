@@ -4,6 +4,7 @@ import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.extension.Accessor;
 import io.github.astro.virtue.common.extension.Attribute;
 import io.github.astro.virtue.common.extension.AttributeKey;
+import io.github.astro.virtue.common.extension.RpcContext;
 import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.spi.ServiceInterface;
 import io.github.astro.virtue.common.url.URL;
@@ -224,8 +225,13 @@ public interface Virtue extends Accessor, Lifecycle {
         Attribute<Virtue> attribute = url.attribute(ATTRIBUTE_KEY);
         Virtue virtue = attribute.get();
         if (virtue == null) {
-            virtue = ExtensionLoader.loadService(Virtue.class, url.getParameter(Key.VIRTUE));
-            attribute.set(virtue);
+            virtue = RpcContext.getContext().attribute(ATTRIBUTE_KEY).get();
+            if (virtue == null) {
+                virtue = ExtensionLoader.loadService(Virtue.class, url.getParameter(Key.VIRTUE));
+            }
+            if (virtue != null) {
+                attribute.set(virtue);
+            }
         }
         return virtue;
     }

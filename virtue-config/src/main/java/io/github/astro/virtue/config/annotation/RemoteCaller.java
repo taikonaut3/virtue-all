@@ -23,4 +23,10 @@ public @interface RemoteCaller {
      */
     String proxy() default Components.ProxyFactory.JDK;
 
+    /**
+     * Is it only when the first call is made that the registration center is actually connected to Get the available services.
+     * The default gets available services when {@link io.github.astro.virtue.config.ClientCaller} creation is complete.
+     */
+    boolean lazyDiscover() default false;
+
 }

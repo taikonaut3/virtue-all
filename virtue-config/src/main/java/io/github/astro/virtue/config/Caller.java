@@ -2,6 +2,8 @@ package io.github.astro.virtue.config;
 
 import io.github.astro.virtue.common.exception.RpcException;
 import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.common.util.GenerateUtil;
+import io.github.astro.virtue.config.manager.Virtue;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -83,6 +85,24 @@ public interface Caller<T extends Annotation> extends CommonConfig, Lifecycle {
      */
     default String path() {
         return URL.toPath(pathList());
+    }
+
+    /**
+     * Caller unique identification.
+     *
+     * @return unique identification
+     */
+    default String identification() {
+        return GenerateUtil.generateCallerIdentification(protocol(), path());
+    }
+
+    /**
+     * The belong to virtue
+     *
+     * @return virtue instance
+     */
+    default Virtue virtue() {
+        return container().virtue();
     }
 
 }

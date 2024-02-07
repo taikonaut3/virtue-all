@@ -12,10 +12,6 @@ import io.github.astro.virtue.rpc.http1_1.config.PathVariable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/9 13:33
- */
 @RemoteCaller("provider")
 public interface HttpConsumer {
 
@@ -24,7 +20,6 @@ public interface HttpConsumer {
     @HttpCall(path = "hello", method = HttpMethod.GET)
     String hello(@Param("world") String world);
 
-    @Options(async = true)
     @HttpCall(path = "hello/list", method = HttpMethod.POST)
     CompletableFuture<List<ParentObject>> list(List<ParentObject> list);
 

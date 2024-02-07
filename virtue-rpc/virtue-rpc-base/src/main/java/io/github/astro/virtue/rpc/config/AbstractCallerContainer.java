@@ -20,6 +20,8 @@ public abstract class AbstractCallerContainer implements CallerContainer {
 
     protected Map<Method, Caller<?>> callerMap = new HashMap<>();
 
+    protected Map<String, Caller<?>> identificationCallerMap = new HashMap<>();
+
     @Getter
     protected Virtue virtue;
 
@@ -35,6 +37,13 @@ public abstract class AbstractCallerContainer implements CallerContainer {
     }
 
     @Override
+    public void start() {
+        for (Caller<?> caller : callerMap.values()) {
+            caller.start();
+        }
+    }
+
+    @Override
     public Caller<?>[] callers() {
         return callerMap.values().toArray(Caller[]::new);
     }
@@ -47,5 +56,10 @@ public abstract class AbstractCallerContainer implements CallerContainer {
     @Override
     public String remoteApplication() {
         return remoteApplication;
+    }
+
+    @Override
+    public Caller<?> getCaller(String identification) {
+        return identificationCallerMap.get(identification);
     }
 }

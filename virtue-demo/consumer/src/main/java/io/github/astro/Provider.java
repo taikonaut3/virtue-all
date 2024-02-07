@@ -6,10 +6,6 @@ import io.github.astro.virtue.rpc.virtue.config.VirtueCallable;
 
 import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/5 18:58
- */
 @RemoteService("345")
 public class Provider {
 

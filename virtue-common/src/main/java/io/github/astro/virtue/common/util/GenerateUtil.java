@@ -23,7 +23,10 @@ public interface GenerateUtil {
             }
             builder.append(")");
         }
-
         return builder.toString();
+    }
+
+    static String generateCallerIdentification(String protocol, String path) {
+        return protocol + ":" + path;
     }
 }

@@ -1,6 +1,9 @@
 package io.github.astro.virtue.config;
 
+import io.github.astro.virtue.common.url.URL;
+
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 /**
  * Client caller for making remote service calls.
@@ -15,5 +18,12 @@ public interface ClientCaller<T extends Annotation> extends Caller<T>, DirectRem
      * @return remote caller instance
      */
     RemoteCaller<?> remoteCaller();
+
+    /**
+     * Convert RegistryConfig to URL
+     *
+     * @return all registry url config
+     */
+    List<URL> registryConfigUrls();
 }
 

@@ -2,7 +2,6 @@ package io.github.astro;
 
 import io.github.astro.model.ParentObject;
 import io.github.astro.virtue.config.annotation.Config;
-import io.github.astro.virtue.config.annotation.Options;
 import io.github.astro.virtue.config.annotation.RemoteCaller;
 import io.github.astro.virtue.rpc.virtue.config.VirtueCall;
 import io.github.astro.virtue.rpc.virtue.envelope.VirtueResponse;
@@ -14,11 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import static io.github.astro.virtue.common.constant.Components.Serialize.JSON;
 import static io.github.astro.virtue.common.constant.Components.Serialize.MSGPACK;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/5 18:58
- */
-@RemoteCaller("provider")
+@RemoteCaller(value = "provider")
 public interface Consumer {
 
     @Config(filters = {"filter2"}, serialize = JSON)
@@ -26,14 +21,13 @@ public interface Consumer {
     String hello(String world);
 
     @Config(filters = {"filter1"},serialize = JSON)
-    @Options(async = true)
     @VirtueCall(service = "345", callMethod = "hello")
     CompletableFuture<String> helloAsync(String world);
 
-    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"), options = @Options(async = true))
+    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"))
     CompletableFuture<Response> helloResp(String world);
 
-    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"), options = @Options(async = true))
+    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"))
     CompletableFuture<VirtueResponse> helloDynamicRes(String world);
 
     @VirtueCall(service = "345",callMethod = "list",config = @Config(serialize = MSGPACK))

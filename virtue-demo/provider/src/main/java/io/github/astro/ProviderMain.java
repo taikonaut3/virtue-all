@@ -12,12 +12,6 @@ import org.springframework.context.annotation.Bean;
 import static io.github.astro.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.github.astro.virtue.common.constant.Components.Registry.CONSUL;
 
-/**
- * ${END}
- *
- * @Author WenBo Zhou
- * @Date 2024/1/7 19:52
- */
 @SpringBootApplication
 @EnableVirtue(scanBasePackages = "io.github.astro")
 public class ProviderMain {

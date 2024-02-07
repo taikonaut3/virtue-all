@@ -25,8 +25,8 @@ public class ConsulRegistry extends AbstractRegistry {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsulRegistry.class);
 
-    private static final AttributeKey<Vertx> VERTX_ATTRIBUTE_KEY = AttributeKey.get("vertx");
     private ConsulClient consulClient;
+
     private Vertx vertx;
 
     protected ConsulRegistry(URL url) {
@@ -56,7 +56,7 @@ public class ConsulRegistry extends AbstractRegistry {
                     .setHost(url.host())
                     .setPort(url.port())
                     .setTimeout(url.getIntParameter(Key.CONNECT_TIMEOUT));
-            Attribute<Vertx> vertxAttribute = Virtue.get(url).attribute(VERTX_ATTRIBUTE_KEY);
+            Attribute<Vertx> vertxAttribute = Virtue.get(url).attribute(AttributeKey.get(Key.VERTX));
             vertx = vertxAttribute.get();
             if (vertx == null) {
                 vertx = Vertx.vertx();

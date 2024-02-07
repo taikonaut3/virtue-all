@@ -11,11 +11,6 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/13 22:12
- */
-
 @Accessors(fluent = true)
 @Data
 public class SystemInfo {
@@ -46,7 +41,7 @@ public class SystemInfo {
         long usedMemory = totalMemory - freeMemory;
         memoryUsage = Double.parseDouble(decimalFormat.format((double) usedMemory / totalMemory));
         RemoteServiceManager remoteServiceManager = virtue.configManager().remoteServiceManager();
-        Collection<RemoteService<?>> remoteServices = remoteServiceManager.getRemoteService();
+        Collection<RemoteService<?>> remoteServices = remoteServiceManager.remoteServices();
         services = remoteServices.stream()
                 .mapToInt(remoteService -> remoteService.callers().length)
                 .sum();

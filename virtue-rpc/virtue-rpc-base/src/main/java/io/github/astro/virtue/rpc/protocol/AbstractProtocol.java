@@ -23,7 +23,7 @@ public abstract class AbstractProtocol<Req, Res> implements Protocol<Req, Res> {
 
     protected ProtocolParser protocolParser;
 
-    protected final Transporter transporter;
+    protected Transporter transporter;
 
 
 
@@ -37,8 +37,11 @@ public abstract class AbstractProtocol<Req, Res> implements Protocol<Req, Res> {
         this.serverHandler = serverHandler;
         this.protocolParser = protocolParser;
         Virtue virtue = RpcContext.getContext().attribute(Virtue.ATTRIBUTE_KEY).get();
-        String transport = virtue.configManager().applicationConfig().transport();
-        transporter = ExtensionLoader.loadService(Transporter.class, transport);
+        transporter = virtue.attribute(Transporter.ATTRIBUTE_KEY).get();
+        if (transporter == null) {
+            String transport = virtue.configManager().applicationConfig().transport();
+            transporter = ExtensionLoader.loadService(Transporter.class, transport);
+        }
     }
 
     @Override

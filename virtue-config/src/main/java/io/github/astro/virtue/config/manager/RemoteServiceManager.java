@@ -1,9 +1,13 @@
 package io.github.astro.virtue.config.manager;
 
+import io.github.astro.virtue.common.util.GenerateUtil;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.ServerCaller;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * RemoteService Manager
@@ -14,7 +18,7 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
         super(virtue);
     }
 
-    public Collection<RemoteService<?>> getRemoteService() {
+    public Collection<RemoteService<?>> remoteServices() {
         return map.values();
     }
 
@@ -23,8 +27,12 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
     }
 
     public ServerCaller<?> getServerCaller(String protocol, String path) {
-        for (RemoteService<?> remoteService : getRemoteService()) {
-            ServerCaller<?> caller = remoteService.getCaller(protocol, path);
+        return getServerCaller(GenerateUtil.generateCallerIdentification(protocol, path));
+    }
+
+    public ServerCaller<?> getServerCaller(String identification) {
+        for (RemoteService<?> remoteService : remoteServices()) {
+            ServerCaller<?> caller = (ServerCaller<?>) remoteService.getCaller(identification);
             if (caller != null) {
                 return caller;
             }
@@ -40,6 +48,12 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
         }
         return null;
+    }
+
+    public List<ServerCaller<?>> serverCallers() {
+        return remoteServices().stream()
+                .flatMap(container -> Arrays.stream(container.callers()).map(caller -> (ServerCaller<?>) caller))
+                .collect(Collectors.toList());
     }
 
 }

@@ -82,7 +82,7 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
         }
     }
 
-
+    @Override
     public void addFilter(Filter... filters) {
         if (this.filters == null) {
             synchronized (this) {
@@ -104,14 +104,16 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
         return method.getReturnType();
     }
 
-    protected abstract Config config();
+    protected Config config() {
+        return null;
+    }
 
     protected abstract URL createUrl(URL url);
 
     protected abstract void doInit();
 
     private T parseAnnotation(Method method, Class<T> type) {
-        AssertUtil.condition(method.isAnnotationPresent(type), "Only support @" + type.getSimpleName() + " modify Method");
+        AssertUtil.condition(ReflectUtil.findAnnotation(method,type)!=null, "Only support @" + type.getSimpleName() + " modify Method");
         return method.getAnnotation(type);
     }
 

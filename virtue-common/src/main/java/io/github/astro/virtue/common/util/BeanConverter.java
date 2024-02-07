@@ -16,10 +16,8 @@ public final class BeanConverter {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-
             try {
                 Object value = field.get(object);
-
                 if (value != null) {
                     map.put(field.getName(), value.toString());
                 }
@@ -27,7 +25,6 @@ public final class BeanConverter {
                 logger.error("Convert To Map Fail", e);
             }
         }
-
         return map;
     }
 

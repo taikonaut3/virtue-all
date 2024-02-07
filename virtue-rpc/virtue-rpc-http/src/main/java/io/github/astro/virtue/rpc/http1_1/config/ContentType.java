@@ -10,5 +10,7 @@ public interface ContentType {
     String APPLICATION_X_WWW_FORM_URLENCODED = HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString();
     String MULTIPART_FORM_DATA = HttpHeaderValues.MULTIPART_FORM_DATA.toString();
     String TEXT_PLAIN = HttpHeaderValues.TEXT_PLAIN.toString();
+
+    String APPLICATION_OCTET_STREAM = HttpHeaderValues.APPLICATION_OCTET_STREAM.toString();
 }
 

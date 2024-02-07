@@ -43,6 +43,11 @@
             <artifactId>virtue-proxy-bytebuddy</artifactId>
             <version>${revision}</version>
         </dependency>
+<!--         <dependency> -->
+<!--             <groupId>io.github.astro</groupId> -->
+<!--             <artifactId>virtue-spring-web-api</artifactId> -->
+<!--             <version>${revision}</version> -->
+<!--         </dependency> -->
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -55,6 +60,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>3.0.0.Beta3</version>
         </dependency>
     </dependencies>
 

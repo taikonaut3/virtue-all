@@ -24,7 +24,7 @@ public interface CallArgs {
     /**
      * Get the parameter types of the method.
      *
-     * @return {@link Caller#method()#getGenericParameterTypes();}
+     * @return {@link Caller#method()java.lang.reflect.Method#getGenericParameterTypes()}
      */
     Type[] parameterTypes();
 

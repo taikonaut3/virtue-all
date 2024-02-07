@@ -1,19 +1,16 @@
 package io.github.astro.virtue.rpc.http1_1.config;
 
+import io.github.astro.virtue.config.annotation.CallerFactoryProvider;
 import io.github.astro.virtue.config.annotation.Config;
-import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
-import io.github.astro.virtue.rpc.http1_1.HttpCallerFactory;
 
 import java.lang.annotation.*;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/9 13:19
- */
+import static io.github.astro.virtue.common.constant.Components.Protocol.HTTP;
+
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@RegistryCallerFactory(HttpCallerFactory.class)
+@CallerFactoryProvider(HTTP)
 public @interface HttpCallable {
 
     /**

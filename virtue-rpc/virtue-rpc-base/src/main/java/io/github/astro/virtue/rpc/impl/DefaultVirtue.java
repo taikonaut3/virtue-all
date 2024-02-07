@@ -8,14 +8,17 @@ import io.github.astro.virtue.config.RemoteCaller;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.Scheduler;
 import io.github.astro.virtue.config.VirtueConfiguration;
+import io.github.astro.virtue.config.config.ApplicationConfig;
 import io.github.astro.virtue.config.config.EventDispatcherConfig;
 import io.github.astro.virtue.config.manager.ConfigManager;
 import io.github.astro.virtue.config.manager.MonitorManager;
 import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.event.EventDispatcher;
 import io.github.astro.virtue.event.EventDispatcherFactory;
+import io.github.astro.virtue.governance.router.Router;
 import io.github.astro.virtue.rpc.ComplexRemoteCaller;
 import io.github.astro.virtue.rpc.ComplexRemoteService;
+import io.github.astro.virtue.transport.Transporter;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -24,7 +27,7 @@ import java.util.List;
 import static io.github.astro.virtue.common.constant.Components.DEFAULT;
 
 /**
- * virtue application config
+ * Virtue application config
  * manage each config component
  */
 @Accessors(fluent = true)
@@ -84,12 +87,21 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
         for (VirtueConfiguration configuration : configurations) {
             configuration.initBefore(this);
         }
-        EventDispatcherConfig eventDispatcherConfig = configManager.applicationConfig().eventDispatcherConfig();
-        EventDispatcherFactory eventDispatcherFactory = ExtensionLoader.loadService(EventDispatcherFactory.class, eventDispatcherConfig.type());
-        eventDispatcher = eventDispatcherFactory.get(eventDispatcherConfig.toUrl());
+        initApplicationComponents();
         for (VirtueConfiguration configuration : configurations) {
             configuration.initAfter(this);
         }
+    }
+
+    private void initApplicationComponents() {
+        ApplicationConfig applicationConfig = configManager.applicationConfig();
+        EventDispatcherConfig eventDispatcherConfig = applicationConfig.eventDispatcherConfig();
+        EventDispatcherFactory eventDispatcherFactory = ExtensionLoader.loadService(EventDispatcherFactory.class, eventDispatcherConfig.type());
+        eventDispatcher = eventDispatcherFactory.get(eventDispatcherConfig.toUrl());
+        Router router = ExtensionLoader.loadService(Router.class, applicationConfig.router());
+        Transporter transporter = ExtensionLoader.loadService(Transporter.class, applicationConfig.transport());
+        attribute(Router.ATTRIBUTE_KEY).set(router);
+        attribute(Transporter.ATTRIBUTE_KEY).set(transporter);
     }
 
     public synchronized void start() {
@@ -97,15 +109,14 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
         for (VirtueConfiguration configuration : configurations) {
             configuration.startBefore(this);
         }
-
-        for (RemoteService<?> remoteService : configManager().remoteServiceManager().getRemoteService()) {
+        configManager.filterManager().executeRules();
+        configManager.registryConfigManager().executeRules();
+        for (RemoteService<?> remoteService : configManager().remoteServiceManager().remoteServices()) {
             remoteService.start();
         }
-
-        for (RemoteCaller<?> remoteCaller : configManager().remoteCallerManager().getRemoteCallers()) {
+        for (RemoteCaller<?> remoteCaller : configManager().remoteCallerManager().remoteCallers()) {
             remoteCaller.start();
         }
-
         for (VirtueConfiguration configuration : configurations) {
             configuration.startAfter(this);
         }

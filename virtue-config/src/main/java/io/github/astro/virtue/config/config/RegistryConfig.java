@@ -4,6 +4,9 @@ import io.github.astro.virtue.common.constant.Constant;
 import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.url.Parameter;
 import io.github.astro.virtue.common.url.URL;
+import io.github.astro.virtue.config.MatchRule;
+import io.github.astro.virtue.config.manager.RegistryConfigManager;
+import io.github.astro.virtue.config.manager.Virtue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -11,7 +14,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true, chain = true)
 @Getter
 @Setter
-public class RegistryConfig extends UrlTypeConfig {
+public class RegistryConfig extends UrlTypeConfig implements MatchRule<RegistryConfig> {
 
     @Parameter(Key.GLOBAL)
     private boolean global = true;
@@ -60,4 +63,17 @@ public class RegistryConfig extends UrlTypeConfig {
         return new URL(type, host, port, parameterization());
     }
 
+    @Override
+    public RegistryConfig addProtocolRule(Virtue virtue, Scope scope, String... regex) {
+        RegistryConfigManager manager = virtue.configManager().registryConfigManager();
+        manager.addProtocolRule(this, scope, regex);
+        return this;
+    }
+
+    @Override
+    public RegistryConfig addPathRule(Virtue virtue, Scope scope, String... regex) {
+        RegistryConfigManager manager = virtue.configManager().registryConfigManager();
+        manager.addPathRule(this, scope, regex);
+        return this;
+    }
 }

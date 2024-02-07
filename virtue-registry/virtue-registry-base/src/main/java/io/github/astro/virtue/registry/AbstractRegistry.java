@@ -27,10 +27,10 @@ public abstract class AbstractRegistry implements Registry {
 
     @Override
     public List<URL> discover(URL url) {
-        String application = url.getParameter(Key.APPLICATION);
+        String serviceName = serviceName(url);
         List<URL> urls;
         // 1、判断是否缓存中是否有可用的服务
-        List<String> serverUrls = discoverHealthServices.get(application);
+        List<String> serverUrls = discoverHealthServices.get(serviceName);
         if (serverUrls == null || serverUrls.isEmpty()) {
             boolean noSubscribe = serverUrls == null;
             // 2、注册中心中发现可用服务
@@ -38,7 +38,7 @@ public abstract class AbstractRegistry implements Registry {
             serverUrls = urls.stream().map(URL::toString).toList();
             // 3、订阅服务的变更
             if (noSubscribe) subscribeService(url);
-            discoverHealthServices.put(application, serverUrls);
+            discoverHealthServices.put(serviceName, serverUrls);
         } else {
             urls = serverUrls.stream().map(URL::valueOf).filter(serverUrl -> serverUrl.protocol().equalsIgnoreCase(url.protocol())).toList();
         }

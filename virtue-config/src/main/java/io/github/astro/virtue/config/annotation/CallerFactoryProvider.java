@@ -1,6 +1,6 @@
 package io.github.astro.virtue.config.annotation;
 
-import io.github.astro.virtue.config.CallerFactory;
+import io.github.astro.virtue.common.spi.ServiceProvider;
 
 import java.lang.annotation.*;
 
@@ -10,14 +10,14 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RegistryCallerFactory {
+public @interface CallerFactoryProvider {
 
     /**
-     * CallerFactory‘s Class
+     * CallerFactory‘s {@link ServiceProvider#value()}
      *
      * @return class object
      */
-    Class<? extends CallerFactory> value();
+    String value();
 
 
 }

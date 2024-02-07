@@ -29,6 +29,13 @@ public interface CommonConfig extends Parameterization {
     String serialize();
 
     /**
+     * Add filter.
+     *
+     * @param filters
+     */
+    void addFilter(Filter... filters);
+
+    /**
      * Gets a list of filters from the @Config.
      */
     List<Filter> filters();

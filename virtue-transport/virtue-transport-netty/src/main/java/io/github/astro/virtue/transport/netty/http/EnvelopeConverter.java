@@ -5,9 +5,9 @@ import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.transport.Request;
 import io.github.astro.virtue.transport.Response;
 import io.netty.channel.*;
-import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
 import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -29,10 +29,9 @@ public final class EnvelopeConverter {
         @Override
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
             if (msg instanceof Request request) {
-                FullHttpRequest httpRequest = (FullHttpRequest) request.message();
+                HttpRequest httpRequest = (HttpRequest) request.message();
                 httpRequest.headers()
                         .add(HttpHeaderNames.HOST, request.url().address())
-                        .add(HttpHeaderNames.CONTENT_LENGTH, httpRequest.content().readableBytes())
                         .add(HttpHeaderNames.USER_AGENT, "Netty HttpClient")
                         .add(Key.URL, request.url());
                 msg = httpRequest;

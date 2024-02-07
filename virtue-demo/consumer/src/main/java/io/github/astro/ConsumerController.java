@@ -11,11 +11,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-/**
- * @Author WenBo Zhou
- * @Date 2024/1/16 19:02
- */
-
 @RestController
 public class ConsumerController {
 

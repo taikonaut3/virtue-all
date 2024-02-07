@@ -14,12 +14,6 @@ import java.lang.annotation.*;
 public @interface Options {
 
     /**
-     * Supports async call,The default is false.
-     * If true,Then the returnType should be {@link java.util.concurrent.CompletableFuture}.
-     */
-    boolean async() default false;
-
-    /**
      * The default is false,Unit: ms
      */
     int timeout() default Constant.DEFAULT_TIMEOUT;
@@ -34,7 +28,7 @@ public @interface Options {
      * Used {@link io.github.astro.virtue.governance.router.Router}.
      * Default is "weight" {@link io.github.astro.virtue.governance.router.WeightRouter}.
      */
-    String router() default Components.Router.WEIGHT;
+    String router() default Components.DEFAULT;
 
     /**
      * Used {@link io.github.astro.virtue.governance.loadbalance.LoadBalance}.
@@ -74,12 +68,6 @@ public @interface Options {
      * Supports multiple registry configs.
      */
     String[] registries() default {};
-
-    /**
-     * Is it only when the first call is made that the registration center is actually connected to Get the available services.
-     * The default gets available services when {@link io.github.astro.virtue.config.ClientCaller} creation is complete.
-     */
-    boolean lazyDiscover() default false;
 
 }
 

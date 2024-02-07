@@ -24,6 +24,10 @@ public class JacksonSerializer implements Serializer {
         this.objectMapper = JsonMapper.builder().configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true).build();
     }
 
+    public ObjectMapper objectMapper() {
+        return objectMapper;
+    }
+
     @Override
     public byte[] serialize(Object input) throws SerializationException {
         if (input == null) {

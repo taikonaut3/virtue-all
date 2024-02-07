@@ -138,13 +138,28 @@ public class URL extends AbstractAccessor {
         return builder.toString();
     }
 
-    public void address(String address) {
+    public static List<String> pathToList(String path) {
+        List<String> list = new ArrayList<>();
+        if (StringUtil.isBlank(path)) {
+            return list;
+        }
+        String[] parts = path.split("/");
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                list.add(part);
+            }
+        }
+        return list;
+    }
+
+    public URL address(String address) {
         this.address = address;
         if (NetUtil.isValidIpPort(address)) {
             InetSocketAddress socketAddress = NetUtil.toInetSocketAddress(address);
             this.host = socketAddress.getHostString();
             this.port = socketAddress.getPort();
         }
+        return this;
     }
 
     public void addPath(String path) {

@@ -8,10 +8,6 @@ import io.github.astro.virtue.rpc.event.ClientHandlerExceptionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @Author WenBo Zhou
- * @Date 2023/12/5 15:49
- */
 public class ClientHandlerExceptionListener implements EventListener<ClientHandlerExceptionEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientHandlerExceptionListener.class);

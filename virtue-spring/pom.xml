@@ -14,5 +14,6 @@
 
     <modules>
         <module>virtue-boot-starter</module>
+        <module>virtue-spring-web-api</module>
     </modules>
 </project>

@@ -1,10 +1,13 @@
 package io.github.astro.virtue.config.manager;
 
+import io.github.astro.virtue.config.ClientCaller;
 import io.github.astro.virtue.config.RemoteCaller;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * RemoteCaller Manager
@@ -15,12 +18,22 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         super(virtue);
     }
 
-    public Collection<RemoteCaller<?>> getRemoteCallers() {
+    public Collection<RemoteCaller<?>> remoteCallers() {
         LinkedList<RemoteCaller<?>> remoteCallers = new LinkedList<>();
         for (List<RemoteCaller<?>> value : map.values()) {
             remoteCallers.addAll(value);
         }
         return remoteCallers;
+    }
+
+    public ClientCaller<?> getClientCaller(String identification) {
+        for (RemoteCaller<?> remoteCaller : remoteCallers()) {
+            ClientCaller<?> caller = (ClientCaller<?>) remoteCaller.getCaller(identification);
+            if (caller != null) {
+                return caller;
+            }
+        }
+        return null;
     }
 
     public synchronized void register(RemoteCaller<?> remoteCaller) {
@@ -39,6 +52,12 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
             }
         }
         return null;
+    }
+
+    public List<ClientCaller<?>> clientCallers() {
+        return remoteCallers().stream()
+                .flatMap(container -> Arrays.stream(container.callers()).map(caller -> (ClientCaller<?>) caller))
+                .collect(Collectors.toList());
     }
 
 }

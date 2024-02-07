@@ -28,6 +28,8 @@ import io.github.astro.virtue.governance.directory.Directory;
 import io.github.astro.virtue.governance.faulttolerance.FaultTolerance;
 import io.github.astro.virtue.governance.loadbalance.LoadBalance;
 import io.github.astro.virtue.governance.router.Router;
+import io.github.astro.virtue.registry.Registry;
+import io.github.astro.virtue.registry.RegistryFactory;
 import io.github.astro.virtue.rpc.RpcFuture;
 import io.github.astro.virtue.transport.Request;
 import io.github.astro.virtue.transport.client.Client;
@@ -44,6 +46,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+import static io.github.astro.virtue.common.constant.Components.DEFAULT;
+
 @Setter
 @Getter
 @Accessors(fluent = true, chain = true)
@@ -53,14 +57,13 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     protected String directUrl;
 
+    protected Type returnType;
+
     @Parameter(Key.RETRIES)
     protected int retires;
 
     @Parameter(Key.ASYNC)
     protected boolean async;
-
-    @Parameter(Key.LAZY_DISCOVER)
-    protected boolean lazyDiscover;
 
     @Parameter(Key.LOAD_BALANCE)
     protected String loadBalance;
@@ -88,21 +91,19 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     protected volatile List<RegistryConfig> registryConfigs;
 
+    protected List<URL> registryConfigUrls;
+
     protected AbstractClientCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
         super(method, remoteCaller, protocol, annoType);
-        if (!lazyDiscover) {
-            discoveryUrls(Invocation.create(url, null));
-        }
     }
 
     @Override
     public void init() {
         Options ops = getOptions();
         // check
-        checkAsyncReturnType(ops, method);
+        checkAsyncReturnType(method);
         checkDirectUrl(ops.url());
         // set
-        async(ops.async());
         router(ops.router());
         directUrl(ops.url());
         timeout(ops.timeout());
@@ -113,7 +114,6 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         oneWay(returnType().getTypeName().equals("void"));
         multiplex(ops.multiplex());
         clientConfig(ops.client());
-        lazyDiscover(ops.lazyDiscover());
         // subclass init
         doInit();
         // parse config
@@ -127,6 +127,17 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         url = createUrl(clientConfig.toUrl());
     }
 
+    @Override
+    public void start() {
+        if (!remoteCaller().lazyDiscover()) {
+            for (URL registryUrl : registryConfigUrls) {
+                RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
+                Registry registry = registryFactory.get(registryUrl);
+                registry.discover(url);
+            }
+        }
+    }
+
     private Options getOptions() {
         if (method.isAnnotationPresent(Options.class)) {
             return method.getAnnotation(Options.class);
@@ -137,15 +148,28 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return ReflectUtil.getDefaultInstance(Options.class);
     }
 
+    @Override
     public void addRegistryConfig(RegistryConfig... configs) {
         if (registryConfigs == null) {
             synchronized (this) {
                 if (registryConfigs == null) {
                     registryConfigs = new LinkedList<>();
+                    registryConfigUrls = new LinkedList<>();
                 }
             }
         }
-        CollectionUtil.addToList(this.registryConfigs, (registryConfig, config) -> Objects.equals(config.type(), registryConfig.type()) && config.host().equals(registryConfig.host()) && config.port() == registryConfig.port(), configs);
+        CollectionUtil.addToList(this.registryConfigs,
+                (registryConfig, config) ->
+                        Objects.equals(config.type(), registryConfig.type())
+                                && config.host().equals(registryConfig.host())
+                                && config.port() == registryConfig.port(),
+                config -> {
+                    URL configUrl = config.toUrl();
+                    configUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
+                    configUrl.addParameter(Key.VIRTUE, virtue.name());
+                    registryConfigUrls.add(configUrl);
+                }, configs);
+
     }
 
     @Override
@@ -167,8 +191,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     public Object call(Invocation invocation) throws RpcException {
         try {
             List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-            Invocation filterInvocation = Invocation.create(invocation.url(), invocation.callArgs(), this::directRemoteCall);
-            RpcFuture future = (RpcFuture) filterChain.filter(filterInvocation, postFilters);
+            invocation.revise(this::directRemoteCall);
+            RpcFuture future = (RpcFuture) filterChain.filter(invocation, postFilters);
             return async() ? future : future.get();
         } catch (Exception e) {
             throw new RpcException(e);
@@ -177,18 +201,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     @Override
     public Type returnType() {
-        Type returnType = method.getGenericReturnType();
-        if (async()) {
-            if (returnType instanceof ParameterizedType parameterizedType) {
-                if (parameterizedType.getRawType() != CompletableFuture.class) {
-                    throw new IllegalArgumentException("Async returnType should be CompletableFuture");
-                }
-                return parameterizedType.getActualTypeArguments()[0];
-            }
-            throw new IllegalArgumentException("Async returnType should be CompletableFuture");
-        } else {
             return returnType;
-        }
     }
 
     @Override
@@ -221,12 +234,36 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     protected Object governanceCall(Invocation invocation) {
         try {
-            URL url = selectURL(invocation);
-            url.addParameters(invocation.url().parameters());
-            invocation.url().address(url.address());
+            URL url = invocation.url();
+            ClientCaller<?> caller = (ClientCaller<?>) invocation.callArgs().caller();
+            if (StringUtil.isBlank(caller.directUrl())) {
+                // Get available service urls
+                String directoryKey = url.getParameter(Key.DIRECTORY, DEFAULT);
+                Directory directory = ExtensionLoader.loadService(Directory.class, directoryKey);
+                URL[] registryConfigUrls = caller.registryConfigUrls().toArray(URL[]::new);
+                List<URL> availableServiceUrls = directory.list(invocation, registryConfigUrls);
+                if (availableServiceUrls.isEmpty()) {
+                    throw new SourceException("Not found available service!,Path:" + url.path());
+                }
+                // Router
+                Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
+                if (router == null) {
+                    String routerKey = virtue.configManager().applicationConfig().router();
+                    router = ExtensionLoader.loadService(Router.class, routerKey);
+                }
+                List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
+                // LoadBalance
+                String loadBalanceKey = url.getParameter(Key.LOAD_BALANCE, Components.LoadBalance.RANDOM);
+                LoadBalance loadBalance = ExtensionLoader.loadService(LoadBalance.class, loadBalanceKey);
+                URL selectedServiceUrl = loadBalance.select(invocation, finalServiceUrls);
+                url.address(selectedServiceUrl.address()).addParameters(selectedServiceUrl.parameters());
+            }
+            // Invocation revise
+            invocation.revise(caller::call);
+            // faultTolerance call
             String faultToleranceKey = url.getParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_FAST);
             FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceKey);
-            return faultTolerance.operation(invocation.revise(this::call));
+            return faultTolerance.operation(invocation);
         } catch (RpcException e) {
             throw new RpcException(e);
         }
@@ -245,39 +282,6 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return future;
     }
 
-    private URL selectURL(Invocation invocation) {
-        URL url = invocation.url();
-        if (!StringUtil.isBlank(directUrl)) {
-            return url;
-        }
-        List<URL> urls = discoveryUrls(invocation);
-        String routerKey = url.getParameter(Key.ROUTER, Components.Router.WEIGHT);
-        Router router = ExtensionLoader.loadService(Router.class, routerKey);
-        urls = router.route(urls, invocation);
-        String loadBalanceKey = url.getParameter(Key.LOAD_BALANCE, Components.LoadBalance.RANDOM);
-        LoadBalance loadBalance = ExtensionLoader.loadService(LoadBalance.class, loadBalanceKey);
-        return loadBalance.select(invocation, urls);
-    }
-
-    private List<URL> discoveryUrls(Invocation invocation) {
-        URL url = invocation.url();
-        URL[] urls = registryConfigs().stream().map(config -> {
-            URL registryUrl = config.toUrl();
-            registryUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
-            registryUrl.addParameter(Key.VIRTUE, virtue.name());
-            return registryUrl;
-        }).toArray(URL[]::new);
-        String directoryKey = url.getParameter(Key.DIRECTORY, Components.DEFAULT);
-        Directory directory = ExtensionLoader.loadService(Directory.class, directoryKey);
-        List<URL> result = directory.list(invocation, urls);
-        if (result.isEmpty()) {
-            if (lazyDiscover) {
-                throw new SourceException("Not found available service!,Path:" + invocation.url().path());
-            }
-        }
-        return result;
-    }
-
     private Client getClient(String address) {
         ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
         ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
@@ -290,15 +294,12 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return protocolInstance.openClient(clientUrl);
     }
 
-    private void checkAsyncReturnType(Options options, Method method) {
-        Type returnType = method.getGenericReturnType();
-        if (options.async()) {
+    private void checkAsyncReturnType(Method method) {
+        returnType = method.getGenericReturnType();
             if (returnType instanceof ParameterizedType parameterizedType) {
-                if (parameterizedType.getRawType() != CompletableFuture.class) {
-                    throw new IllegalArgumentException(method.getName() + " Async returnType should be CompletableFuture");
-                }
-            } else {
-                throw new IllegalArgumentException(method.getName() + " Async returnType should be CompletableFuture");
+                if (parameterizedType.getRawType() == CompletableFuture.class) {
+                    returnType = parameterizedType.getActualTypeArguments()[0];
+                    async(true);
             }
         }
     }
@@ -327,5 +328,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return clientConfig;
     }
 
-    protected abstract Options options();
+    protected Options options() {
+        return null;
+    }
 }

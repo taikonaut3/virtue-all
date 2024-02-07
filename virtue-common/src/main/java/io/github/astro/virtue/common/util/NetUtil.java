@@ -14,9 +14,7 @@ import java.util.regex.Pattern;
 public final class NetUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(NetUtil.class);
-
     private static volatile InetAddress LOCAL_ADDRESS = null;
-
     private static final String IP_REGEX = "^((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$";
     private static final String PORT_REGEX = "^\\d{1,5}$";
 
@@ -25,10 +23,8 @@ public final class NetUtil {
         if (parts.length != 2) {
             return false;
         }
-
         String ip = parts[0];
         String port = parts[1];
-
         return isValidIp(ip) && isValidPort(port);
     }
 
@@ -93,7 +89,7 @@ public final class NetUtil {
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = networkInterfaces.nextElement();
                 // 排除回环接口和未启用的接口
-                if (networkInterface.isUp() && !networkInterface.isLoopback()) {
+                if (networkInterface.isUp() && !networkInterface.isLoopback() && !networkInterface.isVirtual()) {
                     Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
                     while (inetAddresses.hasMoreElements()) {
                         InetAddress inetAddress = inetAddresses.nextElement();
@@ -110,7 +106,6 @@ public final class NetUtil {
         }
         return null;
     }
-
     private NetUtil() {
     }
 

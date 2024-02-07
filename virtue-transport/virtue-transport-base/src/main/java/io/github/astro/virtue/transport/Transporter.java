@@ -1,6 +1,8 @@
 package io.github.astro.virtue.transport;
 
+import io.github.astro.virtue.common.constant.Key;
 import io.github.astro.virtue.common.exception.NetWorkException;
+import io.github.astro.virtue.common.extension.AttributeKey;
 import io.github.astro.virtue.common.spi.ServiceInterface;
 import io.github.astro.virtue.common.url.URL;
 import io.github.astro.virtue.transport.channel.ChannelHandler;
@@ -15,6 +17,8 @@ import static io.github.astro.virtue.common.constant.Components.Transport.NETTY;
  */
 @ServiceInterface(NETTY)
 public interface Transporter {
+
+    AttributeKey<Transporter> ATTRIBUTE_KEY = AttributeKey.get(Key.TRANSPORTER);
 
     /**
      * Binds a Server to the URL with the given codec.

@@ -1,18 +1,18 @@
 package io.github.astro.virtue.rpc;
 
+import io.github.astro.virtue.common.spi.ExtensionLoader;
 import io.github.astro.virtue.common.util.AssertUtil;
+import io.github.astro.virtue.common.util.GenerateUtil;
 import io.github.astro.virtue.common.util.ReflectUtil;
 import io.github.astro.virtue.config.CallerFactory;
 import io.github.astro.virtue.config.RemoteService;
 import io.github.astro.virtue.config.ServerCaller;
-import io.github.astro.virtue.config.annotation.RegistryCallerFactory;
+import io.github.astro.virtue.config.annotation.CallerFactoryProvider;
 import io.github.astro.virtue.config.manager.Virtue;
 import io.github.astro.virtue.rpc.config.AbstractCallerContainer;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 @ToString
 public class ComplexRemoteService<T> extends AbstractCallerContainer implements RemoteService<T> {
@@ -20,7 +20,6 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
     private static final Class<io.github.astro.virtue.config.annotation.RemoteService> REMOTE_SERVICE_CLASS =
             io.github.astro.virtue.config.annotation.RemoteService.class;
 
-    private final Map<String, ServerCaller<?>> providerCallerMap = new HashMap<>();
 
     private final Class<T> remoteServiceClass;
 
@@ -61,13 +60,13 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
 
     private void parseServerCaller() {
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
-            RegistryCallerFactory registryCallerFactory = ReflectUtil.findAnnotation(method, RegistryCallerFactory.class);
-            if (registryCallerFactory != null) {
-                CallerFactory callerFactory = CallerFactory.get(registryCallerFactory.value());
+            CallerFactoryProvider factoryProvider = ReflectUtil.findAnnotation(method, CallerFactoryProvider.class);
+            if (factoryProvider != null) {
+                CallerFactory callerFactory = ExtensionLoader.loadService(CallerFactory.class, factoryProvider.value());
                 ServerCaller<?> caller = callerFactory.createServerCaller(method, this);
                 if (caller != null) {
                     callerMap.put(method, caller);
-                    providerCallerMap.put(caller.protocol() + caller.path(), caller);
+                    identificationCallerMap.put(caller.identification(), caller);
                     virtue.configManager().serverConfigManager().neededOpenProtocol(caller.protocol());
                 }
             }
@@ -81,7 +80,7 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
 
     @Override
     public ServerCaller<?> getCaller(String protocol, String path) {
-        return providerCallerMap.get(protocol + path);
+        return (ServerCaller<?>) identificationCallerMap.get(GenerateUtil.generateCallerIdentification(protocol, path));
     }
 
     @Override
