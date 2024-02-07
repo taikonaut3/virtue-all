@@ -17,6 +17,7 @@ import io.github.astro.virtue.config.config.RegistryConfig;
 import io.github.astro.virtue.config.config.ServerConfig;
 import io.github.astro.virtue.config.filter.Filter;
 import io.github.astro.virtue.event.EventDispatcher;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -104,6 +105,7 @@ public interface Virtue extends Accessor, Lifecycle {
         return configManager().remoteCallerManager().get(target);
     }
 
+
     /**
      * Get remoteService by target class
      *
@@ -113,6 +115,18 @@ public interface Virtue extends Accessor, Lifecycle {
      */
     default <T> RemoteService<T> remoteService(Class<T> targetClass) {
         return configManager().remoteServiceManager().get(targetClass);
+    }
+
+    /**
+     * Config Router rule
+     *
+     * @param urlRegex
+     * @param targetRegex
+     * @return current instance
+     */
+    default Virtue router(@Language("RegExp") String urlRegex, @Language("RegExp") String targetRegex) {
+        configManager().routerConfigManager().register(urlRegex, targetRegex);
+        return this;
     }
 
     /**

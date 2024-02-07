@@ -1,20 +1,25 @@
 package io.github.astro.virtue.config.config;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.intellij.lang.annotations.Language;
 
 @Accessors(fluent = true, chain = true)
-@Setter
 @Getter
+@ToString
 public class RouterConfig {
 
-    private Map<String, List<String>> map = new ConcurrentHashMap<>();
+    private final String urlRegex;
 
+    private String matchTargetRegex;
 
+    public RouterConfig(@Language("RegExp") String urlRegex) {
+        this.urlRegex = urlRegex;
+    }
 
+    public RouterConfig match(@Language("RegExp") String matchTargetRegex) {
+        this.matchTargetRegex = matchTargetRegex;
+        return this;
+    }
 }

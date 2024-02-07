@@ -21,6 +21,8 @@ public class ConfigManager {
 
     private final RegistryConfigManager registryConfigManager;
 
+    private final RouterConfigManager routerConfigManager;
+
     private final FilterManager filterManager;
 
     private final ApplicationConfig applicationConfig;
@@ -30,6 +32,7 @@ public class ConfigManager {
         remoteCallerManager = new RemoteCallerManager(virtue);
         clientConfigManager = new ClientConfigManager(virtue);
         registryConfigManager = new RegistryConfigManager(virtue);
+        routerConfigManager = new RouterConfigManager(virtue);
         filterManager = new FilterManager(virtue);
         serverConfigManager = new ServerConfigManager(virtue);
         this.applicationConfig = new ApplicationConfig();

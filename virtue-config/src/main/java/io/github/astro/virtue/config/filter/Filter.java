@@ -32,7 +32,7 @@ public interface Filter extends MatchRule<Filter> {
     }
 
     @Override
-    default Filter addProtocolRule(Virtue virtue, Scope scope, String... regex) {
+    default  Filter addProtocolRule(Virtue virtue, Scope scope, String... regex) {
         FilterManager manager = virtue.configManager().filterManager();
         manager.addProtocolRule(this, scope, regex);
         return this;

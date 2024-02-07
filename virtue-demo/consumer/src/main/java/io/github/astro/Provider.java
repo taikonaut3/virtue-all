@@ -11,7 +11,7 @@ public class Provider {
 
     @Config(filters = {"filter2", "filter1"}, serialize = JSON)
     @VirtueCallable(name = "hello")
-    public String hello(String world) {
+    public  String hello(String world) {
         return "hello" + world;
     }
 
