@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.0.2-alpha</revision>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>0.0.3-alpha</revision>
         <slf4j.version>2.0.9</slf4j.version>
         <logback.version>1.4.14</logback.version>
         <lombok.version>1.18.30</lombok.version>
@@ -400,6 +400,23 @@
                             <keyname>C7E27A4B099711A4BC257C891EF5179C7E8EEC66</keyname>
                             <passphraseServerId>C7E27A4B099711A4BC257C891EF5179C7E8EEC66</passphraseServerId>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${plugin.flatten.version}</version>
+                <configuration>
+                    <flattenMode>bom</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

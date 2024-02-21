@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.taikonaut3</groupId>
   <artifactId>virtue-serialization</artifactId>
-  <version>0.0.2-alpha</version>
+  <version>0.0.3-alpha</version>
   <packaging>pom</packaging>
-  <description>Virtue Dependencies Bom.</description>
-  <url>https://github.com/taikonaut3/virtue-all/virtue-serialization</url>
+  <description>Virtue RPC Framework.</description>
+  <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-serialization</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -23,9 +23,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-serialization</connection>
-    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-serialization</developerConnection>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-serialization</url>
+    <connection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-serialization</connection>
+    <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-serialization</developerConnection>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-serialization</url>
   </scm>
   <build>
     <plugins>

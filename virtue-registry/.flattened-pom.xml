@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.taikonaut3</groupId>
   <artifactId>virtue-registry</artifactId>
-  <version>0.0.2-alpha</version>
+  <version>0.0.3-alpha</version>
   <packaging>pom</packaging>
-  <description>Virtue Dependencies Bom.</description>
-  <url>https://github.com/taikonaut3/virtue-all/virtue-registry</url>
+  <description>Virtue RPC Framework.</description>
+  <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-registry</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -23,9 +23,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-registry</connection>
-    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-registry</developerConnection>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-registry</url>
+    <connection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-registry</connection>
+    <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-registry</developerConnection>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-registry</url>
   </scm>
   <build>
     <plugins>

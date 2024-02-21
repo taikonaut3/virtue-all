@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.taikonaut3</groupId>
   <artifactId>virtue-common</artifactId>
-  <version>0.0.2-alpha</version>
-  <description>Virtue Dependencies Bom.</description>
-  <url>https://github.com/taikonaut3/virtue-all/virtue-common</url>
+  <version>0.0.3-alpha</version>
+  <description>Virtue RPC Framework.</description>
+  <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-common</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -22,9 +22,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-common</connection>
-    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-common</developerConnection>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-common</url>
+    <connection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-common</connection>
+    <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-common</developerConnection>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-common</url>
   </scm>
   <dependencies>
     <dependency>

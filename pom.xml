@@ -27,7 +27,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>0.0.2-alpha</revision>
+        <revision>0.0.3-alpha</revision>
         <plugin.gpg.version>3.1.0</plugin.gpg.version>
         <plugin.javadoc.version>3.6.3</plugin.javadoc.version>
         <plugin.source.version>3.3.0</plugin.source.version>
@@ -54,10 +54,9 @@
         </dependency>
     </dependencies>
 
-
     <name>${project.artifactId}</name>
-    <description>Virtue Dependencies Bom.</description>
-    <url>https://github.com/taikonaut3/virtue-all</url>
+    <description>Virtue RPC Framework.</description>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -72,10 +71,11 @@
             <organizationUrl>http://www.sonatype.com</organizationUrl>
         </developer>
     </developers>
+
     <scm>
-        <connection>scm:git:git://github.com/taikonaut3/virtue-all.git</connection>
-        <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git</developerConnection>
-        <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom</url>
+        <connection>scm:git:https://github.com/taikonaut3/virtue-all.git</connection>
+        <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git</developerConnection>
+        <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
     </scm>
 
     <build>
@@ -88,6 +88,11 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <tokenAuth>true</tokenAuth>
+                    <excludeArtifacts>
+                        <excludeArtifact>virtue-demo</excludeArtifact>
+                        <excludeArtifact>virtue-demo/provider</excludeArtifact>
+                        <excludeArtifact>virtue-demo/consumer</excludeArtifact>
+                    </excludeArtifacts>
                 </configuration>
             </plugin>
             <plugin>

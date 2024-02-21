@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.taikonaut3</groupId>
   <artifactId>consumer</artifactId>
-  <version>0.0.2-alpha</version>
-  <description>Virtue Dependencies Bom.</description>
-  <url>https://github.com/taikonaut3/virtue-all/virtue-demo/consumer</url>
+  <version>0.0.3-alpha</version>
+  <description>Virtue RPC Framework.</description>
+  <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-demo/consumer</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -22,9 +22,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-demo/consumer</connection>
-    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-demo/consumer</developerConnection>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-demo/consumer</url>
+    <connection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-demo/consumer</connection>
+    <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-demo/consumer</developerConnection>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-demo/consumer</url>
   </scm>
   <build>
     <plugins>

@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.taikonaut3</groupId>
   <artifactId>virtue-proxy-cglib</artifactId>
-  <version>0.0.2-alpha</version>
-  <description>Virtue Dependencies Bom.</description>
-  <url>https://github.com/taikonaut3/virtue-all/virtue-proxy/virtue-proxy-cglib</url>
+  <version>0.0.3-alpha</version>
+  <description>Virtue RPC Framework.</description>
+  <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-proxy/virtue-proxy-cglib</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -22,15 +22,15 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-proxy/virtue-proxy-cglib</connection>
-    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-proxy/virtue-proxy-cglib</developerConnection>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-proxy/virtue-proxy-cglib</url>
+    <connection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-proxy/virtue-proxy-cglib</connection>
+    <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-proxy/virtue-proxy-cglib</developerConnection>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-proxy/virtue-proxy-cglib</url>
   </scm>
   <dependencies>
     <dependency>
       <groupId>io.github.taikonaut3</groupId>
       <artifactId>virtue-proxy-base</artifactId>
-      <version>0.0.2-alpha</version>
+      <version>0.0.3-alpha</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

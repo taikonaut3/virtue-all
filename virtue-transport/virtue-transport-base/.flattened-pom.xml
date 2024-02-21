@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.taikonaut3</groupId>
   <artifactId>virtue-transport-base</artifactId>
-  <version>0.0.2-alpha</version>
-  <description>Virtue Dependencies Bom.</description>
-  <url>https://github.com/taikonaut3/virtue-all/virtue-transport/virtue-transport-base</url>
+  <version>0.0.3-alpha</version>
+  <description>Virtue RPC Framework.</description>
+  <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-transport/virtue-transport-base</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>
@@ -22,15 +22,15 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-transport/virtue-transport-base</connection>
-    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-transport/virtue-transport-base</developerConnection>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-transport/virtue-transport-base</url>
+    <connection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-transport/virtue-transport-base</connection>
+    <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git/virtue-transport/virtue-transport-base</developerConnection>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-transport/virtue-transport-base</url>
   </scm>
   <dependencies>
     <dependency>
       <groupId>io.github.taikonaut3</groupId>
       <artifactId>virtue-config</artifactId>
-      <version>0.0.2-alpha</version>
+      <version>0.0.3-alpha</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
