@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.github.astro</groupId>
+        <groupId>io.github.taikonaut3</groupId>
         <artifactId>virtue-all</artifactId>
         <version>${revision}</version>
     </parent>
@@ -19,32 +19,32 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-boot-starter</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-serialization-msgpack</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-registry-nacos</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-proxy-cglib</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-proxy-bytebuddy</artifactId>
             <version>${revision}</version>
         </dependency>
 <!--         <dependency> -->
-<!--             <groupId>io.github.astro</groupId> -->
+<!--             <groupId>io.github.taikonaut3naut3</groupId> -->
 <!--             <artifactId>virtue-spring-web-api</artifactId> -->
 <!--             <version>${revision}</version> -->
 <!--         </dependency> -->

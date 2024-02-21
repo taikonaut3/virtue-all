@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.github.taikonaut3</groupId>
+  <artifactId>virtue-rpc-virtue</artifactId>
+  <version>0.0.2-alpha</version>
+  <description>Virtue Dependencies Bom.</description>
+  <url>https://github.com/taikonaut3/virtue-all/virtue-rpc/virtue-rpc-virtue</url>
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>taikonaut3</name>
+      <email>wenbochou@163.com</email>
+      <organization>Sonatype</organization>
+      <organizationUrl>http://www.sonatype.com</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/taikonaut3/virtue-all.git/virtue-rpc/virtue-rpc-virtue</connection>
+    <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git/virtue-rpc/virtue-rpc-virtue</developerConnection>
+    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-dependencies-bom/virtue-rpc/virtue-rpc-virtue</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>io.github.taikonaut3</groupId>
+      <artifactId>virtue-rpc-base</artifactId>
+      <version>0.0.2-alpha</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.3.0</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
