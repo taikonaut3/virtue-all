@@ -15,6 +15,7 @@ import io.github.taikonaut3.virtue.transport.Response;
 import io.github.taikonaut3.virtue.transport.byteutils.ByteReader;
 import io.github.taikonaut3.virtue.transport.byteutils.ByteWriter;
 import io.github.taikonaut3.virtue.transport.codec.Codec;
+import io.github.taikonaut3.virtue.transport.compress.Compression;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,7 +185,7 @@ public class VirtueCodec implements Codec {
             byte[] fixHeaderBytes = encodeFixHeader(virtueEnvelope);
             byte[] extendHeaderBytes = encodeExtendHeader(virtueEnvelope);
             byte[] bodyBytes = encodeBody(virtueEnvelope);
-            writer.writeInt(virtueEnvelope.getHeader().getLength());
+            writer.writeInt(virtueEnvelope.header().getLength());
             writer.writeInt(fixHeaderBytes.length);
             writer.writeBytes(fixHeaderBytes);
             writer.writeBytes(extendHeaderBytes);
@@ -214,26 +215,27 @@ public class VirtueCodec implements Codec {
     }
 
     private byte[] encodeFixHeader(VirtueEnvelope virtueEnvelope) {
-        return virtueEnvelope.getHeader().fixDataToBytes();
+        return virtueEnvelope.header().fixDataToBytes();
     }
 
     private byte[] encodeExtendHeader(VirtueEnvelope virtueEnvelope) {
-        Header header = virtueEnvelope.getHeader();
+        Header header = virtueEnvelope.header();
         header.addExtendData(Key.BODY_TYPE, virtueEnvelope.getBody().getClass().getName());
         return header.extendDataToBytes();
     }
 
     private byte[] encodeBody(VirtueEnvelope virtueEnvelope) {
-        Serializer serializer = virtueEnvelope.getHeader().getSerializer();
+        Serializer serializer = virtueEnvelope.header().serializer();
         byte[] bytes = serializer.serialize(virtueEnvelope.getBody());
-        logger.debug("{}: [serializer: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName());
-        return bytes;
+        Compression compression = virtueEnvelope.header().compression();
+        logger.debug("{}: [serializer: {}],[compression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compression.getClass().getSimpleName());
+        return compression.compress(bytes);
     }
 
     @SuppressWarnings("unchecked")
     private Header decodeHeader(byte[] fixHeaderBytes, byte[] extendHeaderBytes) {
         Header header = decodeFixHeader(fixHeaderBytes);
-        HashMap<String, String> extendData = (HashMap<String, String>) header.getSerializer().deserialize(extendHeaderBytes, HashMap.class);
+        HashMap<String, String> extendData = (HashMap<String, String>) header.serializer().deserialize(extendHeaderBytes, HashMap.class);
         header.addExtendData(extendData);
         return header;
     }
@@ -243,16 +245,17 @@ public class VirtueCodec implements Codec {
     }
 
     private Object decodeBody(Header header, byte[] bodyBytes) {
-        Serializer serializer = header.getSerializer();
+        Serializer serializer = header.serializer();
         Class<?> bodyType;
         try {
             bodyType = Class.forName(header.getExtendData(Key.BODY_TYPE));
         } catch (ClassNotFoundException e) {
             bodyType = Object.class;
         }
-        logger.debug("{}: [deserializer: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName());
-        return serializer.deserialize(bodyBytes, bodyType);
-
+        Compression compression = header.compression();
+        byte[] decompress = compression.decompress(bodyBytes);
+        logger.debug("{}: [deserializer: {}],[decompression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compression.getClass().getSimpleName());
+        return serializer.deserialize(decompress, bodyType);
     }
 
     private VirtueEnvelope createEnvelope(Header header, Object body) {

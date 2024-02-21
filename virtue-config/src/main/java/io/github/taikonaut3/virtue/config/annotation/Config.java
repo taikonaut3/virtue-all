@@ -4,8 +4,6 @@ import io.github.taikonaut3.virtue.common.constant.Components;
 
 import java.lang.annotation.*;
 
-import static io.github.taikonaut3.virtue.common.constant.Components.Serialize;
-
 /**
  * Common config for the client and the server.
  */
@@ -27,7 +25,9 @@ public @interface Config {
     /**
      * Serialization type.
      */
-    String serialize() default Serialize.KRYO;
+    String serialize() default Components.Serialize.KRYO;
+
+    String compression() default Components.Compression.GZIP;
 
     /**
      * Invoke Filter.

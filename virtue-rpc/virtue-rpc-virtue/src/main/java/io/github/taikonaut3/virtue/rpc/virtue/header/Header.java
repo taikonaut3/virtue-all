@@ -5,6 +5,7 @@ import io.github.taikonaut3.virtue.common.constant.Mode;
 import io.github.taikonaut3.virtue.common.constant.ModeContainer;
 import io.github.taikonaut3.virtue.common.spi.ExtensionLoader;
 import io.github.taikonaut3.virtue.serialization.Serializer;
+import io.github.taikonaut3.virtue.transport.compress.Compression;
 
 import java.util.Map;
 
@@ -35,9 +36,14 @@ public interface Header {
         return ModeContainer.getMode(Key.SERIALIZE, serial);
     }
 
-    default Serializer getSerializer() {
+    default Serializer serializer() {
         String serial = getExtendData(Key.SERIALIZE);
         return ExtensionLoader.loadService(Serializer.class, serial);
+    }
+
+    default Compression compression() {
+        String compressionType = getExtendData(Key.COMPRESSION);
+        return ExtensionLoader.loadService(Compression.class, compressionType);
     }
 
 }

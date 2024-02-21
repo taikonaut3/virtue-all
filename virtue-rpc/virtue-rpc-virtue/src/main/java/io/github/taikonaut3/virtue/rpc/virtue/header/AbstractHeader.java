@@ -62,7 +62,7 @@ public abstract class AbstractHeader implements Header {
 
     @Override
     public byte[] extendDataToBytes() {
-        return getSerializer().serialize(extendData);
+        return serializer().serialize(extendData);
     }
 
 }

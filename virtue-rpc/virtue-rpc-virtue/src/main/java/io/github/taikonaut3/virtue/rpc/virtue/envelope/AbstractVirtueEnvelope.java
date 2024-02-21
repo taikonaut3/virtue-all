@@ -26,7 +26,7 @@ public abstract class AbstractVirtueEnvelope implements VirtueEnvelope {
     }
 
     @Override
-    public Header getHeader() {
+    public Header header() {
         return header;
     }
 

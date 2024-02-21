@@ -26,9 +26,6 @@ public class ServerConfig extends UrlTypeConfig {
     @Parameter(Key.SSL)
     private boolean ssl;
 
-    @Parameter(Key.COMPRESSION)
-    private boolean compression;
-
     @Parameter(Key.MAX_CONNECTIONS)
     private int maxConnections;
 

@@ -18,7 +18,7 @@ public interface VirtueEnvelope extends Serializable {
      *
      * @return the header of the message
      */
-    Header getHeader();
+    Header header();
 
     /**
      * Sets the header of this message.

@@ -69,6 +69,7 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
         Mode protocolMode = ModeContainer.getMode(Key.PROTOCOL, protocol());
         VirtueHeader header = new VirtueHeader(serializeMode, responseMode, protocolMode);
         header.addExtendData(Key.URL, url.toString());
+        header.addExtendData(Key.COMPRESSION, url.getParameter(Key.COMPRESSION, Components.Compression.GZIP));
         return header;
     }
 

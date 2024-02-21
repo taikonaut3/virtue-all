@@ -64,6 +64,9 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
     @Setter
     @Parameter(Key.SERIALIZE)
     protected String serialize;
+    @Setter
+    @Parameter(Key.COMPRESSION)
+    protected String compression;
 
     protected AbstractCaller(Method method, CallerContainer container, String protocol, Class<T> annoType) {
         AssertUtil.notNull(method, container, protocol, annoType);
@@ -129,6 +132,7 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
 
     private void parseConfig(Config config) {
         serialize(config.serialize());
+        compression(config.compression());
         filterChain = ExtensionLoader.loadService(FilterChain.class, config.filterChain());
         String[] filterNames = config.filters();
         ConfigManager manager = virtue.configManager();

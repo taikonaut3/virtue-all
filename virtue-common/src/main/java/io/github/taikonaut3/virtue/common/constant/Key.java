@@ -124,7 +124,6 @@ public interface Key {
     String HTTP_REQUEST_WRAPPER = "httpRequestWrapper";
 
     String ENVELOPE = "envelope";
-
     String RESPONSE_CODE = "responseCode";
 
     String INVOKER = "invoker";
