@@ -82,7 +82,7 @@ public class RpcFuture extends CompletableFuture<Object> {
      * @throws ExecutionException
      */
     @Override
-    public Object get() throws InterruptedException, ExecutionException {
+    public Object get() {
         try {
             return super.get(timeout(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
