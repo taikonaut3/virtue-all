@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.github.astro</groupId>
+        <groupId>io.github.taikonaut3</groupId>
         <artifactId>virtue-rpc</artifactId>
         <version>${revision}</version>
     </parent>
@@ -13,12 +13,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-rpc-base</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.astro</groupId>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-serialization-json</artifactId>
             <version>${revision}</version>
         </dependency>
