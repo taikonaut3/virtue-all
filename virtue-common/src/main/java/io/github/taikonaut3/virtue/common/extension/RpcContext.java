@@ -2,15 +2,10 @@ package io.github.taikonaut3.virtue.common.extension;
 
 public class RpcContext extends AbstractAccessor {
 
-    private static final ThreadLocal<RpcContext> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<RpcContext> THREAD_LOCAL = ThreadLocal.withInitial(RpcContext::new);
 
     public static RpcContext getContext() {
-        RpcContext context = threadLocal.get();
-        if (context == null) {
-            context = new RpcContext();
-            threadLocal.set(context);
-        }
-        return context;
+        return THREAD_LOCAL.get();
     }
 
     public RpcContext remove(String key) {
@@ -20,7 +15,7 @@ public class RpcContext extends AbstractAccessor {
 
     public void clear() {
         accessor.clear();
-        threadLocal.remove();
+        THREAD_LOCAL.remove();
     }
 
 }
