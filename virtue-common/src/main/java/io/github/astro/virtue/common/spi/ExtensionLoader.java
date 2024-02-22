@@ -39,9 +39,12 @@ public class ExtensionLoader<S> {
 
     private final String defaultService;
 
-    public ExtensionLoader(Class<S> clazz) {
+    private final boolean lazyLoad;
+
+    private ExtensionLoader(Class<S> clazz) {
         this.type = clazz;
         this.defaultService = clazz.getAnnotation(ServiceInterface.class).value();
+        this.lazyLoad = clazz.getAnnotation(ServiceInterface.class).lazyLoad();
         this.services = new ConcurrentHashMap<>();
         this.serviceClasses = new ConcurrentHashMap<>();
         loadServiceClasses(clazz);
@@ -107,6 +110,13 @@ public class ExtensionLoader<S> {
                             if (serviceClass.isAnnotationPresent(ServiceProvider.class)) {
                                 ServiceProvider provider = serviceClass.getAnnotation(ServiceProvider.class);
                                 String key = StringUtil.isBlankOrDefault(provider.value(), serviceClass.getName());
+                                if(!lazyLoad){
+                                    if (this.type.isAssignableFrom(serviceClass)) {
+                                        services.putIfAbsent(key, createInstance((Class<? extends S>)serviceClass));
+                                    } else {
+                                        throw new IllegalArgumentException("Load service type(" + this.type + ":" + key + ") failed," + clazz + " is not " + this.type + "’s subclass");
+                                    }
+                                }
                                 serviceClasses.put(key, (Class<? extends S>) serviceClass);
                             }
                         } catch (ClassNotFoundException e) {
@@ -126,7 +136,14 @@ public class ExtensionLoader<S> {
 
     public S getService(String serviceName) {
         S service = services.get(serviceName);
-        if (service == null) {
+        if(Objects.nonNull(service)){
+            return service;
+        }
+        synchronized(this) {
+            service = services.get(serviceName);
+            if (Objects.nonNull(service)) {
+                return service;
+            }
             Class<? extends S> clazz = serviceClasses.get(serviceName);
             if (clazz == null) {
                 logger.warn("Load service type({}:{}) failed,Unknown the [{}] Please check is Exist", this.type, serviceName, serviceName);
