@@ -1,6 +1,5 @@
 package io.github.taikonaut3.virtue.common.spi;
 
-import com.google.auto.service.AutoService;
 import io.github.taikonaut3.virtue.common.util.FileUtil;
 import lombok.Getter;
 
@@ -24,9 +23,10 @@ import static io.github.taikonaut3.virtue.common.constant.Constant.SPI_FIX_PATH;
  * @see ServiceProvider
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
-@SupportedAnnotationTypes({"io.github.taikonaut3.virtue.common.spi.ServiceInterface",
-        "io.github.taikonaut3.virtue.common.spi.ServiceProvider"})
-@AutoService(Processor.class)
+@SupportedAnnotationTypes({
+        "io.github.taikonaut3.virtue.common.spi.ServiceInterface",
+        "io.github.taikonaut3.virtue.common.spi.ServiceProvider"
+})
 public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
 
     private Map<String, File> fileMap;
