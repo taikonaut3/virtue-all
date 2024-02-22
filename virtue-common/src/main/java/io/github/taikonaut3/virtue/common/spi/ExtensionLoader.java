@@ -139,7 +139,7 @@ public class ExtensionLoader<S> {
         if(Objects.nonNull(service)){
             return service;
         }
-        synchronized(this) {
+        synchronized(serviceName.intern()) {
             service = services.get(serviceName);
             if (Objects.nonNull(service)) {
                 return service;
