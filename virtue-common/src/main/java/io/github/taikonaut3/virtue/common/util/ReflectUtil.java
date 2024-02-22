@@ -98,39 +98,22 @@ public final class ReflectUtil {
         }
         return constructor;
     }
-
-    public static List<Field> getAllFields(Class<?> clazz) {
-        Field[] declaredFields = clazz.getDeclaredFields();
-        List<Field> fields = new ArrayList<>(Arrays.asList(declaredFields));
-        Class<?> superClass = clazz.getSuperclass();
-        if (superClass != null) {
-            fields.addAll(getAllFields(superClass));
-        }
-        return fields;
+    public static List<Field> getAllFields(Class<?> clazz){
+        List<Field> allFields = new ArrayList<>();
+        do{
+            Field[] declaredFields = clazz.getDeclaredFields();
+            allFields.addAll(Arrays.asList(declaredFields));
+            clazz = clazz.getSuperclass();
+        }while(clazz != null && clazz != Object.class);
+        return allFields;
     }
 
-    public static <T extends Annotation> T findAnnotation(Class<?> clazz, Class<T> annotationType) {
-        T annotation = clazz.getAnnotation(annotationType);
+    public static <T extends Annotation> T findAnnotation(AnnotatedElement annotatedElement,Class<T> annotationType) {
+        T annotation = annotatedElement.getAnnotation(annotationType);
         if (annotation != null) {
             return annotation;
         }
-        List<Annotation> annotations = Arrays.stream(clazz.getAnnotations()).
-                filter(item -> !item.annotationType().getPackageName().startsWith("java.lang.annotation")).toList();
-        for (Annotation anno : annotations) {
-            annotation = findAnnotation(anno, annotationType);
-            if (annotation != null) {
-                return annotation;
-            }
-        }
-        return null;
-    }
-
-    public static <T extends Annotation> T findAnnotation(Method method, Class<T> annotationType) {
-        T annotation = method.getAnnotation(annotationType);
-        if (annotation != null) {
-            return annotation;
-        }
-        List<Annotation> annotations = Arrays.stream(method.getAnnotations()).
+        List<Annotation> annotations = Arrays.stream(annotatedElement.getAnnotations()).
                 filter(item -> !item.annotationType().getPackageName().startsWith("java.lang.annotation")).toList();
         for (Annotation anno : annotations) {
             annotation = findAnnotation(anno, annotationType);
