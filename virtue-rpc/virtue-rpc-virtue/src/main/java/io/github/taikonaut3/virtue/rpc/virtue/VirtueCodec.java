@@ -185,7 +185,7 @@ public class VirtueCodec implements Codec {
             byte[] fixHeaderBytes = encodeFixHeader(virtueEnvelope);
             byte[] extendHeaderBytes = encodeExtendHeader(virtueEnvelope);
             byte[] bodyBytes = encodeBody(virtueEnvelope);
-            writer.writeInt(virtueEnvelope.header().getLength());
+            writer.writeInt(virtueEnvelope.header().length());
             writer.writeInt(fixHeaderBytes.length);
             writer.writeBytes(fixHeaderBytes);
             writer.writeBytes(extendHeaderBytes);

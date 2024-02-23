@@ -1,8 +1,6 @@
 package io.github.taikonaut3.virtue.rpc.virtue.header;
 
-import io.github.taikonaut3.virtue.common.constant.Key;
 import io.github.taikonaut3.virtue.common.constant.Mode;
-import io.github.taikonaut3.virtue.common.constant.ModeContainer;
 import io.github.taikonaut3.virtue.common.spi.ExtensionLoader;
 import io.github.taikonaut3.virtue.serialization.Serializer;
 import io.github.taikonaut3.virtue.transport.compress.Compression;
@@ -11,15 +9,19 @@ import java.util.Map;
 
 public interface Header {
 
-    int getLength();
+    int length();
 
-    int getAllowMaxSize();
+    int allowMaxSize();
 
-    Mode getEnvelopeMode();
+    Mode envelopeMode();
 
-    Mode getProtocolMode();
+    Mode protocolMode();
 
-    Map<String, String> getExtendsData();
+    Mode serializeMode();
+
+    Mode compressionMode();
+
+    Map<String, String> extendsData();
 
     void addExtendData(String key, String value);
 
@@ -31,19 +33,12 @@ public interface Header {
 
     byte[] extendDataToBytes();
 
-    default Mode getSerializerMode() {
-        String serial = getExtendData(Key.SERIALIZE);
-        return ModeContainer.getMode(Key.SERIALIZE, serial);
-    }
-
     default Serializer serializer() {
-        String serial = getExtendData(Key.SERIALIZE);
-        return ExtensionLoader.loadService(Serializer.class, serial);
+        return ExtensionLoader.loadService(Serializer.class, serializeMode().name());
     }
 
     default Compression compression() {
-        String compressionType = getExtendData(Key.COMPRESSION);
-        return ExtensionLoader.loadService(Compression.class, compressionType);
+        return ExtensionLoader.loadService(Compression.class, compressionMode().name());
     }
 
 }

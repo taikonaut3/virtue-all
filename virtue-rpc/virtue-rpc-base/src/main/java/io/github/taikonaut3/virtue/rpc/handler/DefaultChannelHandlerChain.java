@@ -91,7 +91,9 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
         URL url = channel.attribute(URL.ATTRIBUTE_KEY).get();
         if (url != null) {
             String envelope = url.getParameter(Key.ENVELOPE);
-            Event<?> exceptionEvent = envelope.equals(Key.REQUEST) ? new ServerHandlerExceptionEvent(channel, cause) : new ClientHandlerExceptionEvent(channel, cause);
+            Event<?> exceptionEvent = envelope.equals(Key.REQUEST) ?
+                    new ServerHandlerExceptionEvent(channel, cause) :
+                    new ClientHandlerExceptionEvent(channel, cause);
             getEventDispatcher(url).dispatchEvent(exceptionEvent);
         }
         channels.remove(NetUtil.getAddress(channel.remoteAddress()));

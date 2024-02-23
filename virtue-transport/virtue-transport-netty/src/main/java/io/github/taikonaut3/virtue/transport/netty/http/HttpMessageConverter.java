@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  */
 @Accessors(fluent = true)
 @Getter
-public final class EnvelopeConverter {
+public final class HttpMessageConverter {
 
     private final ChannelHandler requestConverter = new RequestConverter();
 

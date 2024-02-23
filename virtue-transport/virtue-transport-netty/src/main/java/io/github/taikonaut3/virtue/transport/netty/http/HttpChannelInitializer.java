@@ -42,7 +42,7 @@ public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
     private void initClientPipeline(SocketChannel socketChannel, IdleStateHandler idleStateHandler) {
         String maxMessageKey = isServer ? MAX_RECEIVE_SIZE : CLIENT_MAX_RECEIVE_SIZE;
         int maxReceiveSize = url.getIntParameter(maxMessageKey, DEFAULT_MAX_MESSAGE_SIZE);
-        EnvelopeConverter converter = new EnvelopeConverter();
+        HttpMessageConverter converter = new HttpMessageConverter();
         socketChannel.pipeline()
                 .addLast("httpClientCodec", new HttpClientCodec())
                 .addLast("requestConverter", converter.requestConverter())

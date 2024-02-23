@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static io.github.taikonaut3.virtue.common.constant.Components.Compression.GZIP;
 import static io.github.taikonaut3.virtue.common.constant.Components.Envelope.*;
 import static io.github.taikonaut3.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.*;
@@ -29,6 +30,7 @@ public class ModeContainer {
         put(Key.ENVELOPE, HEARTBEAT, (byte) 3);
         put(Key.ENVELOPE, ERROR, (byte) -1);
         put(Key.PROTOCOL, VIRTUE, (byte) 1);
+        put(Key.COMPRESSION, GZIP, (byte) 1);
     }
 
     public static Mode getMode(String key, String name) {
