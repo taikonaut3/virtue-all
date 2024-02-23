@@ -1,4 +1,4 @@
-package io.github.taikonaut3.virtue.rpc.event;
+package io.github.taikonaut3.virtue.rpc.listener;
 
 import io.github.taikonaut3.virtue.event.Event;
 import io.github.taikonaut3.virtue.event.EventListener;

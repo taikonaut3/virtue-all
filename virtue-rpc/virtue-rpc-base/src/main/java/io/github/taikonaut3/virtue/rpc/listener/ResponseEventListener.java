@@ -2,7 +2,6 @@ package io.github.taikonaut3.virtue.rpc.listener;
 
 import io.github.taikonaut3.virtue.common.executor.RpcThreadPool;
 import io.github.taikonaut3.virtue.rpc.RpcFuture;
-import io.github.taikonaut3.virtue.rpc.event.EnvelopeEventListener;
 import io.github.taikonaut3.virtue.rpc.event.ResponseEvent;
 import io.github.taikonaut3.virtue.transport.Response;
 import org.slf4j.Logger;

@@ -8,7 +8,6 @@ import io.github.taikonaut3.virtue.common.url.URL;
 import io.github.taikonaut3.virtue.common.util.DateUtil;
 import io.github.taikonaut3.virtue.config.CallArgs;
 import io.github.taikonaut3.virtue.config.ServerCaller;
-import io.github.taikonaut3.virtue.rpc.event.EnvelopeEventListener;
 import io.github.taikonaut3.virtue.rpc.event.RequestEvent;
 import io.github.taikonaut3.virtue.rpc.protocol.Protocol;
 import io.github.taikonaut3.virtue.rpc.protocol.ProtocolParser;
