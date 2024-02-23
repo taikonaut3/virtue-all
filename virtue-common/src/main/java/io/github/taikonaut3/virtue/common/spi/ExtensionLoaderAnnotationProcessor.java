@@ -22,7 +22,7 @@ import static io.github.taikonaut3.virtue.common.constant.Constant.SPI_FIX_PATH;
  * @see ServiceInterface
  * @see ServiceProvider
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes({
         "io.github.taikonaut3.virtue.common.spi.ServiceInterface",
         "io.github.taikonaut3.virtue.common.spi.ServiceProvider"

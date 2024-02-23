@@ -165,40 +165,27 @@ public final class ReflectUtil {
         if (value instanceof String) {
             return "\"" + value + "\"";
         } else if (value.getClass().isArray()) {
-            switch (value) {
-                case Object[] objects -> {
-                    return Arrays.deepToString(objects);
-                }
-                case boolean[] booleans -> {
-                    return Arrays.toString(booleans);
-                }
-                case byte[] bytes -> {
-                    return Arrays.toString(bytes);
-                }
-                case char[] chars -> {
-                    return Arrays.toString(chars);
-                }
-                case double[] doubles -> {
-                    return Arrays.toString(doubles);
-                }
-                case float[] floats -> {
-                    return Arrays.toString(floats);
-                }
-                case int[] ints -> {
-                    return Arrays.toString(ints);
-                }
-                case long[] longs -> {
-                    return Arrays.toString(longs);
-                }
-                case short[] shorts -> {
-                    return Arrays.toString(shorts);
-                }
-                default -> {
-                }
+            if (value instanceof Object[]) {
+                return Arrays.deepToString((Object[]) value);
+            } else if (value instanceof boolean[]) {
+                return Arrays.toString((boolean[]) value);
+            } else if (value instanceof byte[]) {
+                return Arrays.toString((byte[]) value);
+            } else if (value instanceof char[]) {
+                return Arrays.toString((char[]) value);
+            } else if (value instanceof double[]) {
+                return Arrays.toString((double[]) value);
+            } else if (value instanceof float[]) {
+                return Arrays.toString((float[]) value);
+            } else if (value instanceof int[]) {
+                return Arrays.toString((int[]) value);
+            } else if (value instanceof long[]) {
+                return Arrays.toString((long[]) value);
+            } else if (value instanceof short[]) {
+                return Arrays.toString((short[]) value);
             }
         }
         return String.valueOf(value);
     }
-
 
 }

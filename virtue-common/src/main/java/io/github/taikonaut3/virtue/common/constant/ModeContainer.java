@@ -61,8 +61,26 @@ public class ModeContainer {
         return modeMap;
     }
 
-    public record ModeBean(String name, byte type) implements Mode {
+    public static class ModeBean implements Mode {
 
+        private final String name;
+
+        private final byte type;
+
+        public ModeBean(String name, byte type) {
+            this.name = name;
+            this.type = type;
+        }
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public byte type() {
+            return type;
+        }
     }
 
 }
