@@ -41,9 +41,8 @@ public class ClientPool {
             if (isMultiplex) {
                 RpcContext.getContext().attribute(URL.ATTRIBUTE_KEY).set(url);
                 return clientPool.borrowObject();
-            } else {
-                return getCustom(url);
             }
+            return getCustom(url);
         } catch (Exception e) {
             logger.error("Get Client fail for: " + url, e);
             throw new SourceException("Get Client fail for: " + url);
