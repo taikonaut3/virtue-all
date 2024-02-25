@@ -8,31 +8,32 @@ import java.util.concurrent.TimeUnit;
 public interface ObjectPool<T> {
     /**
      * 获取对象，如果没有可用对象，会一直等待
-     * @return T
+     * @return PooledObject<T>
      * @throws InterruptedException 中断异常
      */
-    T poll() throws InterruptedException;
+    PooledObject<T> poll() throws InterruptedException;
 
     /**
      * 获取对象 带有超时
      * @param time 等待时间
      * @param timeUnit 时间单位
-     * @return T
+     * @return PooledObject<T>
      * @throws InterruptedException 中断异常
      */
-    T poll(long time, TimeUnit timeUnit) throws InterruptedException;
+    PooledObject<T> poll(long time, TimeUnit timeUnit) throws InterruptedException;
 
     /**
      * 获取对象，没有可用对象返回null
-     * @return T or null
+     * @return PooledObject<T> or null
      */
-    T get();
+    PooledObject<T> get();
 
     /**
      * 归还对象
      * @param object 待归还的对象
+     * @throws Exception back failed
      */
-    void back(T object);
+    void back(PooledObject<T> object) throws Exception;
 
     /**
      * 添加一个对象
@@ -64,9 +65,15 @@ public interface ObjectPool<T> {
     /**
      * 删除对象
      * @param object
-     * @return pooledObject
+     * @return boolean is success
      * @throws Exception exception
      */
-    PooledObject<?> remove(PooledObject<?> object) throws Exception;
+    boolean remove(PooledObject<T> object) throws Exception;
+
+    /**
+     * pool object size
+     * @return size
+     */
+    int size();
 
 }

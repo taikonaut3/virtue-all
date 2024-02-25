@@ -13,11 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Chang Liu
  */
-public class DefaultPooledObject<T> implements PooledObject<T>{
-
-    private final T object;
-    private final Instant createInstant = Instant.now();
-    private PooledObjectState state = PooledObjectState.IDLE;
+public class DefaultPooledObject<T> extends AbstractPooledObject<T>{
 
 
     @SuppressWarnings("unchecked")
@@ -27,9 +23,8 @@ public class DefaultPooledObject<T> implements PooledObject<T>{
         }
     };
 
-
     public DefaultPooledObject(final T object){
-        this.object = object;
+        super(object);
     }
 
     @Override
