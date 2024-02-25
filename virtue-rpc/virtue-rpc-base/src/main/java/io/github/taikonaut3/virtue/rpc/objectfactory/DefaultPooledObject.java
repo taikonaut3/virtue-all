@@ -2,7 +2,9 @@ package io.github.taikonaut3.virtue.rpc.objectfactory;
 
 import io.github.taikonaut3.virtue.event.Event;
 import io.github.taikonaut3.virtue.event.EventListener;
+import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectEvent;
 import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectInvalidListener;
+import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectListener;
 
 import java.time.Instant;
 import java.util.*;
@@ -18,9 +20,10 @@ public class DefaultPooledObject<T> implements PooledObject<T>{
     private PooledObjectState state = PooledObjectState.IDLE;
 
 
-    private final Map<PooledObjectState,List<EventListener<Event<?>>>> listenerMap = new ConcurrentHashMap<>(){
+    @SuppressWarnings("unchecked")
+    private final Map<PooledObjectState,List<PooledObjectListener<PooledObjectEvent<PooledObject<?>>>>> listenerMap = new ConcurrentHashMap<>(){
         {
-            addListener(PooledObjectState.INVALID, new PooledObjectInvalidListener());
+            addListener(PooledObjectState.INVALID, new PooledObjectInvalidListener<>());
         }
     };
 
@@ -47,19 +50,19 @@ public class DefaultPooledObject<T> implements PooledObject<T>{
     @Override
     public void setState(PooledObjectState state) {
         this.state = state;
-        List<EventListener<Event<?>>> listenerList = listenerMap.get(state);
+        List<PooledObjectListener<PooledObjectEvent<PooledObject<?>>>> listenerList = listenerMap.get(state);
         if(CollectionUtils.isEmpty(listenerList)){
             return;
         }
-        Event<?> event = state.getEvent(this);
+        PooledObjectEvent<PooledObject<?>> event = (PooledObjectEvent<PooledObject<?>>) state.getEvent(this);
         listenerList.forEach(listener -> listener.onEvent(event));
     }
 
-    public void addListener(PooledObjectState state,EventListener<Event<?>>...eventListener){
+    public void addListener(PooledObjectState state, PooledObjectListener<PooledObjectEvent<PooledObject<?>>>...eventListener){
         if(Objects.isNull(eventListener) || eventListener.length == 0){
             throw new IllegalArgumentException("listener must be present");
         }
-        List<EventListener<Event<?>>> listenerList = this.listenerMap.computeIfAbsent(state,key -> new ArrayList<>());
+        List<PooledObjectListener<PooledObjectEvent<PooledObject<?>>>> listenerList = this.listenerMap.computeIfAbsent(state,key -> new ArrayList<>());
         listenerList.addAll(Arrays.asList(eventListener));
     }
 }

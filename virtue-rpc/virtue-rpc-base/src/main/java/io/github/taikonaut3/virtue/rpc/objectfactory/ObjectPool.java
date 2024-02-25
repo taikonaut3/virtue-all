@@ -15,12 +15,12 @@ public interface ObjectPool<T> {
 
     /**
      * 获取对象 带有超时
-     * @param millis 等待时间
+     * @param time 等待时间
      * @param timeUnit 时间单位
      * @return T
      * @throws InterruptedException 中断异常
      */
-    T poll(long millis, TimeUnit timeUnit) throws InterruptedException;
+    T poll(long time, TimeUnit timeUnit) throws InterruptedException;
 
     /**
      * 获取对象，没有可用对象返回null

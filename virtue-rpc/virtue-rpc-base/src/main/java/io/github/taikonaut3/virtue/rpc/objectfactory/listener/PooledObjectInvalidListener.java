@@ -7,7 +7,7 @@ import io.github.taikonaut3.virtue.rpc.objectfactory.PooledObject;
  * @author Chang Liu
  * 对象在置为无效时执行的 listener
  */
-public class PooledObjectInvalidListener<S extends PooledObjectInvalidEvent<PooledObject<?>>> extends PooledObjectListener<S> {
+public class PooledObjectInvalidListener<S extends PooledObjectEvent<PooledObject<?>>> extends PooledObjectListener<S> {
 
 
     @Override

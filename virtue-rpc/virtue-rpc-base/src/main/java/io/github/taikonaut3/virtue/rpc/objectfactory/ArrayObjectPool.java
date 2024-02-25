@@ -45,7 +45,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
 
     @Override
     public T poll() throws InterruptedException{
-        T t = doGet();
+        T t = get();
         if(Objects.nonNull(t)){
             return t;
         }
@@ -54,7 +54,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
             // keep waiting
             while(Objects.isNull(t)){
                 notFull.wait();
-                t = doGet();
+                t = get();
             }
         }finally {
             mainLock.unlock();
@@ -78,7 +78,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
 
     @Override
     public T poll(long time, TimeUnit timeUnit) throws InterruptedException {
-        T t = doGet();
+        T t = get();
         if(Objects.nonNull(t)){
             return t;
         }
@@ -94,7 +94,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
                 if(remaining <= 0L){
                     return null;
                 }
-                t = doGet();
+                t = get();
             }
         }finally {
             mainLock.unlock();
@@ -183,8 +183,6 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         if(minIdle < 0){
             throw new IllegalArgumentException("minIdle cannot be less than 0");
         }
-        for (int i = 0; i < minIdle; i++) {
-            addObjects(minIdle);
-        }
+        addObjects(minIdle);
     }
 }
