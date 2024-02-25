@@ -1,5 +1,7 @@
 package io.github.taikonaut3.virtue.rpc.objectfactory;
 
+import lombok.SneakyThrows;
+
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -15,7 +17,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     private final Object[] objectArr;
     private final int[] objectStatus;
     private final ReentrantLock mainLock = new ReentrantLock();
-    private final Condition notFull = mainLock.newCondition();
+    private final Condition notEmpty = mainLock.newCondition();
     private static final int USE = 1;
     private static final int NOT_USE = 0;
     private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
@@ -53,7 +55,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         try{
             // keep waiting
             while(Objects.isNull(t)){
-                notFull.wait();
+                notEmpty.wait();
                 t = get();
             }
         }finally {
@@ -90,7 +92,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
                 if(remaining <= 0L){
                     return null;
                 }
-                remaining = notFull.awaitNanos(timeUnit.toNanos(remaining));
+                remaining = notEmpty.awaitNanos(timeUnit.toNanos(remaining));
                 if(remaining <= 0L){
                     return null;
                 }
@@ -103,11 +105,13 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
+    @SneakyThrows
     public T get() {
         boolean isFull = IntStream.of(objectStatus).allMatch(status -> status == USE);
-        if(isFull){
+        if(isFull && objectArr.length == poolConfig.getInitCapacity()){
             return null;
         }
+        addObject();
         return doGet();
     }
 
@@ -124,7 +128,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         }
         mainLock.lock();
         try{
-            notFull.notify();
+            notEmpty.notify();
         }finally {
             mainLock.unlock();
         }
@@ -180,8 +184,12 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
      */
     private void init() throws Exception {
         int minIdle = poolConfig.getMinIdle();
+        int capacity = poolConfig.getInitCapacity();
         if(minIdle < 0){
             throw new IllegalArgumentException("minIdle cannot be less than 0");
+        }
+        if(minIdle > capacity){
+            throw new IllegalArgumentException("minIdle cannot be more than capacity");
         }
         addObjects(minIdle);
     }
