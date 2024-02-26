@@ -1,6 +1,6 @@
-package io.github.taikonaut3.virtue.rpc.objectfactory.listener;
+package io.github.taikonaut3.virtue.rpc.objectpool.listener;
 
-import io.github.taikonaut3.virtue.rpc.objectfactory.PooledObject;
+import io.github.taikonaut3.virtue.rpc.objectpool.PooledObject;
 
 /**
  * @author Chang Liu

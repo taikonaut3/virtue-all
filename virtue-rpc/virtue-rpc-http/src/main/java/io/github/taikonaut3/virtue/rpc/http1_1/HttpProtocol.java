@@ -7,7 +7,7 @@ import io.github.taikonaut3.virtue.config.CallArgs;
 import io.github.taikonaut3.virtue.rpc.handler.*;
 import io.github.taikonaut3.virtue.rpc.http1_1.config.HttpRequestWrapper;
 import io.github.taikonaut3.virtue.rpc.http1_1.envelope.HttpRequestAdapter;
-import io.github.taikonaut3.virtue.rpc.objectfactory.ClientPool;
+import io.github.taikonaut3.virtue.rpc.objectpool.ClientPool;
 import io.github.taikonaut3.virtue.rpc.protocol.AbstractProtocol;
 import io.github.taikonaut3.virtue.transport.channel.ChannelHandler;
 import io.github.taikonaut3.virtue.transport.client.Client;

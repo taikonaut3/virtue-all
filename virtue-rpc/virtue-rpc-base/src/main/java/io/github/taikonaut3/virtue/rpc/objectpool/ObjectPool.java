@@ -1,4 +1,4 @@
-package io.github.taikonaut3.virtue.rpc.objectfactory;
+package io.github.taikonaut3.virtue.rpc.objectpool;
 
 import java.util.concurrent.TimeUnit;
 
