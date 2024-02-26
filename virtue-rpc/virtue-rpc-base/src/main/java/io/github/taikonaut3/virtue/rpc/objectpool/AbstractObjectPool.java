@@ -3,6 +3,8 @@ package io.github.taikonaut3.virtue.rpc.objectpool;
 import io.github.taikonaut3.virtue.common.util.AssertUtil;
 import io.github.taikonaut3.virtue.config.manager.Virtue;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * @author Chang Liu
  */
@@ -11,6 +13,10 @@ public abstract class AbstractObjectPool<T> implements ObjectPool<T> {
     protected final Virtue virtue;
     protected final PooledObjectFactory<T> factory;
     protected final ObjectPoolConfig poolConfig;
+
+    protected final AtomicLong createdCount = new AtomicLong();
+
+    protected final AtomicLong destroyCount = new AtomicLong();
 
     protected int size;
 

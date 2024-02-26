@@ -1,7 +1,6 @@
 package io.github.taikonaut3.virtue.rpc.objectpool;
 
 import io.github.taikonaut3.virtue.config.manager.Virtue;
-import lombok.SneakyThrows;
 
 import java.util.Arrays;
 import java.util.Objects;
