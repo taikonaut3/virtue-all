@@ -146,6 +146,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
             }
             pooledObjectArr[size] = pooledObject;
             pooledObject.setState(PooledObjectState.IDLE);
+            notEmpty.notify();
             size++;
         }finally {
             mainLock.unlock();

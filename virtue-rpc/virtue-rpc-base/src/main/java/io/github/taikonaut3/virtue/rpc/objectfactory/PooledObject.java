@@ -1,5 +1,8 @@
 package io.github.taikonaut3.virtue.rpc.objectfactory;
 
+import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectEvent;
+import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectListener;
+
 import java.time.Instant;
 
 /**
@@ -29,4 +32,11 @@ public interface PooledObject<T>{
      * @param state PooledObjectState
      */
     void setState(PooledObjectState state);
+
+    /**
+     * Add a listener with state as the key
+     * @param state state
+     * @param eventListener eventListeners
+     */
+    void addListener(PooledObjectState state, PooledObjectListener<PooledObjectEvent<PooledObject<?>>>...eventListener);
 }
