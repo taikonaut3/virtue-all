@@ -1,12 +1,11 @@
 package io.github.taikonaut3.virtue.rpc.objectfactory;
 
+import io.github.taikonaut3.virtue.common.util.CollectionUtil;
 import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectEvent;
-import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectInvalidListener;
 import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectListener;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -24,10 +23,14 @@ public abstract class AbstractPooledObject<T> implements PooledObject<T>{
     protected AbstractPooledObject(T object){
         this.object = object;
     }
-
+    @SafeVarargs
     @Override
-    public void addListener(PooledObjectState state, PooledObjectListener<PooledObjectEvent<PooledObject<?>>>... eventListener) {
-        throw new UnsupportedOperationException();
+    public final void addListener(PooledObjectState state, PooledObjectListener<PooledObjectEvent<PooledObject<?>>>... eventListener){
+        if(Objects.isNull(eventListener) || eventListener.length == 0){
+            throw new IllegalArgumentException("listener must be present");
+        }
+        List<PooledObjectListener<PooledObjectEvent<PooledObject<?>>>> listenerList = listenerMap.computeIfAbsent(state,key -> new ArrayList<>());
+        listenerList.addAll(Arrays.asList(eventListener));
     }
 
     @Override
@@ -48,5 +51,15 @@ public abstract class AbstractPooledObject<T> implements PooledObject<T>{
     @Override
     public void state(PooledObjectState state) {
         this.state = state;
+        PooledObjectEvent<PooledObject<?>> event = (PooledObjectEvent<PooledObject<?>>) state.getEvent(this);
+        if(Objects.isNull(event)){
+            return;
+        }
+        List<PooledObjectListener<PooledObjectEvent<PooledObject<?>>>> listenerList = listenerMap.get(state);
+        if(CollectionUtil.isEmpty(listenerList)){
+            return;
+        }
+        listenerList.forEach(listener -> listener.onEvent(event));
     }
+
 }

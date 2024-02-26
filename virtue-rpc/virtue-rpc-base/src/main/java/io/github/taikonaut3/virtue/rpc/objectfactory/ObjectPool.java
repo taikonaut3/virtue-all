@@ -36,25 +36,22 @@ public interface ObjectPool<T> {
      * Back an object to the pool.
      *
      * @param object the object to back to the pool
-     * @throws Exception back failed
      */
-    void back(PooledObject<T> object) throws Exception;
+    void back(PooledObject<T> object);
 
     /**
      * Add an object to the pool.
-     *
-     * @throws Exception if the object creation fail
      */
-    void addObject() throws Exception;
+    void addObject();
 
     /**
      * Add multiple objects to the pool.
      *
      * @param count the number of objects to add
-     * @throws Exception if the object creation fails */
-    default void addObjects(int count) throws Exception{
+     **/
+    default void addObjects(int count){
         if(count < 0){
-            throw new IllegalArgumentException("count 必须大于 0");
+            throw new IllegalArgumentException("Count must be greater than 0");
         }
         for (int i = 0; i < count; i++) {
             addObject();
@@ -65,18 +62,16 @@ public interface ObjectPool<T> {
      * Validate whether an object is still valid.
      *
      * @param pooledObject the object to validate
-     * @throws Exception if the object is not valid
      */
-    void validateObject(PooledObject<T> pooledObject) throws Exception;
+    void validateObject(PooledObject<T> pooledObject);
 
     /**
      * Remove an object from the pool.
      *
-     * @param object
+     * @param object object
      * @return boolean is success
-     * @throws Exception exception
      */
-    boolean remove(PooledObject<T> object) throws Exception;
+    boolean remove(PooledObject<T> object);
 
     /**
      * pool object size

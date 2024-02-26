@@ -1,8 +1,6 @@
 package io.github.taikonaut3.virtue.rpc.objectfactory;
 
 import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -17,19 +15,13 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unchecked")
 public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
-
-    private static final Logger logger = LoggerFactory.getLogger(ArrayObjectPool.class);
     private final PooledObject<T>[] pooledObjectArr;
     private final ReentrantLock mainLock = new ReentrantLock();
     private final Condition notEmpty = mainLock.newCondition();
     private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
 
-    private final ObjectPoolConfig poolConfig;
-
-    private int size;
-
-    public ArrayObjectPool(ObjectPoolConfig poolConfig,PooledObjectFactory<T> factory){
-        super(factory);
+    public ArrayObjectPool(PooledObjectFactory<T> factory,ObjectPoolConfig poolConfig){
+        super(factory,poolConfig);
         int capacity = poolConfig.initCapacity();
         if(capacity < 0){
             throw new IllegalArgumentException("capacity cannot be less than 0");
@@ -37,13 +29,12 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         if(Objects.isNull(factory)){
             throw new NullPointerException();
         }
-        this.poolConfig = poolConfig;
         pooledObjectArr = new PooledObject[capacity];
         init();
     }
 
     public ArrayObjectPool(PooledObjectFactory<T> factory){
-        this(ObjectPoolConfig.getDefault(),factory);
+        this(factory,ObjectPoolConfig.getDefault());
     }
 
     @Override
@@ -108,16 +99,17 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     @SneakyThrows
     public PooledObject<T> get() {
         boolean isFull = Arrays.stream(pooledObjectArr).allMatch(pooledObject -> pooledObject.state() == PooledObjectState.ALLOCATED);
-        if (isFull && size == poolConfig.initCapacity()) {
-            return null;
-        }else if(isFull && size != poolConfig.initCapacity()){
+        if(isFull){
+            if(size == poolConfig.initCapacity()){
+               return null;
+            }
             addObject();
         }
         return doGet();
     }
 
     @Override
-    public void back(PooledObject<T> pooledObject) throws Exception {
+    public void back(PooledObject<T> pooledObject){
         validateObject(pooledObject);
         for (int i = 0; i < size; i++) {
             if(pooledObjectArr[i] == pooledObject){
@@ -138,7 +130,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
-    public void addObject() throws Exception {
+    public void addObject(){
         PooledObject<T> pooledObject = factory.makeObject();
         validateObject(pooledObject);
         mainLock.lock();
@@ -156,7 +148,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
-    public void validateObject(PooledObject<T> pooledObject) throws Exception {
+    public void validateObject(PooledObject<T> pooledObject){
         if(Objects.isNull(pooledObject)){
             throw new NullPointerException();
         }
@@ -167,7 +159,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
-    public boolean remove(PooledObject<T> pooledObject) throws Exception {
+    public boolean remove(PooledObject<T> pooledObject){
         validateObject(pooledObject);
         mainLock.lock();
         try{
@@ -192,10 +184,6 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
        }
         pooledObjectArr[size = newSize] = defaultValue.get();
     }
-    @Override
-    public int size() {
-        return size;
-    }
 
     /**
      * 初始化 object
@@ -209,10 +197,6 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         if(minIdle > capacity){
             throw new IllegalArgumentException("minIdle cannot be more than capacity");
         }
-        try {
-            addObjects(minIdle);
-        } catch (Exception e) {
-            logger.error("add object error {}", e.getMessage());
-        }
+        addObjects(minIdle);
     }
 }
