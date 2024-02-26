@@ -10,31 +10,36 @@ import java.time.Instant;
  */
 public interface PooledObject<T>{
     /**
-     * 获取 真实对象
-     * @return 真实对象
+     * Get the underlying object.
+     *
+     * @return the underlying object
      */
     T getObject();
 
     /**
-     * 返回 对象的创建时间
-     * @return 创建时间
+     * Return the creation time of the object.
+     *
+     * @return the creation time
      */
-    Instant getCreateInstant();
+    Instant createInstant();
 
     /**
-     * 获取当前对象的状态
+     * Get the current state of the object.
+     *
      * @return PooledObjectState
      */
-    PooledObjectState getState();
+    PooledObjectState state();
 
     /**
-     * 设置对象的状态
+     * Set the state of the object.
+     *
      * @param state PooledObjectState
      */
-    void setState(PooledObjectState state);
+    void state(PooledObjectState state);
 
     /**
      * Add a listener with state as the key
+     *
      * @param state state
      * @param eventListener eventListeners
      */

@@ -12,12 +12,13 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 /**
+ * ArrayObjectPool
  * @author Chang Liu
  */
 @SuppressWarnings("unchecked")
 public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArrayObjectPool.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArrayObjectPool.class);
     private final PooledObject<T>[] pooledObjectArr;
     private final ReentrantLock mainLock = new ReentrantLock();
     private final Condition notEmpty = mainLock.newCondition();
@@ -29,7 +30,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
 
     public ArrayObjectPool(ObjectPoolConfig poolConfig,PooledObjectFactory<T> factory){
         super(factory);
-        int capacity = poolConfig.getInitCapacity();
+        int capacity = poolConfig.initCapacity();
         if(capacity < 0){
             throw new IllegalArgumentException("capacity cannot be less than 0");
         }
@@ -65,10 +66,10 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
     private PooledObject<T> doGet(){
         for (int i = 0; i < size; i++) {
-            if(pooledObjectArr[i].getState() == PooledObjectState.IDLE){
+            if (pooledObjectArr[i].state() == PooledObjectState.IDLE) {
                 synchronized(generateMemoryLockKey(i).intern()){
-                    if(pooledObjectArr[i].getState() == PooledObjectState.IDLE){
-                        pooledObjectArr[i].setState(PooledObjectState.ALLOCATED);
+                    if (pooledObjectArr[i].state() == PooledObjectState.IDLE) {
+                        pooledObjectArr[i].state(PooledObjectState.ALLOCATED);
                         return pooledObjectArr[i];
                     }
                 }
@@ -106,8 +107,8 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     @Override
     @SneakyThrows
     public PooledObject<T> get() {
-        boolean isFull = Arrays.stream(pooledObjectArr).allMatch(pooledObject -> pooledObject.getState() == PooledObjectState.ALLOCATED);
-        if(isFull && size == poolConfig.getInitCapacity()){
+        boolean isFull = Arrays.stream(pooledObjectArr).allMatch(pooledObject -> pooledObject.state() == PooledObjectState.ALLOCATED);
+        if (isFull && size == poolConfig.initCapacity()) {
             return null;
         }else if(isFull && size != poolConfig.getInitCapacity()){
             addObject();
@@ -120,7 +121,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         validateObject(pooledObject);
         for (int i = 0; i < size; i++) {
             if(pooledObjectArr[i] == pooledObject){
-                pooledObjectArr[i].setState(PooledObjectState.IDLE);
+                pooledObjectArr[i].state(PooledObjectState.IDLE);
                 break;
             }
         }
@@ -142,11 +143,11 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         validateObject(pooledObject);
         mainLock.lock();
         try{
-            if(size == poolConfig.getInitCapacity()){
+            if (size == poolConfig.initCapacity()) {
                 throw new RuntimeException("Pool capacity is full and cannot continue to be added");
             }
             pooledObjectArr[size] = pooledObject;
-            pooledObject.setState(PooledObjectState.IDLE);
+            pooledObject.state(PooledObjectState.IDLE);
             notEmpty.notify();
             size++;
         }finally {
@@ -173,7 +174,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
             for (int i = 0; i < size; i++) {
                 if(pooledObjectArr[i] == pooledObject){
                     fastRemove(pooledObjectArr,i,() -> null);
-                    pooledObject.setState(PooledObjectState.INVALID);
+                    pooledObject.state(PooledObjectState.INVALID);
                     return true;
                 }
             }
@@ -200,8 +201,8 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
      * 初始化 object
      */
     private void init(){
-        int minIdle = poolConfig.getMinIdle();
-        int capacity = poolConfig.getInitCapacity();
+        int minIdle = poolConfig.minIdle();
+        int capacity = poolConfig.initCapacity();
         if(minIdle < 0){
             throw new IllegalArgumentException("minIdle cannot be less than 0");
         }
@@ -211,7 +212,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         try {
             addObjects(minIdle);
         } catch (Exception e) {
-            LOGGER.error("add object error {}",e.getMessage());
+            logger.error("add object error {}", e.getMessage());
         }
     }
 }

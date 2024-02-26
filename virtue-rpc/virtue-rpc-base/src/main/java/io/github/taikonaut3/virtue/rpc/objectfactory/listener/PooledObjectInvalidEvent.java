@@ -7,4 +7,6 @@ import io.github.taikonaut3.virtue.rpc.objectfactory.PooledObject;
  */
 public class PooledObjectInvalidEvent<S extends PooledObject<?>> extends PooledObjectEvent<S> {
 
+
+
 }

@@ -27,13 +27,16 @@ public @interface Config {
      */
     String serialize() default Components.Serialize.KRYO;
 
+    /**
+     * Compression type
+     */
     String compression() default Components.Compression.GZIP;
 
     /**
      * Invoke Filter.
      * @see io.github.taikonaut3.virtue.config.filter.Filter
      */
-    String[] filters() default {"jjj"};
+    String[] filters() default {};
 
     /**
      * The filter chain for {@link io.github.taikonaut3.virtue.config.Caller}

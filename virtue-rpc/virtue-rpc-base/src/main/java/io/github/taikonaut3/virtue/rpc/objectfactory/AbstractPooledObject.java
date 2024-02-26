@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2024/2/25 14:14
  */
 public abstract class AbstractPooledObject<T> implements PooledObject<T>{
+
     protected final T object;
     protected final Instant createInstant = Instant.now();
     protected PooledObjectState state = PooledObjectState.IDLE;
@@ -27,5 +28,25 @@ public abstract class AbstractPooledObject<T> implements PooledObject<T>{
     @Override
     public void addListener(PooledObjectState state, PooledObjectListener<PooledObjectEvent<PooledObject<?>>>... eventListener) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public T getObject() {
+        return object;
+    }
+
+    @Override
+    public Instant createInstant() {
+        return createInstant;
+    }
+
+    @Override
+    public PooledObjectState state() {
+        return state;
+    }
+
+    @Override
+    public void state(PooledObjectState state) {
+        this.state = state;
     }
 }

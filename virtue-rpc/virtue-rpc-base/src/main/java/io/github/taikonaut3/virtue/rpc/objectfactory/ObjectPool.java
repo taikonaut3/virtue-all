@@ -6,46 +6,52 @@ import java.util.concurrent.TimeUnit;
  * @author Chang Liu
  */
 public interface ObjectPool<T> {
+
     /**
-     * 获取对象，如果没有可用对象，会一直等待
+     * Get an object from the pool, blocking until one is available.
+     *
      * @return PooledObject<T>
-     * @throws InterruptedException 中断异常
+     * @throws InterruptedException  if interrupted while waiting
      */
     PooledObject<T> poll() throws InterruptedException;
 
     /**
-     * 获取对象 带有超时
-     * @param time 等待时间
-     * @param timeUnit 时间单位
+     * Get an object from the pool, waiting up to the specified wait time if necessary.
+     *
+     * @param time the maximum time to wait
+     * @param timeUnit the time unit of the time argument
      * @return PooledObject<T>
-     * @throws InterruptedException 中断异常
-     */
+     * @throws InterruptedException if interrupted while waiting
+     * */
     PooledObject<T> poll(long time, TimeUnit timeUnit) throws InterruptedException;
 
     /**
-     * 获取对象，没有可用对象返回null
+     * Get an object from the pool, returning null if no objects are available.
+     *
      * @return PooledObject<T> or null
      */
     PooledObject<T> get();
 
     /**
-     * 归还对象
-     * @param object 待归还的对象
+     * Back an object to the pool.
+     *
+     * @param object the object to back to the pool
      * @throws Exception back failed
      */
     void back(PooledObject<T> object) throws Exception;
 
     /**
-     * 添加一个对象
-     * @throws Exception 创建对象失败
+     * Add an object to the pool.
+     *
+     * @throws Exception if the object creation fail
      */
     void addObject() throws Exception;
 
     /**
-     * 添加多个对象
-     * @param count 对象的个数
-     * @throws Exception 创建对象失败
-     */
+     * Add multiple objects to the pool.
+     *
+     * @param count the number of objects to add
+     * @throws Exception if the object creation fails */
     default void addObjects(int count) throws Exception{
         if(count < 0){
             throw new IllegalArgumentException("count 必须大于 0");
@@ -56,14 +62,16 @@ public interface ObjectPool<T> {
     }
 
     /**
-     * 校验对象是否合法
-     * @param pooledObject 校验 添加的对象是否合法
-     * @throws Exception 不合法抛出
+     * Validate whether an object is still valid.
+     *
+     * @param pooledObject the object to validate
+     * @throws Exception if the object is not valid
      */
     void validateObject(PooledObject<T> pooledObject) throws Exception;
 
     /**
-     * 删除对象
+     * Remove an object from the pool.
+     *
      * @param object
      * @return boolean is success
      * @throws Exception exception
@@ -72,6 +80,7 @@ public interface ObjectPool<T> {
 
     /**
      * pool object size
+     *
      * @return size
      */
     int size();

@@ -32,6 +32,7 @@ public class ByteBuddyProxyFactory extends AbstractProxyFactory {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected <T> T doCreateProxy(T target, InvocationHandler handler) {
         try (DynamicType.Unloaded<?> dynamicType = new ByteBuddy()
                     .subclass(target.getClass())
