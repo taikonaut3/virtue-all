@@ -1,8 +1,8 @@
-package io.github.taikonaut3.virtue.rpc.objectfactory;
+package io.github.taikonaut3.virtue.rpc.objectpool;
 
 import io.github.taikonaut3.virtue.event.Event;
-import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectEvent;
-import io.github.taikonaut3.virtue.rpc.objectfactory.listener.PooledObjectInvalidEvent;
+import io.github.taikonaut3.virtue.rpc.objectpool.listener.PooledObjectEvent;
+import io.github.taikonaut3.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
 
 /**
  * @author Chang Liu

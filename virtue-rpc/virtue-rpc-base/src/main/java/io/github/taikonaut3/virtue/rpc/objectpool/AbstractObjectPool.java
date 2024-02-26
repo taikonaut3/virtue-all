@@ -1,0 +1,51 @@
+package io.github.taikonaut3.virtue.rpc.objectpool;
+
+import io.github.taikonaut3.virtue.common.util.AssertUtil;
+import io.github.taikonaut3.virtue.config.manager.Virtue;
+
+/**
+ * @author Chang Liu
+ */
+public abstract class AbstractObjectPool<T> implements ObjectPool<T> {
+
+    protected final Virtue virtue;
+    protected final PooledObjectFactory<T> factory;
+    protected final ObjectPoolConfig poolConfig;
+
+    protected int size;
+
+    protected AbstractObjectPool(Virtue virtue, PooledObjectFactory<T> factory, ObjectPoolConfig poolConfig) {
+        AssertUtil.notNull(virtue, factory, poolConfig);
+        this.virtue = virtue;
+        this.factory = factory;
+        this.poolConfig = poolConfig;
+        init();
+    }
+
+    protected void before(){}
+
+    protected void after(PooledObject<T> pooledObject){}
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * 初始化 object
+     */
+    private void init() {
+        int capacity = poolConfig.initCapacity();
+        if (capacity < 0) {
+            throw new IllegalArgumentException("capacity cannot be less than 0");
+        }
+        int minIdle = poolConfig.minIdle();
+        if (minIdle < 0) {
+            throw new IllegalArgumentException("minIdle cannot be less than 0");
+        }
+        if (minIdle > capacity) {
+            throw new IllegalArgumentException("minIdle cannot be more than capacity");
+        }
+        addObjects(minIdle);
+    }
+}

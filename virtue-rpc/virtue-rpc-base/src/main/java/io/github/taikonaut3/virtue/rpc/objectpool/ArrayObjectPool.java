@@ -1,5 +1,6 @@
-package io.github.taikonaut3.virtue.rpc.objectfactory;
+package io.github.taikonaut3.virtue.rpc.objectpool;
 
+import io.github.taikonaut3.virtue.config.manager.Virtue;
 import lombok.SneakyThrows;
 
 import java.util.Arrays;
@@ -20,21 +21,13 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     private final Condition notEmpty = mainLock.newCondition();
     private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
 
-    public ArrayObjectPool(PooledObjectFactory<T> factory,ObjectPoolConfig poolConfig){
-        super(factory,poolConfig);
-        int capacity = poolConfig.initCapacity();
-        if(capacity < 0){
-            throw new IllegalArgumentException("capacity cannot be less than 0");
-        }
-        if(Objects.isNull(factory)){
-            throw new NullPointerException();
-        }
-        pooledObjectArr = new PooledObject[capacity];
-        init();
+    public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory, ObjectPoolConfig poolConfig) {
+        super(virtue, factory, poolConfig);
+        pooledObjectArr = new PooledObject[poolConfig.initCapacity()];
     }
 
-    public ArrayObjectPool(PooledObjectFactory<T> factory){
-        this(factory,ObjectPoolConfig.getDefault());
+    public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory) {
+        this(virtue, factory, new ObjectPoolConfig());
     }
 
     @Override
@@ -193,18 +186,4 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         pooledObjectArr[size = newSize] = defaultValue.get();
     }
 
-    /**
-     * 初始化 object
-     */
-    private void init(){
-        int minIdle = poolConfig.minIdle();
-        int capacity = poolConfig.initCapacity();
-        if(minIdle < 0){
-            throw new IllegalArgumentException("minIdle cannot be less than 0");
-        }
-        if(minIdle > capacity){
-            throw new IllegalArgumentException("minIdle cannot be more than capacity");
-        }
-        addObjects(minIdle);
-    }
 }
