@@ -7,11 +7,13 @@ import io.github.taikonaut3.virtue.rpc.objectpool.listener.PooledObjectInvalidLi
 /**
  * @author Chang Liu
  */
-public class DefaultPooledObject<T> extends AbstractPooledObject<T>{
+public class DefaultPooledObject<T> extends AbstractPooledObject<T> {
 
     private Virtue virtue;
 
-    public DefaultPooledObject(final T object){
+    private volatile boolean noHadRegisterEvent = false;
+
+    public DefaultPooledObject(final T object) {
         super(object);
     }
 
@@ -23,6 +25,11 @@ public class DefaultPooledObject<T> extends AbstractPooledObject<T>{
 
     public void virtue(Virtue virtue) {
         this.virtue = virtue;
-        virtue.eventDispatcher().addListener(PooledObjectInvalidEvent.class, new PooledObjectInvalidListener<>());
+        synchronized (object) {
+            if (noHadRegisterEvent) {
+                virtue.eventDispatcher().addListener(PooledObjectInvalidEvent.class, new PooledObjectInvalidListener<>());
+                noHadRegisterEvent = true;
+            }
+        }
     }
 }
