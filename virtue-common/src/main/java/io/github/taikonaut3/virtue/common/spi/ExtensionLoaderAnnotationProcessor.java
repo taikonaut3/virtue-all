@@ -1,5 +1,6 @@
 package io.github.taikonaut3.virtue.common.spi;
 
+import io.github.taikonaut3.virtue.common.exception.RpcException;
 import io.github.taikonaut3.virtue.common.util.FileUtil;
 import lombok.Getter;
 
@@ -72,7 +73,7 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
             fileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", path);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new RpcException(e);
         }
         return new File(fileObject.toUri());
     }

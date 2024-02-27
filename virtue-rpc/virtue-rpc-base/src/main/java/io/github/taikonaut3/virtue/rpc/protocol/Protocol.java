@@ -40,14 +40,41 @@ public interface Protocol<Req, Res> {
      */
     Res createResponse(URL url, Object payload);
 
+    /**
+     * Opening a client may reuse the existing one.
+     *
+     * @param url client config {@link io.github.taikonaut3.virtue.config.config.ClientConfig}
+     * @return {@link Client}
+     */
     Client openClient(URL url);
 
+    /**
+     * Opening a new Server.
+     *
+     * @param url server config {@link io.github.taikonaut3.virtue.config.config.ServerConfig}
+     * @return {@link Server}
+     */
     Server openServer(URL url);
 
+    /**
+     * Get server Codec.
+     *
+     * @return {@link Codec}
+     */
     Codec serverCodec();
 
+    /**
+     * Get client Codec.
+     *
+     * @return {@link Codec}
+     */
     Codec clientCodec();
 
+    /**
+     * Get ProtocolParser.
+     *
+     * @return {@link ProtocolParser}
+     */
     ProtocolParser parser();
 
 }
