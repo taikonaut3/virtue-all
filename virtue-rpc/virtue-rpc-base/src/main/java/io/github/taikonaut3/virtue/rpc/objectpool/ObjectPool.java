@@ -13,7 +13,7 @@ public interface ObjectPool<T> {
      * @return PooledObject<T>
      * @throws InterruptedException  if interrupted while waiting
      */
-    PooledObject<T> poll() throws InterruptedException;
+    T poll() throws InterruptedException;
 
     /**
      * Get an object from the pool, waiting up to the specified wait time if necessary.
@@ -23,21 +23,21 @@ public interface ObjectPool<T> {
      * @return PooledObject<T>
      * @throws InterruptedException if interrupted while waiting
      * */
-    PooledObject<T> poll(long time, TimeUnit timeUnit) throws InterruptedException;
+    T poll(long time, TimeUnit timeUnit) throws InterruptedException;
 
     /**
      * Get an object from the pool, returning null if no objects are available.
      *
-     * @return PooledObject<T> or null
+     * @return T or null
      */
-    PooledObject<T> get();
+    T get();
 
     /**
      * Back an object to the pool.
      *
      * @param object the object to back to the pool
      */
-    void back(PooledObject<T> object);
+    void back(T object);
 
     /**
      * Add an object to the pool.
@@ -61,17 +61,16 @@ public interface ObjectPool<T> {
     /**
      * Validate whether an object is still valid.
      *
-     * @param pooledObject the object to validate
+     * @param object to validate
      */
-    void validateObject(PooledObject<T> pooledObject);
+    void validateObject(T object);
 
     /**
      * Remove an object from the pool.
      *
      * @param object object
-     * @return boolean is success
      */
-    boolean remove(PooledObject<T> object);
+    void destroy(T object);
 
     /**
      * pool object size
