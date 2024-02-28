@@ -128,7 +128,6 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
         for (VirtueConfiguration configuration : configurations) {
             configuration.stopBefore(this);
         }
-
         for (VirtueConfiguration configuration : configurations) {
             configuration.stopAfter(this);
         }

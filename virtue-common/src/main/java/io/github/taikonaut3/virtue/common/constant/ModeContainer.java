@@ -15,7 +15,7 @@ import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.*
 /**
  * Store mapping: string -> byte.
  */
-public class ModeContainer {
+public class  ModeContainer {
 
     private static final Map<String, List<ModeBean>> modeMap = new ConcurrentHashMap<>();
 

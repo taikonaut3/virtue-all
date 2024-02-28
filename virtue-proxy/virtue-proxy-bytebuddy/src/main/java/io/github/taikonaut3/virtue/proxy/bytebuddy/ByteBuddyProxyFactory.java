@@ -20,9 +20,9 @@ public class ByteBuddyProxyFactory extends AbstractProxyFactory {
     @Override
     protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) {
         try (DynamicType.Unloaded<T> dynamicType = new ByteBuddy()
-                    .subclass(interfaceClass)
-                    .method(ElementMatchers.any())
-                    .intercept(MethodDelegation.to(new MethodInterceptor(interfaceClass, handler).new InterfaceInterceptor()))
+                .subclass(interfaceClass)
+                .method(ElementMatchers.any())
+                .intercept(MethodDelegation.to(new MethodInterceptor(handler).new InterfaceInterceptor()))
                 .make()) {
             return dynamicType.load(interfaceClass.getClassLoader())
                     .getLoaded().getDeclaredConstructor().newInstance();
@@ -34,12 +34,12 @@ public class ByteBuddyProxyFactory extends AbstractProxyFactory {
     @Override
     @SuppressWarnings("unchecked")
     protected <T> T doCreateProxy(T target, InvocationHandler handler) {
-        try (DynamicType.Unloaded<?> dynamicType = new ByteBuddy()
-                    .subclass(target.getClass())
-                    .method(ElementMatchers.any())
-                    .intercept(MethodDelegation.to(new MethodInterceptor(target, handler).new InstanceInterceptor()))
+        try (DynamicType.Unloaded<T> dynamicType = (DynamicType.Unloaded<T>) new ByteBuddy()
+                .subclass(target.getClass())
+                .method(ElementMatchers.any())
+                .intercept(MethodDelegation.to(new MethodInterceptor(handler).new InstanceInterceptor()))
                 .make()) {
-            return (T) dynamicType.load(target.getClass().getClassLoader())
+            return dynamicType.load(target.getClass().getClassLoader())
                     .getLoaded().getConstructor().newInstance();
         } catch (Exception e) {
             throw new RpcException("Create Proxy fail for target: " + target.getClass().getName(), e);

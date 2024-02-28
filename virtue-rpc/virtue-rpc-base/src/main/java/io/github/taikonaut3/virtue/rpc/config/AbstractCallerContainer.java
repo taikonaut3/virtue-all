@@ -7,8 +7,6 @@ import io.github.taikonaut3.virtue.config.manager.Virtue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -16,18 +14,13 @@ import java.util.Map;
 
 @Accessors(fluent = true)
 public abstract class AbstractCallerContainer implements CallerContainer {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractServerCaller.class);
 
     protected Map<Method, Caller<?>> callerMap = new HashMap<>();
-
     protected Map<String, Caller<?>> identificationCallerMap = new HashMap<>();
-
     @Getter
     protected Virtue virtue;
-
     @Setter
     protected String remoteApplication;
-
     @Getter
     protected String proxy;
 
@@ -41,6 +34,12 @@ public abstract class AbstractCallerContainer implements CallerContainer {
         for (Caller<?> caller : callerMap.values()) {
             caller.start();
         }
+    }
+
+    @Override
+    public void stop() {
+        callerMap.clear();
+        identificationCallerMap.clear();
     }
 
     @Override

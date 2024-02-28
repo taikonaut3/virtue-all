@@ -21,22 +21,14 @@ public class JDKInvocationHandler implements java.lang.reflect.InvocationHandler
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (Object.class.equals(method.getDeclaringClass())) {
-            return method.invoke(this, args);
-        }
         return handler.invoke(proxy, method, args, superInvoker(method, args));
 
     }
 
     private SuperInvoker<?> superInvoker(Method method, Object[] args) {
         if (target instanceof Class<?>) {
-            return null;
+            return () -> null;
         }
         return () -> method.invoke(target, args);
-    }
-
-    @Override
-    public String toString() {
-        return target.toString();
     }
 }

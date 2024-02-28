@@ -12,7 +12,7 @@ public final class ReflectUtil {
 
     public static final Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
 
-    private static final Map<Class<? extends Annotation>, Annotation> ANNOTATION_MAP = new LinkedHashMap<>();
+    private static final Map<Class<? extends Annotation>, Annotation> DEFAULT_ANNOTATION_MAP = new LinkedHashMap<>();
 
     public static <T> T createInstance(Class<T> type, Object... args) {
         Class<?>[] parameterTypes;
@@ -42,7 +42,7 @@ public final class ReflectUtil {
     }
 
     public static <T extends Annotation> T getDefaultInstance(Class<T> annotationType) {
-        Annotation annotation = ANNOTATION_MAP.get(annotationType);
+        Annotation annotation = DEFAULT_ANNOTATION_MAP.get(annotationType);
         if (annotation == null) {
             annotation = (T) Proxy.newProxyInstance(
                     annotationType.getClassLoader(),
@@ -54,7 +54,7 @@ public final class ReflectUtil {
                         // 返回注解的默认属性值
                         return method.getDefaultValue();
                     });
-            ANNOTATION_MAP.put(annotationType, annotation);
+            DEFAULT_ANNOTATION_MAP.put(annotationType, annotation);
         }
         return (T) annotation;
 

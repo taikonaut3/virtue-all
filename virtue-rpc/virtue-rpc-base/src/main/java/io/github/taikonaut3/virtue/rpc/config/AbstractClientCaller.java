@@ -131,7 +131,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     public void start() {
         if (!remoteCaller().lazyDiscover()) {
             if(registryConfigs==null || registryConfigs.isEmpty()){
-                logger.warn("Can't find registryConfig(s)");
+                logger.warn("Can't find RegistryConfig(s)");
             }else {
                 for (URL registryUrl : registryConfigUrls) {
                     RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());

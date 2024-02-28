@@ -13,6 +13,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <revision>0.0.3-alpha</revision>
+        <junit.version>5.10.2</junit.version>
         <slf4j.version>2.0.9</slf4j.version>
         <logback.version>1.4.14</logback.version>
         <lombok.version>1.18.30</lombok.version>
@@ -40,6 +41,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
             <dependency>
                 <groupId>org.jetbrains</groupId>

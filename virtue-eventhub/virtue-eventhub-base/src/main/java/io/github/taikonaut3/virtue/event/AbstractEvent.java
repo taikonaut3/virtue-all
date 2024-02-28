@@ -8,11 +8,11 @@ public abstract class AbstractEvent<S> extends AbstractAccessor implements Event
 
     protected volatile boolean propagation = false;
 
-    public AbstractEvent() {
+    protected AbstractEvent() {
 
     }
 
-    public AbstractEvent(S data) {
+    protected AbstractEvent(S data) {
         this.data = data;
     }
 

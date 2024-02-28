@@ -21,6 +21,7 @@
         <module>virtue-transport</module>
         <module>virtue-spring</module>
         <module>virtue-dependencies-bom</module>
+        <module>virtue-test</module>
     </modules>
 
     <properties>

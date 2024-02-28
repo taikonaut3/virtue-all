@@ -53,7 +53,7 @@ public class NacosRegistry extends AbstractRegistry {
         try {
             namingService.deregisterInstance(serviceName, url.host(), url.port());
         } catch (NacosException e) {
-            logger.error("DeregisterInstance is Failed from Nacos:  service:{}-{}", serviceName, url.address());
+            logger.error("DeregisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
             throw new RuntimeException(e);
         }
         Virtue.get(url).scheduler().addPeriodic(() -> {
@@ -65,7 +65,7 @@ public class NacosRegistry extends AbstractRegistry {
             try {
                 namingService.registerInstance(serviceName, instance);
             } catch (NacosException e) {
-                logger.error("RegisterInstance is Failed from Nacos:  service:{}-{}", serviceName, url.address());
+                logger.error("RegisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
                 throw new RuntimeException(e);
             }
         }, 0, 5, TimeUnit.SECONDS);
