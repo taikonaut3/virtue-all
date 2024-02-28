@@ -4,6 +4,7 @@ import io.github.taikonaut3.filter.Filter1;
 import io.github.taikonaut3.filter.Filter2;
 import io.github.taikonaut3.model.ParentObject;
 import io.github.taikonaut3.virtue.boot.EnableVirtue;
+import io.github.taikonaut3.virtue.config.MatchRule;
 import io.github.taikonaut3.virtue.config.config.RegistryConfig;
 import io.github.taikonaut3.virtue.config.config.ServerConfig;
 import io.github.taikonaut3.virtue.config.manager.Virtue;
@@ -25,9 +26,10 @@ public class ConsumerMain {
 
     public static void simpleTest() {
         Virtue virtue = Virtue.getDefault();
+        virtue.wrap(new Provider());
         Consumer consumer = virtue.applicationName("consumer")
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
-                .register("filter1", new Filter1())
+                .register("filter1", new Filter1().addProtocolRule(virtue, MatchRule.Scope.client,".*"))
                 .register("filter2",new Filter2())
                 .router("^virtue://.*/345/list",":2333")
                 //.register(new RegistryConfig("nacos://127.0.0.1:8848"))
