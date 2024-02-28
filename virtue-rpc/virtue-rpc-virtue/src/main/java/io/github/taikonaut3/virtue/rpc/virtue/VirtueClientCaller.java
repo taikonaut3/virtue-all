@@ -1,10 +1,10 @@
 package io.github.taikonaut3.virtue.rpc.virtue;
 
+import io.github.taikonaut3.virtue.common.util.GenerateUtil;
 import io.github.taikonaut3.virtue.common.util.StringUtil;
 import io.github.taikonaut3.virtue.config.RemoteCaller;
 import io.github.taikonaut3.virtue.config.annotation.Config;
 import io.github.taikonaut3.virtue.config.annotation.Options;
-import io.github.taikonaut3.virtue.common.util.GenerateUtil;
 import io.github.taikonaut3.virtue.rpc.config.AbstractClientCaller;
 import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCall;
 import lombok.Getter;
@@ -34,7 +34,8 @@ public class VirtueClientCaller extends AbstractClientCaller<VirtueCall> {
     @Override
     public void doInit() {
         remoteService = parsedAnnotation.service();
-        callMethod = StringUtil.isBlank(parsedAnnotation.callMethod()) ? GenerateUtil.generateKey(method()) : parsedAnnotation.callMethod();
+        callMethod = StringUtil.isBlank(parsedAnnotation.callMethod()) ?
+                GenerateUtil.generateKey(method()) : parsedAnnotation.callMethod();
     }
 
     @Override

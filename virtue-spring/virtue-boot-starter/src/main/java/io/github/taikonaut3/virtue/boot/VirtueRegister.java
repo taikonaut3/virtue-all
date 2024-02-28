@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
-public class VirtuePostProcessorRegister implements ImportBeanDefinitionRegistrar {
+public class VirtueRegister implements ImportBeanDefinitionRegistrar {
 
     private final static List<Class<?>> SCAN_POSTPROCESSORS = List.of(
             RemoteServicePostProcessor.class,
