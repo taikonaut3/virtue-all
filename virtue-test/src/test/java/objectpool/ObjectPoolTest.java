@@ -22,23 +22,26 @@ public class ObjectPoolTest {
         Virtue virtue = Virtue.getDefault();
         ArrayObjectPool<SimpleObject> objectPool = new ArrayObjectPool<>(virtue, new SimpleObjectFactory(virtue));
         ExecutorService executorService = Executors.newFixedThreadPool(20);
-        executorService.execute(()->{
-            for (int i = 0; i < 200; i++) {
-                SimpleObject object = null;
-                try {
-                    object = objectPool.poll();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+        for (int j = 0; j < 100; j++) {
+            executorService.execute(() -> {
+                for (int i = 0; i < 2; i++) {
+                    SimpleObject object = null;
+                    try {
+                        object = objectPool.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println(object);
+                    objectPool.back(object);
                 }
-                try {
-                    TimeUnit.SECONDS.sleep(2);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println(object);
-                objectPool.back(object);
-            }
-        });
+            });
+        }
+
         System.in.read();
     }
 }
