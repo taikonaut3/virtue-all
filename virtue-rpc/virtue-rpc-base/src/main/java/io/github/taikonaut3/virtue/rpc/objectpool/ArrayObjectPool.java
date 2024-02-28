@@ -1,5 +1,6 @@
 package io.github.taikonaut3.virtue.rpc.objectpool;
 
+import io.github.taikonaut3.virtue.common.util.AssertUtil;
 import io.github.taikonaut3.virtue.config.manager.Virtue;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory, ObjectPoolConfig poolConfig) {
         super(virtue, factory, poolConfig);
         pooledObjectArr = new PooledObject[poolConfig.initCapacity()];
+        addObjects(poolConfig.minIdle());
     }
 
     public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory) {
@@ -39,7 +41,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         try{
             // keep waiting
             while(Objects.isNull(t)){
-                notEmpty.wait();
+                notEmpty.await();
                 t = get();
             }
         }finally {
@@ -111,7 +113,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         }
         mainLock.lock();
         try{
-            notEmpty.notify();
+            notEmpty.signal();
         }finally {
             mainLock.unlock();
         }
@@ -124,9 +126,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     @Override
     public void addObject(){
         PooledObject<T> pooledObject = factory.makeObject();
-        if(Objects.isNull(pooledObject)){
-            throw new NullPointerException();
-        }
+        AssertUtil.notNull(pooledObject);
         validateObject(pooledObject.getObject());
         mainLock.lock();
         try{
@@ -135,7 +135,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
             }
             pooledObjectArr[size] = pooledObject;
             pooledObject.state(PooledObjectState.IDLE);
-            notEmpty.notify();
+            notEmpty.signal();
             size++;
             createdCount.incrementAndGet();
         }finally {

@@ -49,6 +49,5 @@ public abstract class AbstractObjectPool<T> implements ObjectPool<T> {
         if (minIdle > capacity) {
             throw new IllegalArgumentException("minIdle cannot be more than capacity");
         }
-        addObjects(minIdle);
     }
 }
