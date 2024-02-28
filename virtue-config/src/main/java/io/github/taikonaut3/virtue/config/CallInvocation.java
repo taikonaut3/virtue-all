@@ -2,7 +2,7 @@ package io.github.taikonaut3.virtue.config;
 
 import io.github.taikonaut3.virtue.common.url.URL;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * The basic Invocation implementation class
@@ -13,9 +13,9 @@ public class CallInvocation implements Invocation {
 
     private URL url;
 
-    private Function<Invocation, Object> invoke;
+    private Supplier<Object> invoke;
 
-    public CallInvocation(URL url, CallArgs args, Function<Invocation, Object> invoke) {
+    public CallInvocation(URL url, CallArgs args, Supplier<Object> invoke) {
         this.url = url;
         this.args = args;
         this.invoke = invoke;
@@ -34,7 +34,7 @@ public class CallInvocation implements Invocation {
     @Override
     public Object invoke() {
         if (invoke != null) {
-            return invoke.apply(this);
+            return invoke.get();
         }
         return null;
     }
@@ -46,13 +46,13 @@ public class CallInvocation implements Invocation {
     }
 
     @Override
-    public Invocation revise(Function<Invocation, Object> invoke) {
+    public Invocation revise(Supplier<Object> invoke) {
         this.invoke = invoke;
         return this;
     }
 
     @Override
-    public Invocation revise(URL url, Function<Invocation, Object> invoke) {
+    public Invocation revise(URL url, Supplier<Object> invoke) {
         revise(url).revise(invoke);
         return this;
     }

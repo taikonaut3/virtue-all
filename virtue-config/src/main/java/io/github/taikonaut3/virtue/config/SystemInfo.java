@@ -4,6 +4,7 @@ import com.sun.management.OperatingSystemMXBean;
 import io.github.taikonaut3.virtue.config.manager.RemoteServiceManager;
 import io.github.taikonaut3.virtue.config.manager.Virtue;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.lang.management.ManagementFactory;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @Accessors(fluent = true)
 @Data
+@ToString
 public class SystemInfo {
 
     private double cpuUsage;

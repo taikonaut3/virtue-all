@@ -1,7 +1,9 @@
 package io.github.taikonaut3;
 
 import io.github.taikonaut3.model.ParentObject;
+import io.github.taikonaut3.virtue.common.constant.Components;
 import io.github.taikonaut3.virtue.config.annotation.Config;
+import io.github.taikonaut3.virtue.config.annotation.Options;
 import io.github.taikonaut3.virtue.config.annotation.RemoteCaller;
 import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCall;
 import io.github.taikonaut3.virtue.rpc.virtue.envelope.VirtueResponse;
@@ -30,7 +32,9 @@ public interface Consumer {
     @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"))
     CompletableFuture<VirtueResponse> helloDynamicRes(String world);
 
-    @VirtueCall(service = "345",callMethod = "list",config = @Config(serialize = MSGPACK))
+    @Config(filters = {"filter1","filter2"},serialize = MSGPACK)
+    @Options(faultTolerance = Components.FaultTolerance.FAIL_RETRY)
+    @VirtueCall(service = "345",callMethod = "list")
     List<ParentObject> list(List<ParentObject> list);
 
 }

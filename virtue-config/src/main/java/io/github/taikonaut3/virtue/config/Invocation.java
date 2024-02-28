@@ -2,7 +2,7 @@ package io.github.taikonaut3.virtue.config;
 
 import io.github.taikonaut3.virtue.common.url.URL;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Encapsulate the url, callArgs, and invocation behavior.
@@ -44,7 +44,7 @@ public interface Invocation {
      * @param invoke
      * @return current instance
      */
-    Invocation revise(Function<Invocation, Object> invoke);
+    Invocation revise(Supplier<Object> invoke);
 
     /**
      * Revise current url and invocation behavior.
@@ -53,7 +53,7 @@ public interface Invocation {
      * @param invoke
      * @return callInvocation instance
      */
-    Invocation revise(URL url, Function<Invocation, Object> invoke);
+    Invocation revise(URL url, Supplier<Object> invoke);
 
     /**
      * Create invocation instance use {@link CallInvocation}.
@@ -63,7 +63,7 @@ public interface Invocation {
      * @param invoke
      * @return callInvocation instance
      */
-    static Invocation create(URL url, CallArgs args, Function<Invocation, Object> invoke) {
+    static Invocation create(URL url, CallArgs args, Supplier<Object> invoke) {
         return new CallInvocation(url, args, invoke);
     }
 

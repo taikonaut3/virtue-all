@@ -22,9 +22,9 @@ public class ObjectPoolTest {
     public void test1() throws InterruptedException, IOException {
         Virtue virtue = Virtue.getDefault();
         ArrayObjectPool<SimpleObject> objectPool = new ArrayObjectPool<>(virtue, new SimpleObjectFactory(virtue));
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
+        ExecutorService executorService = Executors.newFixedThreadPool(200);
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        for (int j = 0; j < 1000; j++) {
+        for (int j = 0; j < 200; j++) {
             executorService.execute(() -> {
                     SimpleObject object = null;
                     try {

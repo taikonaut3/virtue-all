@@ -10,7 +10,6 @@ import io.github.taikonaut3.virtue.config.ServerCaller;
 import io.github.taikonaut3.virtue.config.config.ServerConfig;
 import io.github.taikonaut3.virtue.config.filter.Filter;
 import io.github.taikonaut3.virtue.config.filter.FilterScope;
-import io.github.taikonaut3.virtue.transport.server.Server;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
@@ -20,8 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 @Getter
@@ -29,8 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractServerCaller<T extends Annotation> extends AbstractCaller<T> implements ServerCaller<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractServerCaller.class);
-
-    public static final Map<String, Server> hadExportServer = new ConcurrentHashMap<>();
 
     protected String desc;
 
@@ -52,7 +47,7 @@ public abstract class AbstractServerCaller<T extends Annotation> extends Abstrac
     @Override
     public Object call(URL url, CallArgs args) throws RpcException {
         List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
-        Invocation invocation = Invocation.create(url, args, inv -> {
+        Invocation invocation = Invocation.create(url, args, () -> {
             method.setAccessible(true);
             try {
                 return method.invoke(remoteService().target(), args.args());

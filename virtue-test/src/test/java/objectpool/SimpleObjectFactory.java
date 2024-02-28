@@ -11,7 +11,7 @@ import io.github.taikonaut3.virtue.rpc.objectpool.PooledObjectFactory;
  */
 public class SimpleObjectFactory implements PooledObjectFactory<SimpleObject> {
 
-    private Virtue virtue;
+    private final Virtue virtue;
 
     public SimpleObjectFactory(Virtue virtue) {
         this.virtue = virtue;
