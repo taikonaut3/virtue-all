@@ -91,7 +91,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
 
     @Override
     public T get() {
-        boolean isFull = Arrays.stream(pooledObjectArr).allMatch(pooledObject -> pooledObject.state() == PooledObjectState.ALLOCATED);
+        boolean isFull = Arrays.stream(pooledObjectArr).filter(Objects::nonNull).allMatch(pooledObject -> pooledObject.state() == PooledObjectState.ALLOCATED);
         if(isFull){
             if(size == poolConfig.initCapacity()){
                return null;

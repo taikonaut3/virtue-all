@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ObjectPoolTest
@@ -22,9 +23,9 @@ public class ObjectPoolTest {
         Virtue virtue = Virtue.getDefault();
         ArrayObjectPool<SimpleObject> objectPool = new ArrayObjectPool<>(virtue, new SimpleObjectFactory(virtue));
         ExecutorService executorService = Executors.newFixedThreadPool(20);
-        for (int j = 0; j < 100; j++) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        for (int j = 0; j < 1000; j++) {
             executorService.execute(() -> {
-                for (int i = 0; i < 2; i++) {
                     SimpleObject object = null;
                     try {
                         object = objectPool.poll();
@@ -32,13 +33,12 @@ public class ObjectPoolTest {
                         throw new RuntimeException(e);
                     }
                     try {
-                        TimeUnit.SECONDS.sleep(2);
+                        TimeUnit.SECONDS.sleep(1);
+                        System.out.println(object+"-"+atomicInteger.getAndIncrement());
+                        objectPool.back(object);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println(object);
-                    objectPool.back(object);
-                }
             });
         }
 
