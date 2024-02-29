@@ -38,7 +38,7 @@ public interface Consumer {
     List<ParentObject> list(List<ParentObject> list);
 
 
-    @Config(filters = {"filter1","filter2"})
+    @Config(filters = {"filter1","filter2"},serialize = MSGPACK)
     @VirtueCall(service = "345",callMethod = "list2")
     List<ParentObject> list(List<ParentObject> list1,List<ParentObject> list2);
 
