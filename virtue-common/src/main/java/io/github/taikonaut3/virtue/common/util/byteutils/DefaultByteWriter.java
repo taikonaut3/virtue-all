@@ -1,4 +1,4 @@
-package io.github.taikonaut3.virtue.transport.byteutils;
+package io.github.taikonaut3.virtue.common.util.byteutils;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;

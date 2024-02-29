@@ -39,7 +39,7 @@ public class ConsumerMain {
         virtue.start();
         for (int i = 0; i < 50; i++) {
             long start = System.currentTimeMillis();
-            List<ParentObject> list = consumer.list(ParentObject.getObjList());
+            List<ParentObject> list = consumer.list(ParentObject.getObjList("client list 1"), ParentObject.getObjList("client list 2"));
             long end = System.currentTimeMillis();
             System.out.println("耗时:" + (end - start) + list);
         }

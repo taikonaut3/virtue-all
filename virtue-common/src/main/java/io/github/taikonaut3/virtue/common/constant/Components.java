@@ -33,6 +33,8 @@ public interface Components {
 
         String HTTP = "http";
 
+        String HTTP1 = "http1.1";
+
     }
 
     interface Registry {

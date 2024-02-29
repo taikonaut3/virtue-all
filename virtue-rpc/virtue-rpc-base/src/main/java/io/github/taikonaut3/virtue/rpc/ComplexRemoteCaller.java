@@ -1,6 +1,7 @@
 package io.github.taikonaut3.virtue.rpc;
 
 import io.github.taikonaut3.virtue.common.spi.ExtensionLoader;
+import io.github.taikonaut3.virtue.common.url.URL;
 import io.github.taikonaut3.virtue.common.util.AssertUtil;
 import io.github.taikonaut3.virtue.common.util.ReflectUtil;
 import io.github.taikonaut3.virtue.config.*;
@@ -25,6 +26,8 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
     private T proxyInstance;
 
     private boolean lazyDiscover;
+
+    private URL url;
 
     public ComplexRemoteCaller(Virtue virtue, Class<T> target) {
         super(virtue);
@@ -60,13 +63,23 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
     }
 
     @Override
+    public URL url() {
+        return url;
+    }
+
+    @Override
     public Class<T> targetInterface() {
         return targetInterface;
     }
 
     private void parseRemoteCaller() {
         io.github.taikonaut3.virtue.config.annotation.RemoteCaller remoteCaller = targetInterface.getAnnotation(REMOTE_CALL_CLASS);
-        remoteApplication = remoteCaller.value();
+        String value = remoteCaller.value();
+        try {
+            url = URL.valueOf(value);
+        } catch (Exception e) {
+            remoteApplication = value;
+        }
         proxy = remoteCaller.proxy();
         lazyDiscover = remoteCaller.lazyDiscover();
     }

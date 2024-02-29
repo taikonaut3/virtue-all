@@ -22,6 +22,7 @@
         <fury.version>0.4.1</fury.version>
         <maspack.version>0.9.8</maspack.version>
         <protobuf.version>3.25.2</protobuf.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <curator.version>5.5.0</curator.version>
         <nacos.version>2.3.0</nacos.version>
         <netty.version>4.1.104.Final</netty.version>
@@ -121,6 +122,12 @@
                 <groupId>org.furyio</groupId>
                 <artifactId>fury-core</artifactId>
                 <version>${fury.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
             <dependency>

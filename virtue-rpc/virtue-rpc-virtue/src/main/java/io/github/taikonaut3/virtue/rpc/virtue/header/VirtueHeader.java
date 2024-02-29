@@ -3,8 +3,8 @@ package io.github.taikonaut3.virtue.rpc.virtue.header;
 import io.github.taikonaut3.virtue.common.constant.Key;
 import io.github.taikonaut3.virtue.common.constant.Mode;
 import io.github.taikonaut3.virtue.common.constant.ModeContainer;
-import io.github.taikonaut3.virtue.transport.byteutils.ByteReader;
-import io.github.taikonaut3.virtue.transport.byteutils.ByteWriter;
+import io.github.taikonaut3.virtue.common.util.byteutils.ByteReader;
+import io.github.taikonaut3.virtue.common.util.byteutils.ByteWriter;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

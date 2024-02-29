@@ -1,6 +1,5 @@
 package io.github.taikonaut3.virtue.common.util;
 
-import io.github.taikonaut3.virtue.common.exception.RpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,15 +39,6 @@ public final class ReflectUtil {
             logger.error("Create Instance Fail", e);
         }
         return instance;
-    }
-
-    public static Object invokeStaticDeclaredMethod(Class<?> type, String name, Object... args) {
-        try {
-            return type.getDeclaredMethod(name).invoke(null, args);
-        } catch (Exception e) {
-            logger.error("Invoke static declared Method Fail", e);
-            throw new RpcException(e);
-        }
     }
 
     public static <T extends Annotation> T getDefaultInstance(Class<T> annotationType) {

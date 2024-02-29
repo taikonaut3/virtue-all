@@ -102,10 +102,9 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         Options ops = getOptions();
         // check
         checkAsyncReturnType(method);
-        checkDirectUrl(ops.url());
+        checkDirectUrl(ops);
         // set
         router(ops.router());
-        directUrl(ops.url());
         timeout(ops.timeout());
         retires(ops.retires());
         directory(ops.directory());
@@ -310,13 +309,19 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         }
     }
 
-    private void checkDirectUrl(String url) {
+    private void checkDirectUrl(Options options) {
+        String url = options.url();
         if (!StringUtil.isBlank(url)) {
             try {
                 NetUtil.toInetSocketAddress(url);
+                directUrl(url);
             } catch (IllegalArgumentException e) {
                 logger.error("Illegal direct connection address", e);
                 throw new IllegalArgumentException(e);
+            }
+        } else {
+            if (remoteCaller().url() != null) {
+                directUrl(remoteCaller().url().toString());
             }
         }
     }

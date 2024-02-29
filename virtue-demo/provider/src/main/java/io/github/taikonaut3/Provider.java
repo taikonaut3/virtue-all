@@ -32,4 +32,9 @@ public class Provider {
         return ParentObject.getObjList();
     }
 
+    @VirtueCallable(name = "list2")
+    public List<ParentObject> list2(List<ParentObject> list1, List<ParentObject> list2) {
+        return ParentObject.getObjList("list server2");
+    }
+
 }

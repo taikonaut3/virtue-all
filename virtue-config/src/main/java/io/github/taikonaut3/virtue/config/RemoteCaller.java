@@ -1,5 +1,7 @@
 package io.github.taikonaut3.virtue.config;
 
+import io.github.taikonaut3.virtue.common.url.URL;
+
 /**
  * Remote caller for invoking remote service methods.
  *
@@ -26,6 +28,11 @@ public interface RemoteCaller<T> extends CallerContainer {
      * The default gets available services when {@link io.github.taikonaut3.virtue.config.ClientCaller} creation is complete.
      */
     boolean lazyDiscover();
+
+    /**
+     * Direct url
+     */
+    URL url();
 
 }
 

@@ -37,4 +37,9 @@ public interface Consumer {
     @VirtueCall(service = "345",callMethod = "list")
     List<ParentObject> list(List<ParentObject> list);
 
+
+    @Config(filters = {"filter1","filter2"})
+    @VirtueCall(service = "345",callMethod = "list2")
+    List<ParentObject> list(List<ParentObject> list1,List<ParentObject> list2);
+
 }
