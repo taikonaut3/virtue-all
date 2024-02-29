@@ -3,6 +3,7 @@ package io.github.taikonaut3.virtue.rpc.http1_1;
 import io.github.taikonaut3.virtue.common.exception.RpcException;
 import io.github.taikonaut3.virtue.common.url.URL;
 import io.github.taikonaut3.virtue.config.CallArgs;
+import io.github.taikonaut3.virtue.config.Invocation;
 import io.github.taikonaut3.virtue.config.RemoteCaller;
 import io.github.taikonaut3.virtue.rpc.RpcFuture;
 import io.github.taikonaut3.virtue.rpc.config.AbstractClientCaller;
@@ -56,7 +57,10 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
     }
 
     @Override
-    protected void sendAfter(RpcFuture future) {
+    protected RpcFuture send(Invocation invocation) {
+        RpcFuture future = super.send(invocation);
         future.completeConsumer(f -> ((HttpProtocol) protocolInstance).returnClient(f.client()));
+        return future;
     }
+
 }

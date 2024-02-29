@@ -195,7 +195,10 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     public Object call(Invocation invocation) throws RpcException {
         String faultToleranceKey = invocation.url().getParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_FAST);
         FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceKey);
-        invocation.revise(() -> doDirectRemoteCall(invocation));
+        invocation.revise(() -> {
+            RpcFuture future = send(invocation);
+            return async() ? future : future.get();
+        });
         return faultTolerance.operation(invocation);
     }
 
@@ -269,7 +272,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         }
     }
 
-    protected Object doDirectRemoteCall(Invocation invocation) {
+    protected RpcFuture send(Invocation invocation) {
         URL url = invocation.url();
         CallArgs callArgs = invocation.callArgs();
         Client client = getClient(url.address());
@@ -279,12 +282,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         future.client(client);
         // request
         client.send(request);
-        sendAfter(future);
-        return async() ? future : future.get();
-    }
-
-    protected void sendAfter(RpcFuture future) {
-
+        return future;
     }
 
     private Client getClient(String address) {
