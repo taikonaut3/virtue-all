@@ -37,6 +37,12 @@
                 <version>0.6.1</version>
                 <configuration>
                     <protocExecutable>C:\dev\protoc-25.3\bin\protoc.exe</protocExecutable>
+                    <!--proto文件所在目录-->
+                    <!--  <protoSourceRoot>src/main/proto</protoSourceRoot> -->
+                    <!--产出java文件的目标目录-->
+                    <outputDirectory>src/test/java</outputDirectory>
+                    <!--是否清空上面配置目录outputDirectory-->
+                    <clearOutputDirectory>false</clearOutputDirectory>
                 </configuration>
             </plugin>
         </plugins>

@@ -23,7 +23,7 @@ public final class PersonProto2 {
      * <code>string street = 1;</code>
      * @return The street.
      */
-    String getStreet();
+    java.lang.String getStreet();
     /**
      * <code>string street = 1;</code>
      * @return The bytes for street.
@@ -35,7 +35,7 @@ public final class PersonProto2 {
      * <code>string city = 2;</code>
      * @return The city.
      */
-    String getCity();
+    java.lang.String getCity();
     /**
      * <code>string city = 2;</code>
      * @return The bytes for city.
@@ -47,7 +47,7 @@ public final class PersonProto2 {
      * <code>string zip = 3;</code>
      * @return The zip.
      */
-    String getZip();
+    java.lang.String getZip();
     /**
      * <code>string zip = 3;</code>
      * @return The bytes for zip.
@@ -73,42 +73,42 @@ public final class PersonProto2 {
       zip_ = "";
     }
 
-    @Override
+    @java.lang.Override
     @SuppressWarnings({"unused"})
-    protected Object newInstance(
+    protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
       return new Address2();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return PersonProto2.internal_static_protobuf_p2_Address2_descriptor;
+      return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Address2_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return PersonProto2.internal_static_protobuf_p2_Address2_fieldAccessorTable
+      return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Address2_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Address2.class, Builder.class);
+              protobuf.p2.PersonProto2.Address2.class, protobuf.p2.PersonProto2.Address2.Builder.class);
     }
 
     public static final int STREET_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private volatile Object street_ = "";
+    private volatile java.lang.Object street_ = "";
     /**
      * <code>string street = 1;</code>
      * @return The street.
      */
-    @Override
-    public String getStreet() {
-      Object ref = street_;
-      if (ref instanceof String) {
-        return (String) ref;
+    @java.lang.Override
+    public java.lang.String getStreet() {
+      java.lang.Object ref = street_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         street_ = s;
         return s;
       }
@@ -117,14 +117,14 @@ public final class PersonProto2 {
      * <code>string street = 1;</code>
      * @return The bytes for street.
      */
-    @Override
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getStreetBytes() {
-      Object ref = street_;
-      if (ref instanceof String) {
+      java.lang.Object ref = street_;
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         street_ = b;
         return b;
       } else {
@@ -134,20 +134,20 @@ public final class PersonProto2 {
 
     public static final int CITY_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
-    private volatile Object city_ = "";
+    private volatile java.lang.Object city_ = "";
     /**
      * <code>string city = 2;</code>
      * @return The city.
      */
-    @Override
-    public String getCity() {
-      Object ref = city_;
-      if (ref instanceof String) {
-        return (String) ref;
+    @java.lang.Override
+    public java.lang.String getCity() {
+      java.lang.Object ref = city_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         city_ = s;
         return s;
       }
@@ -156,14 +156,14 @@ public final class PersonProto2 {
      * <code>string city = 2;</code>
      * @return The bytes for city.
      */
-    @Override
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getCityBytes() {
-      Object ref = city_;
-      if (ref instanceof String) {
+      java.lang.Object ref = city_;
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         city_ = b;
         return b;
       } else {
@@ -173,20 +173,20 @@ public final class PersonProto2 {
 
     public static final int ZIP_FIELD_NUMBER = 3;
     @SuppressWarnings("serial")
-    private volatile Object zip_ = "";
+    private volatile java.lang.Object zip_ = "";
     /**
      * <code>string zip = 3;</code>
      * @return The zip.
      */
-    @Override
-    public String getZip() {
-      Object ref = zip_;
-      if (ref instanceof String) {
-        return (String) ref;
+    @java.lang.Override
+    public java.lang.String getZip() {
+      java.lang.Object ref = zip_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         zip_ = s;
         return s;
       }
@@ -195,14 +195,14 @@ public final class PersonProto2 {
      * <code>string zip = 3;</code>
      * @return The bytes for zip.
      */
-    @Override
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getZipBytes() {
-      Object ref = zip_;
-      if (ref instanceof String) {
+      java.lang.Object ref = zip_;
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         zip_ = b;
         return b;
       } else {
@@ -211,7 +211,7 @@ public final class PersonProto2 {
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -221,7 +221,7 @@ public final class PersonProto2 {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(street_)) {
@@ -236,7 +236,7 @@ public final class PersonProto2 {
       getUnknownFields().writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -256,15 +256,15 @@ public final class PersonProto2 {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Address2)) {
+      if (!(obj instanceof protobuf.p2.PersonProto2.Address2)) {
         return super.equals(obj);
       }
-      Address2 other = (Address2) obj;
+      protobuf.p2.PersonProto2.Address2 other = (protobuf.p2.PersonProto2.Address2) obj;
 
       if (!getStreet()
           .equals(other.getStreet())) return false;
@@ -276,7 +276,7 @@ public final class PersonProto2 {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -294,44 +294,44 @@ public final class PersonProto2 {
       return hash;
     }
 
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Address2 parseFrom(byte[] data)
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Address2 parseFrom(java.io.InputStream input)
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -339,26 +339,26 @@ public final class PersonProto2 {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static Address2 parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.p2.PersonProto2.Address2 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
 
-    public static Address2 parseDelimitedFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Address2 parseFrom(
+    public static protobuf.p2.PersonProto2.Address2 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -366,23 +366,23 @@ public final class PersonProto2 {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Address2 prototype) {
+    public static Builder newBuilder(protobuf.p2.PersonProto2.Address2 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -392,18 +392,18 @@ public final class PersonProto2 {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:protobuf.p2.Address2)
-        Address2OrBuilder {
+        protobuf.p2.PersonProto2.Address2OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return PersonProto2.internal_static_protobuf_p2_Address2_descriptor;
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Address2_descriptor;
       }
 
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return PersonProto2.internal_static_protobuf_p2_Address2_fieldAccessorTable
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Address2_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Address2.class, Builder.class);
+                protobuf.p2.PersonProto2.Address2.class, protobuf.p2.PersonProto2.Address2.Builder.class);
       }
 
       // Construct using protobuf.p2.PersonProto2.Address2.newBuilder()
@@ -412,11 +412,11 @@ public final class PersonProto2 {
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
 
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
@@ -426,35 +426,35 @@ public final class PersonProto2 {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return PersonProto2.internal_static_protobuf_p2_Address2_descriptor;
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Address2_descriptor;
       }
 
-      @Override
-      public Address2 getDefaultInstanceForType() {
-        return Address2.getDefaultInstance();
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Address2 getDefaultInstanceForType() {
+        return protobuf.p2.PersonProto2.Address2.getDefaultInstance();
       }
 
-      @Override
-      public Address2 build() {
-        Address2 result = buildPartial();
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Address2 build() {
+        protobuf.p2.PersonProto2.Address2 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public Address2 buildPartial() {
-        Address2 result = new Address2(this);
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Address2 buildPartial() {
+        protobuf.p2.PersonProto2.Address2 result = new protobuf.p2.PersonProto2.Address2(this);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      private void buildPartial0(Address2 result) {
+      private void buildPartial0(protobuf.p2.PersonProto2.Address2 result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.street_ = street_;
@@ -467,50 +467,50 @@ public final class PersonProto2 {
         }
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Address2) {
-          return mergeFrom((Address2)other);
+        if (other instanceof protobuf.p2.PersonProto2.Address2) {
+          return mergeFrom((protobuf.p2.PersonProto2.Address2)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Address2 other) {
-        if (other == Address2.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.p2.PersonProto2.Address2 other) {
+        if (other == protobuf.p2.PersonProto2.Address2.getDefaultInstance()) return this;
         if (!other.getStreet().isEmpty()) {
           street_ = other.street_;
           bitField0_ |= 0x00000001;
@@ -531,18 +531,18 @@ public final class PersonProto2 {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         if (extensionRegistry == null) {
-          throw new NullPointerException();
+          throw new java.lang.NullPointerException();
         }
         try {
           boolean done = false;
@@ -584,21 +584,21 @@ public final class PersonProto2 {
       }
       private int bitField0_;
 
-      private Object street_ = "";
+      private java.lang.Object street_ = "";
       /**
        * <code>string street = 1;</code>
        * @return The street.
        */
-      public String getStreet() {
-        Object ref = street_;
-        if (!(ref instanceof String)) {
+      public java.lang.String getStreet() {
+        java.lang.Object ref = street_;
+        if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
+          java.lang.String s = bs.toStringUtf8();
           street_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
       /**
@@ -607,11 +607,11 @@ public final class PersonProto2 {
        */
       public com.google.protobuf.ByteString
           getStreetBytes() {
-        Object ref = street_;
+        java.lang.Object ref = street_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+                  (java.lang.String) ref);
           street_ = b;
           return b;
         } else {
@@ -624,7 +624,7 @@ public final class PersonProto2 {
        * @return This builder for chaining.
        */
       public Builder setStreet(
-          String value) {
+          java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         street_ = value;
         bitField0_ |= 0x00000001;
@@ -656,21 +656,21 @@ public final class PersonProto2 {
         return this;
       }
 
-      private Object city_ = "";
+      private java.lang.Object city_ = "";
       /**
        * <code>string city = 2;</code>
        * @return The city.
        */
-      public String getCity() {
-        Object ref = city_;
-        if (!(ref instanceof String)) {
+      public java.lang.String getCity() {
+        java.lang.Object ref = city_;
+        if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
+          java.lang.String s = bs.toStringUtf8();
           city_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
       /**
@@ -679,11 +679,11 @@ public final class PersonProto2 {
        */
       public com.google.protobuf.ByteString
           getCityBytes() {
-        Object ref = city_;
+        java.lang.Object ref = city_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+                  (java.lang.String) ref);
           city_ = b;
           return b;
         } else {
@@ -696,7 +696,7 @@ public final class PersonProto2 {
        * @return This builder for chaining.
        */
       public Builder setCity(
-          String value) {
+          java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         city_ = value;
         bitField0_ |= 0x00000002;
@@ -728,21 +728,21 @@ public final class PersonProto2 {
         return this;
       }
 
-      private Object zip_ = "";
+      private java.lang.Object zip_ = "";
       /**
        * <code>string zip = 3;</code>
        * @return The zip.
        */
-      public String getZip() {
-        Object ref = zip_;
-        if (!(ref instanceof String)) {
+      public java.lang.String getZip() {
+        java.lang.Object ref = zip_;
+        if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
+          java.lang.String s = bs.toStringUtf8();
           zip_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
       /**
@@ -751,11 +751,11 @@ public final class PersonProto2 {
        */
       public com.google.protobuf.ByteString
           getZipBytes() {
-        Object ref = zip_;
+        java.lang.Object ref = zip_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+                  (java.lang.String) ref);
           zip_ = b;
           return b;
         } else {
@@ -768,7 +768,7 @@ public final class PersonProto2 {
        * @return This builder for chaining.
        */
       public Builder setZip(
-          String value) {
+          java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         zip_ = value;
         bitField0_ |= 0x00000004;
@@ -799,13 +799,13 @@ public final class PersonProto2 {
         onChanged();
         return this;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -816,18 +816,18 @@ public final class PersonProto2 {
     }
 
     // @@protoc_insertion_point(class_scope:protobuf.p2.Address2)
-    private static final Address2 DEFAULT_INSTANCE;
+    private static final protobuf.p2.PersonProto2.Address2 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Address2();
+      DEFAULT_INSTANCE = new protobuf.p2.PersonProto2.Address2();
     }
 
-    public static Address2 getDefaultInstance() {
+    public static protobuf.p2.PersonProto2.Address2 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Address2>
         PARSER = new com.google.protobuf.AbstractParser<Address2>() {
-      @Override
+      @java.lang.Override
       public Address2 parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -851,13 +851,13 @@ public final class PersonProto2 {
       return PARSER;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Parser<Address2> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public Address2 getDefaultInstanceForType() {
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Address2 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -871,7 +871,7 @@ public final class PersonProto2 {
      * <code>string email = 1;</code>
      * @return The email.
      */
-    String getEmail();
+    java.lang.String getEmail();
     /**
      * <code>string email = 1;</code>
      * @return The bytes for email.
@@ -883,7 +883,7 @@ public final class PersonProto2 {
      * <code>string phone = 2;</code>
      * @return The phone.
      */
-    String getPhone();
+    java.lang.String getPhone();
     /**
      * <code>string phone = 2;</code>
      * @return The bytes for phone.
@@ -908,42 +908,42 @@ public final class PersonProto2 {
       phone_ = "";
     }
 
-    @Override
+    @java.lang.Override
     @SuppressWarnings({"unused"})
-    protected Object newInstance(
+    protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
       return new Contact2();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return PersonProto2.internal_static_protobuf_p2_Contact2_descriptor;
+      return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Contact2_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return PersonProto2.internal_static_protobuf_p2_Contact2_fieldAccessorTable
+      return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Contact2_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Contact2.class, Builder.class);
+              protobuf.p2.PersonProto2.Contact2.class, protobuf.p2.PersonProto2.Contact2.Builder.class);
     }
 
     public static final int EMAIL_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private volatile Object email_ = "";
+    private volatile java.lang.Object email_ = "";
     /**
      * <code>string email = 1;</code>
      * @return The email.
      */
-    @Override
-    public String getEmail() {
-      Object ref = email_;
-      if (ref instanceof String) {
-        return (String) ref;
+    @java.lang.Override
+    public java.lang.String getEmail() {
+      java.lang.Object ref = email_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         email_ = s;
         return s;
       }
@@ -952,14 +952,14 @@ public final class PersonProto2 {
      * <code>string email = 1;</code>
      * @return The bytes for email.
      */
-    @Override
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getEmailBytes() {
-      Object ref = email_;
-      if (ref instanceof String) {
+      java.lang.Object ref = email_;
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         email_ = b;
         return b;
       } else {
@@ -969,20 +969,20 @@ public final class PersonProto2 {
 
     public static final int PHONE_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
-    private volatile Object phone_ = "";
+    private volatile java.lang.Object phone_ = "";
     /**
      * <code>string phone = 2;</code>
      * @return The phone.
      */
-    @Override
-    public String getPhone() {
-      Object ref = phone_;
-      if (ref instanceof String) {
-        return (String) ref;
+    @java.lang.Override
+    public java.lang.String getPhone() {
+      java.lang.Object ref = phone_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         phone_ = s;
         return s;
       }
@@ -991,14 +991,14 @@ public final class PersonProto2 {
      * <code>string phone = 2;</code>
      * @return The bytes for phone.
      */
-    @Override
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getPhoneBytes() {
-      Object ref = phone_;
-      if (ref instanceof String) {
+      java.lang.Object ref = phone_;
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         phone_ = b;
         return b;
       } else {
@@ -1007,7 +1007,7 @@ public final class PersonProto2 {
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -1017,7 +1017,7 @@ public final class PersonProto2 {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(email_)) {
@@ -1029,7 +1029,7 @@ public final class PersonProto2 {
       getUnknownFields().writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -1046,15 +1046,15 @@ public final class PersonProto2 {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Contact2)) {
+      if (!(obj instanceof protobuf.p2.PersonProto2.Contact2)) {
         return super.equals(obj);
       }
-      Contact2 other = (Contact2) obj;
+      protobuf.p2.PersonProto2.Contact2 other = (protobuf.p2.PersonProto2.Contact2) obj;
 
       if (!getEmail()
           .equals(other.getEmail())) return false;
@@ -1064,7 +1064,7 @@ public final class PersonProto2 {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -1080,44 +1080,44 @@ public final class PersonProto2 {
       return hash;
     }
 
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Contact2 parseFrom(byte[] data)
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Contact2 parseFrom(java.io.InputStream input)
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1125,26 +1125,26 @@ public final class PersonProto2 {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static Contact2 parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.p2.PersonProto2.Contact2 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
 
-    public static Contact2 parseDelimitedFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Contact2 parseFrom(
+    public static protobuf.p2.PersonProto2.Contact2 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1152,23 +1152,23 @@ public final class PersonProto2 {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Contact2 prototype) {
+    public static Builder newBuilder(protobuf.p2.PersonProto2.Contact2 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1178,18 +1178,18 @@ public final class PersonProto2 {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:protobuf.p2.Contact2)
-        Contact2OrBuilder {
+        protobuf.p2.PersonProto2.Contact2OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return PersonProto2.internal_static_protobuf_p2_Contact2_descriptor;
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Contact2_descriptor;
       }
 
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return PersonProto2.internal_static_protobuf_p2_Contact2_fieldAccessorTable
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Contact2_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Contact2.class, Builder.class);
+                protobuf.p2.PersonProto2.Contact2.class, protobuf.p2.PersonProto2.Contact2.Builder.class);
       }
 
       // Construct using protobuf.p2.PersonProto2.Contact2.newBuilder()
@@ -1198,11 +1198,11 @@ public final class PersonProto2 {
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
 
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
@@ -1211,35 +1211,35 @@ public final class PersonProto2 {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return PersonProto2.internal_static_protobuf_p2_Contact2_descriptor;
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Contact2_descriptor;
       }
 
-      @Override
-      public Contact2 getDefaultInstanceForType() {
-        return Contact2.getDefaultInstance();
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Contact2 getDefaultInstanceForType() {
+        return protobuf.p2.PersonProto2.Contact2.getDefaultInstance();
       }
 
-      @Override
-      public Contact2 build() {
-        Contact2 result = buildPartial();
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Contact2 build() {
+        protobuf.p2.PersonProto2.Contact2 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public Contact2 buildPartial() {
-        Contact2 result = new Contact2(this);
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Contact2 buildPartial() {
+        protobuf.p2.PersonProto2.Contact2 result = new protobuf.p2.PersonProto2.Contact2(this);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      private void buildPartial0(Contact2 result) {
+      private void buildPartial0(protobuf.p2.PersonProto2.Contact2 result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.email_ = email_;
@@ -1249,50 +1249,50 @@ public final class PersonProto2 {
         }
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Contact2) {
-          return mergeFrom((Contact2)other);
+        if (other instanceof protobuf.p2.PersonProto2.Contact2) {
+          return mergeFrom((protobuf.p2.PersonProto2.Contact2)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Contact2 other) {
-        if (other == Contact2.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.p2.PersonProto2.Contact2 other) {
+        if (other == protobuf.p2.PersonProto2.Contact2.getDefaultInstance()) return this;
         if (!other.getEmail().isEmpty()) {
           email_ = other.email_;
           bitField0_ |= 0x00000001;
@@ -1308,18 +1308,18 @@ public final class PersonProto2 {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         if (extensionRegistry == null) {
-          throw new NullPointerException();
+          throw new java.lang.NullPointerException();
         }
         try {
           boolean done = false;
@@ -1356,21 +1356,21 @@ public final class PersonProto2 {
       }
       private int bitField0_;
 
-      private Object email_ = "";
+      private java.lang.Object email_ = "";
       /**
        * <code>string email = 1;</code>
        * @return The email.
        */
-      public String getEmail() {
-        Object ref = email_;
-        if (!(ref instanceof String)) {
+      public java.lang.String getEmail() {
+        java.lang.Object ref = email_;
+        if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
+          java.lang.String s = bs.toStringUtf8();
           email_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
       /**
@@ -1379,11 +1379,11 @@ public final class PersonProto2 {
        */
       public com.google.protobuf.ByteString
           getEmailBytes() {
-        Object ref = email_;
+        java.lang.Object ref = email_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+                  (java.lang.String) ref);
           email_ = b;
           return b;
         } else {
@@ -1396,7 +1396,7 @@ public final class PersonProto2 {
        * @return This builder for chaining.
        */
       public Builder setEmail(
-          String value) {
+          java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         email_ = value;
         bitField0_ |= 0x00000001;
@@ -1428,21 +1428,21 @@ public final class PersonProto2 {
         return this;
       }
 
-      private Object phone_ = "";
+      private java.lang.Object phone_ = "";
       /**
        * <code>string phone = 2;</code>
        * @return The phone.
        */
-      public String getPhone() {
-        Object ref = phone_;
-        if (!(ref instanceof String)) {
+      public java.lang.String getPhone() {
+        java.lang.Object ref = phone_;
+        if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
+          java.lang.String s = bs.toStringUtf8();
           phone_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
       /**
@@ -1451,11 +1451,11 @@ public final class PersonProto2 {
        */
       public com.google.protobuf.ByteString
           getPhoneBytes() {
-        Object ref = phone_;
+        java.lang.Object ref = phone_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+                  (java.lang.String) ref);
           phone_ = b;
           return b;
         } else {
@@ -1468,7 +1468,7 @@ public final class PersonProto2 {
        * @return This builder for chaining.
        */
       public Builder setPhone(
-          String value) {
+          java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         phone_ = value;
         bitField0_ |= 0x00000002;
@@ -1499,13 +1499,13 @@ public final class PersonProto2 {
         onChanged();
         return this;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1516,18 +1516,18 @@ public final class PersonProto2 {
     }
 
     // @@protoc_insertion_point(class_scope:protobuf.p2.Contact2)
-    private static final Contact2 DEFAULT_INSTANCE;
+    private static final protobuf.p2.PersonProto2.Contact2 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Contact2();
+      DEFAULT_INSTANCE = new protobuf.p2.PersonProto2.Contact2();
     }
 
-    public static Contact2 getDefaultInstance() {
+    public static protobuf.p2.PersonProto2.Contact2 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Contact2>
         PARSER = new com.google.protobuf.AbstractParser<Contact2>() {
-      @Override
+      @java.lang.Override
       public Contact2 parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1551,27 +1551,27 @@ public final class PersonProto2 {
       return PARSER;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Parser<Contact2> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public Contact2 getDefaultInstanceForType() {
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Contact2 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface PersonOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protobuf.p2.Person)
+  public interface Person2OrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protobuf.p2.Person2)
       com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>string name = 1;</code>
      * @return The name.
      */
-    String getName();
+    java.lang.String getName();
     /**
      * <code>string name = 1;</code>
      * @return The bytes for name.
@@ -1594,21 +1594,21 @@ public final class PersonProto2 {
      * <code>.protobuf.p2.Address2 home_address = 3;</code>
      * @return The homeAddress.
      */
-    Address2 getHomeAddress();
+    protobuf.p2.PersonProto2.Address2 getHomeAddress();
     /**
      * <code>.protobuf.p2.Address2 home_address = 3;</code>
      */
-    Address2OrBuilder getHomeAddressOrBuilder();
+    protobuf.p2.PersonProto2.Address2OrBuilder getHomeAddressOrBuilder();
 
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    java.util.List<Contact2>
+    java.util.List<protobuf.p2.PersonProto2.Contact2> 
         getContactsList();
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    Contact2 getContacts(int index);
+    protobuf.p2.PersonProto2.Contact2 getContacts(int index);
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
@@ -1616,68 +1616,68 @@ public final class PersonProto2 {
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    java.util.List<? extends Contact2OrBuilder>
+    java.util.List<? extends protobuf.p2.PersonProto2.Contact2OrBuilder> 
         getContactsOrBuilderList();
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    Contact2OrBuilder getContactsOrBuilder(
+    protobuf.p2.PersonProto2.Contact2OrBuilder getContactsOrBuilder(
         int index);
   }
   /**
-   * Protobuf type {@code protobuf.p2.Person}
+   * Protobuf type {@code protobuf.p2.Person2}
    */
-  public static final class Person extends
+  public static final class Person2 extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protobuf.p2.Person)
-      PersonOrBuilder {
+      // @@protoc_insertion_point(message_implements:protobuf.p2.Person2)
+      Person2OrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Person.newBuilder() to construct.
-    private Person(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Person2.newBuilder() to construct.
+    private Person2(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Person() {
+    private Person2() {
       name_ = "";
       contacts_ = java.util.Collections.emptyList();
     }
 
-    @Override
+    @java.lang.Override
     @SuppressWarnings({"unused"})
-    protected Object newInstance(
+    protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new Person();
+      return new Person2();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return PersonProto2.internal_static_protobuf_p2_Person_descriptor;
+      return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Person2_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return PersonProto2.internal_static_protobuf_p2_Person_fieldAccessorTable
+      return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Person2_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Person.class, Builder.class);
+              protobuf.p2.PersonProto2.Person2.class, protobuf.p2.PersonProto2.Person2.Builder.class);
     }
 
     private int bitField0_;
     public static final int NAME_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private volatile Object name_ = "";
+    private volatile java.lang.Object name_ = "";
     /**
      * <code>string name = 1;</code>
      * @return The name.
      */
-    @Override
-    public String getName() {
-      Object ref = name_;
-      if (ref instanceof String) {
-        return (String) ref;
+    @java.lang.Override
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         name_ = s;
         return s;
       }
@@ -1686,14 +1686,14 @@ public final class PersonProto2 {
      * <code>string name = 1;</code>
      * @return The bytes for name.
      */
-    @Override
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getNameBytes() {
-      Object ref = name_;
-      if (ref instanceof String) {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         name_ = b;
         return b;
       } else {
@@ -1707,18 +1707,18 @@ public final class PersonProto2 {
      * <code>int32 age = 2;</code>
      * @return The age.
      */
-    @Override
+    @java.lang.Override
     public int getAge() {
       return age_;
     }
 
     public static final int HOME_ADDRESS_FIELD_NUMBER = 3;
-    private Address2 homeAddress_;
+    private protobuf.p2.PersonProto2.Address2 homeAddress_;
     /**
      * <code>.protobuf.p2.Address2 home_address = 3;</code>
      * @return Whether the homeAddress field is set.
      */
-    @Override
+    @java.lang.Override
     public boolean hasHomeAddress() {
       return ((bitField0_ & 0x00000001) != 0);
     }
@@ -1726,61 +1726,61 @@ public final class PersonProto2 {
      * <code>.protobuf.p2.Address2 home_address = 3;</code>
      * @return The homeAddress.
      */
-    @Override
-    public Address2 getHomeAddress() {
-      return homeAddress_ == null ? Address2.getDefaultInstance() : homeAddress_;
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Address2 getHomeAddress() {
+      return homeAddress_ == null ? protobuf.p2.PersonProto2.Address2.getDefaultInstance() : homeAddress_;
     }
     /**
      * <code>.protobuf.p2.Address2 home_address = 3;</code>
      */
-    @Override
-    public Address2OrBuilder getHomeAddressOrBuilder() {
-      return homeAddress_ == null ? Address2.getDefaultInstance() : homeAddress_;
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Address2OrBuilder getHomeAddressOrBuilder() {
+      return homeAddress_ == null ? protobuf.p2.PersonProto2.Address2.getDefaultInstance() : homeAddress_;
     }
 
     public static final int CONTACTS_FIELD_NUMBER = 4;
     @SuppressWarnings("serial")
-    private java.util.List<Contact2> contacts_;
+    private java.util.List<protobuf.p2.PersonProto2.Contact2> contacts_;
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    @Override
-    public java.util.List<Contact2> getContactsList() {
+    @java.lang.Override
+    public java.util.List<protobuf.p2.PersonProto2.Contact2> getContactsList() {
       return contacts_;
     }
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    @Override
-    public java.util.List<? extends Contact2OrBuilder>
+    @java.lang.Override
+    public java.util.List<? extends protobuf.p2.PersonProto2.Contact2OrBuilder> 
         getContactsOrBuilderList() {
       return contacts_;
     }
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    @Override
+    @java.lang.Override
     public int getContactsCount() {
       return contacts_.size();
     }
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    @Override
-    public Contact2 getContacts(int index) {
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Contact2 getContacts(int index) {
       return contacts_.get(index);
     }
     /**
      * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
      */
-    @Override
-    public Contact2OrBuilder getContactsOrBuilder(
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Contact2OrBuilder getContactsOrBuilder(
         int index) {
       return contacts_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -1790,7 +1790,7 @@ public final class PersonProto2 {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
@@ -1808,7 +1808,7 @@ public final class PersonProto2 {
       getUnknownFields().writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -1834,15 +1834,15 @@ public final class PersonProto2 {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Person)) {
+      if (!(obj instanceof protobuf.p2.PersonProto2.Person2)) {
         return super.equals(obj);
       }
-      Person other = (Person) obj;
+      protobuf.p2.PersonProto2.Person2 other = (protobuf.p2.PersonProto2.Person2) obj;
 
       if (!getName()
           .equals(other.getName())) return false;
@@ -1859,7 +1859,7 @@ public final class PersonProto2 {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -1883,44 +1883,44 @@ public final class PersonProto2 {
       return hash;
     }
 
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Person parseFrom(byte[] data)
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Person parseFrom(java.io.InputStream input)
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1928,26 +1928,26 @@ public final class PersonProto2 {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static Person parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.p2.PersonProto2.Person2 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
 
-    public static Person parseDelimitedFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Person parseFrom(
+    public static protobuf.p2.PersonProto2.Person2 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1955,53 +1955,53 @@ public final class PersonProto2 {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Person prototype) {
+    public static Builder newBuilder(protobuf.p2.PersonProto2.Person2 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.p2.Person}
+     * Protobuf type {@code protobuf.p2.Person2}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protobuf.p2.Person)
-        PersonOrBuilder {
+        // @@protoc_insertion_point(builder_implements:protobuf.p2.Person2)
+        protobuf.p2.PersonProto2.Person2OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return PersonProto2.internal_static_protobuf_p2_Person_descriptor;
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Person2_descriptor;
       }
 
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return PersonProto2.internal_static_protobuf_p2_Person_fieldAccessorTable
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Person2_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Person.class, Builder.class);
+                protobuf.p2.PersonProto2.Person2.class, protobuf.p2.PersonProto2.Person2.Builder.class);
       }
 
-      // Construct using protobuf.p2.PersonProto2.Person.newBuilder()
+      // Construct using protobuf.p2.PersonProto2.Person2.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -2012,7 +2012,7 @@ public final class PersonProto2 {
           getContactsFieldBuilder();
         }
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
@@ -2033,36 +2033,36 @@ public final class PersonProto2 {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return PersonProto2.internal_static_protobuf_p2_Person_descriptor;
+        return protobuf.p2.PersonProto2.internal_static_protobuf_p2_Person2_descriptor;
       }
 
-      @Override
-      public Person getDefaultInstanceForType() {
-        return Person.getDefaultInstance();
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Person2 getDefaultInstanceForType() {
+        return protobuf.p2.PersonProto2.Person2.getDefaultInstance();
       }
 
-      @Override
-      public Person build() {
-        Person result = buildPartial();
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Person2 build() {
+        protobuf.p2.PersonProto2.Person2 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public Person buildPartial() {
-        Person result = new Person(this);
+      @java.lang.Override
+      public protobuf.p2.PersonProto2.Person2 buildPartial() {
+        protobuf.p2.PersonProto2.Person2 result = new protobuf.p2.PersonProto2.Person2(this);
         buildPartialRepeatedFields(result);
         if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
       }
 
-      private void buildPartialRepeatedFields(Person result) {
+      private void buildPartialRepeatedFields(protobuf.p2.PersonProto2.Person2 result) {
         if (contactsBuilder_ == null) {
           if (((bitField0_ & 0x00000008) != 0)) {
             contacts_ = java.util.Collections.unmodifiableList(contacts_);
@@ -2074,7 +2074,7 @@ public final class PersonProto2 {
         }
       }
 
-      private void buildPartial0(Person result) {
+      private void buildPartial0(protobuf.p2.PersonProto2.Person2 result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.name_ = name_;
@@ -2092,50 +2092,50 @@ public final class PersonProto2 {
         result.bitField0_ |= to_bitField0_;
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Person) {
-          return mergeFrom((Person)other);
+        if (other instanceof protobuf.p2.PersonProto2.Person2) {
+          return mergeFrom((protobuf.p2.PersonProto2.Person2)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Person other) {
-        if (other == Person.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.p2.PersonProto2.Person2 other) {
+        if (other == protobuf.p2.PersonProto2.Person2.getDefaultInstance()) return this;
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
           bitField0_ |= 0x00000001;
@@ -2178,18 +2178,18 @@ public final class PersonProto2 {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         if (extensionRegistry == null) {
-          throw new NullPointerException();
+          throw new java.lang.NullPointerException();
         }
         try {
           boolean done = false;
@@ -2217,9 +2217,9 @@ public final class PersonProto2 {
                 break;
               } // case 26
               case 34: {
-                Contact2 m =
+                protobuf.p2.PersonProto2.Contact2 m =
                     input.readMessage(
-                        Contact2.parser(),
+                        protobuf.p2.PersonProto2.Contact2.parser(),
                         extensionRegistry);
                 if (contactsBuilder_ == null) {
                   ensureContactsIsMutable();
@@ -2246,21 +2246,21 @@ public final class PersonProto2 {
       }
       private int bitField0_;
 
-      private Object name_ = "";
+      private java.lang.Object name_ = "";
       /**
        * <code>string name = 1;</code>
        * @return The name.
        */
-      public String getName() {
-        Object ref = name_;
-        if (!(ref instanceof String)) {
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
+          java.lang.String s = bs.toStringUtf8();
           name_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
       /**
@@ -2269,11 +2269,11 @@ public final class PersonProto2 {
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
-        Object ref = name_;
+        java.lang.Object ref = name_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+                  (java.lang.String) ref);
           name_ = b;
           return b;
         } else {
@@ -2286,7 +2286,7 @@ public final class PersonProto2 {
        * @return This builder for chaining.
        */
       public Builder setName(
-          String value) {
+          java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         name_ = value;
         bitField0_ |= 0x00000001;
@@ -2323,7 +2323,7 @@ public final class PersonProto2 {
        * <code>int32 age = 2;</code>
        * @return The age.
        */
-      @Override
+      @java.lang.Override
       public int getAge() {
         return age_;
       }
@@ -2350,9 +2350,9 @@ public final class PersonProto2 {
         return this;
       }
 
-      private Address2 homeAddress_;
+      private protobuf.p2.PersonProto2.Address2 homeAddress_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Address2, Address2.Builder, Address2OrBuilder> homeAddressBuilder_;
+          protobuf.p2.PersonProto2.Address2, protobuf.p2.PersonProto2.Address2.Builder, protobuf.p2.PersonProto2.Address2OrBuilder> homeAddressBuilder_;
       /**
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        * @return Whether the homeAddress field is set.
@@ -2364,9 +2364,9 @@ public final class PersonProto2 {
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        * @return The homeAddress.
        */
-      public Address2 getHomeAddress() {
+      public protobuf.p2.PersonProto2.Address2 getHomeAddress() {
         if (homeAddressBuilder_ == null) {
-          return homeAddress_ == null ? Address2.getDefaultInstance() : homeAddress_;
+          return homeAddress_ == null ? protobuf.p2.PersonProto2.Address2.getDefaultInstance() : homeAddress_;
         } else {
           return homeAddressBuilder_.getMessage();
         }
@@ -2374,7 +2374,7 @@ public final class PersonProto2 {
       /**
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        */
-      public Builder setHomeAddress(Address2 value) {
+      public Builder setHomeAddress(protobuf.p2.PersonProto2.Address2 value) {
         if (homeAddressBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2391,7 +2391,7 @@ public final class PersonProto2 {
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        */
       public Builder setHomeAddress(
-          Address2.Builder builderForValue) {
+          protobuf.p2.PersonProto2.Address2.Builder builderForValue) {
         if (homeAddressBuilder_ == null) {
           homeAddress_ = builderForValue.build();
         } else {
@@ -2404,11 +2404,11 @@ public final class PersonProto2 {
       /**
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        */
-      public Builder mergeHomeAddress(Address2 value) {
+      public Builder mergeHomeAddress(protobuf.p2.PersonProto2.Address2 value) {
         if (homeAddressBuilder_ == null) {
           if (((bitField0_ & 0x00000004) != 0) &&
             homeAddress_ != null &&
-            homeAddress_ != Address2.getDefaultInstance()) {
+            homeAddress_ != protobuf.p2.PersonProto2.Address2.getDefaultInstance()) {
             getHomeAddressBuilder().mergeFrom(value);
           } else {
             homeAddress_ = value;
@@ -2438,7 +2438,7 @@ public final class PersonProto2 {
       /**
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        */
-      public Address2.Builder getHomeAddressBuilder() {
+      public protobuf.p2.PersonProto2.Address2.Builder getHomeAddressBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getHomeAddressFieldBuilder().getBuilder();
@@ -2446,23 +2446,23 @@ public final class PersonProto2 {
       /**
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        */
-      public Address2OrBuilder getHomeAddressOrBuilder() {
+      public protobuf.p2.PersonProto2.Address2OrBuilder getHomeAddressOrBuilder() {
         if (homeAddressBuilder_ != null) {
           return homeAddressBuilder_.getMessageOrBuilder();
         } else {
           return homeAddress_ == null ?
-              Address2.getDefaultInstance() : homeAddress_;
+              protobuf.p2.PersonProto2.Address2.getDefaultInstance() : homeAddress_;
         }
       }
       /**
        * <code>.protobuf.p2.Address2 home_address = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Address2, Address2.Builder, Address2OrBuilder>
+          protobuf.p2.PersonProto2.Address2, protobuf.p2.PersonProto2.Address2.Builder, protobuf.p2.PersonProto2.Address2OrBuilder> 
           getHomeAddressFieldBuilder() {
         if (homeAddressBuilder_ == null) {
           homeAddressBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Address2, Address2.Builder, Address2OrBuilder>(
+              protobuf.p2.PersonProto2.Address2, protobuf.p2.PersonProto2.Address2.Builder, protobuf.p2.PersonProto2.Address2OrBuilder>(
                   getHomeAddress(),
                   getParentForChildren(),
                   isClean());
@@ -2471,22 +2471,22 @@ public final class PersonProto2 {
         return homeAddressBuilder_;
       }
 
-      private java.util.List<Contact2> contacts_ =
+      private java.util.List<protobuf.p2.PersonProto2.Contact2> contacts_ =
         java.util.Collections.emptyList();
       private void ensureContactsIsMutable() {
         if (!((bitField0_ & 0x00000008) != 0)) {
-          contacts_ = new java.util.ArrayList<Contact2>(contacts_);
+          contacts_ = new java.util.ArrayList<protobuf.p2.PersonProto2.Contact2>(contacts_);
           bitField0_ |= 0x00000008;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Contact2, Contact2.Builder, Contact2OrBuilder> contactsBuilder_;
+          protobuf.p2.PersonProto2.Contact2, protobuf.p2.PersonProto2.Contact2.Builder, protobuf.p2.PersonProto2.Contact2OrBuilder> contactsBuilder_;
 
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public java.util.List<Contact2> getContactsList() {
+      public java.util.List<protobuf.p2.PersonProto2.Contact2> getContactsList() {
         if (contactsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(contacts_);
         } else {
@@ -2506,7 +2506,7 @@ public final class PersonProto2 {
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public Contact2 getContacts(int index) {
+      public protobuf.p2.PersonProto2.Contact2 getContacts(int index) {
         if (contactsBuilder_ == null) {
           return contacts_.get(index);
         } else {
@@ -2517,7 +2517,7 @@ public final class PersonProto2 {
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
       public Builder setContacts(
-          int index, Contact2 value) {
+          int index, protobuf.p2.PersonProto2.Contact2 value) {
         if (contactsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2534,7 +2534,7 @@ public final class PersonProto2 {
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
       public Builder setContacts(
-          int index, Contact2.Builder builderForValue) {
+          int index, protobuf.p2.PersonProto2.Contact2.Builder builderForValue) {
         if (contactsBuilder_ == null) {
           ensureContactsIsMutable();
           contacts_.set(index, builderForValue.build());
@@ -2547,7 +2547,7 @@ public final class PersonProto2 {
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public Builder addContacts(Contact2 value) {
+      public Builder addContacts(protobuf.p2.PersonProto2.Contact2 value) {
         if (contactsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2564,7 +2564,7 @@ public final class PersonProto2 {
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
       public Builder addContacts(
-          int index, Contact2 value) {
+          int index, protobuf.p2.PersonProto2.Contact2 value) {
         if (contactsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2581,7 +2581,7 @@ public final class PersonProto2 {
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
       public Builder addContacts(
-          Contact2.Builder builderForValue) {
+          protobuf.p2.PersonProto2.Contact2.Builder builderForValue) {
         if (contactsBuilder_ == null) {
           ensureContactsIsMutable();
           contacts_.add(builderForValue.build());
@@ -2595,7 +2595,7 @@ public final class PersonProto2 {
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
       public Builder addContacts(
-          int index, Contact2.Builder builderForValue) {
+          int index, protobuf.p2.PersonProto2.Contact2.Builder builderForValue) {
         if (contactsBuilder_ == null) {
           ensureContactsIsMutable();
           contacts_.add(index, builderForValue.build());
@@ -2609,7 +2609,7 @@ public final class PersonProto2 {
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
       public Builder addAllContacts(
-          Iterable<? extends Contact2> values) {
+          java.lang.Iterable<? extends protobuf.p2.PersonProto2.Contact2> values) {
         if (contactsBuilder_ == null) {
           ensureContactsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -2649,14 +2649,14 @@ public final class PersonProto2 {
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public Contact2.Builder getContactsBuilder(
+      public protobuf.p2.PersonProto2.Contact2.Builder getContactsBuilder(
           int index) {
         return getContactsFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public Contact2OrBuilder getContactsOrBuilder(
+      public protobuf.p2.PersonProto2.Contact2OrBuilder getContactsOrBuilder(
           int index) {
         if (contactsBuilder_ == null) {
           return contacts_.get(index);  } else {
@@ -2666,7 +2666,7 @@ public final class PersonProto2 {
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public java.util.List<? extends Contact2OrBuilder>
+      public java.util.List<? extends protobuf.p2.PersonProto2.Contact2OrBuilder> 
            getContactsOrBuilderList() {
         if (contactsBuilder_ != null) {
           return contactsBuilder_.getMessageOrBuilderList();
@@ -2677,31 +2677,31 @@ public final class PersonProto2 {
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public Contact2.Builder addContactsBuilder() {
+      public protobuf.p2.PersonProto2.Contact2.Builder addContactsBuilder() {
         return getContactsFieldBuilder().addBuilder(
-            Contact2.getDefaultInstance());
+            protobuf.p2.PersonProto2.Contact2.getDefaultInstance());
       }
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public Contact2.Builder addContactsBuilder(
+      public protobuf.p2.PersonProto2.Contact2.Builder addContactsBuilder(
           int index) {
         return getContactsFieldBuilder().addBuilder(
-            index, Contact2.getDefaultInstance());
+            index, protobuf.p2.PersonProto2.Contact2.getDefaultInstance());
       }
       /**
        * <code>repeated .protobuf.p2.Contact2 contacts = 4;</code>
        */
-      public java.util.List<Contact2.Builder>
+      public java.util.List<protobuf.p2.PersonProto2.Contact2.Builder> 
            getContactsBuilderList() {
         return getContactsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Contact2, Contact2.Builder, Contact2OrBuilder>
+          protobuf.p2.PersonProto2.Contact2, protobuf.p2.PersonProto2.Contact2.Builder, protobuf.p2.PersonProto2.Contact2OrBuilder> 
           getContactsFieldBuilder() {
         if (contactsBuilder_ == null) {
           contactsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              Contact2, Contact2.Builder, Contact2OrBuilder>(
+              protobuf.p2.PersonProto2.Contact2, protobuf.p2.PersonProto2.Contact2.Builder, protobuf.p2.PersonProto2.Contact2OrBuilder>(
                   contacts_,
                   ((bitField0_ & 0x00000008) != 0),
                   getParentForChildren(),
@@ -2710,36 +2710,36 @@ public final class PersonProto2 {
         }
         return contactsBuilder_;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
 
-      // @@protoc_insertion_point(builder_scope:protobuf.p2.Person)
+      // @@protoc_insertion_point(builder_scope:protobuf.p2.Person2)
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.p2.Person)
-    private static final Person DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:protobuf.p2.Person2)
+    private static final protobuf.p2.PersonProto2.Person2 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Person();
+      DEFAULT_INSTANCE = new protobuf.p2.PersonProto2.Person2();
     }
 
-    public static Person getDefaultInstance() {
+    public static protobuf.p2.PersonProto2.Person2 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Person>
-        PARSER = new com.google.protobuf.AbstractParser<Person>() {
-      @Override
-      public Person parsePartialFrom(
+    private static final com.google.protobuf.Parser<Person2>
+        PARSER = new com.google.protobuf.AbstractParser<Person2>() {
+      @java.lang.Override
+      public Person2 parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2758,17 +2758,17 @@ public final class PersonProto2 {
       }
     };
 
-    public static com.google.protobuf.Parser<Person> parser() {
+    public static com.google.protobuf.Parser<Person2> parser() {
       return PARSER;
     }
 
-    @Override
-    public com.google.protobuf.Parser<Person> getParserForType() {
+    @java.lang.Override
+    public com.google.protobuf.Parser<Person2> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public Person getDefaultInstanceForType() {
+    @java.lang.Override
+    public protobuf.p2.PersonProto2.Person2 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2785,10 +2785,10 @@ public final class PersonProto2 {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protobuf_p2_Contact2_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_p2_Person_descriptor;
+    internal_static_protobuf_p2_Person2_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protobuf_p2_Person_fieldAccessorTable;
+      internal_static_protobuf_p2_Person2_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2797,14 +2797,14 @@ public final class PersonProto2 {
   private static  com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    String[] descriptorData = {
+    java.lang.String[] descriptorData = {
       "\n\rperson2.proto\022\013protobuf.p2\"5\n\010Address2" +
       "\022\016\n\006street\030\001 \001(\t\022\014\n\004city\030\002 \001(\t\022\013\n\003zip\030\003 " +
       "\001(\t\"(\n\010Contact2\022\r\n\005email\030\001 \001(\t\022\r\n\005phone\030" +
-      "\002 \001(\t\"y\n\006Person\022\014\n\004name\030\001 \001(\t\022\013\n\003age\030\002 \001" +
-      "(\005\022+\n\014home_address\030\003 \001(\0132\025.protobuf.p2.A" +
-      "ddress2\022\'\n\010contacts\030\004 \003(\0132\025.protobuf.p2." +
-      "Contact2B\016B\014PersonProto2b\006proto3"
+      "\002 \001(\t\"z\n\007Person2\022\014\n\004name\030\001 \001(\t\022\013\n\003age\030\002 " +
+      "\001(\005\022+\n\014home_address\030\003 \001(\0132\025.protobuf.p2." +
+      "Address2\022\'\n\010contacts\030\004 \003(\0132\025.protobuf.p2" +
+      ".Contact2B\016B\014PersonProto2b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2815,19 +2815,19 @@ public final class PersonProto2 {
     internal_static_protobuf_p2_Address2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protobuf_p2_Address2_descriptor,
-        new String[] { "Street", "City", "Zip", });
+        new java.lang.String[] { "Street", "City", "Zip", });
     internal_static_protobuf_p2_Contact2_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_protobuf_p2_Contact2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protobuf_p2_Contact2_descriptor,
-        new String[] { "Email", "Phone", });
-    internal_static_protobuf_p2_Person_descriptor =
+        new java.lang.String[] { "Email", "Phone", });
+    internal_static_protobuf_p2_Person2_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_protobuf_p2_Person_fieldAccessorTable = new
+    internal_static_protobuf_p2_Person2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protobuf_p2_Person_descriptor,
-        new String[] { "Name", "Age", "HomeAddress", "Contacts", });
+        internal_static_protobuf_p2_Person2_descriptor,
+        new java.lang.String[] { "Name", "Age", "HomeAddress", "Contacts", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -51,7 +51,7 @@ public class ProtobufTest {
                 .addAllContacts(contact1s)
                 .build();
         byte[] bytes = protobufSerializer.serialize(person1);
-        PersonProto2.Person deserialize = protobufSerializer.deserialize(bytes, PersonProto2.Person.class);
+        PersonProto2.Person2 deserialize = protobufSerializer.deserialize(bytes, PersonProto2.Person2.class);
         System.out.println(deserialize);
     }
 }
