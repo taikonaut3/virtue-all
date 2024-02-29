@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package protobuf;
+option java_outer_classname = "StudentProto";
+
+message Student {
+  string name = 1;
+  int32 age = 2;
+}

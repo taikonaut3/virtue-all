@@ -59,6 +59,8 @@ public interface Components {
 
         String MSGPACK = "msgpack";
 
+        String PROTOBUF = "protobuf";
+
     }
 
     interface Transport {

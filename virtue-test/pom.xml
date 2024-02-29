@@ -18,10 +18,28 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-serialization-protobuf</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocExecutable>C:\dev\protoc-25.3\bin\protoc.exe</protocExecutable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

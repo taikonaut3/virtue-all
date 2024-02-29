@@ -21,6 +21,7 @@
         <kryo.version>5.5.0</kryo.version>
         <fury.version>0.4.1</fury.version>
         <maspack.version>0.9.8</maspack.version>
+        <protobuf.version>3.25.2</protobuf.version>
         <curator.version>5.5.0</curator.version>
         <nacos.version>2.3.0</nacos.version>
         <netty.version>4.1.104.Final</netty.version>
@@ -120,6 +121,18 @@
                 <groupId>org.furyio</groupId>
                 <artifactId>fury-core</artifactId>
                 <version>${fury.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java-util -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java-util</artifactId>
+                <version>${protobuf.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
             <dependency>
