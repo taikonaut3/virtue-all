@@ -1,51 +1,43 @@
 package io.github.taikonaut3.virtue.rpc.virtue.envelope;
 
-import io.github.taikonaut3.virtue.rpc.virtue.header.Header;
+import io.github.taikonaut3.virtue.common.constant.Key;
+import io.github.taikonaut3.virtue.common.spi.ExtensionLoader;
 import io.github.taikonaut3.virtue.common.url.URL;
+import io.github.taikonaut3.virtue.serialization.Serializer;
+import io.github.taikonaut3.virtue.transport.compress.Compression;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * NetWork Transmission carrier
- * Comprise:
- * 1、Header Data {@link Header}
- * 2、Body Data
- */
-public interface VirtueEnvelope extends Serializable {
+@Getter
+@Setter
+@Accessors(fluent = true)
+public abstract class VirtueEnvelope implements Serializable {
 
-    /**
-     * Returns the header of this message.
-     *
-     * @return the header of the message
-     */
-    Header header();
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * Sets the header of this message.
-     *
-     * @param header the header to be set for the message
-     */
-    void setHeader(Header header);
+    private Object body;
 
-    /**
-     * Returns the body of this message.
-     *
-     * @return the body of the message
-     */
-    Object getBody();
+    private URL url;
 
-    /**
-     * Sets the body of this message.
-     *
-     * @param body the body to be set for the message
-     */
-    void setBody(Object body);
+    protected VirtueEnvelope() {
+    }
 
-    /**
-     * This URL may not be what you would expect
-     *
-     * @return
-     */
-    URL getUrl();
+    protected VirtueEnvelope(URL url, Object body) {
+        url(url);
+        body(body);
+    }
+
+    public Serializer serializer() {
+        return ExtensionLoader.loadService(Serializer.class, url.getParameter(Key.SERIALIZE));
+    }
+
+    public Compression compression() {
+        return ExtensionLoader.loadService(Compression.class, url.getParameter(Key.COMPRESSION));
+    }
 
 }

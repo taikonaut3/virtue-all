@@ -29,4 +29,9 @@ public class Response implements Envelope {
         this.message = message;
     }
 
+    public Response(byte code, URL url, Object message) {
+        this(url, message);
+        code(code);
+    }
+
 }

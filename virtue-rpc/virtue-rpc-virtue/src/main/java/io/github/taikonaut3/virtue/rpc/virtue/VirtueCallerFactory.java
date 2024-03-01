@@ -12,6 +12,7 @@ import static io.github.taikonaut3.virtue.common.constant.Components.Protocol.VI
  */
 @ServiceProvider(VIRTUE)
 public class VirtueCallerFactory implements CallerFactory {
+
     @Override
     public ServerCaller<?> createServerCaller(Method method, RemoteService<?> remoteService) {
         return new VirtueServerCaller(method, remoteService);

@@ -33,7 +33,7 @@ public class VirtueClientConvertChannelHandler extends ResponseChannelHandler {
             Type returnType = future.returnType();
             Object body = protocolParser.parseResponseBody(response);
             Object newBody = converter.convert(body, returnType);
-            virtueResponse.setBody(newBody);
+            virtueResponse.body(newBody);
         }
     }
 }

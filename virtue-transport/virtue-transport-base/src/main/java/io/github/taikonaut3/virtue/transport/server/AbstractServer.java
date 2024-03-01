@@ -50,7 +50,7 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
             return;
         }
         if (!isInit) {
-            init();
+            doInit();
             isInit = true;
         }
         doBind();
@@ -87,7 +87,7 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
         return null;
     }
 
-    protected abstract void init() throws BindException;
+    protected abstract void doInit() throws BindException;
 
     protected abstract void doBind() throws BindException;
 

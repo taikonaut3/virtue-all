@@ -48,6 +48,7 @@ public final class NettyCustomCodec {
     class NettyDecoder extends LengthFieldBasedFrameDecoder {
 
         public NettyDecoder(int maxFrameLength) {
+            // First int is total length
             super(maxFrameLength, 0, 4, 0, 4, true);
         }
 
@@ -55,6 +56,7 @@ public final class NettyCustomCodec {
         protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
             ByteBuf byteBuf = (ByteBuf) super.decode(ctx, in);
             if (byteBuf != null) {
+                // 这里会拷贝数据
                 byte[] bytes = new byte[byteBuf.readableBytes()];
                 byteBuf.readBytes(bytes);
                 return codec.decode(bytes);
@@ -62,6 +64,10 @@ public final class NettyCustomCodec {
             return null;
         }
 
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            super.exceptionCaught(ctx, cause);
+        }
     }
 
 }
