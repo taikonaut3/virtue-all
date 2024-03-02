@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.taikonaut3</groupId>
+        <artifactId>virtue-all</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>virtue-test</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-boot-starter</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-serialization-protobuf</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-spring-boot-starter</artifactId>
+            <version>1.5.36</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocExecutable>C:\dev\protoc-25.3\bin\protoc.exe</protocExecutable>
+                    <!--proto文件所在目录-->
+                    <!--  <protoSourceRoot>src/main/proto</protoSourceRoot> -->
+                    <!--产出java文件的目标目录-->
+                    <outputDirectory>src/test/java</outputDirectory>
+                    <!--是否清空上面配置目录outputDirectory-->
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -102,10 +102,9 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         Options ops = getOptions();
         // check
         checkAsyncReturnType(method);
-        checkDirectUrl(ops.url());
+        checkDirectUrl(ops);
         // set
         router(ops.router());
-        directUrl(ops.url());
         timeout(ops.timeout());
         retires(ops.retires());
         directory(ops.directory());
@@ -131,7 +130,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     public void start() {
         if (!remoteCaller().lazyDiscover()) {
             if(registryConfigs==null || registryConfigs.isEmpty()){
-                logger.warn("Can't find registryConfig(s)");
+                logger.warn("Can't find RegistryConfig(s)");
             }else {
                 for (URL registryUrl : registryConfigUrls) {
                     RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
@@ -181,7 +180,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         Object result = null;
         try {
             List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
-            Invocation invocation = Invocation.create(url, args, this::governanceCall);
+            Invocation invocation = Invocation.create(url, args);
+            invocation.revise(() -> doRpcCall(invocation));
             result = filterChain.filter(invocation, preFilters);
         } catch (RpcException e) {
             logger.error("Remote Call Exception " + this, e);
@@ -193,14 +193,13 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     @Override
     public Object call(Invocation invocation) throws RpcException {
-        try {
-            List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-            invocation.revise(this::directRemoteCall);
-            RpcFuture future = (RpcFuture) filterChain.filter(invocation, postFilters);
+        String faultToleranceKey = invocation.url().getParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_FAST);
+        FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceKey);
+        invocation.revise(() -> {
+            RpcFuture future = send(invocation);
             return async() ? future : future.get();
-        } catch (Exception e) {
-            throw new RpcException(e);
-        }
+        });
+        return faultTolerance.operation(invocation);
     }
 
     @Override
@@ -236,7 +235,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         return url;
     }
 
-    protected Object governanceCall(Invocation invocation) {
+    protected Object doRpcCall(Invocation invocation) {
         try {
             URL url = invocation.url();
             ClientCaller<?> caller = (ClientCaller<?>) invocation.callArgs().caller();
@@ -265,17 +264,15 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
                 url.address(selectedServiceUrl.address()).addParameters(selectedServiceUrl.parameters());
             }
             // Invocation revise
-            invocation.revise(caller::call);
-            // faultTolerance call
-            String faultToleranceKey = url.getParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_FAST);
-            FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceKey);
-            return faultTolerance.operation(invocation);
+            invocation.revise(() -> call(invocation));
+            List<Filter> postFilters = FilterScope.POST.filterScope(filters);
+            return filterChain.filter(invocation, postFilters);
         } catch (RpcException e) {
             throw new RpcException(e);
         }
     }
 
-    protected RpcFuture directRemoteCall(Invocation invocation) {
+    protected RpcFuture send(Invocation invocation) {
         URL url = invocation.url();
         CallArgs callArgs = invocation.callArgs();
         Client client = getClient(url.address());
@@ -310,13 +307,19 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         }
     }
 
-    private void checkDirectUrl(String url) {
+    private void checkDirectUrl(Options options) {
+        String url = options.url();
         if (!StringUtil.isBlank(url)) {
             try {
                 NetUtil.toInetSocketAddress(url);
+                directUrl(url);
             } catch (IllegalArgumentException e) {
                 logger.error("Illegal direct connection address", e);
                 throw new IllegalArgumentException(e);
+            }
+        } else {
+            if (remoteCaller().url() != null) {
+                directUrl(remoteCaller().url().toString());
             }
         }
     }

@@ -11,6 +11,8 @@ import io.github.taikonaut3.virtue.event.AbstractEventDispatcher;
 import io.github.taikonaut3.virtue.event.Event;
 import io.github.taikonaut3.virtue.event.EventListener;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,14 +72,14 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     protected <E extends Event<?>> void doDispatchEvent(E event) {
         ringBuffer.publishEvent((eventHolder, sequence) -> {
             EventHolder<E> holder = (EventHolder<E>) eventHolder;
-            holder.setEvent(event);
+            holder.event(event);
         });
         logger.trace("DispatchEvent ({})", event.getClass().getSimpleName());
     }
 
     @SuppressWarnings("unchecked")
     private <E extends Event<?>> void handleEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) {
-        E event = holder.getEvent();
+        E event = holder.event();
         List<EventListener<?>> listeners = listenerMap.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
                 .flatMap(entry -> entry.getValue().stream())
@@ -96,14 +98,10 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     }
 
     @Getter
+    @Setter
+    @Accessors(fluent = true)
     private static class EventHolder<E extends Event<?>> {
-
         private E event;
-
-        public void setEvent(E event) {
-            this.event = event;
-        }
-
     }
 
 }

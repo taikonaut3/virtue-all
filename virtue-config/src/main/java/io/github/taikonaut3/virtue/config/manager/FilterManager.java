@@ -17,8 +17,8 @@ public class FilterManager extends AbstractRuleManager<Filter> {
 
     @Override
     protected void doExecuteRules(Filter filter, List<ServerCaller<?>> matchedServerCallers, List<ClientCaller<?>> matchedClientCallers) {
-        matchedServerCallers.forEach(ServerCaller::addFilter);
-        matchedClientCallers.forEach(ClientCaller::addFilter);
+        matchedServerCallers.forEach(item->item.addFilter(filter));
+        matchedClientCallers.forEach(item->item.addFilter(filter));
     }
 
 }

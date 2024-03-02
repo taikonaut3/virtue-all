@@ -30,7 +30,7 @@ public class RegistryConfigManager extends AbstractRuleManager<RegistryConfig> {
 
     @Override
     protected void doExecuteRules(RegistryConfig config, List<ServerCaller<?>> matchedServerCallers, List<ClientCaller<?>> matchedClientCallers) {
-        matchedClientCallers.forEach(ClientCaller::addRegistryConfig);
+        matchedClientCallers.forEach(item -> item.addRegistryConfig(config));
     }
 
 }

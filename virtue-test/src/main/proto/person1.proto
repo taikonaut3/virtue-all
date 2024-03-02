@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package protobuf.p1;
+option java_outer_classname = "PersonProto1";
+
+message Address1 {
+  string street = 1;
+  string city = 2;
+  string zip = 3;
+}
+
+message Contact1 {
+  string email = 1;
+  string phone = 2;
+}
+
+message Person1 {
+  string name = 1;
+  int32 age = 2;
+  Address1 home_address = 3;
+  repeated Contact1 contacts = 4;
+}

@@ -57,9 +57,10 @@ public class HttpClientCaller extends AbstractClientCaller<HttpCall> {
     }
 
     @Override
-    protected RpcFuture directRemoteCall(Invocation invocation) {
-        RpcFuture future = super.directRemoteCall(invocation);
+    protected RpcFuture send(Invocation invocation) {
+        RpcFuture future = super.send(invocation);
         future.completeConsumer(f -> ((HttpProtocol) protocolInstance).returnClient(f.client()));
         return future;
     }
+
 }

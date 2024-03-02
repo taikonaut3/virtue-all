@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * Registry Global Default Listeners
+ * Registry Global Default Listeners and Open Server
  */
 @ServiceProvider("bootstrapConfiguration")
 public class BootStrapConfiguration implements VirtueConfiguration {
@@ -56,7 +56,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
                     registry.register(serverUrl);
                 }
             }
-            // 开启协议端口
+            // Open Server
             Protocol<?, ?> protocol = ExtensionLoader.loadService(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
         }

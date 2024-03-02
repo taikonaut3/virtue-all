@@ -1,6 +1,6 @@
 package io.github.taikonaut3.virtue.rpc.virtue;
 
-import io.github.taikonaut3.virtue.common.constant.*;
+import io.github.taikonaut3.virtue.common.constant.Key;
 import io.github.taikonaut3.virtue.common.spi.ServiceProvider;
 import io.github.taikonaut3.virtue.common.url.URL;
 import io.github.taikonaut3.virtue.config.CallArgs;
@@ -8,8 +8,6 @@ import io.github.taikonaut3.virtue.rpc.protocol.AbstractProtocol;
 import io.github.taikonaut3.virtue.rpc.virtue.client.VirtueClientChannelHandlerChain;
 import io.github.taikonaut3.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.github.taikonaut3.virtue.rpc.virtue.envelope.VirtueResponse;
-import io.github.taikonaut3.virtue.rpc.virtue.header.Header;
-import io.github.taikonaut3.virtue.rpc.virtue.header.VirtueHeader;
 import io.github.taikonaut3.virtue.rpc.virtue.server.VirtueServerChannelHandlerChain;
 import io.github.taikonaut3.virtue.transport.channel.ChannelHandler;
 import io.github.taikonaut3.virtue.transport.client.Client;
@@ -52,26 +50,14 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
 
     @Override
     public VirtueRequest createRequest(URL url, CallArgs args) {
-        url.addParameter(Key.ENVELOPE, Components.Envelope.REQUEST);
-        return new VirtueRequest(createHeader(url, Components.Envelope.REQUEST), args);
+        url.addParameter(Key.BODY_TYPE, args.getClass().getName());
+        return new VirtueRequest(url, args);
     }
 
     @Override
     public VirtueResponse createResponse(URL url, Object payload) {
-        url.addParameter(Key.ENVELOPE, Components.Envelope.RESPONSE);
-        return new VirtueResponse(createHeader(url, Components.Envelope.RESPONSE), payload);
-    }
-
-    private Header createHeader(URL url, String envelope) {
-        String serialize = url.getParameter(Key.SERIALIZE, Constant.DEFAULT_SERIALIZE);
-        String compression = url.getParameter(Key.COMPRESSION, Components.Compression.GZIP);
-        Mode serializeMode = ModeContainer.getMode(Key.SERIALIZE, serialize);
-        Mode envelopeMode = ModeContainer.getMode(Key.ENVELOPE, envelope);
-        Mode protocolMode = ModeContainer.getMode(Key.PROTOCOL, protocol());
-        Mode compressionMode = ModeContainer.getMode(Key.COMPRESSION, compression);
-        VirtueHeader header = new VirtueHeader(protocolMode, envelopeMode, serializeMode, compressionMode);
-        header.addExtendData(Key.URL, url.toString());
-        return header;
+        url.addParameter(Key.BODY_TYPE, payload.getClass().getName());
+        return new VirtueResponse(url, payload);
     }
 
     private Client getClient(URL url, ChannelHandler handler, Codec codec, String key, Map<String, Client> clients) {

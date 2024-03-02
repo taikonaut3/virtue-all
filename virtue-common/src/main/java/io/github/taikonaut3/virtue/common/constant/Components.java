@@ -33,6 +33,8 @@ public interface Components {
 
         String HTTP = "http";
 
+        String HTTP1 = "http1.1";
+
     }
 
     interface Registry {
@@ -58,6 +60,8 @@ public interface Components {
         String KRYO = "kryo";
 
         String MSGPACK = "msgpack";
+
+        String PROTOBUF = "protobuf";
 
     }
 

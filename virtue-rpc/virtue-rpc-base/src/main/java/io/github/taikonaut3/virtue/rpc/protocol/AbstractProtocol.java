@@ -25,8 +25,6 @@ public abstract class AbstractProtocol<Req, Res> implements Protocol<Req, Res> {
 
     protected Transporter transporter;
 
-
-
     public AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec,
                             ChannelHandler clientHandler, ChannelHandler serverHandler,
                             ProtocolParser protocolParser) {

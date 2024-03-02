@@ -13,16 +13,20 @@ public class ParentObject implements Serializable {
     // getters 和 setters
 
     public static List<ParentObject> getObjList() {
+        return getObjList("");
+    }
+
+    public static List<ParentObject> getObjList(String content) {
         ArrayList<ParentObject> parentObjects = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             ParentObject parent = new ParentObject();
-            parent.setSomeValue("Client Parent Value" + i + i + i);
+            parent.setSomeValue(content + " Client Parent Value" + i + i + i);
 
             ChildObject child = new ChildObject();
-            child.setSomeValue("Child Value" + i + i + i);
+            child.setSomeValue(content + " Child Value" + i + i + i);
 
             GrandchildObject grandchild = new GrandchildObject();
-            grandchild.setSomeValue("Grandchild Value" + i + i + i);
+            grandchild.setSomeValue(content + " Grandchild Value" + i + i + i);
 
             // 将子对象和孙子对象添加到父对象中
             child.setGrandchild(grandchild);

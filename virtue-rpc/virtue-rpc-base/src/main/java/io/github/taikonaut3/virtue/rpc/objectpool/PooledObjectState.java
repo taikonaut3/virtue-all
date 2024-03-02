@@ -5,8 +5,8 @@ import io.github.taikonaut3.virtue.rpc.objectpool.listener.PooledObjectEvent;
 import io.github.taikonaut3.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
 
 /**
- * @author Chang Liu
  * 池中对象的状态
+ * @author Chang Liu
  */
 public enum PooledObjectState {
     /**

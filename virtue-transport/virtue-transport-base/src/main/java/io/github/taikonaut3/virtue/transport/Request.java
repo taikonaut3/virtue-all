@@ -4,6 +4,7 @@ import io.github.taikonaut3.virtue.common.constant.Key;
 import io.github.taikonaut3.virtue.common.extension.AttributeKey;
 import io.github.taikonaut3.virtue.common.url.URL;
 import io.github.taikonaut3.virtue.common.util.DateUtil;
+import io.github.taikonaut3.virtue.common.util.StringUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -30,11 +31,17 @@ public class Request implements Envelope {
     }
 
     public Request(URL url, Object message) {
-        id = INCREASE.getAndIncrement();
-        String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
-        url.addParameter(Key.TIMESTAMP, timestamp);
-        url.addParameter(Key.ENVELOPE, Key.REQUEST);
-        url.addParameter(Key.UNIQUE_ID, String.valueOf(id));
+        String uniqueId = url.getParameter(Key.UNIQUE_ID);
+        if (StringUtil.isBlank(uniqueId)) {
+            id = INCREASE.getAndIncrement();
+            String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
+            url.addParameter(Key.TIMESTAMP, timestamp);
+            url.addParameter(Key.ENVELOPE, Key.REQUEST);
+            url.addParameter(Key.UNIQUE_ID, String.valueOf(id));
+        } else {
+            id = Long.parseLong(uniqueId);
+        }
+        this.oneway = url.getBooleanParameter(Key.ONEWAY);
         this.url = url;
         this.message = message;
 

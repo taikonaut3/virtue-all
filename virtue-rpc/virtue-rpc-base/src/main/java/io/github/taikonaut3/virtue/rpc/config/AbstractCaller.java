@@ -138,4 +138,9 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
         ConfigManager manager = virtue.configManager();
         Optional.ofNullable(filterNames).ifPresent(names -> Arrays.stream(names).map(manager.filterManager()::get).filter(Objects::nonNull).forEach(this::addFilter));
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "[" + path() + "]." + method.toString();
+    }
 }

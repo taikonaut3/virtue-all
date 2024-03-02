@@ -48,7 +48,7 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
         }
         // When reconnecting, there is no need to initialize again
         if (!isInit) {
-            init();
+            doInit();
             isInit = true;
         }
         doConnect();
@@ -75,7 +75,7 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
         return this.getClass().getSimpleName() + " connect to " + NetUtil.getAddress(toInetSocketAddress());
     }
 
-    protected abstract void init() throws ConnectException;
+    protected abstract void doInit() throws ConnectException;
 
     protected abstract void doConnect() throws ConnectException;
 

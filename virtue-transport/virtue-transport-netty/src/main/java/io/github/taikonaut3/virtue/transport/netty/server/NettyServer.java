@@ -36,7 +36,7 @@ public final class NettyServer extends AbstractServer {
     }
 
     @Override
-    protected void init() throws BindException {
+    protected void doInit() throws BindException {
         bootstrap = new ServerBootstrap();
         bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("NettyServerBoss", true));
         workerGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyServerWorker", true));

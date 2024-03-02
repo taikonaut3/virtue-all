@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 public @interface RemoteCaller {
 
     /**
-     * The remoteApplication name
+     * The remoteApplication name or URL
      */
     String value();
 
