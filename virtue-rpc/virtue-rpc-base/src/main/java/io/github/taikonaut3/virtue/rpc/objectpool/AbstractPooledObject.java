@@ -10,7 +10,7 @@ public abstract class AbstractPooledObject<T> implements PooledObject<T>{
 
     protected final T object;
     protected final Instant createInstant = Instant.now();
-    protected PooledObjectState state = PooledObjectState.IDLE;
+    protected volatile PooledObjectState state = PooledObjectState.IDLE;
 
     protected AbstractPooledObject(T object){
         this.object = object;
