@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     private final PooledObject<T>[] pooledObjectArr;
     private final ReentrantLock mainLock = new ReentrantLock();
-    private final Condition notEmpty = mainLock.newCondition();
+    private final Condition available = mainLock.newCondition();
     private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
 
     public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory, ObjectPoolConfig poolConfig) {
@@ -41,7 +41,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         try{
             // keep waiting
             while(Objects.isNull(t)){
-                notEmpty.await();
+                available.await();
                 t = get();
             }
         }finally {
@@ -77,7 +77,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
                 if(remaining <= 0L){
                     return null;
                 }
-                remaining = notEmpty.awaitNanos(timeUnit.toNanos(remaining));
+                remaining = available.awaitNanos(timeUnit.toNanos(remaining));
                 if(remaining <= 0L){
                     return null;
                 }
@@ -113,7 +113,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
         }
         mainLock.lock();
         try{
-            notEmpty.signal();
+            available.signal();
         }finally {
             mainLock.unlock();
         }
@@ -135,7 +135,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
             }
             pooledObjectArr[size] = pooledObject;
             pooledObject.state(PooledObjectState.IDLE);
-            notEmpty.signal();
+            available.signal();
             size++;
             createdCount.incrementAndGet();
         }finally {
