@@ -12,9 +12,11 @@ import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.K
 @ServiceProvider(value = KRYO)
 public class KryoSerializer implements Serializer {
 
-    // Kryo is not thread safe. Each thread should have its own Kryo, Input, and Output instances.
     private static final int BUFFER_SIZE = 4096; // 设置较大的缓冲区大小
 
+    /**
+     * Kryo is not thread safe. Each thread should have its own Kryo, Input, and Output instances.
+     */
     private final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
         kryo.setRegistrationRequired(false);

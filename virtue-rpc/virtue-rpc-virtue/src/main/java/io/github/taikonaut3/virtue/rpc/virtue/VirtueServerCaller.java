@@ -29,7 +29,8 @@ public class VirtueServerCaller extends AbstractServerCaller<VirtueCallable> {
     @Override
     public void doInit() {
         this.remoteService = remoteService().name();
-        this.callMethod = StringUtil.isBlank(parsedAnnotation.name()) ? GenerateUtil.generateKey(method()) : parsedAnnotation.name();
+        this.callMethod = StringUtil.isBlank(parsedAnnotation.name()) ?
+                GenerateUtil.generateKey(method()) : parsedAnnotation.name();
     }
 
     @Override

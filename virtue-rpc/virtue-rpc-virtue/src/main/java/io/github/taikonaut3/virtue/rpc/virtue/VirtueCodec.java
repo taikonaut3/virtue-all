@@ -225,7 +225,7 @@ public class VirtueCodec implements Codec {
             try {
                 noArgsConstructor = (Constructor<? extends VirtueEnvelope>) decodedClass.getConstructor();
             } catch (NoSuchMethodException ex) {
-                logger.error("Can't find available Constructor,Need Envelope() or Envelope(Header,Object)", e);
+                logger.error("Can't find available Constructor,Need Envelope() or Envelope(URL,Object)", e);
             }
         }
     }
