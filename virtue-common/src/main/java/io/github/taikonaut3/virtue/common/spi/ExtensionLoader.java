@@ -160,11 +160,6 @@ public class ExtensionLoader<S> {
     }
 
     public S getDefault() {
-        if (!StringUtil.isBlank(defaultService)) {
-            if (services.size() > 1) {
-                throw new IllegalArgumentException(this.type + " have Multi service Unknown Who is default loaded");
-            }
-        }
         return getService(defaultService);
     }
 
