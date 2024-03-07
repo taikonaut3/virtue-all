@@ -1,6 +1,6 @@
 package io.github.taikonaut3.virtue.config;
 
-import io.github.taikonaut3.virtue.common.url.URL;
+import java.net.InetSocketAddress;
 
 /**
  * Remote caller for invoking remote service methods.
@@ -32,7 +32,7 @@ public interface RemoteCaller<T> extends CallerContainer {
     /**
      * Direct url
      */
-    URL url();
+    InetSocketAddress directAddress();
 
 }
 

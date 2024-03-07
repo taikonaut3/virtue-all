@@ -1,8 +1,8 @@
 package io.github.taikonaut3.virtue.rpc;
 
 import io.github.taikonaut3.virtue.common.spi.ExtensionLoader;
-import io.github.taikonaut3.virtue.common.url.URL;
 import io.github.taikonaut3.virtue.common.util.AssertUtil;
+import io.github.taikonaut3.virtue.common.util.NetUtil;
 import io.github.taikonaut3.virtue.common.util.ReflectUtil;
 import io.github.taikonaut3.virtue.config.*;
 import io.github.taikonaut3.virtue.config.annotation.CallerFactoryProvider;
@@ -14,6 +14,7 @@ import io.github.taikonaut3.virtue.rpc.config.AbstractCallerContainer;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 
 @ToString
 public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements RemoteCaller<T> {
@@ -27,7 +28,7 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
 
     private boolean lazyDiscover;
 
-    private URL url;
+    private InetSocketAddress directAddress;
 
     public ComplexRemoteCaller(Virtue virtue, Class<T> target) {
         super(virtue);
@@ -63,8 +64,8 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
     }
 
     @Override
-    public URL url() {
-        return url;
+    public InetSocketAddress directAddress() {
+        return directAddress;
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
         io.github.taikonaut3.virtue.config.annotation.RemoteCaller remoteCaller = targetInterface.getAnnotation(REMOTE_CALL_CLASS);
         String value = remoteCaller.value();
         try {
-            url = URL.valueOf(value);
+            directAddress = NetUtil.toInetSocketAddress(value);
         } catch (Exception e) {
             remoteApplication = value;
         }

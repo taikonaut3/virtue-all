@@ -318,8 +318,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
                 throw new IllegalArgumentException(e);
             }
         } else {
-            if (remoteCaller().url() != null) {
-                directUrl(remoteCaller().url().toString());
+            if (remoteCaller().directAddress() != null) {
+                directUrl(NetUtil.getAddress(remoteCaller().directAddress()));
             }
         }
     }
