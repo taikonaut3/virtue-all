@@ -12,6 +12,9 @@
     <artifactId>virtue-dependencies-bom</artifactId>
     <packaging>pom</packaging>
 
+    <name>${project.artifactId}</name>
+    <description>Virtue Dependencies Bom.</description>
+
     <properties>
         <junit.version>5.10.2</junit.version>
         <slf4j.version>2.0.9</slf4j.version>
@@ -337,55 +340,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <name>${project.artifactId}</name>
-    <description>Virtue Dependencies Bom.</description>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/${project.artifactId}</url>
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>taikonaut3</name>
-            <email>wenbochou@163.com</email>
-            <organization>Sonatype</organization>
-            <organizationUrl>http://www.sonatype.com</organizationUrl>
-        </developer>
-    </developers>
-    <scm>
-        <connection>scm:git:git://github.com/taikonaut3/virtue-all.git</connection>
-        <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git</developerConnection>
-        <url>http://github.com/taikonaut3/virtue-all/tree/master/${project.artifactId}</url>
-    </scm>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                    <flattenMode>bom</flattenMode>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                        <phase>clean</phase>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

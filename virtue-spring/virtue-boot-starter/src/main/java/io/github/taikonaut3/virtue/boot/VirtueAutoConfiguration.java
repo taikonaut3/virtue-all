@@ -20,7 +20,7 @@ public class VirtueAutoConfiguration {
     }
 
     @Bean
-    public SpringBootVirtueStarter springBootvirtueStarter() {
+    public SpringBootVirtueStarter springBootVirtueStarter() {
         return new SpringBootVirtueStarter();
     }
 
