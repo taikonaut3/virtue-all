@@ -12,6 +12,17 @@
 
     <artifactId>virtue-all</artifactId>
     <packaging>pom</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>Virtue RPC Framework.</description>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/taikonaut3/virtue-all.git</connection>
+        <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git</developerConnection>
+        <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
+    </scm>
+
     <modules>
         <module>virtue-common</module>
         <module>virtue-config</module>
@@ -27,6 +38,7 @@
         <module>virtue-test</module>
         <module>virtue-maven</module>
     </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -38,6 +50,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -45,16 +58,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <name>${project.artifactId}</name>
-    <description>Virtue RPC Framework.</description>
-    <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
-
-    <scm>
-        <connection>scm:git:https://github.com/taikonaut3/virtue-all.git</connection>
-        <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git</developerConnection>
-        <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
-    </scm>
 
     <build>
         <plugins>

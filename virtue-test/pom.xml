@@ -15,25 +15,16 @@
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-boot-starter</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-serialization-protobuf</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.dtflys.forest</groupId>
-            <artifactId>forest-spring-boot-starter</artifactId>
-            <version>1.5.36</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -41,7 +32,6 @@
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.6.1</version>
                 <configuration>
                     <protocExecutable>C:\dev\protoc-25.3\bin\protoc.exe</protocExecutable>
                     <!--proto文件所在目录-->

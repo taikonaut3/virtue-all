@@ -21,32 +21,26 @@
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-boot-starter</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-rpc-http</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-serialization-msgpack</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-registry-nacos</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-proxy-cglib</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-proxy-bytebuddy</artifactId>
-            <version>${revision}</version>
         </dependency>
 <!--         <dependency> -->
 <!--             <groupId>io.github.taikonaut3naut3</groupId> -->

@@ -15,13 +15,11 @@
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-proxy-base</artifactId>
-            <version>${revision}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>6.1.2</version>
         </dependency>
 
     </dependencies>
