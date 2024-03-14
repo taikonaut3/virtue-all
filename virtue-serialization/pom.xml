@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>virtue-serialization-base</module>
+        <module>virtue-serialization-api</module>
         <module>virtue-serialization-fury</module>
         <module>virtue-serialization-jdk</module>
         <module>virtue-serialization-json</module>

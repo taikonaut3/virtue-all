@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-rpc-base</artifactId>
+            <artifactId>virtue-rpc-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>

@@ -1,7 +1,7 @@
 package monitor;
 
-import io.github.taikonaut3.virtue.config.SystemInfo;
-import io.github.taikonaut3.virtue.config.manager.Virtue;
+import io.virtue.config.SystemInfo;
+import io.virtue.config.manager.Virtue;
 import org.junit.jupiter.api.Test;
 
 /**

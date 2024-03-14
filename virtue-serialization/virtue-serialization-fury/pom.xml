@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-serialization-base</artifactId>
+            <artifactId>virtue-serialization-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.furyio</groupId>

@@ -1,7 +1,7 @@
 package objectpool;
 
-import io.github.taikonaut3.virtue.config.manager.Virtue;
-import io.github.taikonaut3.virtue.rpc.objectpool.ArrayObjectPool;
+import io.virtue.config.manager.Virtue;
+import io.virtue.rpc.objectpool.ArrayObjectPool;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

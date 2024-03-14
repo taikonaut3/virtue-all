@@ -14,7 +14,7 @@
         </encoder>
     </appender>
     <conversionRule conversionWord="clr"
-                    converterClass="io.github.taikonaut3.virtue.common.logback.LevelHighlightConverter"/>
+                    converterClass="io.virtue.common.logback.LevelHighlightConverter"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNC"/>

@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>virtue-transport-base</module>
+        <module>virtue-transport-api</module>
         <module>virtue-transport-netty</module>
     </modules>
 

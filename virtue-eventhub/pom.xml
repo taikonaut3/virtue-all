@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>virtue-eventhub-base</module>
+        <module>virtue-eventhub-api</module>
         <module>virtue-eventhub-disruptor</module>
         <module>virtue-eventhub-flow</module>
     </modules>

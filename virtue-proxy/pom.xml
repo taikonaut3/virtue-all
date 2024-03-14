@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>virtue-proxy-base</module>
+        <module>virtue-proxy-api</module>
         <module>virtue-proxy-cglib</module>
         <module>virtue-proxy-jdk</module>
         <module>virtue-proxy-bytebuddy</module>

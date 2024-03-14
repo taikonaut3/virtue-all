@@ -14,13 +14,13 @@
         </encoder>
     </appender>
     <conversionRule conversionWord="clr"
-                    converterClass="io.github.taikonaut3.virtue.common.logback.LevelHighlightConverter"/>
+                    converterClass="io.virtue.common.logback.LevelHighlightConverter"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNC"/>
     </root>
 
     <!-- 定义要打印的包 -->
-    <logger name="io.github.taikonaut3.virtue" level="DEBUG"/>
+    <logger name="io.virtue" level="DEBUG"/>
 
 </configuration>

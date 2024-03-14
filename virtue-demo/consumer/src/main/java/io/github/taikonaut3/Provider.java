@@ -1,10 +1,10 @@
 package io.github.taikonaut3;
 
-import io.github.taikonaut3.virtue.config.annotation.Config;
-import io.github.taikonaut3.virtue.config.annotation.RemoteService;
-import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCallable;
+import io.virtue.config.annotation.Config;
+import io.virtue.config.annotation.RemoteService;
+import io.virtue.rpc.virtue.config.VirtueCallable;
 
-import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.JSON;
+import static io.virtue.common.constant.Components.Serialize.JSON;
 
 @RemoteService("345")
 public class Provider {

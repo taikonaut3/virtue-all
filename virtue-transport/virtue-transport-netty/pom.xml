@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-transport-base</artifactId>
+            <artifactId>virtue-transport-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>

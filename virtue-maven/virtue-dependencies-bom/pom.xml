@@ -212,7 +212,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-eventhub-base</artifactId>
+                <artifactId>virtue-eventhub-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -227,7 +227,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-proxy-base</artifactId>
+                <artifactId>virtue-proxy-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -257,7 +257,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-registry-base</artifactId>
+                <artifactId>virtue-registry-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -277,7 +277,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-rpc-base</artifactId>
+                <artifactId>virtue-rpc-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -297,7 +297,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-serialization-base</artifactId>
+                <artifactId>virtue-serialization-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -337,7 +337,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-transport-base</artifactId>
+                <artifactId>virtue-transport-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

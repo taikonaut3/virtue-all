@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>virtue-rpc-base</module>
+        <module>virtue-rpc-api</module>
         <module>virtue-rpc-virtue</module>
         <module>virtue-rpc-http</module>
     </modules>

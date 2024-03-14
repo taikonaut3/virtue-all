@@ -1,20 +1,20 @@
 package io.github.taikonaut3;
 
 import io.github.taikonaut3.model.ParentObject;
-import io.github.taikonaut3.virtue.common.constant.Components;
-import io.github.taikonaut3.virtue.config.annotation.Config;
-import io.github.taikonaut3.virtue.config.annotation.Options;
-import io.github.taikonaut3.virtue.config.annotation.RemoteCaller;
-import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCall;
-import io.github.taikonaut3.virtue.rpc.virtue.envelope.VirtueResponse;
-import io.github.taikonaut3.virtue.transport.Response;
+import io.virtue.common.constant.Components;
+import io.virtue.config.annotation.Config;
+import io.virtue.config.annotation.Options;
+import io.virtue.config.annotation.RemoteCaller;
+import io.virtue.rpc.virtue.config.VirtueCall;
+import io.virtue.rpc.virtue.envelope.VirtueResponse;
+import io.virtue.transport.Response;
 import org.example.Message;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.JSON;
-import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.MSGPACK;
+import static io.virtue.common.constant.Components.Serialize.JSON;
+import static io.virtue.common.constant.Components.Serialize.MSGPACK;
 
 @RemoteCaller(value = "provider")
 public interface Consumer {

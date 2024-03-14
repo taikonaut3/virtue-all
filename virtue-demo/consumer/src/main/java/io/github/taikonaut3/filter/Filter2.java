@@ -1,10 +1,10 @@
 package io.github.taikonaut3.filter;
 
-import io.github.taikonaut3.virtue.common.constant.Components;
-import io.github.taikonaut3.virtue.common.constant.Key;
-import io.github.taikonaut3.virtue.common.url.URL;
-import io.github.taikonaut3.virtue.config.Invocation;
-import io.github.taikonaut3.virtue.config.filter.Filter;
+import io.virtue.common.constant.Components;
+import io.virtue.common.constant.Key;
+import io.virtue.common.url.URL;
+import io.virtue.config.Invocation;
+import io.virtue.config.filter.Filter;
 import org.springframework.stereotype.Component;
 
 @Component

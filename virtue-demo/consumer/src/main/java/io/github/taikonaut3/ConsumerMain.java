@@ -3,11 +3,11 @@ package io.github.taikonaut3;
 import io.github.taikonaut3.filter.Filter1;
 import io.github.taikonaut3.filter.Filter2;
 import io.github.taikonaut3.model.ParentObject;
-import io.github.taikonaut3.virtue.boot.EnableVirtue;
-import io.github.taikonaut3.virtue.config.MatchRule;
-import io.github.taikonaut3.virtue.config.config.RegistryConfig;
-import io.github.taikonaut3.virtue.config.config.ServerConfig;
-import io.github.taikonaut3.virtue.config.manager.Virtue;
+import io.virtue.boot.EnableVirtue;
+import io.virtue.config.MatchRule;
+import io.virtue.config.config.RegistryConfig;
+import io.virtue.config.config.ServerConfig;
+import io.virtue.config.manager.Virtue;
 import org.example.Message;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Bean;
 import java.util.Date;
 import java.util.List;
 
-import static io.github.taikonaut3.virtue.common.constant.Components.Protocol.VIRTUE;
-import static io.github.taikonaut3.virtue.common.constant.Components.Registry.CONSUL;
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
+import static io.virtue.common.constant.Components.Registry.CONSUL;
 
 @SpringBootApplication
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")

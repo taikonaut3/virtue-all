@@ -1,6 +1,6 @@
 package protobuf;
 
-import io.github.taikonaut3.virtue.serialization.protobuf.ProtobufSerializer;
+import io.virtue.serialization.protobuf.ProtobufSerializer;
 import org.junit.jupiter.api.Test;
 import protobuf.p1.PersonProto1;
 import protobuf.p2.PersonProto2;

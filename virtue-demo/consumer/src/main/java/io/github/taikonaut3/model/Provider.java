@@ -1,12 +1,12 @@
 package io.github.taikonaut3.model;
 
-import io.github.taikonaut3.virtue.config.annotation.Config;
-import io.github.taikonaut3.virtue.config.annotation.RemoteService;
-import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCallable;
+import io.virtue.config.annotation.Config;
+import io.virtue.config.annotation.RemoteService;
+import io.virtue.rpc.virtue.config.VirtueCallable;
 
 import java.util.List;
 
-import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.MSGPACK;
+import static io.virtue.common.constant.Components.Serialize.MSGPACK;
 
 @RemoteService("345")
 public class Provider {

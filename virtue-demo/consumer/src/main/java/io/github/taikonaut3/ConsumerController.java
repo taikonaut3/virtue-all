@@ -1,7 +1,7 @@
 package io.github.taikonaut3;
 
 import io.github.taikonaut3.model.ParentObject;
-import io.github.taikonaut3.virtue.config.manager.Virtue;
+import io.virtue.config.manager.Virtue;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
