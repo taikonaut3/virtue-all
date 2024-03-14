@@ -93,7 +93,7 @@ public class RpcFuture extends CompletableFuture<Object> {
     }
 
     public int timeout() {
-        return Integer.parseInt(url.getParameter(Key.TIMEOUT));
+        return url.getIntParameter(Key.TIMEOUT);
     }
 
     public Type returnType() {

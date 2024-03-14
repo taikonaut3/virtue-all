@@ -8,20 +8,6 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>0.0.5-alpha</revision>
-        <plugin.gpg.version>3.1.0</plugin.gpg.version>
-        <plugin.compiler.version>3.1</plugin.compiler.version>
-        <plugin.javadoc.version>3.6.3</plugin.javadoc.version>
-        <plugin.source.version>3.3.0</plugin.source.version>
-        <plugin.central-publishing.version>0.3.0</plugin.central-publishing.version>
-        <plugin.flatten.version>1.6.0</plugin.flatten.version>
-        <plugin.protobuf.version>0.6.1</plugin.protobuf.version>
-    </properties>
-
     <modules>
         <module>../../../virtue-all</module>
         <module>../virtue-dependencies-bom</module>
@@ -29,26 +15,41 @@
 
     <name>${project.artifactId}</name>
     <description>Virtue Parent.</description>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/${project.artifactId}</url>
+    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-maven/${project.artifactId}</url>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
     <developers>
         <developer>
             <name>taikonaut3</name>
             <email>wenbochou@163.com</email>
-            <organization>Sonatype</organization>
-            <organizationUrl>http://www.sonatype.com</organizationUrl>
         </developer>
     </developers>
+
     <scm>
         <connection>scm:git:git://github.com/taikonaut3/virtue-all.git</connection>
         <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git</developerConnection>
-        <url>http://github.com/taikonaut3/virtue-all/tree/master/${project.artifactId}</url>
+        <url>${project.url}</url>
     </scm>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>0.0.6-alpha</revision>
+        <plugin.gpg.version>3.1.0</plugin.gpg.version>
+        <plugin.compiler.version>3.8.1</plugin.compiler.version>
+        <plugin.javadoc.version>3.6.3</plugin.javadoc.version>
+        <plugin.source.version>3.3.0</plugin.source.version>
+        <plugin.central-publishing.version>0.3.0</plugin.central-publishing.version>
+        <plugin.flatten.version>1.6.0</plugin.flatten.version>
+        <plugin.protobuf.version>0.6.1</plugin.protobuf.version>
+    </properties>
 
     <build>
         <pluginManagement>
@@ -73,7 +74,6 @@
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>${plugin.gpg.version}</version>
                 </plugin>
-                <!-- 添加flatten-maven-plugin插件 -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
@@ -91,6 +91,7 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
@@ -154,7 +155,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
                 <configuration>
-                    <updatePomFile>true</updatePomFile>
                     <flattenMode>bom</flattenMode>
                 </configuration>
                 <executions>
@@ -176,6 +176,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

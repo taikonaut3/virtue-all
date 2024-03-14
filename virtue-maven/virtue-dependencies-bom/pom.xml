@@ -9,11 +9,18 @@
         <version>${revision}</version>
         <relativePath>../virtue-parent/pom.xml</relativePath>
     </parent>
+
     <artifactId>virtue-dependencies-bom</artifactId>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
     <description>Virtue Dependencies Bom.</description>
+
+    <scm>
+        <connection>scm:git:git://github.com/taikonaut3/virtue-all.git</connection>
+        <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git</developerConnection>
+        <url>${project.url}</url>
+    </scm>
 
     <properties>
         <junit.version>5.10.2</junit.version>

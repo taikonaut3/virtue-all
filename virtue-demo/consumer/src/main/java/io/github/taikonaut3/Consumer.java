@@ -8,6 +8,7 @@ import io.github.taikonaut3.virtue.config.annotation.RemoteCaller;
 import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCall;
 import io.github.taikonaut3.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.github.taikonaut3.virtue.transport.Response;
+import org.example.Message;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -31,6 +32,9 @@ public interface Consumer {
 
     @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"))
     CompletableFuture<VirtueResponse> helloDynamicRes(String world);
+
+    @VirtueCall(service = "345",callMethod = "exchangeMessage")
+    Message exchangeMessage(Message message);
 
     @Config(filters = {"filter1","filter2"},serialize = MSGPACK)
     @Options(faultTolerance = Components.FaultTolerance.FAIL_RETRY)

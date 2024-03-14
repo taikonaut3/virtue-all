@@ -11,5 +11,12 @@
 
     <artifactId>provider</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>common-model</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
 
 </project>

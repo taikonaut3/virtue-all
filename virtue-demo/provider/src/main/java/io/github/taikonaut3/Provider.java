@@ -4,7 +4,9 @@ import io.github.taikonaut3.model2.ParentObject;
 import io.github.taikonaut3.virtue.config.annotation.Config;
 import io.github.taikonaut3.virtue.config.annotation.RemoteService;
 import io.github.taikonaut3.virtue.rpc.virtue.config.VirtueCallable;
+import org.example.Message;
 
+import java.util.Date;
 import java.util.List;
 
 import static io.github.taikonaut3.virtue.common.constant.Components.Serialize.MSGPACK;
@@ -36,6 +38,13 @@ public class Provider {
     @VirtueCallable(name = "list2")
     public List<ParentObject> list2(List<ParentObject> list1, List<ParentObject> list2) {
         return ParentObject.getObjList("list server2");
+    }
+
+    @VirtueCallable(name = "exchangeMessage")
+    public Message exchangeMessage(Message message) {
+        message.setDate(new Date());
+        message.setName("server " + message.getDate().toString());
+        return message;
     }
 
 }

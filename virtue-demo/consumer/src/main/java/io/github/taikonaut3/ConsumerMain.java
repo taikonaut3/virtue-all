@@ -8,9 +8,11 @@ import io.github.taikonaut3.virtue.config.MatchRule;
 import io.github.taikonaut3.virtue.config.config.RegistryConfig;
 import io.github.taikonaut3.virtue.config.config.ServerConfig;
 import io.github.taikonaut3.virtue.config.manager.Virtue;
+import org.example.Message;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Date;
 import java.util.List;
 
 import static io.github.taikonaut3.virtue.common.constant.Components.Protocol.VIRTUE;
@@ -37,6 +39,10 @@ public class ConsumerMain {
                 .remoteCaller(Consumer.class)
                 .get();
         virtue.start();
+        Message message = new Message();
+        message.setDate(new Date());
+        message.setName("client" + message.getDate().toString());
+        Message message1 = consumer.exchangeMessage(message);
         for (int i = 0; i < 50; i++) {
             long start = System.currentTimeMillis();
             List<ParentObject> list = consumer.list(ParentObject.getObjList("client list 1"), ParentObject.getObjList("client list 2"));

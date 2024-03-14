@@ -26,7 +26,7 @@ public @interface Options {
 
     /**
      * Used {@link io.github.taikonaut3.virtue.governance.router.Router}.
-     * Default is "weight" {@link io.github.taikonaut3.virtue.governance.router.WeightRouter}.
+     * Default is "weight" {@link io.github.taikonaut3.virtue.governance.router.DefaultRouter}.
      */
     String router() default Components.DEFAULT;
 
