@@ -1,7 +1,7 @@
-//package io.github.taikonaut3.virtue.registry.zookeeper;
+//package io.virtue.registry.zookeeper;
 //
 //import url.common.io.virtue.URL;
-//import io.github.taikonaut3.virtue.registry.RegistryListener;
+//import io.virtue.registry.RegistryListener;
 //import org.apache.curator.framework.recipes.cache.ChildData;
 //import org.apache.curator.framework.recipes.cache.CuratorCacheListener;
 //

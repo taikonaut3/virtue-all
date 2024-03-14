@@ -40,7 +40,7 @@ import java.util.Objects;
  * <p>
  * Especial: Total length Reflected in the network framework (eg: Netty)
  *
- * @see io.github.taikonaut3.virtue.transport.netty.custom.NettyCustomCodec
+ * @see io.virtue.transport.netty.custom.NettyCustomCodec
  */
 @ToString
 public class VirtueCodec implements Codec {

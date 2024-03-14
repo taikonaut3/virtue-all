@@ -21,6 +21,6 @@
     </root>
 
     <!-- 定义要打印的包 -->
-    <logger name="io.github.taikonaut3.virtue" level="DEBUG"/>
+    <logger name="io.virtue" level="DEBUG"/>
 
 </configuration>

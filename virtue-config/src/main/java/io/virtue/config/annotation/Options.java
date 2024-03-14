@@ -19,26 +19,26 @@ public @interface Options {
     int timeout() default Constant.DEFAULT_TIMEOUT;
 
     /**
-     * Used {@link io.github.taikonaut3.virtue.governance.directory.Directory}.
-     * Default is "default" {@link io.github.taikonaut3.virtue.governance.directory.DefaultDirectory}.
+     * Used {@link io.virtue.governance.directory.Directory}.
+     * Default is "default" {@link io.virtue.governance.directory.DefaultDirectory}.
      */
     String directory() default Components.DEFAULT;
 
     /**
-     * Used {@link io.github.taikonaut3.virtue.governance.router.Router}.
-     * Default is "weight" {@link io.github.taikonaut3.virtue.governance.router.DefaultRouter}.
+     * Used {@link io.virtue.governance.router.Router}.
+     * Default is "weight" {@link io.virtue.governance.router.DefaultRouter}.
      */
     String router() default Components.DEFAULT;
 
     /**
-     * Used {@link io.github.taikonaut3.virtue.governance.loadbalance.LoadBalance}.
-     * Default is "random" {@link io.github.taikonaut3.virtue.governance.loadbalance.RandomLoadBalance}.
+     * Used {@link io.virtue.governance.loadbalance.LoadBalance}.
+     * Default is "random" {@link io.virtue.governance.loadbalance.RandomLoadBalance}.
      */
     String loadBalance() default Components.LoadBalance.RANDOM;
 
     /**
-     * Used {@link io.github.taikonaut3.virtue.governance.faulttolerance.FaultTolerance}.
-     * Default is "failFast" {@link io.github.taikonaut3.virtue.governance.faulttolerance.FailFast}.
+     * Used {@link io.virtue.governance.faulttolerance.FaultTolerance}.
+     * Default is "failFast" {@link io.virtue.governance.faulttolerance.FailFast}.
      */
     String faultTolerance() default Components.FaultTolerance.FAIL_FAST;
 

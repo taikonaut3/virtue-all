@@ -253,7 +253,7 @@ public interface Virtue extends Accessor, Lifecycle {
      * Get default virtue instance
      *
      * @return default virtue instance
-     * @see io.github.taikonaut3.virtue.rpc.impl.DefaultVirtue
+     * @see io.virtue.rpc.impl.DefaultVirtue
      */
     static Virtue getDefault() {
         return ExtensionLoader.loadService(Virtue.class);
