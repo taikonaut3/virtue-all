@@ -124,17 +124,10 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
 
         }
 
-        public void setValue(String value) {
-            this.value = value;
-        }
-
         public List<String> interfaces() {
             return interfaceList;
         }
 
-        public void setInterfaces(List<String> interfaceList) {
-            this.interfaceList = interfaceList;
-        }
 
         private List<String> getPropertyTypes(AnnotationValue value) {
             List<String> propertyTypes = new ArrayList<>();

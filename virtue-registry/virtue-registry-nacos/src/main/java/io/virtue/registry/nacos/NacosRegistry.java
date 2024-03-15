@@ -7,6 +7,7 @@ import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ConnectException;
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.config.manager.Virtue;
@@ -107,7 +108,7 @@ public class NacosRegistry extends AbstractRegistry {
             });
         } catch (NacosException e) {
             logger.error("Subscribe is Failed from Nacos for Service:{}", serviceName);
-            throw new RuntimeException(e);
+            throw new RpcException(e);
         }
     }
 
@@ -116,7 +117,7 @@ public class NacosRegistry extends AbstractRegistry {
         try {
             namingService.shutDown();
         } catch (NacosException e) {
-            throw new RuntimeException(e);
+            throw new RpcException(e);
         }
     }
 

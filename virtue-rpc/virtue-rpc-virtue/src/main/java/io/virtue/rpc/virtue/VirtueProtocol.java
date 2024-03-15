@@ -1,5 +1,6 @@
 package io.virtue.rpc.virtue;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
@@ -9,10 +10,7 @@ import io.virtue.rpc.virtue.client.VirtueClientChannelHandlerChain;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.rpc.virtue.server.VirtueServerChannelHandlerChain;
-import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.Client;
-import io.virtue.transport.codec.Codec;
-import io.virtue.common.constant.Components;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,10 +37,10 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
         Client client;
         if (isMultiplex) {
             String key = url.authority();
-            client = getClient(url, clientHandler, clientCodec, key, multiplexClients);
+            client = getClient(url, key, multiplexClients);
         } else {
             String key = url.uri();
-            client = getClient(url, clientHandler, clientCodec, key, customClients);
+            client = getClient(url, key, customClients);
         }
         return client;
     }
@@ -59,13 +57,13 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
         return new VirtueResponse(url, payload);
     }
 
-    private Client getClient(URL url, ChannelHandler handler, Codec codec, String key, Map<String, Client> clients) {
+    private Client getClient(URL url, String key, Map<String, Client> clients) {
         Client client;
         client = clients.get(key);
         if (client == null) {
             synchronized (this) {
                 if (clients.get(key) == null) {
-                    client = transporter.connect(url, handler, codec);
+                    client = transporter.connect(url, clientHandler, clientCodec);
                     clients.put(key, client);
                 }
             }

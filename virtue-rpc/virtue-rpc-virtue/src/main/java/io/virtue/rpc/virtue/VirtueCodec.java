@@ -27,16 +27,18 @@ import java.util.Objects;
 
 /**
  * Envelope is formed in the following Order:
- * 1、Total length of Envelope: 4 bytes
- * 2、Total length of Header: 4 bytes
- * 3、Fix length of Header: 4 bytes
- * 4、Header Data
- * 5、Body Data
+ * 1、Total Length of message: 4 bytes
+ * 2、Magic: 4 bytes
+ * 3、Message Type: 4 bytes
+ * 4、Compress Type: 1 byte
+ * 5、URL Length: 4 bytes
+ * 6、URL Data: url_length bytes
+ * 7、Body Data: residual bytes
  * <p>
- * +-----------+---------- +--------------+-------------+------------+
- * | TotalLen  | HeaderLen | FixHeaderLen | Header Data | Body Data  |
- * | (4 bytes) | (4 bytes) |  (4 bytes)   | (variable)  | (variable) |
- * +-----------+----------+---------------+-------------+------------+
+ * +-----------+----------+-------------+--------------+-----------+------------+-------------+
+ * | TotalLen  |   Magic  | MessageType | CompressType |  URLLen   |     URL    |    Body     |
+ * | (4 bytes) | (1 byte) |  (4 bytes)  |   (1 byte)   | (4 bytes) | (variable) |  (variable) |
+ * +-----------+----------+-------------+--------------+-----------+------------+-------------+
  * <p>
  * Especial: Total length Reflected in the network framework (eg: Netty)
  *
