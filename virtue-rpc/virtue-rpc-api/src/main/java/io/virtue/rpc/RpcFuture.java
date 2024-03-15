@@ -88,7 +88,8 @@ public class RpcFuture extends CompletableFuture<Object> {
         } catch (Exception e) {
             throw new RpcException(e);
         } finally {
-            RpcContext.getContext().attribute(Response.ATTRIBUTE_KEY).set(response);
+            RpcContext.currentContext().attribute(Response.ATTRIBUTE_KEY).set(response);
+            RpcContext.ResponseContext.parse(response.url());
         }
     }
 

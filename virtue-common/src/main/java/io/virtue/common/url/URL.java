@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -112,17 +115,26 @@ public class URL extends AbstractAccessor {
 
     public static String mapToUrlString(Map<String, String> parameters) {
         return parameters.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .map(entry -> encodeParam(entry.getKey()) + "=" + encodeParam(entry.getValue()))
                 .collect(Collectors.joining("&"));
     }
+
+    private static String encodeParam(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    private static String decodeParam(String value) {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
+    }
+
 
     public static Map<String, String> urlStringToMap(String params) {
         return Arrays.stream(params.split("&"))
                 .map(param -> param.split("="))
                 .filter(keyValue -> keyValue.length == 2)
                 .collect(Collectors.toMap(
-                        split -> split[0],
-                        split -> split[1]
+                        split -> decodeParam(split[0]),
+                        split -> decodeParam(split[1])
                 ));
     }
 

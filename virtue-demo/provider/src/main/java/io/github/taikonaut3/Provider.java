@@ -29,7 +29,7 @@ public class Provider {
         return "hello";
     }
 
-    @VirtueCallable(name = "list", config = @Config(serialize = MSGPACK))
+    @VirtueCallable(name = "list", config = @Config(serialize = MSGPACK,filters = "testFilter"))
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }
@@ -41,6 +41,7 @@ public class Provider {
     }
 
     @VirtueCallable(name = "exchangeMessage")
+    @Config(filters = "testFilter")
     public Message exchangeMessage(Message message) {
         message.setDate(new Date());
         message.setName("server " + message.getDate().toString());

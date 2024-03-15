@@ -37,8 +37,10 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         CallArgs callArgs = protocolParser.parseRequestBody(request);
         ServerCaller<?> serverCaller = (ServerCaller<?>) callArgs.caller();
         boolean oneway = url.getBooleanParameter(Key.ONEWAY);
+        Response response = null;
         try {
-            RpcContext.getContext().attribute(Request.ATTRIBUTE_KEY).set(request);
+            RpcContext.currentContext().attribute(Request.ATTRIBUTE_KEY).set(request);
+            RpcContext.RequestContext.parse(request.url());
             if (oneway) {
                 serverCaller.call(url,callArgs);
             } else {
@@ -50,18 +52,23 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
                     Object result = serverCaller.call(url,callArgs);
                     long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
                     if (invokeAfterMargin < timeout) {
-                        Response response = new Response(url, result);
+                        response = new Response(url, result);
                         response.code(Response.SUCCESS);
-                        event.getChannel().send(response);
+
                     }
                 }
             }
         } catch (Exception e) {
             logger.error("Invoke " + url.path() + " fail", e);
             Object message = protocol.createResponse(url, e.getMessage());
-            Response response = new Response(url, message);
+            response = new Response(url, message);
             response.code(Response.ERROR);
-            event.getChannel().send(response);
+        } finally {
+            String responseContextStr = RpcContext.responseContext().toString();
+            url.addParameter(Key.RESPONSE_CONTEXT, responseContextStr);
+            if (response != null) {
+                event.getChannel().send(response);
+            }
         }
     }
 }

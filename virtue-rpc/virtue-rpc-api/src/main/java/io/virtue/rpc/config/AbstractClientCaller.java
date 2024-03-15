@@ -184,7 +184,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         } catch (RpcException e) {
             logger.error("Remote Call Exception " + this, e);
         } finally {
-            RpcContext.getContext().clear();
+            RpcContext.clear();
         }
         return result;
     }
@@ -278,6 +278,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         Request request = new Request(url, message);
         RpcFuture future = new RpcFuture(url, callArgs);
         future.client(client);
+        String requestContextStr = RpcContext.requestContext().toString();
+        url.addParameter(Key.REQUEST_CONTEXT, requestContextStr);
         // request
         client.send(request);
         return future;

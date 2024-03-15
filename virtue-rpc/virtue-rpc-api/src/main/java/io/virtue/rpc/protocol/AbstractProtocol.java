@@ -34,7 +34,7 @@ public abstract class AbstractProtocol<Req, Res> implements Protocol<Req, Res> {
         this.clientHandler = clientHandler;
         this.serverHandler = serverHandler;
         this.protocolParser = protocolParser;
-        Virtue virtue = RpcContext.getContext().attribute(Virtue.ATTRIBUTE_KEY).get();
+        Virtue virtue = RpcContext.currentContext().attribute(Virtue.ATTRIBUTE_KEY).get();
         transporter = virtue.attribute(Transporter.ATTRIBUTE_KEY).get();
         if (transporter == null) {
             String transport = virtue.configManager().applicationConfig().transport();

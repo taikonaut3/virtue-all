@@ -238,7 +238,7 @@ public interface Virtue extends Accessor, Lifecycle {
         Attribute<Virtue> attribute = url.attribute(ATTRIBUTE_KEY);
         Virtue virtue = attribute.get();
         if (virtue == null) {
-            virtue = RpcContext.getContext().attribute(ATTRIBUTE_KEY).get();
+            virtue = RpcContext.currentContext().attribute(ATTRIBUTE_KEY).get();
             if (virtue == null) {
                 virtue = ExtensionLoader.loadService(Virtue.class, url.getParameter(Key.VIRTUE));
             }

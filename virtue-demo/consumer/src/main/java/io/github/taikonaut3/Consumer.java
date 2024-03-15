@@ -34,6 +34,8 @@ public interface Consumer {
     CompletableFuture<VirtueResponse> helloDynamicRes(String world);
 
     @VirtueCall(service = "345",callMethod = "exchangeMessage")
+    @Config(filters = "testFilter")
+    @Options(timeout = 60000)
     Message exchangeMessage(Message message);
 
     @Config(filters = {"filter1","filter2"},serialize = MSGPACK)

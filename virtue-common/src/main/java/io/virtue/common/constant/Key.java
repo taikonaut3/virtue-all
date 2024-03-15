@@ -77,6 +77,10 @@ public interface Key {
 
     String DISCOVER_URL = "discoverUrl";
 
+    String REQUEST_CONTEXT = "requestContext";
+
+    String RESPONSE_CONTEXT = "responseContext";
+
     String MULTIPLEX = "multiplex";
 
     String SERIALIZE = "serialize";
