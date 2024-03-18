@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractRegistry implements Registry {
+public abstract class AbstractRegistryService implements RegistryService {
 
     protected final Map<String, List<String>> discoverHealthServices = new ConcurrentHashMap<>();
 
@@ -19,7 +19,7 @@ public abstract class AbstractRegistry implements Registry {
 
     protected boolean enableHealthCheck;
 
-    protected AbstractRegistry(URL url) {
+    protected AbstractRegistryService(URL url) {
         registryUrl = url;
         enableHealthCheck = url.getBooleanParameter(Key.ENABLE_HEALTH_CHECK, true);
         connect(url);

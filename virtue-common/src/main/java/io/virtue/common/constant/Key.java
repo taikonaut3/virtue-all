@@ -25,6 +25,8 @@ public interface Key {
 
     String PROTOCOL_VERSION = "protocolVersion";
 
+    String LAST_CALL_INDEX = "lastCallIndex";
+
     String CLASS = "class";
 
     String BODY_TYPE = "bodyType";
@@ -87,7 +89,7 @@ public interface Key {
 
     String LOAD_BALANCE = "loadBalance";
 
-    String DIRECTORY = "directory";
+    String SERVICE_DISCOVERY = "serviceDiscovery";
 
     String ROUTER = "router";
 
@@ -153,5 +155,6 @@ public interface Key {
     AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(ALL_IDLE_TIMES);
     AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(WRITE_IDLE_TIMES);
     AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(READER_IDLE_TIMES);
+    AttributeKey<AtomicInteger> LAST_CALL_INDEX_ATTRIBUTE_KEY = AttributeKey.get(LAST_CALL_INDEX);
     String VERTX = "vertx";
 }

@@ -9,9 +9,10 @@ import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.client.NettyClient;
 import io.virtue.transport.netty.server.NettyServer;
 import io.virtue.transport.server.Server;
-import io.virtue.common.constant.Components;
 
-@ServiceProvider(Components.Transport.NETTY)
+import static io.virtue.common.constant.Components.Transport.NETTY;
+
+@ServiceProvider(NETTY)
 public final class NettyTransport implements Transporter {
 
     @Override

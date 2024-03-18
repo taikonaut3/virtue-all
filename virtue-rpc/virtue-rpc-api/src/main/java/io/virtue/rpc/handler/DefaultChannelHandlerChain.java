@@ -9,7 +9,7 @@ import io.virtue.event.Event;
 import io.virtue.rpc.event.ClientHandlerExceptionEvent;
 import io.virtue.rpc.event.ServerHandlerExceptionEvent;
 import io.virtue.transport.Envelope;
-import io.virtue.transport.base.ChannelHandlerAdapter;
+import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.channel.ChannelHandlerChain;

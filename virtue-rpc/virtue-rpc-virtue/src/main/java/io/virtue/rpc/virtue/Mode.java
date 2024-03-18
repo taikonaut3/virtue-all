@@ -1,4 +1,4 @@
-package io.virtue.common.constant;
+package io.virtue.rpc.virtue;
 
 /**
  * Designed only for mapping: string -> byte,

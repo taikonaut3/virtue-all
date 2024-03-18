@@ -3,7 +3,7 @@ package io.virtue.registry.consul;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
 import io.virtue.registry.AbstractRegistryFactory;
-import io.virtue.registry.Registry;
+import io.virtue.registry.RegistryService;
 import io.virtue.common.constant.Components;
 
 /**
@@ -13,8 +13,8 @@ import io.virtue.common.constant.Components;
 public class ConsulRegistryFactory extends AbstractRegistryFactory {
 
     @Override
-    protected Registry create(URL url) {
-        return new ConsulRegistry(url);
+    protected RegistryService create(URL url) {
+        return new ConsulRegistryService(url);
     }
 
 }

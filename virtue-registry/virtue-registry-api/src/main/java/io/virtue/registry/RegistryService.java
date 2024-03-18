@@ -2,17 +2,12 @@ package io.virtue.registry;
 
 import io.virtue.common.exception.ConnectException;
 import io.virtue.common.url.URL;
+import io.virtue.config.Closeable;
 
 import java.util.List;
 
-public interface Registry {
+public interface RegistryService extends Closeable {
 
-    /**
-     * Checks if the registry is connected.
-     *
-     * @return true if the registry is connected, false otherwise.
-     */
-    boolean isAvailable();
 
     /**
      * Connects to the registry using the specified URL.
@@ -32,13 +27,9 @@ public interface Registry {
      * Discovers services with the specified URL from the registry.
      *
      * @param url The URL used for service discovery.
-     * @return A list of URLs representing the discovered services.
+     * @return The discovered services.
      */
     List<URL> discover(URL url);
 
-    /**
-     * Destroys the registry.
-     */
-    void destroy();
 }
 

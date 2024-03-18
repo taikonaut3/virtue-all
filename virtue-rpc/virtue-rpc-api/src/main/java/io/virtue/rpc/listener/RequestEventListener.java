@@ -67,7 +67,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
             String responseContextStr = RpcContext.responseContext().toString();
             url.addParameter(Key.RESPONSE_CONTEXT, responseContextStr);
             if (response != null) {
-                event.getChannel().send(response);
+                event.channel().send(response);
             }
         }
     }

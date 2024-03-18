@@ -9,7 +9,7 @@ import io.virtue.config.manager.Virtue;
 import io.virtue.proxy.InvocationHandler;
 import io.virtue.proxy.ProxyFactory;
 import io.virtue.proxy.SuperInvoker;
-import io.virtue.rpc.config.AbstractCallerContainer;
+import io.virtue.rpc.support.AbstractCallerContainer;
 import io.virtue.config.*;
 import lombok.ToString;
 

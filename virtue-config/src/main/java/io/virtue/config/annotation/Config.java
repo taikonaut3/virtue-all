@@ -1,6 +1,7 @@
 package io.virtue.config.annotation;
 
 import io.virtue.common.constant.Components;
+import io.virtue.common.constant.Constant;
 import io.virtue.config.Caller;
 import io.virtue.config.filter.Filter;
 
@@ -27,12 +28,12 @@ public @interface Config {
     /**
      * Serialization type.
      */
-    String serialize() default Components.Serialize.KRYO;
+    String serialize() default Constant.DEFAULT_SERIALIZE;
 
     /**
      * Compression type
      */
-    String compression() default Components.Compression.GZIP;
+    String compression() default Constant.DEFAULT_COMPRESSION;
 
     /**
      * Invoke Filter.

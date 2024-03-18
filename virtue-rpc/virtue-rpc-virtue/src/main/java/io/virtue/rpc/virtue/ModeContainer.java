@@ -1,5 +1,6 @@
-package io.virtue.common.constant;
+package io.virtue.rpc.virtue;
 
+import io.virtue.common.constant.Key;
 import io.virtue.common.exception.SourceException;
 
 import java.util.LinkedList;

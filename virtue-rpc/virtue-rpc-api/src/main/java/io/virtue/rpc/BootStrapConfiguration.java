@@ -9,7 +9,7 @@ import io.virtue.config.config.RegistryConfig;
 import io.virtue.config.manager.ServerConfigManager;
 import io.virtue.config.manager.Virtue;
 import io.virtue.event.EventDispatcher;
-import io.virtue.registry.Registry;
+import io.virtue.registry.RegistryService;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.rpc.event.*;
 import io.virtue.rpc.listener.*;
@@ -52,13 +52,14 @@ public class BootStrapConfiguration implements VirtueConfiguration {
                     registryConfigUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
                     registryConfigUrl.addParameter(Key.VIRTUE, virtue.name());
                     RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryConfigUrl.protocol());
-                    Registry registry = registryFactory.get(registryConfigUrl);
-                    registry.register(serverUrl);
+                    RegistryService registryService = registryFactory.get(registryConfigUrl);
+                    registryService.register(serverUrl);
                 }
             }
             // Open Server
             Protocol<?, ?> protocol = ExtensionLoader.loadService(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
+            logger.info("Opened Server[{}] for Protocol[{}] and bind Port(s) {}", server.getClass().getSimpleName(), protocol.protocol(), server.port());
         }
     }
 }

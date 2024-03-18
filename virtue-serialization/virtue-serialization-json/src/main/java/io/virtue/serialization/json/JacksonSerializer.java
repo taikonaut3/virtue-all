@@ -9,12 +9,13 @@ import io.virtue.common.exception.ConversionException;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
-import io.virtue.common.constant.Components;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-@ServiceProvider(Components.Serialize.JSON)
+import static io.virtue.common.constant.Components.Serialize.JSON;
+
+@ServiceProvider(JSON)
 public class JacksonSerializer implements Serializer {
 
     private final ObjectMapper objectMapper;

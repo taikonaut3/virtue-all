@@ -2,6 +2,7 @@ package io.virtue.config.manager;
 
 import io.virtue.config.config.ApplicationConfig;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -25,7 +26,8 @@ public class ConfigManager {
 
     private final FilterManager filterManager;
 
-    private final ApplicationConfig applicationConfig;
+    @Setter
+    private ApplicationConfig applicationConfig;
 
     public ConfigManager(Virtue virtue) {
         remoteServiceManager = new RemoteServiceManager(virtue);

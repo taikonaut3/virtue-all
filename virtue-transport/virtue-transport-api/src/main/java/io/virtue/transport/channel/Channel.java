@@ -2,7 +2,7 @@ package io.virtue.transport.channel;
 
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.extension.Accessor;
-import io.virtue.transport.Closeable;
+import io.virtue.config.Closeable;
 import io.virtue.transport.endpoint.Endpoint;
 
 import java.net.InetSocketAddress;

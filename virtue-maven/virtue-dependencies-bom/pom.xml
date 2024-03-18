@@ -252,22 +252,22 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-registry</artifactId>
+                <artifactId>virtue-registryService</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-registry-api</artifactId>
+                <artifactId>virtue-registryService-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-registry-consul</artifactId>
+                <artifactId>virtue-registryService-consul</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
-                <artifactId>virtue-registry-nacos</artifactId>
+                <artifactId>virtue-registryService-nacos</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

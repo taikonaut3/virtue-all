@@ -4,12 +4,12 @@ import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ServiceInterface;
 import io.virtue.config.Invocation;
 
-import static io.virtue.common.constant.Components.FaultTolerance.FAIL_RETRY;
+import static io.virtue.common.constant.Components.FaultTolerance.FAIL_FAST;
 
 /**
  * Represents a fault tolerance interface.
  */
-@ServiceInterface(FAIL_RETRY)
+@ServiceInterface(FAIL_FAST)
 public interface FaultTolerance {
 
     /**

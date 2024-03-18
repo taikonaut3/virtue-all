@@ -6,7 +6,7 @@ import io.virtue.config.CallArgs;
 import io.virtue.config.Invocation;
 import io.virtue.config.RemoteCaller;
 import io.virtue.rpc.RpcFuture;
-import io.virtue.rpc.config.AbstractClientCaller;
+import io.virtue.rpc.support.AbstractClientCaller;
 import io.virtue.rpc.http1_1.config.HttpCall;
 import io.virtue.rpc.http1_1.config.HttpRequestWrapper;
 import io.virtue.common.constant.Components;

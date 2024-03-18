@@ -1,15 +1,11 @@
-package io.virtue.transport.base;
+package io.virtue.transport.channel;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.config.manager.Virtue;
 import io.virtue.event.EventDispatcher;
-import io.virtue.transport.channel.Channel;
-import io.virtue.transport.channel.ChannelHandler;
 
 public class ChannelHandlerAdapter implements ChannelHandler {
-
-
 
     @Override
     public void connected(Channel channel) throws RpcException {

@@ -9,7 +9,7 @@ import io.virtue.config.RemoteService;
 import io.virtue.config.ServerCaller;
 import io.virtue.config.annotation.CallerFactoryProvider;
 import io.virtue.config.manager.Virtue;
-import io.virtue.rpc.config.AbstractCallerContainer;
+import io.virtue.rpc.support.AbstractCallerContainer;
 import lombok.ToString;
 
 import java.lang.reflect.Method;

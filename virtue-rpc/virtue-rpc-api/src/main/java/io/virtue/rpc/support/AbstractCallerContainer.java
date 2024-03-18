@@ -1,4 +1,4 @@
-package io.virtue.rpc.config;
+package io.virtue.rpc.support;
 
 import io.virtue.common.util.AssertUtil;
 import io.virtue.config.Caller;

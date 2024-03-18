@@ -1,14 +1,13 @@
-package io.virtue.governance.directory;
+package io.virtue.governance.discovery;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.config.Invocation;
-import io.virtue.registry.Registry;
+import io.virtue.registry.RegistryService;
 import io.virtue.registry.RegistryFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,33 +19,28 @@ import static io.virtue.common.constant.Components.DEFAULT;
  * must open virtue-registry
  */
 @ServiceProvider(DEFAULT)
-public class DefaultDirectory implements Directory {
-
-    private static final Logger logger = LoggerFactory.getLogger(DefaultDirectory.class);
+public class DefaultServiceDiscovery implements ServiceDiscovery {
 
     @Override
-    public List<URL> list(Invocation invocation, URL... registryConfigs) {
-        logger.debug("director......");
-        ArrayList<URL> remoteServiceUrls = new ArrayList<>();
+    public List<URL> discover(Invocation invocation, URL... registryConfigs) {
+        ArrayList<URL> availableServiceUrls = new ArrayList<>();
         URL url = invocation.url();
         for (URL registryUrl : registryConfigs) {
             RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
-            Registry registry = registryFactory.get(registryUrl);
-            List<URL> discoverUrls = registry.discover(url);
-            if (discoverUrls != null && !discoverUrls.isEmpty()) {
+            RegistryService registryService = registryFactory.get(registryUrl);
+            List<URL> discoverUrls = registryService.discover(url);
+            if (CollectionUtil.isNotEmpty(discoverUrls)) {
                 for (URL discoverUrl : discoverUrls) {
-                    CollectionUtil.addToList(remoteServiceUrls,
+                    CollectionUtil.addToList(
+                            availableServiceUrls,
                             (existUrl, newUrl) -> Objects.equals(existUrl.address(), newUrl.address()),
                             discoverUrl);
                 }
             }
         }
-        return remoteServiceUrls;
+        if (availableServiceUrls.isEmpty()) {
+            throw new RpcException("Not found available service!,Path:" + url.path());
+        }
+        return availableServiceUrls;
     }
-
-    @Override
-    public void destroy() {
-
-    }
-
 }

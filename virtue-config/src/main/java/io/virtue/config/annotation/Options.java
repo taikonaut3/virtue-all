@@ -1,6 +1,5 @@
 package io.virtue.config.annotation;
 
-import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Constant;
 
 import java.lang.annotation.*;
@@ -19,28 +18,28 @@ public @interface Options {
     int timeout() default Constant.DEFAULT_TIMEOUT;
 
     /**
-     * Used {@link io.virtue.governance.directory.Directory}.
-     * Default is "default" {@link io.virtue.governance.directory.DefaultDirectory}.
+     * Used {@link io.virtue.governance.discovery.ServiceDiscovery}.
+     * Default is "default" {@link io.virtue.governance.discovery.ServiceDiscovery}.
      */
-    String directory() default Components.DEFAULT;
+    String serviceDiscovery() default Constant.DEFAULT_SERVICE_DISCOVERY;
 
     /**
      * Used {@link io.virtue.governance.router.Router}.
      * Default is "weight" {@link io.virtue.governance.router.DefaultRouter}.
      */
-    String router() default Components.DEFAULT;
+    String router() default Constant.DEFAULT_ROUTER;
 
     /**
      * Used {@link io.virtue.governance.loadbalance.LoadBalance}.
      * Default is "random" {@link io.virtue.governance.loadbalance.RandomLoadBalance}.
      */
-    String loadBalance() default Components.LoadBalance.RANDOM;
+    String loadBalance() default Constant.DEFAULT_LOAD_BALANCE;
 
     /**
      * Used {@link io.virtue.governance.faulttolerance.FaultTolerance}.
      * Default is "failFast" {@link io.virtue.governance.faulttolerance.FailFast}.
      */
-    String faultTolerance() default Components.FaultTolerance.FAIL_FAST;
+    String faultTolerance() default Constant.DEFAULT_FAULT_TOLERANCE;
 
     /**
      * If {@link Options#faultTolerance()} is "failRetry",

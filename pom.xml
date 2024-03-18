@@ -31,7 +31,7 @@
         <module>virtue-proxy</module>
         <module>virtue-eventhub</module>
         <module>virtue-governance</module>
-        <module>virtue-registry</module>
+        <module>virtue-registryService</module>
         <module>virtue-serialization</module>
         <module>virtue-transport</module>
         <module>virtue-spring</module>

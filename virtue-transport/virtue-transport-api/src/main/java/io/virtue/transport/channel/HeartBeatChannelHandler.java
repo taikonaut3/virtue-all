@@ -1,8 +1,7 @@
-package io.virtue.transport.base;
+package io.virtue.transport.channel;
 
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.extension.AttributeKey;
-import io.virtue.transport.channel.Channel;
 
 import java.util.HashSet;
 import java.util.Set;

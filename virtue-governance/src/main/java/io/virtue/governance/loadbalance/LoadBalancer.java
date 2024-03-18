@@ -12,7 +12,7 @@ import static io.virtue.common.constant.Components.LoadBalance.RANDOM;
  * Load balancing interface.
  */
 @ServiceInterface(RANDOM)
-public interface LoadBalance {
+public interface LoadBalancer {
 
     /**
      * Selects an url for the given invocation from a list of available urls.
@@ -21,6 +21,6 @@ public interface LoadBalance {
      * @param urls       the list of available URLs
      * @return the selected url
      */
-    URL select(Invocation invocation, List<URL> urls);
+    URL choose(Invocation invocation, List<URL> urls);
 }
 

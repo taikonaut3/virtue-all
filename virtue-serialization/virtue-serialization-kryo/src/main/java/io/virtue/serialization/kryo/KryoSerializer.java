@@ -6,9 +6,10 @@ import com.esotericsoftware.kryo.io.Output;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
-import io.virtue.common.constant.Components;
 
-@ServiceProvider(value = Components.Serialize.KRYO)
+import static io.virtue.common.constant.Components.Serialize.KRYO;
+
+@ServiceProvider(KRYO)
 public class KryoSerializer implements Serializer {
 
     private static final int BUFFER_SIZE = 4096; // 设置较大的缓冲区大小

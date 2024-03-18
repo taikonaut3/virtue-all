@@ -10,7 +10,7 @@ import io.virtue.config.manager.Virtue;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.transport.Request;
-import io.virtue.transport.base.ChannelHandlerAdapter;
+import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
 
 public class RequestChannelHandler extends ChannelHandlerAdapter {

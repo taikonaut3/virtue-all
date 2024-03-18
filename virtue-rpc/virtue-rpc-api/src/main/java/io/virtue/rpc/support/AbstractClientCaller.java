@@ -1,9 +1,8 @@
-package io.virtue.rpc.config;
+package io.virtue.rpc.support;
 
-import io.virtue.common.constant.Components;
+import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.exception.SourceException;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
@@ -24,11 +23,11 @@ import io.virtue.config.filter.FilterScope;
 import io.virtue.config.manager.ClientConfigManager;
 import io.virtue.config.manager.ConfigManager;
 import io.virtue.config.manager.Virtue;
-import io.virtue.governance.directory.Directory;
+import io.virtue.governance.discovery.ServiceDiscovery;
 import io.virtue.governance.faulttolerance.FaultTolerance;
-import io.virtue.governance.loadbalance.LoadBalance;
+import io.virtue.governance.loadbalance.LoadBalancer;
 import io.virtue.governance.router.Router;
-import io.virtue.registry.Registry;
+import io.virtue.registry.RegistryService;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.rpc.RpcFuture;
 import io.virtue.transport.Request;
@@ -45,6 +44,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Setter
 @Getter
@@ -66,8 +66,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     @Parameter(Key.LOAD_BALANCE)
     protected String loadBalance;
 
-    @Parameter(Key.DIRECTORY)
-    protected String directory;
+    @Parameter(Key.SERVICE_DISCOVERY)
+    protected String serviceDiscovery;
 
     @Parameter(Key.ROUTER)
     protected String router;
@@ -105,7 +105,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         router(ops.router());
         timeout(ops.timeout());
         retires(ops.retires());
-        directory(ops.directory());
+        serviceDiscovery(ops.serviceDiscovery());
         loadBalance(ops.loadBalance());
         faultTolerance(ops.faultTolerance());
         oneWay(returnType().getTypeName().equals("void"));
@@ -132,8 +132,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
             }else {
                 for (URL registryUrl : registryConfigUrls) {
                     RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
-                    Registry registry = registryFactory.get(registryUrl);
-                    registry.discover(url);
+                    RegistryService registryService = registryFactory.get(registryUrl);
+                    registryService.discover(url);
                 }
             }
         }
@@ -191,8 +191,8 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
 
     @Override
     public Object call(Invocation invocation) throws RpcException {
-        String faultToleranceKey = invocation.url().getParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_FAST);
-        FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceKey);
+        String faultToleranceName = invocation.url().getParameter(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
+        FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceName);
         invocation.revise(() -> {
             RpcFuture future = send(invocation);
             return async() ? future : future.get();
@@ -230,6 +230,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         url.replacePaths(pathList());
         url.addParameters(clientUrl.parameters());
         url.addParameters(parameterization());
+        url.attribute(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY).set(new AtomicInteger(-1));
         return url;
     }
 
@@ -238,27 +239,25 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
             URL url = invocation.url();
             ClientCaller<?> caller = (ClientCaller<?>) invocation.callArgs().caller();
             if (StringUtil.isBlank(caller.directUrl())) {
-                // Get available service urls
-                String directoryKey = url.getParameter(Key.DIRECTORY, Components.DEFAULT);
-                Directory directory = ExtensionLoader.loadService(Directory.class, directoryKey);
+                // ServiceDiscovery
+                String serviceDiscoveryName = url.getParameter(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
+                ServiceDiscovery serviceDiscovery = ExtensionLoader.loadService(ServiceDiscovery.class, serviceDiscoveryName);
                 URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls()).stream()
                         .flatMap(Collection::stream)
                         .toArray(URL[]::new);
-                List<URL> availableServiceUrls = directory.list(invocation, registryConfigUrls);
-                if (availableServiceUrls.isEmpty()) {
-                    throw new SourceException("Not found available service!,Path:" + url.path());
-                }
+                List<URL> availableServiceUrls = serviceDiscovery.discover(invocation, registryConfigUrls);
                 // Router
                 Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
                 if (router == null) {
-                    String routerKey = virtue.configManager().applicationConfig().router();
-                    router = ExtensionLoader.loadService(Router.class, routerKey);
+                    String routerName = virtue.configManager().applicationConfig().router();
+                    routerName = StringUtil.isBlank(routerName) ? Constant.DEFAULT_ROUTER : routerName;
+                    router = ExtensionLoader.loadService(Router.class, routerName);
                 }
                 List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
                 // LoadBalance
-                String loadBalanceKey = url.getParameter(Key.LOAD_BALANCE, Components.LoadBalance.RANDOM);
-                LoadBalance loadBalance = ExtensionLoader.loadService(LoadBalance.class, loadBalanceKey);
-                URL selectedServiceUrl = loadBalance.select(invocation, finalServiceUrls);
+                String loadBalancerName = url.getParameter(Key.LOAD_BALANCE, Constant.DEFAULT_LOAD_BALANCE);
+                LoadBalancer loadBalancer = ExtensionLoader.loadService(LoadBalancer.class, loadBalancerName);
+                URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
                 url.address(selectedServiceUrl.address()).addParameters(selectedServiceUrl.parameters());
             }
             // Invocation revise

@@ -4,7 +4,7 @@ import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.config.RemoteService;
 import io.virtue.config.annotation.Config;
-import io.virtue.rpc.config.AbstractServerCaller;
+import io.virtue.rpc.support.AbstractServerCaller;
 import io.virtue.rpc.virtue.config.VirtueCallable;
 import io.virtue.common.constant.Components;
 import org.slf4j.Logger;

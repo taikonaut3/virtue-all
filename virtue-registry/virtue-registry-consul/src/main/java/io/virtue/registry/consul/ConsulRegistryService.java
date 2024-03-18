@@ -8,7 +8,7 @@ import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.config.manager.Virtue;
-import io.virtue.registry.AbstractRegistry;
+import io.virtue.registry.AbstractRegistryService;
 import io.vertx.core.Vertx;
 import io.vertx.ext.consul.*;
 import org.slf4j.Logger;
@@ -21,20 +21,20 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ConsulRegistry extends AbstractRegistry {
+public class ConsulRegistryService extends AbstractRegistryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsulRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConsulRegistryService.class);
 
     private ConsulClient consulClient;
 
     private Vertx vertx;
 
-    protected ConsulRegistry(URL url) {
+    protected ConsulRegistryService(URL url) {
         super(url);
     }
 
     @Override
-    public boolean isAvailable() {
+    public boolean isActive() {
         AtomicBoolean isConnected = new AtomicBoolean(false);
         CountDownLatch latch = new CountDownLatch(1);
         consulClient.agentInfo().onComplete(ar -> {
@@ -150,7 +150,7 @@ public class ConsulRegistry extends AbstractRegistry {
     }
 
     @Override
-    public void destroy() {
+    public void close() {
         consulClient.close();
     }
 

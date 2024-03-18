@@ -2,7 +2,7 @@ package io.virtue.rpc.handler;
 
 import io.virtue.rpc.event.RequestEvent;
 import io.virtue.transport.Request;
-import io.virtue.transport.base.ChannelHandlerAdapter;
+import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
 
 public final class ServerChannelHandler extends ChannelHandlerAdapter {

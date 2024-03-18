@@ -37,10 +37,10 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
         this.channels = channelHandler.getChannels();
         try {
             bind();
-            logger.debug("Created server({}),Bind port(s): {} ({})", this.getClass().getSimpleName(), port(), url.protocol());
+            logger.debug("Created Server({}),Bind port(s): {} ({})", this.getClass().getSimpleName(), port(), url.protocol());
         } catch (Throwable e) {
-            logger.error("Create server fail,Bind port:" + port(), e);
-            throw new BindException("Create server fail,Bind address :" + address(), e);
+            logger.error("Create Server is Failed,Bind port:" + port(), e);
+            throw new BindException("Create Server is Failed,Bind port:" + port(), e);
         }
     }
 

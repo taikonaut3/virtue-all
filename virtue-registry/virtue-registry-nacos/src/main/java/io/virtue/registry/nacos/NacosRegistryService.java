@@ -11,7 +11,7 @@ import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.config.manager.Virtue;
-import io.virtue.registry.AbstractRegistry;
+import io.virtue.registry.AbstractRegistryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,18 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class NacosRegistry extends AbstractRegistry {
+public class NacosRegistryService extends AbstractRegistryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(NacosRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(NacosRegistryService.class);
 
     private NamingService namingService;
 
-    protected NacosRegistry(URL url) {
+    protected NacosRegistryService(URL url) {
         super(url);
     }
 
     @Override
-    public boolean isAvailable() {
+    public boolean isActive() {
         return namingService.getServerStatus().equals("UP");
     }
 
@@ -113,7 +113,7 @@ public class NacosRegistry extends AbstractRegistry {
     }
 
     @Override
-    public void destroy() {
+    public void close() {
         try {
             namingService.shutDown();
         } catch (NacosException e) {

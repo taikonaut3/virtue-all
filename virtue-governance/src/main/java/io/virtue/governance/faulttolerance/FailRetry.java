@@ -24,10 +24,10 @@ public class FailRetry extends AbstractFaultTolerance {
             try {
                 return invocation.invoke();
             } catch (Exception e) {
-                logger.error("调用服务出现异常: " + e.getMessage() + ",开始重试第 " + start + " 次", e);
+                logger.error("An exception occurred in the calling service: " + e.getMessage() + ",Start retry: " + start , e);
             }
         }
-        throw new RpcException("调用服务出现异常,重试次数: " + retries);
+        throw new RpcException("An exception occurred in the calling service,Retry times: " + retries);
     }
 
 }

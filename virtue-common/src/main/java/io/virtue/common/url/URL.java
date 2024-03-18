@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Basic for:
- * 1、Rpc Request: {@link RemoteUrl}.
+ * 1、Rpc Request.
  * 2、Connect to Third Party Middleware.
  */
 @Getter

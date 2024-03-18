@@ -1,4 +1,4 @@
-package io.virtue.governance.directory;
+package io.virtue.governance.discovery;
 
 import io.virtue.common.spi.ServiceInterface;
 import io.virtue.common.url.URL;
@@ -9,23 +9,19 @@ import java.util.List;
 import static io.virtue.common.constant.Components.DEFAULT;
 
 /**
- * Directory for listing available services from the registry.
+ * ServiceDiscovery for discover available services from the registry.
  */
 @ServiceInterface(DEFAULT)
-public interface Directory {
+public interface ServiceDiscovery {
 
     /**
-     * Lists all available services from the registry.
+     * discover all available services from the registry.
      *
      * @param invocation      the invocation to be used for the service lookup
      * @param registryConfigs the registry configurations to be used for the service lookup
      * @return a list of urls representing the available services
      */
-    List<URL> list(Invocation invocation, URL... registryConfigs);
+    List<URL> discover(Invocation invocation, URL... registryConfigs);
 
-    /**
-     * Destroys the cache used by the directory.
-     */
-    void destroy();
 }
 

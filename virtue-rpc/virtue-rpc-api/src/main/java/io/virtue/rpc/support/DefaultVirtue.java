@@ -1,4 +1,4 @@
-package io.virtue.rpc.impl;
+package io.virtue.rpc.support;
 
 import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.RpcContext;
@@ -39,11 +39,11 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
     private final MonitorManager monitorManager;
     private final List<VirtueConfiguration> configurations;
     private final Scheduler scheduler;
-    private String name;
+    private final String name;
     private EventDispatcher eventDispatcher;
 
     public DefaultVirtue() {
-        name(DEFAULT);
+        name = DEFAULT;
         configManager = new ConfigManager(this);
         monitorManager = new MonitorManager();
         configurations = ExtensionLoader.loadServices(VirtueConfiguration.class);
@@ -54,12 +54,6 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
     @Override
     public String name() {
         return name;
-    }
-
-    @Override
-    public Virtue name(String name) {
-        this.name = name;
-        return this;
     }
 
     @Override

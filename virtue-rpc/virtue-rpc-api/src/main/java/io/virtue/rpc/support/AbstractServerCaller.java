@@ -1,4 +1,4 @@
-package io.virtue.rpc.config;
+package io.virtue.rpc.support;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;

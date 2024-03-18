@@ -62,13 +62,17 @@ public interface Constant {
 
     int DEFAULT_WEIGHT = 0;
 
+    String DEFAULT_ROUTER = DEFAULT;
+
+    String DEFAULT_SERVICE_DISCOVERY = DEFAULT;
+
     String DEFAULT_PROXY = ProxyFactory.JDK;
 
     String DEFAULT_REGISTRY = Registry.CONSUL;
 
-    String DEFAULT_FAULT_TOLERANCE = FaultTolerance.FAIL_RETRY;
+    String DEFAULT_FAULT_TOLERANCE = FaultTolerance.FAIL_FAST;
 
-    String DEFAULT_LOAD_BALANCE = LoadBalance.RANDOM;
+    String DEFAULT_LOAD_BALANCE = LoadBalance.ROUND_ROBIN;
 
     String DEFAULT_EVENT_DISPATCHER = EventDispatcher.DISRUPTOR;
 
@@ -92,4 +96,5 @@ public interface Constant {
 
     String MULTIPLEX_PREFIX = "multiplex_";
 
+    String DEFAULT_COMPRESSION = Compression.GZIP;
 }

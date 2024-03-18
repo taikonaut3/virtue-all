@@ -1,5 +1,6 @@
 package io.virtue.config.manager;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.extension.Accessor;
 import io.virtue.common.extension.Attribute;
@@ -12,12 +13,12 @@ import io.virtue.config.Lifecycle;
 import io.virtue.config.RemoteCaller;
 import io.virtue.config.RemoteService;
 import io.virtue.config.Scheduler;
+import io.virtue.config.config.ApplicationConfig;
 import io.virtue.config.config.ClientConfig;
 import io.virtue.config.config.RegistryConfig;
 import io.virtue.config.config.ServerConfig;
 import io.virtue.config.filter.Filter;
 import io.virtue.event.EventDispatcher;
-import io.virtue.common.constant.Components;
 import org.intellij.lang.annotations.Language;
 
 import java.util.Arrays;
@@ -38,14 +39,6 @@ public interface Virtue extends Accessor, Lifecycle {
      * @return name
      */
     String name();
-
-    /**
-     * Set name
-     *
-     * @param name
-     * @return current instance
-     */
-    Virtue name(String name);
 
     /**
      * Get configManager
@@ -209,13 +202,18 @@ public interface Virtue extends Accessor, Lifecycle {
         return this;
     }
 
+    default Virtue application(ApplicationConfig config) {
+        configManager().applicationConfig(config);
+        return this;
+    }
+
     /**
      * Get application-name
      *
      * @return application-name
      */
     default String applicationName() {
-        return configManager().applicationConfig().applicationName();
+        return configManager().applicationConfig().name();
     }
 
     /**
@@ -224,7 +222,7 @@ public interface Virtue extends Accessor, Lifecycle {
      * @return current instance
      */
     default Virtue applicationName(String applicationName) {
-        configManager().applicationConfig().applicationName(applicationName);
+        configManager().applicationConfig().name(applicationName);
         return this;
     }
 
@@ -253,7 +251,7 @@ public interface Virtue extends Accessor, Lifecycle {
      * Get default virtue instance
      *
      * @return default virtue instance
-     * @see io.virtue.rpc.impl.DefaultVirtue
+     * @see io.virtue.rpc.support.DefaultVirtue
      */
     static Virtue getDefault() {
         return ExtensionLoader.loadService(Virtue.class);

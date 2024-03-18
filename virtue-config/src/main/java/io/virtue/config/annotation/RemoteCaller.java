@@ -1,6 +1,6 @@
 package io.virtue.config.annotation;
 
-import io.virtue.common.constant.Components;
+import io.virtue.common.constant.Constant;
 import io.virtue.config.ClientCaller;
 
 import java.lang.annotation.*;
@@ -22,7 +22,7 @@ public @interface RemoteCaller {
     /**
      * The proxy type
      */
-    String proxy() default Components.ProxyFactory.JDK;
+    String proxy() default Constant.DEFAULT_PROXY;
 
     /**
      * Is it only when the first call is made that the registration center is actually connected to Get the available services.

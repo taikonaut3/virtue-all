@@ -8,16 +8,17 @@ import io.virtue.common.exception.ConversionException;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
-import io.virtue.common.constant.Components;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import static io.virtue.common.constant.Components.Serialize.MSGPACK;
+
 /**
  * MsgPackSerializer
  */
-@ServiceProvider(Components.Serialize.MSGPACK)
+@ServiceProvider(MSGPACK)
 public class MsgPackSerializer implements Serializer {
 
     private final JsonMapper jsonMapper;

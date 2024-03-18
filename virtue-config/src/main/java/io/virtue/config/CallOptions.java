@@ -24,10 +24,10 @@ public interface CallOptions extends CommonConfig {
     int timeout();
 
     /**
-     * Used {@link io.virtue.governance.directory.Directory}.
-     * Default is "default" {@link io.virtue.governance.directory.DefaultDirectory}
+     * Used {@link io.virtue.governance.discovery.ServiceDiscovery}.
+     * Default is "default" {@link io.virtue.governance.discovery.DefaultServiceDiscovery}
      */
-    String directory();
+    String serviceDiscovery();
 
     /**
      * Used {@link io.virtue.governance.router.Router}.

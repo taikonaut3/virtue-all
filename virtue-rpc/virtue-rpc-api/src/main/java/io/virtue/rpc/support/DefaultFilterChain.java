@@ -1,4 +1,4 @@
-package io.virtue.rpc.impl;
+package io.virtue.rpc.support;
 
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.config.Invocation;

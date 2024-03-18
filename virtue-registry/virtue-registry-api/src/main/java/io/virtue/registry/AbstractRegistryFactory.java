@@ -7,23 +7,23 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractRegistryFactory implements RegistryFactory {
 
-    private static final Map<String, Registry> registries = new ConcurrentHashMap<>();
+    private static final Map<String, RegistryService> registries = new ConcurrentHashMap<>();
 
     @Override
-    public Registry get(URL url) {
+    public RegistryService get(URL url) {
         String uri = url.authority();
-        Registry registry = registries.get(uri);
-        if (registry == null) {
-            registry = create(url);
-            registries.put(uri, registry);
+        RegistryService registryService = registries.get(uri);
+        if (registryService == null) {
+            registryService = create(url);
+            registries.put(uri, registryService);
         } else {
-            if (!registry.isAvailable()) {
-                registry.connect(url);
+            if (!registryService.isActive()) {
+                registryService.connect(url);
             }
         }
-        return registry;
+        return registryService;
     }
 
-    protected abstract Registry create(URL url);
+    protected abstract RegistryService create(URL url);
 
 }

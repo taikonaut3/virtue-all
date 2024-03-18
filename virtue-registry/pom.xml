@@ -9,14 +9,14 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>virtue-registry</artifactId>
+    <artifactId>virtue-registryService</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>virtue-registry-api</module>
-        <module>virtue-registry-consul</module>
-        <module>virtue-registry-zookeeper</module>
-        <module>virtue-registry-nacos</module>
+        <module>virtue-registryService-api</module>
+        <module>virtue-registryService-consul</module>
+        <module>virtue-registryService-zookeeper</module>
+        <module>virtue-registryService-nacos</module>
     </modules>
 
 </project>

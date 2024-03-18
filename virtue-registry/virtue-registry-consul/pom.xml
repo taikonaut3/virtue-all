@@ -5,16 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.taikonaut3</groupId>
-        <artifactId>virtue-registry</artifactId>
+        <artifactId>virtue-registryService</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>virtue-registry-consul</artifactId>
+    <artifactId>virtue-registryService-consul</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-registry-api</artifactId>
+            <artifactId>virtue-registryService-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>

@@ -8,8 +8,10 @@ import io.virtue.event.AbstractEvent;
 import io.virtue.transport.Request;
 import io.virtue.transport.channel.Channel;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 @Getter
+@Accessors(fluent = true)
 public class RequestEvent extends AbstractEvent<Request> {
 
     private final Channel channel;
