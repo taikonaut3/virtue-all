@@ -32,6 +32,8 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         logger.debug("Received Event({})", event.getClass().getSimpleName());
         Request request = event.source();
         URL url = request.url();
+        RpcContext.currentContext().attribute(Request.ATTRIBUTE_KEY).set(request);
+        RpcContext.RequestContext.parse(url);
         Protocol<?,?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
         CallArgs callArgs = protocolParser.parseRequestBody(request);
@@ -39,8 +41,6 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         boolean oneway = url.getBooleanParameter(Key.ONEWAY);
         Response response = null;
         try {
-            RpcContext.currentContext().attribute(Request.ATTRIBUTE_KEY).set(request);
-            RpcContext.RequestContext.parse(request.url());
             if (oneway) {
                 serverCaller.call(url,callArgs);
             } else {

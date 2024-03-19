@@ -182,7 +182,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
             invocation.revise(() -> doRpcCall(invocation));
             result = filterChain.filter(invocation, preFilters);
         } catch (RpcException e) {
-            logger.error("Remote Call Exception " + this, e);
+            logger.error("Remote Call fail " + this, e);
         } finally {
             RpcContext.clear();
         }
@@ -264,7 +264,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
             invocation.revise(() -> call(invocation));
             List<Filter> postFilters = FilterScope.POST.filterScope(filters);
             return filterChain.filter(invocation, postFilters);
-        } catch (RpcException e) {
+        } catch (Exception e) {
             throw new RpcException(e);
         }
     }
