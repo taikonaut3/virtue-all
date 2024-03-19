@@ -6,8 +6,8 @@ import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.DateUtil;
-import io.virtue.config.CallArgs;
-import io.virtue.config.ServerCaller;
+import io.virtue.core.CallArgs;
+import io.virtue.core.ServerCaller;
 import io.virtue.rpc.event.RequestEvent;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;
@@ -52,17 +52,14 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
                     Object result = serverCaller.call(url,callArgs);
                     long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
                     if (invokeAfterMargin < timeout) {
-                        response = new Response(url, result);
-                        response.code(Response.SUCCESS);
-
+                        response = Response.success(url, result);
                     }
                 }
             }
         } catch (Exception e) {
             logger.error("Invoke " + url.path() + " fail", e);
             Object message = protocol.createResponse(url, e.getMessage());
-            response = new Response(url, message);
-            response.code(Response.ERROR);
+            response = Response.error(url, message);
         } finally {
             String responseContextStr = RpcContext.responseContext().toString();
             url.addParameter(Key.RESPONSE_CONTEXT, responseContextStr);

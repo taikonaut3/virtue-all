@@ -1,7 +1,7 @@
 package io.virtue.boot.processor;
 
 import io.virtue.boot.EnableVirtue;
-import io.virtue.config.annotation.RemoteService;
+import io.virtue.core.annotation.RemoteService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;

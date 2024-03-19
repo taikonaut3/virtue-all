@@ -5,7 +5,7 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.config.Invocation;
+import io.virtue.core.Invocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

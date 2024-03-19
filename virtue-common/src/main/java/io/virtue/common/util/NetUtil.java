@@ -106,7 +106,6 @@ public final class NetUtil {
         }
         return null;
     }
-    private NetUtil() {
-    }
 
+    private NetUtil() {}
 }

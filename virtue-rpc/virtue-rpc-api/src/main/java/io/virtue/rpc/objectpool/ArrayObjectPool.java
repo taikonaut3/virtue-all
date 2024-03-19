@@ -1,7 +1,7 @@
 package io.virtue.rpc.objectpool;
 
 import io.virtue.common.util.AssertUtil;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 
 import java.util.Arrays;
 import java.util.Objects;

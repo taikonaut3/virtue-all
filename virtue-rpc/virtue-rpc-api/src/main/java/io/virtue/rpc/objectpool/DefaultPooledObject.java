@@ -1,6 +1,6 @@
 package io.virtue.rpc.objectpool;
 
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 import io.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
 import io.virtue.rpc.objectpool.listener.PooledObjectInvalidListener;
 

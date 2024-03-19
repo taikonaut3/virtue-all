@@ -2,7 +2,7 @@ package io.virtue.governance.faulttolerance;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ServiceInterface;
-import io.virtue.config.Invocation;
+import io.virtue.core.Invocation;
 
 import static io.virtue.common.constant.Components.FaultTolerance.FAIL_FAST;
 

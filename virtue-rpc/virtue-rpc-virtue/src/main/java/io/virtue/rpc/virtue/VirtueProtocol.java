@@ -4,7 +4,7 @@ import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.virtue.client.VirtueClientChannelHandlerChain;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;

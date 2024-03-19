@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-registryService-consul</artifactId>
+            <artifactId>virtue-registry-consul</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>

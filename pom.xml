@@ -25,13 +25,13 @@
 
     <modules>
         <module>virtue-common</module>
-        <module>virtue-config</module>
+        <module>virtue-core</module>
         <module>virtue-demo</module>
         <module>virtue-rpc</module>
         <module>virtue-proxy</module>
         <module>virtue-eventhub</module>
         <module>virtue-governance</module>
-        <module>virtue-registryService</module>
+        <module>virtue-registry</module>
         <module>virtue-serialization</module>
         <module>virtue-transport</module>
         <module>virtue-spring</module>

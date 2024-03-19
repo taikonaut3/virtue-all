@@ -58,7 +58,7 @@ public interface Constant {
 
     String DEFAULT_VERSION = "1.0.0";
 
-    String DEFAULT_GROUP = "default:group";
+    String DEFAULT_GROUP = DEFAULT;
 
     int DEFAULT_WEIGHT = 0;
 

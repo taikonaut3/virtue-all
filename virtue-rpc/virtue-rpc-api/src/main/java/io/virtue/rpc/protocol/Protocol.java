@@ -2,11 +2,11 @@ package io.virtue.rpc.protocol;
 
 import io.virtue.common.spi.ServiceInterface;
 import io.virtue.common.url.URL;
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
-import io.virtue.config.config.ClientConfig;
-import io.virtue.config.config.ServerConfig;
+import io.virtue.core.config.ClientConfig;
+import io.virtue.core.config.ServerConfig;
 import io.virtue.transport.client.Client;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.server.Server;
@@ -44,7 +44,7 @@ public interface Protocol<Req, Res> {
     /**
      * Opening a client may reuse the existing one.
      *
-     * @param url client config {@link ClientConfig}
+     * @param url client core {@link ClientConfig}
      * @return {@link Client}
      */
     Client openClient(URL url);
@@ -52,7 +52,7 @@ public interface Protocol<Req, Res> {
     /**
      * Opening a new Server.
      *
-     * @param url server config {@link ServerConfig}
+     * @param url server core {@link ServerConfig}
      * @return {@link Server}
      */
     Server openServer(URL url);

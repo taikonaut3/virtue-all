@@ -2,7 +2,7 @@ package io.virtue.boot.processor;
 
 import io.virtue.boot.EnvironmentKey;
 import io.virtue.common.exception.SourceException;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 import org.springframework.beans.BeansException;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;

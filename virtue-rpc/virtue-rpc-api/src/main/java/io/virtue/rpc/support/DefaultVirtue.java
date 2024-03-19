@@ -4,20 +4,18 @@ import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.spi.ServiceProvider;
-import io.virtue.config.RemoteCaller;
-import io.virtue.config.RemoteService;
-import io.virtue.config.Scheduler;
-import io.virtue.config.VirtueConfiguration;
-import io.virtue.config.config.ApplicationConfig;
-import io.virtue.config.config.EventDispatcherConfig;
-import io.virtue.config.manager.ConfigManager;
-import io.virtue.config.manager.MonitorManager;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.RemoteCaller;
+import io.virtue.core.RemoteService;
+import io.virtue.core.Scheduler;
+import io.virtue.core.VirtueConfiguration;
+import io.virtue.core.config.ApplicationConfig;
+import io.virtue.core.config.EventDispatcherConfig;
+import io.virtue.core.manager.ConfigManager;
+import io.virtue.core.manager.MonitorManager;
+import io.virtue.core.manager.Virtue;
 import io.virtue.event.EventDispatcher;
 import io.virtue.event.EventDispatcherFactory;
 import io.virtue.governance.router.Router;
-import io.virtue.rpc.ComplexRemoteCaller;
-import io.virtue.rpc.ComplexRemoteService;
 import io.virtue.transport.Transporter;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -27,8 +25,8 @@ import java.util.List;
 import static io.virtue.common.constant.Components.DEFAULT;
 
 /**
- * Virtue application config
- * manage each config component
+ * Virtue application core
+ * manage each core component
  */
 @Accessors(fluent = true)
 @Getter

@@ -3,7 +3,7 @@ package io.virtue.rpc.listener;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
-import io.virtue.config.config.ClientConfig;
+import io.virtue.core.config.ClientConfig;
 import io.virtue.event.EventListener;
 import io.virtue.rpc.event.HeartBeatEvent;
 import io.virtue.transport.channel.Channel;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Close idle connections according to config
+ * Close idle connections according to core
  * {@link ClientConfig#spareCloseTimes}
  * to reduce resource waste
  */

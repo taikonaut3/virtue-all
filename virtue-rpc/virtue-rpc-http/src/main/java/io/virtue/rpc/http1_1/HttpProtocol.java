@@ -3,7 +3,7 @@ package io.virtue.rpc.http1_1;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 import io.virtue.rpc.http1_1.config.HttpRequestWrapper;
 import io.virtue.rpc.http1_1.envelope.HttpRequestAdapter;
 import io.virtue.rpc.objectpool.ClientPool;

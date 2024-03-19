@@ -1,9 +1,9 @@
 package io.github.taikonaut3;
 
 import io.github.taikonaut3.model.ParentObject;
-import io.virtue.config.annotation.Config;
-import io.virtue.config.annotation.Options;
-import io.virtue.config.annotation.RemoteCaller;
+import io.virtue.core.annotation.Config;
+import io.virtue.core.annotation.Options;
+import io.virtue.core.annotation.RemoteCaller;
 import io.virtue.rpc.http1_1.config.HttpCall;
 import io.virtue.rpc.http1_1.config.HttpMethod;
 import io.virtue.rpc.http1_1.config.Param;

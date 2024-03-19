@@ -1,6 +1,6 @@
 package objectpool;
 
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 import io.virtue.rpc.objectpool.ArrayObjectPool;
 import org.junit.jupiter.api.Test;
 

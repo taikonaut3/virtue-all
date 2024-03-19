@@ -10,7 +10,7 @@ import io.virtue.common.exception.ConnectException;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 import io.virtue.registry.AbstractRegistryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

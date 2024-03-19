@@ -5,7 +5,7 @@ import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 import io.virtue.transport.Response;
 import io.virtue.transport.client.Client;
 import lombok.Getter;

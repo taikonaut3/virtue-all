@@ -14,7 +14,7 @@ public class CGLibProxyFactory extends AbstractProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) {
+    protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) throws Exception{
         Enhancer enhancer = new Enhancer();
         enhancer.setClassLoader(interfaceClass.getClassLoader());
         enhancer.setSuperclass(interfaceClass);
@@ -24,7 +24,7 @@ public class CGLibProxyFactory extends AbstractProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T> T doCreateProxy(T target, InvocationHandler handler) {
+    protected <T> T doCreateProxy(T target, InvocationHandler handler) throws Exception{
         Enhancer enhancer = new Enhancer();
         enhancer.setClassLoader(target.getClass().getClassLoader());
         enhancer.setSuperclass(target.getClass());

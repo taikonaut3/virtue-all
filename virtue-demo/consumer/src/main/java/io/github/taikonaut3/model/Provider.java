@@ -1,7 +1,7 @@
 package io.github.taikonaut3.model;
 
-import io.virtue.config.annotation.Config;
-import io.virtue.config.annotation.RemoteService;
+import io.virtue.core.annotation.Config;
+import io.virtue.core.annotation.RemoteService;
 import io.virtue.rpc.virtue.config.VirtueCallable;
 
 import java.util.List;

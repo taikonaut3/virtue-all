@@ -3,7 +3,7 @@ package io.virtue.rpc.virtue.server;
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
-import io.virtue.config.RpcCallArgs;
+import io.virtue.core.support.RpcCallArgs;
 import io.virtue.rpc.handler.RequestChannelHandler;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;

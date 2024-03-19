@@ -1,8 +1,8 @@
 package io.github.taikonaut3;
 
 import io.github.taikonaut3.model2.ParentObject;
-import io.virtue.config.annotation.Config;
-import io.virtue.config.annotation.RemoteService;
+import io.virtue.core.annotation.Config;
+import io.virtue.core.annotation.RemoteService;
 import io.virtue.rpc.virtue.config.VirtueCallable;
 import org.example.Message;
 

@@ -2,9 +2,9 @@ package io.github.taikonaut3;
 
 import io.github.taikonaut3.model.ParentObject;
 import io.virtue.common.constant.Components;
-import io.virtue.config.annotation.Config;
-import io.virtue.config.annotation.Options;
-import io.virtue.config.annotation.RemoteCaller;
+import io.virtue.core.annotation.Config;
+import io.virtue.core.annotation.Options;
+import io.virtue.core.annotation.RemoteCaller;
 import io.virtue.rpc.virtue.config.VirtueCall;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.transport.Response;

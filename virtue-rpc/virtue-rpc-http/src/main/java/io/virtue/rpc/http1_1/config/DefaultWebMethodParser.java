@@ -1,7 +1,7 @@
 package io.virtue.rpc.http1_1.config;
 
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 import io.virtue.rpc.http1_1.HttpParser;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RequestBody;

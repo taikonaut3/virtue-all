@@ -1,8 +1,8 @@
 package io.virtue.rpc.http1;
 
 import io.virtue.common.spi.ExtensionLoader;
-import io.virtue.config.CallArgs;
-import io.virtue.config.Caller;
+import io.virtue.core.CallArgs;
+import io.virtue.core.Caller;
 import io.virtue.rpc.RpcFuture;
 import io.virtue.rpc.http1_1.config.MethodParser;
 import io.virtue.rpc.protocol.ProtocolParser;

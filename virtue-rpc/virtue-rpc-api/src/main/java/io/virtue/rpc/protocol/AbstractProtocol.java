@@ -3,7 +3,7 @@ package io.virtue.rpc.protocol;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 import io.virtue.transport.Transporter;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.codec.Codec;

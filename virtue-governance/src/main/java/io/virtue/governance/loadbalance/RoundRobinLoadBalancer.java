@@ -3,7 +3,7 @@ package io.virtue.governance.loadbalance;
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.config.Invocation;
+import io.virtue.core.Invocation;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.virtue.common.constant.Components.LoadBalance.ROUND_ROBIN;
 
 /**
- * The "Polling" load-balancing policy:
+ * "RoundRobin" load balancing strategy:
  * Requests are assigned to each server in sequence,
  * Each request is assigned in the order of the server list, and starts again at the end of the list,
  * This strategy applies to cases where the server performance is equivalent.

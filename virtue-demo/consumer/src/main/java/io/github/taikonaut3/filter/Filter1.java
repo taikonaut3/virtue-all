@@ -1,9 +1,9 @@
 package io.github.taikonaut3.filter;
 
 import io.virtue.common.url.URL;
-import io.virtue.config.Invocation;
-import io.virtue.config.filter.Filter;
-import io.virtue.config.filter.FilterScope;
+import io.virtue.core.Invocation;
+import io.virtue.core.filter.Filter;
+import io.virtue.core.filter.FilterScope;
 import org.springframework.stereotype.Component;
 
 @Component

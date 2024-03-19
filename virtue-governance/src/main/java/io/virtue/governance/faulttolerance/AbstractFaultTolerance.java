@@ -1,7 +1,7 @@
 package io.virtue.governance.faulttolerance;
 
 import io.virtue.common.exception.RpcException;
-import io.virtue.config.Invocation;
+import io.virtue.core.Invocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

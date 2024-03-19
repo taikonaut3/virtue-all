@@ -11,18 +11,18 @@ import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectUtil;
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.CallArgs;
-import io.virtue.config.ClientCaller;
-import io.virtue.config.Invocation;
-import io.virtue.config.RemoteCaller;
-import io.virtue.config.annotation.Options;
-import io.virtue.config.config.ClientConfig;
-import io.virtue.config.config.RegistryConfig;
-import io.virtue.config.filter.Filter;
-import io.virtue.config.filter.FilterScope;
-import io.virtue.config.manager.ClientConfigManager;
-import io.virtue.config.manager.ConfigManager;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.CallArgs;
+import io.virtue.core.ClientCaller;
+import io.virtue.core.Invocation;
+import io.virtue.core.RemoteCaller;
+import io.virtue.core.annotation.Options;
+import io.virtue.core.config.ClientConfig;
+import io.virtue.core.config.RegistryConfig;
+import io.virtue.core.filter.Filter;
+import io.virtue.core.filter.FilterScope;
+import io.virtue.core.manager.ClientConfigManager;
+import io.virtue.core.manager.ConfigManager;
+import io.virtue.core.manager.Virtue;
 import io.virtue.governance.discovery.ServiceDiscovery;
 import io.virtue.governance.faulttolerance.FaultTolerance;
 import io.virtue.governance.loadbalance.LoadBalancer;
@@ -113,7 +113,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
         clientConfig(ops.client());
         // subclass init
         doInit();
-        // parse config
+        // parse core
         ConfigManager configManager = virtue.configManager();
         for (RegistryConfig registryConfig : configManager.registryConfigManager().globalConfigs()) {
             addRegistryConfig(registryConfig);

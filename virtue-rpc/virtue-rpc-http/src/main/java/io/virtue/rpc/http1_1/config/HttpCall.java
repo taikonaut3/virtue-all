@@ -1,8 +1,8 @@
 package io.virtue.rpc.http1_1.config;
 
-import io.virtue.config.annotation.Config;
-import io.virtue.config.annotation.Options;
-import io.virtue.config.annotation.CallerFactoryProvider;
+import io.virtue.core.annotation.Config;
+import io.virtue.core.annotation.Options;
+import io.virtue.core.annotation.CallerFactoryProvider;
 import io.virtue.common.constant.Components;
 
 import java.lang.annotation.*;

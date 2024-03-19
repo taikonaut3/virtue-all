@@ -1,8 +1,8 @@
 package io.virtue.boot;
 
 import io.virtue.common.constant.Key;
-import io.virtue.config.config.ApplicationConfig;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.config.ApplicationConfig;
+import io.virtue.core.manager.Virtue;
 import io.virtue.common.constant.Components;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.client.serviceregistry.RegistrationLifecycle;

@@ -1,6 +1,6 @@
 package io.virtue.boot.processor;
 
-import io.virtue.config.filter.Filter;
+import io.virtue.core.filter.Filter;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 

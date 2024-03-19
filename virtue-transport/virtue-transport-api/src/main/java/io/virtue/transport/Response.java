@@ -34,4 +34,13 @@ public class Response implements Envelope {
         code(code);
     }
 
+
+    public static Response success(URL url,Object message){
+        return new Response(SUCCESS,url,message);
+    }
+
+    public static Response error(URL url,Object message){
+        return new Response(ERROR,url,message);
+    }
+
 }

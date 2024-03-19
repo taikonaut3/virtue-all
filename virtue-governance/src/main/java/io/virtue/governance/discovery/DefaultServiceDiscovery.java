@@ -5,7 +5,7 @@ import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
-import io.virtue.config.Invocation;
+import io.virtue.core.Invocation;
 import io.virtue.registry.RegistryService;
 import io.virtue.registry.RegistryFactory;
 

@@ -2,7 +2,7 @@ package io.virtue.rpc.virtue;
 
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.constant.Components;
-import io.virtue.config.*;
+import io.virtue.core.*;
 
 import java.lang.reflect.Method;
 

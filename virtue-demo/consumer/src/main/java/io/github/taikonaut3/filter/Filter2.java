@@ -3,8 +3,8 @@ package io.github.taikonaut3.filter;
 import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
-import io.virtue.config.Invocation;
-import io.virtue.config.filter.Filter;
+import io.virtue.core.Invocation;
+import io.virtue.core.filter.Filter;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,7 +1,7 @@
 package io.virtue.transport.server;
 
 import io.virtue.common.exception.BindException;
-import io.virtue.config.Closeable;
+import io.virtue.core.Closeable;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.endpoint.Endpoint;
 

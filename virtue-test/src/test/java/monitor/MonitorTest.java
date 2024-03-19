@@ -1,7 +1,7 @@
 package monitor;
 
-import io.virtue.config.SystemInfo;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.SystemInfo;
+import io.virtue.core.manager.Virtue;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -1,9 +1,9 @@
 package io.virtue.rpc.support;
 
 import io.virtue.common.spi.ServiceProvider;
-import io.virtue.config.Invocation;
-import io.virtue.config.filter.Filter;
-import io.virtue.config.filter.FilterChain;
+import io.virtue.core.Invocation;
+import io.virtue.core.filter.Filter;
+import io.virtue.core.filter.FilterChain;
 
 import java.util.List;
 

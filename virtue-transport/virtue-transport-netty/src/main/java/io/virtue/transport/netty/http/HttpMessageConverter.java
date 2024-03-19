@@ -47,7 +47,7 @@ public final class HttpMessageConverter {
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             if (msg instanceof FullHttpResponse httpResponse) {
                 URL url = ctx.channel().attr(urlKey).get();
-                msg = new Response(url, httpResponse);
+                msg = Response.success(url, httpResponse);
             }
             ctx.fireChannelRead(msg);
         }

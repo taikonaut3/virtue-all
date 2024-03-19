@@ -1,6 +1,6 @@
 package io.virtue.rpc.http1_1.config;
 
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

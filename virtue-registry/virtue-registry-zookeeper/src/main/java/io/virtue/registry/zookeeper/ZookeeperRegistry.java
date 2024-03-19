@@ -2,7 +2,7 @@
 //
 //import constant.common.io.virtue.Constant;
 //import constant.common.io.virtue.Key;
-//import config.io.virtue.CallArgs;
+//import core.io.virtue.CallArgs;
 //import url.common.io.virtue.URL;
 //import util.common.io.virtue.GenerateUtil;
 //import registry.io.virtue.AbstractRegistry;

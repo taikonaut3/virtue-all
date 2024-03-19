@@ -2,7 +2,7 @@ package io.virtue.governance.loadbalance;
 
 import io.virtue.common.spi.ServiceInterface;
 import io.virtue.common.url.URL;
-import io.virtue.config.Invocation;
+import io.virtue.core.Invocation;
 
 import java.util.List;
 

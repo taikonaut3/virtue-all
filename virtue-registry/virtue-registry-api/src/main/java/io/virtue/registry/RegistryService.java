@@ -2,7 +2,7 @@ package io.virtue.registry;
 
 import io.virtue.common.exception.ConnectException;
 import io.virtue.common.url.URL;
-import io.virtue.config.Closeable;
+import io.virtue.core.Closeable;
 
 import java.util.List;
 

@@ -1,23 +1,33 @@
 package io.virtue.proxy;
 
+import io.virtue.common.exception.RpcException;
+
 public abstract class AbstractProxyFactory implements ProxyFactory {
 
     @Override
     public <T> T createProxy(Class<T> interfaceClass, InvocationHandler handler) {
-        if (!interfaceClass.isInterface()) {
-            throw new IllegalArgumentException(interfaceClass + "Is Not Interface," + "The Method Only Support Interface");
+        try {
+            if (!interfaceClass.isInterface()) {
+                throw new IllegalArgumentException(interfaceClass + "Is Not Interface," + "The Method Only Support Interface");
+            }
+            return doCreateProxy(interfaceClass, wrap(interfaceClass, handler));
+        } catch (Exception e) {
+            throw new RpcException("Create Proxy fail for interface: " + interfaceClass.getName(), e);
         }
-        return doCreateProxy(interfaceClass, wrap(interfaceClass, handler));
     }
 
     @Override
     public <T> T createProxy(T target, InvocationHandler handler) {
-        return doCreateProxy(target, wrap(target, handler));
+        try {
+            return doCreateProxy(target, wrap(target, handler));
+        } catch (Exception e) {
+            throw new RpcException("Create Proxy fail for target: " + target.getClass().getName(), e);
+        }
     }
 
-    protected abstract <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler);
+    protected abstract <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) throws Exception;
 
-    protected abstract <T> T doCreateProxy(T target, InvocationHandler handler);
+    protected abstract <T> T doCreateProxy(T target, InvocationHandler handler) throws Exception;
 
     private InvocationHandler wrap(Object target, InvocationHandler invocationHandler) {
         return (proxy, method, args, superInvoker) -> {

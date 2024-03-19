@@ -4,8 +4,8 @@ import com.google.protobuf.MessageLite;
 import io.virtue.common.exception.ConversionException;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
-import io.virtue.config.CallArgs;
-import io.virtue.config.RpcCallArgs;
+import io.virtue.core.CallArgs;
+import io.virtue.core.support.RpcCallArgs;
 import io.virtue.serialization.Serializer;
 
 import java.lang.reflect.Method;

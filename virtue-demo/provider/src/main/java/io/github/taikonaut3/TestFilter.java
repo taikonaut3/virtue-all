@@ -1,8 +1,8 @@
 package io.github.taikonaut3;
 
 import io.virtue.common.extension.RpcContext;
-import io.virtue.config.Invocation;
-import io.virtue.config.filter.Filter;
+import io.virtue.core.Invocation;
+import io.virtue.core.filter.Filter;
 import org.springframework.stereotype.Component;
 
 /**

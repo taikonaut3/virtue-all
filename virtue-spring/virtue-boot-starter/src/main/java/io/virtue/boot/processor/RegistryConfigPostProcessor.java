@@ -1,6 +1,6 @@
 package io.virtue.boot.processor;
 
-import io.virtue.config.config.RegistryConfig;
+import io.virtue.core.config.RegistryConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 

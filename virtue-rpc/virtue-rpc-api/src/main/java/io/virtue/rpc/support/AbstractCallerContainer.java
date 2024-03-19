@@ -1,9 +1,9 @@
 package io.virtue.rpc.support;
 
 import io.virtue.common.util.AssertUtil;
-import io.virtue.config.Caller;
-import io.virtue.config.CallerContainer;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.Caller;
+import io.virtue.core.CallerContainer;
+import io.virtue.core.manager.Virtue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -1,7 +1,7 @@
 package io.virtue.rpc.http1_1;
 
-import io.virtue.config.RemoteService;
-import io.virtue.config.annotation.Config;
+import io.virtue.core.RemoteService;
+import io.virtue.core.annotation.Config;
 import io.virtue.rpc.support.AbstractServerCaller;
 import io.virtue.rpc.http1_1.config.HttpCallable;
 import io.virtue.common.constant.Components;

@@ -1,9 +1,9 @@
 package io.virtue.boot;
 
-import io.virtue.config.config.ClientConfig;
-import io.virtue.config.config.RegistryConfig;
-import io.virtue.config.config.ServerConfig;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.config.ClientConfig;
+import io.virtue.core.config.RegistryConfig;
+import io.virtue.core.config.ServerConfig;
+import io.virtue.core.manager.Virtue;
 import jakarta.annotation.Resource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

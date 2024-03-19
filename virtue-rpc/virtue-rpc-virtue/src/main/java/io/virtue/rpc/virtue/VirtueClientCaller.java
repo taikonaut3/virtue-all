@@ -2,9 +2,9 @@ package io.virtue.rpc.virtue;
 
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.RemoteCaller;
-import io.virtue.config.annotation.Config;
-import io.virtue.config.annotation.Options;
+import io.virtue.core.RemoteCaller;
+import io.virtue.core.annotation.Config;
+import io.virtue.core.annotation.Options;
 import io.virtue.rpc.support.AbstractClientCaller;
 import io.virtue.rpc.virtue.config.VirtueCall;
 import io.virtue.common.constant.Components;

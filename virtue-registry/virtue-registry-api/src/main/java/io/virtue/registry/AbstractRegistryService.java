@@ -3,8 +3,8 @@ package io.virtue.registry;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.SystemInfo;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.SystemInfo;
+import io.virtue.core.manager.Virtue;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,11 +1,11 @@
 package io.virtue.boot.processor;
 
 import io.virtue.boot.RemoteCallFactoryBean;
-import io.virtue.config.annotation.RemoteService;
-import io.virtue.config.config.ClientConfig;
-import io.virtue.config.config.RegistryConfig;
-import io.virtue.config.config.ServerConfig;
-import io.virtue.config.filter.Filter;
+import io.virtue.core.annotation.RemoteService;
+import io.virtue.core.config.ClientConfig;
+import io.virtue.core.config.RegistryConfig;
+import io.virtue.core.config.ServerConfig;
+import io.virtue.core.filter.Filter;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 

@@ -21,8 +21,7 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
         if(url!=null){
             Protocol<?,?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
             Object message = protocol.createResponse(url, cause.getMessage());
-            Response response = new Response(url, message);
-            response.code(Response.ERROR);
+            Response response = Response.error(url, message);
             event.channel().send(response);
         }
     }

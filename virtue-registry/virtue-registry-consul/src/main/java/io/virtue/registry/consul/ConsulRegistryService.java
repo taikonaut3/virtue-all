@@ -7,7 +7,7 @@ import io.virtue.common.extension.Attribute;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.manager.Virtue;
 import io.virtue.registry.AbstractRegistryService;
 import io.vertx.core.Vertx;
 import io.vertx.ext.consul.*;

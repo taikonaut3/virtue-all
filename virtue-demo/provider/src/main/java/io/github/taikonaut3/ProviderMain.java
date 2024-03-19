@@ -2,9 +2,9 @@ package io.github.taikonaut3;
 
 import io.virtue.boot.EnableVirtue;
 import io.virtue.common.constant.Key;
-import io.virtue.config.config.RegistryConfig;
-import io.virtue.config.config.ServerConfig;
-import io.virtue.config.manager.Virtue;
+import io.virtue.core.config.RegistryConfig;
+import io.virtue.core.config.ServerConfig;
+import io.virtue.core.manager.Virtue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

@@ -2,7 +2,7 @@ package io.virtue.boot.processor;
 
 import io.virtue.boot.EnableVirtue;
 import io.virtue.boot.RemoteCallFactoryBean;
-import io.virtue.config.annotation.RemoteCaller;
+import io.virtue.core.annotation.RemoteCaller;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.annotation.Qualifier;

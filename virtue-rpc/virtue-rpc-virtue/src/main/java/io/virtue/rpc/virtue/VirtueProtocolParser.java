@@ -1,6 +1,6 @@
 package io.virtue.rpc.virtue;
 
-import io.virtue.config.CallArgs;
+import io.virtue.core.CallArgs;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;

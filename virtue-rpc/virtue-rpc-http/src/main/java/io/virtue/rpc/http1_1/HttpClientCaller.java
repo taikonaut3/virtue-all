@@ -2,9 +2,9 @@ package io.virtue.rpc.http1_1;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
-import io.virtue.config.CallArgs;
-import io.virtue.config.Invocation;
-import io.virtue.config.RemoteCaller;
+import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
+import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.RpcFuture;
 import io.virtue.rpc.support.AbstractClientCaller;
 import io.virtue.rpc.http1_1.config.HttpCall;
