@@ -6,6 +6,7 @@ import io.github.taikonaut3.filter.TestFilter;
 import io.github.taikonaut3.model.ParentObject;
 import io.virtue.boot.EnableVirtue;
 import io.virtue.core.MatchRule;
+import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.core.manager.Virtue;
@@ -30,7 +31,7 @@ public class ConsumerMain {
     public static void simpleTest() {
         Virtue virtue = Virtue.getDefault();
         virtue.wrap(new Provider());
-        Consumer consumer = virtue.applicationName("consumer")
+        Consumer consumer = virtue.application(new ApplicationConfig("consumer"))
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
                 .register("filter1", new Filter1().addProtocolRule(virtue, MatchRule.Scope.client,".*"))
                 .register("filter2",new Filter2())

@@ -213,7 +213,7 @@ public class VirtueCodec implements Codec {
             bodyType = Object.class;
         }
         byte[] decompress = compressionInstance.decompress(bodyBytes);
-        logger.debug("{}: [deserializer: {}],[decompression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compression.getClass().getSimpleName());
+        logger.debug("{}: [deserializer: {}],[decompression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compressionInstance.getClass().getSimpleName());
         return serializer.deserialize(decompress, bodyType);
     }
 
