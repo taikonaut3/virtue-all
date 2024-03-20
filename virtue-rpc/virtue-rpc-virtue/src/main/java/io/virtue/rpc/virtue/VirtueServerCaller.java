@@ -1,23 +1,27 @@
 package io.virtue.rpc.virtue;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.RemoteService;
 import io.virtue.core.annotation.Config;
 import io.virtue.rpc.support.AbstractServerCaller;
 import io.virtue.rpc.virtue.config.VirtueCallable;
-import io.virtue.common.constant.Components;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
+@Getter
+@Accessors(fluent = true)
 public class VirtueServerCaller extends AbstractServerCaller<VirtueCallable> {
 
     private static final Logger logger = LoggerFactory.getLogger(VirtueServerCaller.class);
 
-    private String remoteService;
+    private String remoteServiceName;
 
     private String callMethod;
 
@@ -27,7 +31,7 @@ public class VirtueServerCaller extends AbstractServerCaller<VirtueCallable> {
 
     @Override
     public void doInit() {
-        this.remoteService = remoteService().name();
+        this.remoteServiceName = remoteService().name();
         this.callMethod = StringUtil.isBlank(parsedAnnotation.name()) ?
                 GenerateUtil.generateKey(method()) : parsedAnnotation.name();
     }
@@ -39,6 +43,6 @@ public class VirtueServerCaller extends AbstractServerCaller<VirtueCallable> {
 
     @Override
     public List<String> pathList() {
-        return List.of(remoteService, callMethod);
+        return List.of(remoteServiceName, callMethod);
     }
 }
