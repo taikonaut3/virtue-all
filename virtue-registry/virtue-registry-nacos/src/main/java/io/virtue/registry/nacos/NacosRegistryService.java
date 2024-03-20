@@ -55,7 +55,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             namingService.deregisterInstance(serviceName, url.host(), url.port());
         } catch (NacosException e) {
             logger.error("DeregisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
-            throw new RuntimeException(e);
+            throw RpcException.unwrap(e);
         }
         Virtue.get(url).scheduler().addPeriodic(() -> {
             Instance instance = new Instance();
@@ -67,7 +67,7 @@ public class NacosRegistryService extends AbstractRegistryService {
                 namingService.registerInstance(serviceName, instance);
             } catch (NacosException e) {
                 logger.error("RegisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
-                throw new RuntimeException(e);
+                throw RpcException.unwrap(e);
             }
         }, 0, 5, TimeUnit.SECONDS);
 
@@ -87,7 +87,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             }
         } catch (NacosException e) {
             logger.error("SelectInstances is Failed from Nacos for Url:{}", url);
-            throw new RuntimeException(e);
+            throw RpcException.unwrap(e);
         }
         return urls;
     }
@@ -108,7 +108,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             });
         } catch (NacosException e) {
             logger.error("Subscribe is Failed from Nacos for Service:{}", serviceName);
-            throw new RpcException(e);
+            throw RpcException.unwrap(e);
         }
     }
 
@@ -117,7 +117,7 @@ public class NacosRegistryService extends AbstractRegistryService {
         try {
             namingService.shutDown();
         } catch (NacosException e) {
-            throw new RpcException(e);
+            throw RpcException.unwrap(e);
         }
     }
 

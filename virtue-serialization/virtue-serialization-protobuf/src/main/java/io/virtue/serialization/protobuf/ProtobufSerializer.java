@@ -36,9 +36,9 @@ public class ProtobufSerializer implements Serializer {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
+    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
         try {
-            if (CallArgs.class.isAssignableFrom(clazz)) {
+            if (CallArgs.class.isAssignableFrom(type)) {
                 RpcCallArgs callArgs = new RpcCallArgs();
                 callArgs.args(new Object[]{bytes});
                 return (T) callArgs;
@@ -57,10 +57,10 @@ public class ProtobufSerializer implements Serializer {
 
     @Override
     public Object convert(Object arg, Type type) throws ConversionException {
-        if (arg instanceof byte[] bytes && type instanceof Class<?> clazz) {
+        if (arg instanceof byte[] bytes && type instanceof Class<?> typeClass) {
             try {
-                if (MessageLite.class.isAssignableFrom(clazz)) {
-                    Method parseForm = clazz.getDeclaredMethod("parseFrom", byte[].class);
+                if (MessageLite.class.isAssignableFrom(typeClass)) {
+                    Method parseForm = typeClass.getDeclaredMethod("parseFrom", byte[].class);
                     parseForm.setAccessible(true);
                     return parseForm.invoke(null, (Object) bytes);
                 }

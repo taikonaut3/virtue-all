@@ -14,7 +14,6 @@ public class VirtueServerChannelHandlerChain extends DefaultChannelHandlerChain 
 
     public VirtueServerChannelHandlerChain() {
         addLast(new ServerHeartBeatChannelHandler());
-        addLast(new VirtueServerConvertChannelHandler());
         addLast(new ServerChannelHandler());
     }
 }

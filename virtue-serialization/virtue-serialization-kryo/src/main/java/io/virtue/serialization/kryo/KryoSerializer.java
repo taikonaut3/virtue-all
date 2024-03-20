@@ -35,10 +35,10 @@ public class KryoSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
+    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
         try (Input input = new Input(bytes)) {
             Kryo kryo = kryoThreadLocal.get();
-            return kryo.readObject(input, clazz);
+            return kryo.readObject(input, type);
         } catch (Exception e) {
             throw new SerializationException("Failed to deserialize object", e);
         }

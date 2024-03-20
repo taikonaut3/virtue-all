@@ -1,13 +1,21 @@
 package io.virtue.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
-public interface FileUtil {
+public final class FileUtil {
 
-    static void writeLineFile(String content, File targetFile) {
+    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+
+    private FileUtil() {
+    }
+
+    public static void writeLineFile(String content, File targetFile) {
         try {
             if (content.isEmpty()) {
                 return;
@@ -29,28 +37,32 @@ public interface FileUtil {
                 }
                 file.setLength(0);
                 file.write(fileContents.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Write file is failed", e);
         }
     }
 
-    static void createFileWithParentDirectory(String filePath) {
+    public static void createFileWithParentDirectory(String filePath) {
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         createParentDirectories(parentDir);
         try {
-            file.createNewFile();
+            boolean success = file.createNewFile();
+            if (!success) {
+                logger.warn("Create file is not success");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Create file is failed", e);
         }
     }
 
     private static void createParentDirectories(File directory) {
         if (!directory.exists()) {
-            directory.mkdirs();
+            boolean success = directory.mkdirs();
+            if (!success) {
+                logger.warn("Create Parent Directories is not success");
+            }
         }
         File parentDir = directory.getParentFile();
         if (parentDir != null) {

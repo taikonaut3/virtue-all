@@ -24,9 +24,9 @@ public interface StringUtil {
         }
     }
 
-    static String simpleClassName(Class<?> clazz) {
-        Objects.requireNonNull(clazz);
-        String className = clazz.getName();
+    static String simpleClassName(Class<?> type) {
+        Objects.requireNonNull(type);
+        String className = type.getName();
         final int lastDotIdx = className.lastIndexOf(".");
         if (lastDotIdx > -1) {
             return className.substring(lastDotIdx + 1);

@@ -1,6 +1,6 @@
 package io.virtue.proxy;
 
-import io.virtue.common.exception.RpcException;
+import java.lang.reflect.UndeclaredThrowableException;
 
 public abstract class AbstractProxyFactory implements ProxyFactory {
 
@@ -12,7 +12,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
             }
             return doCreateProxy(interfaceClass, wrap(interfaceClass, handler));
         } catch (Exception e) {
-            throw new RpcException("Create Proxy fail for interface: " + interfaceClass.getName(), e);
+            throw new UndeclaredThrowableException(e, "Create Proxy fail for interface: " + interfaceClass.getName());
         }
     }
 
@@ -21,7 +21,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         try {
             return doCreateProxy(target, wrap(target, handler));
         } catch (Exception e) {
-            throw new RpcException("Create Proxy fail for target: " + target.getClass().getName(), e);
+            throw new UndeclaredThrowableException(e, "Create Proxy fail for target: " + target.getClass().getName());
         }
     }
 

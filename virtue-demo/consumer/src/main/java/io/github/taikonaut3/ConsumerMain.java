@@ -46,6 +46,7 @@ public class ConsumerMain {
         message.setDate(new Date());
         message.setName("client" + message.getDate().toString());
         Message message1 = consumer.exchangeMessage(message);
+        System.out.println(message1);
         for (int i = 0; i < 50; i++) {
             long start = System.currentTimeMillis();
             List<ParentObject> list = consumer.list(ParentObject.getObjList("client list 1"), ParentObject.getObjList("client list 2"));

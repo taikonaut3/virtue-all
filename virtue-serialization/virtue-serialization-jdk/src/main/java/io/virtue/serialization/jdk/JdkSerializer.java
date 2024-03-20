@@ -1,9 +1,9 @@
 package io.virtue.serialization.jdk;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
-import io.virtue.common.constant.Components;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,11 +25,11 @@ public class JdkSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(byte[] input, Class<T> clazz) throws SerializationException {
+    public <T> T deserialize(byte[] input, Class<T> type) throws SerializationException {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(input);
              ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
             Object object = objectInputStream.readObject();
-            return clazz.cast(object);
+            return type.cast(object);
         } catch (Throwable e) {
             throw new SerializationException(e);
         }

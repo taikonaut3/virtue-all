@@ -2,6 +2,7 @@ package io.virtue.boot.processor;
 
 import io.virtue.boot.EnableVirtue;
 import io.virtue.boot.RemoteCallFactoryBean;
+import io.virtue.common.exception.RpcException;
 import io.virtue.core.annotation.RemoteCaller;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -42,16 +43,16 @@ public class RemoteCallerPostProcessor extends PreferentialCreateConfig implemen
         RemoteCallScanner remoteCallScanner = new RemoteCallScanner();
         for (String pkg : remoteCallPackages) {
             List<? extends Class<?>> RemoteCallInterfaces = remoteCallScanner.findClasses(pkg);
-            for (Class<?> clazz : RemoteCallInterfaces) {
+            for (Class<?> type : RemoteCallInterfaces) {
                 BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RemoteCallFactoryBean.class);
-                builder.addConstructorArgValue(clazz);
+                builder.addConstructorArgValue(type);
                 AbstractBeanDefinition definition = builder.getBeanDefinition();
                 String beanName = "";
-                if (clazz.isAnnotationPresent(Qualifier.class)) {
-                    beanName = clazz.getAnnotation(Qualifier.class).value();
+                if (type.isAnnotationPresent(Qualifier.class)) {
+                    beanName = type.getAnnotation(Qualifier.class).value();
                 }
                 if (!StringUtils.hasText(beanName)) {
-                    beanName = StringUtils.uncapitalizeAsProperty(clazz.getSimpleName());
+                    beanName = StringUtils.uncapitalizeAsProperty(type.getSimpleName());
                 }
                 registry.registerBeanDefinition(beanName, definition);
 
@@ -86,7 +87,7 @@ public class RemoteCallerPostProcessor extends PreferentialCreateConfig implemen
                 try {
                     return ClassLoader.getSystemClassLoader().loadClass(beanDefinition.getBeanClassName());
                 } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw RpcException.unwrap(e);
                 }
             }).toList();
         }

@@ -9,9 +9,9 @@ import io.virtue.event.Event;
 import io.virtue.rpc.event.ClientHandlerExceptionEvent;
 import io.virtue.rpc.event.ServerHandlerExceptionEvent;
 import io.virtue.transport.Envelope;
-import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.channel.ChannelHandler;
+import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.ChannelHandlerChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +96,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
                     new ClientHandlerExceptionEvent(channel, cause);
             getEventDispatcher(url).dispatchEvent(exceptionEvent);
         }
-        channels.remove(NetUtil.getAddress(channel.remoteAddress()));
+//        channels.remove(NetUtil.getAddress(channel.remoteAddress()));
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.caught(channel, cause);
         }

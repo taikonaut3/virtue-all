@@ -58,7 +58,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
             }
         } catch (Exception e) {
             logger.error("Invoke " + url.path() + " fail", e);
-            Object message = protocol.createResponse(url, e.getMessage());
+            Object message = protocol.createResponse(url, "Server Exception message: " + e.getMessage());
             response = Response.error(url, message);
         } finally {
             String responseContextStr = RpcContext.responseContext().toString();

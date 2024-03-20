@@ -21,6 +21,10 @@
             <artifactId>virtue-serialization-protobuf</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-eventhub-flow</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>

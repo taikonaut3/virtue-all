@@ -42,12 +42,12 @@ public class JacksonSerializer implements Serializer {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
-        if (clazz == String.class) {
+    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
+        if (type == String.class) {
             return (T) new String(bytes);
         }
         try {
-            return objectMapper.readValue(bytes, clazz);
+            return objectMapper.readValue(bytes, type);
         } catch (IOException e) {
             throw new SerializationException(e);
         }

@@ -60,11 +60,11 @@ public final class ReflectUtil {
 
     }
 
-    public static Class<?>[] findMatchingConstructor(Class<?> clazz, Object... args) throws NoSuchMethodException {
+    public static Class<?>[] findMatchingConstructor(Class<?> type, Object... args) throws NoSuchMethodException {
         if (args == null || args.length == 0) {
             return null;
         }
-        Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+        Constructor<?>[] constructors = type.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             if (parameterTypes.length == args.length) {
@@ -98,13 +98,14 @@ public final class ReflectUtil {
         }
         return constructor;
     }
-    public static List<Field> getAllFields(Class<?> clazz){
+
+    public static List<Field> getAllFields(Class<?> type) {
         List<Field> allFields = new ArrayList<>();
         do{
-            Field[] declaredFields = clazz.getDeclaredFields();
+            Field[] declaredFields = type.getDeclaredFields();
             allFields.addAll(Arrays.asList(declaredFields));
-            clazz = clazz.getSuperclass();
-        }while(clazz != null && clazz != Object.class);
+            type = type.getSuperclass();
+        } while (type != null && type != Object.class);
         return allFields;
     }
 

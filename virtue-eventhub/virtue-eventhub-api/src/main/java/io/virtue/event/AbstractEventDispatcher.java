@@ -16,7 +16,6 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     @Override
     public <E extends Event<?>> void addListener(Class<E> eventType, EventListener<E> listener) {
         listenerMap.computeIfAbsent(eventType, k -> new LinkedList<>()).add(listener);
-
     }
 
     @Override

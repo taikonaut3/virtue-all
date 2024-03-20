@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -51,10 +50,8 @@ public abstract class AbstractServerCaller<T extends Annotation> extends Abstrac
             method.setAccessible(true);
             try {
                 return method.invoke(remoteService().target(), args.args());
-            } catch (IllegalAccessException e) {
-                throw new RpcException(e);
-            } catch (InvocationTargetException e) {
-                throw new RpcException(e.getTargetException());
+            } catch (Exception e) {
+                throw RpcException.unwrap(e);
             }
         });
         Object result = filterChain.filter(invocation, preFilters);

@@ -27,8 +27,8 @@ import io.virtue.governance.discovery.ServiceDiscovery;
 import io.virtue.governance.faulttolerance.FaultTolerance;
 import io.virtue.governance.loadbalance.LoadBalancer;
 import io.virtue.governance.router.Router;
-import io.virtue.registry.RegistryService;
 import io.virtue.registry.RegistryFactory;
+import io.virtue.registry.RegistryService;
 import io.virtue.rpc.RpcFuture;
 import io.virtue.transport.Request;
 import io.virtue.transport.client.Client;
@@ -181,8 +181,9 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
             Invocation invocation = Invocation.create(url, args);
             invocation.revise(() -> doRpcCall(invocation));
             result = filterChain.filter(invocation, preFilters);
-        } catch (RpcException e) {
+        } catch (Exception e) {
             logger.error("Remote Call fail " + this, e);
+            throw RpcException.unwrap(e);
         } finally {
             RpcContext.clear();
         }
@@ -235,38 +236,34 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     }
 
     protected Object doRpcCall(Invocation invocation) {
-        try {
-            URL url = invocation.url();
-            ClientCaller<?> caller = (ClientCaller<?>) invocation.callArgs().caller();
-            if (StringUtil.isBlank(caller.directUrl())) {
-                // ServiceDiscovery
-                String serviceDiscoveryName = url.getParameter(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
-                ServiceDiscovery serviceDiscovery = ExtensionLoader.loadService(ServiceDiscovery.class, serviceDiscoveryName);
-                URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls()).stream()
-                        .flatMap(Collection::stream)
-                        .toArray(URL[]::new);
-                List<URL> availableServiceUrls = serviceDiscovery.discover(invocation, registryConfigUrls);
-                // Router
-                Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
-                if (router == null) {
-                    String routerName = virtue.configManager().applicationConfig().router();
-                    routerName = StringUtil.isBlank(routerName) ? Constant.DEFAULT_ROUTER : routerName;
-                    router = ExtensionLoader.loadService(Router.class, routerName);
-                }
-                List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
-                // LoadBalance
-                String loadBalancerName = url.getParameter(Key.LOAD_BALANCE, Constant.DEFAULT_LOAD_BALANCE);
-                LoadBalancer loadBalancer = ExtensionLoader.loadService(LoadBalancer.class, loadBalancerName);
-                URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
-                url.address(selectedServiceUrl.address()).addParameters(selectedServiceUrl.parameters());
+        URL url = invocation.url();
+        ClientCaller<?> caller = (ClientCaller<?>) invocation.callArgs().caller();
+        if (StringUtil.isBlank(caller.directUrl())) {
+            // ServiceDiscovery
+            String serviceDiscoveryName = url.getParameter(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
+            ServiceDiscovery serviceDiscovery = ExtensionLoader.loadService(ServiceDiscovery.class, serviceDiscoveryName);
+            URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls()).stream()
+                    .flatMap(Collection::stream)
+                    .toArray(URL[]::new);
+            List<URL> availableServiceUrls = serviceDiscovery.discover(invocation, registryConfigUrls);
+            // Router
+            Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
+            if (router == null) {
+                String routerName = virtue.configManager().applicationConfig().router();
+                routerName = StringUtil.isBlank(routerName) ? Constant.DEFAULT_ROUTER : routerName;
+                router = ExtensionLoader.loadService(Router.class, routerName);
             }
-            // Invocation revise
-            invocation.revise(() -> call(invocation));
-            List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-            return filterChain.filter(invocation, postFilters);
-        } catch (Exception e) {
-            throw new RpcException(e);
+            List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
+            // LoadBalance
+            String loadBalancerName = url.getParameter(Key.LOAD_BALANCE, Constant.DEFAULT_LOAD_BALANCE);
+            LoadBalancer loadBalancer = ExtensionLoader.loadService(LoadBalancer.class, loadBalancerName);
+            URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
+            url.address(selectedServiceUrl.address()).addParameters(selectedServiceUrl.parameters());
         }
+        // Invocation revise
+        invocation.revise(() -> call(invocation));
+        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
+        return filterChain.filter(invocation, postFilters);
     }
 
     protected RpcFuture send(Invocation invocation) {
@@ -313,8 +310,7 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
                 NetUtil.toInetSocketAddress(url);
                 directUrl(url);
             } catch (IllegalArgumentException e) {
-                logger.error("Illegal direct connection address", e);
-                throw new IllegalArgumentException(e);
+                throw new IllegalArgumentException("Illegal direct connection address", e);
             }
         } else {
             if (remoteCaller().directAddress() != null) {

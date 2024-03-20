@@ -3,13 +3,19 @@ package io.virtue.rpc.virtue;
 import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.CodecException;
+import io.virtue.common.exception.SourceException;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.byteutils.ByteReader;
 import io.virtue.common.util.byteutils.ByteWriter;
+import io.virtue.core.ServerCaller;
+import io.virtue.core.manager.Virtue;
+import io.virtue.core.support.RpcCallArgs;
+import io.virtue.rpc.RpcFuture;
 import io.virtue.rpc.virtue.envelope.VirtueEnvelope;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
+import io.virtue.serialization.Converter;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
@@ -20,8 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
+
+import static io.virtue.common.constant.Components.Serialize.*;
 
 /**
  * Envelope is formed in the following Order:
@@ -46,6 +56,8 @@ import java.util.Objects;
 public class VirtueCodec implements Codec {
 
     private static final Logger logger = LoggerFactory.getLogger(VirtueCodec.class);
+
+    private static final List<String> COMMON_SERIALIZATION = List.of(JSON, MSGPACK, PROTOBUF);
 
     private static final int MAGIC_REQ = 888;
 
@@ -76,7 +88,7 @@ public class VirtueCodec implements Codec {
             }
         } catch (Exception e) {
             logger.error("Encode message fail", e);
-            throw new CodecException(e);
+            throw new CodecException("Encode message fail", e);
         }
     }
 
@@ -90,7 +102,7 @@ public class VirtueCodec implements Codec {
             }
         } catch (Exception e) {
             logger.error("Decode message fail", e);
-            throw new CodecException(e);
+            throw new CodecException("Decode message fail", e);
         }
     }
 
@@ -103,7 +115,7 @@ public class VirtueCodec implements Codec {
         return byteWriter.toBytes();
     }
 
-    private Request decodeRequest(byte[] bytes) {
+    private Request decodeRequest(byte[] bytes) throws Exception {
         ByteReader byteReader = ByteReader.newReader(bytes);
         // magic
         int magic = byteReader.readInt();
@@ -125,7 +137,7 @@ public class VirtueCodec implements Codec {
         return byteWriter.toBytes();
     }
 
-    private Response decodeResponse(byte[] bytes) {
+    private Response decodeResponse(byte[] bytes) throws Exception {
         ByteReader byteReader = ByteReader.newReader(bytes);
         // magic
         int magic = byteReader.readInt();
@@ -161,47 +173,37 @@ public class VirtueCodec implements Codec {
         writer.writeBytes(message);
     }
 
-    private VirtueEnvelope decodeEnvelope(ByteReader reader) throws CodecException {
-        try {
-            // message type
-            Mode envelopeMode = ModeContainer.getMode(Key.ENVELOPE, reader.readByte());
-            String currentEnvelope = decodedClass == VirtueRequest.class ? Components.Envelope.REQUEST : Components.Envelope.RESPONSE;
-            if (!Objects.equals(envelopeMode.name(), currentEnvelope)) {
-                throw new IllegalArgumentException("Parse protocol error,Message type not match");
-            }
-            // compression type
-            Mode compressionMode = ModeContainer.getMode(Key.COMPRESSION, reader.readByte());
-            Compression compressionInstance = ExtensionLoader.loadService(Compression.class, compressionMode.name());
-            // url
-            int urlLength = reader.readInt();
-            byte[] urlCompressedBytes = reader.readBytes(urlLength);
-            byte[] urlBytes = compressionInstance.decompress(urlCompressedBytes);
-            String urlStr = new String(urlBytes);
-            URL url = URL.valueOf(urlStr);
-            // body
-            byte[] bodyBytes = reader.readBytes(reader.readableBytes());
-            Object body = decodeBody(url, bodyBytes);
-            return createEnvelope(url, body);
-        } catch (Exception e) {
-            logger.error(this.getClass().getSimpleName() + " decode Error", e);
-            throw new CodecException(e);
+    private VirtueEnvelope decodeEnvelope(ByteReader reader) throws Exception {
+        // message type
+        Mode envelopeMode = ModeContainer.getMode(Key.ENVELOPE, reader.readByte());
+        String currentEnvelope = decodedClass == VirtueRequest.class ? Components.Envelope.REQUEST : Components.Envelope.RESPONSE;
+        if (!Objects.equals(envelopeMode.name(), currentEnvelope)) {
+            throw new IllegalArgumentException("Parse protocol error,Message type not match");
         }
+        // compression type
+        Mode compressionMode = ModeContainer.getMode(Key.COMPRESSION, reader.readByte());
+        Compression compressionInstance = ExtensionLoader.loadService(Compression.class, compressionMode.name());
+        // url
+        int urlLength = reader.readInt();
+        byte[] urlCompressedBytes = reader.readBytes(urlLength);
+        byte[] urlBytes = compressionInstance.decompress(urlCompressedBytes);
+        String urlStr = new String(urlBytes);
+        URL url = URL.valueOf(urlStr);
+        // body
+        byte[] bodyBytes = reader.readBytes(reader.readableBytes());
+        Object body = decodeBody(url, bodyBytes, currentEnvelope);
+        return createEnvelope(url, body);
     }
 
     private byte[] encodeBody(VirtueEnvelope virtueEnvelope) {
-        try {
-            Serializer serializer = virtueEnvelope.serializer();
-            Compression compression = virtueEnvelope.compression();
-            byte[] bytes = serializer.serialize(virtueEnvelope.body());
-            logger.debug("{}: [serializer: {}],[compression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compression.getClass().getSimpleName());
-            return compression.compress(bytes);
-        } catch (Exception e) {
-            logger.error(this.getClass().getSimpleName() + " encode Error", e);
-            throw new CodecException(e);
-        }
+        Serializer serializer = virtueEnvelope.serializer();
+        Compression compression = virtueEnvelope.compression();
+        byte[] bytes = serializer.serialize(virtueEnvelope.body());
+        logger.debug("{}: [serializer: {}],[compression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compression.getClass().getSimpleName());
+        return compression.compress(bytes);
     }
 
-    private Object decodeBody(URL url, byte[] bodyBytes) {
+    private Object decodeBody(URL url, byte[] bodyBytes, String envelopeType) {
         String serialize = url.getParameter(Key.SERIALIZE);
         String compression = url.getParameter(Key.COMPRESSION);
         Serializer serializer = ExtensionLoader.loadService(Serializer.class, serialize);
@@ -214,7 +216,29 @@ public class VirtueCodec implements Codec {
         }
         byte[] decompress = compressionInstance.decompress(bodyBytes);
         logger.debug("{}: [deserializer: {}],[decompression: {}]", this.getClass().getSimpleName(), serializer.getClass().getSimpleName(), compressionInstance.getClass().getSimpleName());
-        return serializer.deserialize(decompress, bodyType);
+        Object body = serializer.deserialize(decompress, bodyType);
+        return convertBody(url, body, serializer);
+    }
+
+    private Object convertBody(URL url, Object body, Converter converter) {
+        if (body instanceof RpcCallArgs callArgs) {
+            Virtue virtue = Virtue.get(url);
+            ServerCaller<?> serverCaller = virtue.configManager().remoteServiceManager().getServerCaller(url.protocol(), url.path());
+            if (serverCaller == null) {
+                throw new SourceException("Can't find  ProviderCaller[" + url.path() + "]");
+            }
+            callArgs.caller(serverCaller);
+            callArgs.returnType(serverCaller.method().getGenericReturnType());
+            callArgs.parameterTypes(serverCaller.method().getGenericParameterTypes());
+            Object[] args = converter.convert(callArgs.args(), callArgs.parameterTypes());
+            callArgs.args(args);
+        } else {
+            String id = url.getParameter(Key.UNIQUE_ID);
+            RpcFuture future = RpcFuture.getFuture(id);
+            Type returnType = future.returnType();
+            body = converter.convert(body, returnType);
+        }
+        return body;
     }
 
     @SuppressWarnings("unchecked")
@@ -230,19 +254,14 @@ public class VirtueCodec implements Codec {
         }
     }
 
-    private VirtueEnvelope createEnvelope(URL url, Object body) {
+    private VirtueEnvelope createEnvelope(URL url, Object body) throws Exception {
         VirtueEnvelope virtueEnvelope;
-        try {
-            if(allArgsConstructor!=null){
-                virtueEnvelope = allArgsConstructor.newInstance(url, body);
-            }else {
-                virtueEnvelope = noArgsConstructor.newInstance();
-                virtueEnvelope.url(url);
-                virtueEnvelope.body(body);
-            }
-        } catch (Exception e) {
-            logger.error("Create "+decodedClass.getSimpleName()+" Instance Error ", e);
-            throw new CodecException(e);
+        if (allArgsConstructor != null) {
+            virtueEnvelope = allArgsConstructor.newInstance(url, body);
+        } else {
+            virtueEnvelope = noArgsConstructor.newInstance();
+            virtueEnvelope.url(url);
+            virtueEnvelope.body(body);
         }
         return virtueEnvelope;
     }

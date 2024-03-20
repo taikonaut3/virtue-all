@@ -1,18 +1,20 @@
 package io.virtue.common.spi;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.util.ReflectUtil;
 import io.virtue.common.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static io.virtue.common.constant.Constant.SPI_FIX_PATH;
+import static java.lang.String.format;
 
 /**
  * Extension spi loader.
@@ -35,55 +37,57 @@ public class ExtensionLoader<S> {
 
     private final Map<String, Class<? extends S>> serviceClasses;
 
+
     private final Class<S> type;
 
     private final String defaultService;
 
     private final boolean lazyLoad;
+    private Object[] args;
 
-    private ExtensionLoader(Class<S> clazz) {
-        this.type = clazz;
-        this.defaultService = clazz.getAnnotation(ServiceInterface.class).value();
-        this.lazyLoad = clazz.getAnnotation(ServiceInterface.class).lazyLoad();
+    private ExtensionLoader(Class<S> type) {
+        this.type = type;
+        this.defaultService = type.getAnnotation(ServiceInterface.class).value();
+        this.lazyLoad = type.getAnnotation(ServiceInterface.class).lazyLoad();
         this.services = new ConcurrentHashMap<>();
         this.serviceClasses = new ConcurrentHashMap<>();
-        loadServiceClasses(clazz);
+        loadServiceClasses(type);
     }
 
     @SuppressWarnings("unchecked")
     @SafeVarargs
-    public static <S> ExtensionLoader<S> load(Class<S> clazz, LoadedListener<S>... loadedListeners) {
-        if (clazz == null) {
+    public static <S> ExtensionLoader<S> load(Class<S> type, LoadedListener<S>... loadedListeners) {
+        if (type == null) {
             throw new IllegalArgumentException("Service type is null");
         }
-        if (!clazz.isInterface()) {
-            throw new IllegalArgumentException("Service type(" + clazz + ") is not interface");
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Service type(" + type + ") is not interface");
         }
-        if (!clazz.isAnnotationPresent(ServiceInterface.class)) {
-            throw new IllegalArgumentException("Service type(" + clazz + ") can not be load because WITHOUT @ServiceInterface");
+        if (!type.isAnnotationPresent(ServiceInterface.class)) {
+            throw new IllegalArgumentException("Service type(" + type + ") can not be load because WITHOUT @ServiceInterface");
         }
-        ExtensionLoader<?> extensionLoader = LOADED_MAP.get(clazz.getTypeName());
+        ExtensionLoader<?> extensionLoader = LOADED_MAP.get(type.getTypeName());
         if (extensionLoader == null) {
-            extensionLoader = new ExtensionLoader<>(clazz);
-            LOADED_MAP.putIfAbsent(clazz.getTypeName(), extensionLoader);
+            extensionLoader = new ExtensionLoader<>(type);
+            LOADED_MAP.putIfAbsent(type.getTypeName(), extensionLoader);
         }
-        addListener(clazz, loadedListeners);
+        addListener(type, loadedListeners);
         return (ExtensionLoader<S>) extensionLoader;
     }
 
     @SafeVarargs
-    public static <S> S loadService(Class<S> clazz, String serviceName, LoadedListener<S>... loadedListeners) {
-        return load(clazz, loadedListeners).getService(serviceName);
+    public static <S> S loadService(Class<S> type, String serviceName, LoadedListener<S>... loadedListeners) {
+        return load(type, loadedListeners).getService(serviceName);
     }
 
     @SafeVarargs
-    public static <S> S loadService(Class<S> clazz, LoadedListener<S>... loadedListeners) {
-        return load(clazz, loadedListeners).getDefault();
+    public static <S> S loadService(Class<S> type, LoadedListener<S>... loadedListeners) {
+        return load(type, loadedListeners).getDefault();
     }
 
     @SafeVarargs
-    public static <S> List<S> loadServices(Class<S> clazz, LoadedListener<S>... loadedListeners) {
-        return load(clazz, loadedListeners).getServices();
+    public static <S> List<S> loadServices(Class<S> type, LoadedListener<S>... loadedListeners) {
+        return load(type, loadedListeners).getServices();
     }
 
     @SafeVarargs
@@ -95,17 +99,17 @@ public class ExtensionLoader<S> {
     }
 
     @SuppressWarnings("unchecked")
-    private void loadServiceClasses(Class<S> clazz) {
+    private void loadServiceClasses(Class<S> type) {
         /**========================load services from {@link PREFIX}========================*/
         try {
-            Enumeration<URL> resources = classLoader.getResources(PREFIX + clazz.getTypeName());
+            Enumeration<URL> resources = classLoader.getResources(PREFIX + type.getTypeName());
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
                 /**=======================load legal services to {@link services}========================*/
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
                     String serviceClassName;
                     while ((serviceClassName = br.readLine()) != null) {
-                        try {
+
                             Class<?> serviceClass = classLoader.loadClass(serviceClassName);
                             if (serviceClass.isAnnotationPresent(ServiceProvider.class)) {
                                 ServiceProvider provider = serviceClass.getAnnotation(ServiceProvider.class);
@@ -114,22 +118,17 @@ public class ExtensionLoader<S> {
                                     if (this.type.isAssignableFrom(serviceClass)) {
                                         services.putIfAbsent(key, createInstance((Class<? extends S>)serviceClass));
                                     } else {
-                                        throw new IllegalArgumentException("Load service type(" + this.type + ":" + key + ") failed," + clazz + " is not " + this.type + "’s subclass");
+                                        throw new IllegalArgumentException(format("Load service type(%s:%s) failed, %s is not %s’s subclass", this.type, key, type, this.type));
                                     }
                                 }
                                 serviceClasses.put(key, (Class<? extends S>) serviceClass);
                             }
-                        } catch (ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             }
-        } catch (IOException e) {
-            logger.error("Load " + clazz + " error", e);
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.error("Load " + type + " error", e);
+            throw RpcException.unwrap(e);
         }
 
     }
@@ -144,16 +143,15 @@ public class ExtensionLoader<S> {
             if (Objects.nonNull(service)) {
                 return service;
             }
-            Class<? extends S> clazz = serviceClasses.get(serviceName);
-            if (clazz == null) {
-                logger.warn("Load service type({}:{}) failed,Unknown the [{}] Please check is Exist", this.type, serviceName, serviceName);
-                return getDefault();
+            Class<? extends S> type = serviceClasses.get(serviceName);
+            if (type == null) {
+                throw new IllegalArgumentException(format("Load service type(%s:%s) failed,Unknown the [%s] Please check is Exist", this.type, serviceName, serviceName));
             }
-            if (this.type.isAssignableFrom(clazz)) {
-                service = createInstance(clazz);
+            if (this.type.isAssignableFrom(type)) {
+                service = createInstance(type);
                 services.putIfAbsent(serviceName, service);
             } else {
-                throw new IllegalArgumentException("Load service type(" + this.type + ":" + serviceName + ") failed," + clazz + " is not " + this.type + "’s subclass");
+                throw new IllegalArgumentException(format("Load service type(%s:%s) failed,%s is not %s’s subclass", this.type, serviceName, type, this.type));
             }
         }
         return service;
@@ -171,16 +169,35 @@ public class ExtensionLoader<S> {
         return list;
     }
 
+    public ExtensionLoader<S> conditionOnConstructor(Object... args) {
+        this.args = args;
+        return this;
+    }
+
     @SuppressWarnings("unchecked")
-    private S createInstance(Class<? extends S> clazz) {
-        S service = ReflectUtil.createInstance(clazz);
-        Set<LoadedListener<?>> listeners = LISTENERMAP.get(type);
-        if (listeners != null) {
-            for (LoadedListener<?> listener : listeners) {
-                ((LoadedListener<S>) listener).listen(service);
+    private S createInstance(Class<? extends S> type) {
+        ServiceProvider provider = type.getAnnotation(ServiceProvider.class);
+        Class<?>[] constructorParameters = provider.constructor();
+        try {
+            S service = null;
+            if (constructorParameters != null && constructorParameters.length > 0) {
+                if (args != null && args.length > 0) {
+                    Constructor<? extends S> constructor = ReflectUtil.finfConstructor(type, constructorParameters);
+                    service = ReflectUtil.createInstance(constructor, args);
+                }
+            } else {
+                service = ReflectUtil.createInstance(type);
             }
+            Set<LoadedListener<?>> listeners = LISTENERMAP.get(type);
+            if (listeners != null) {
+                for (LoadedListener<?> listener : listeners) {
+                    ((LoadedListener<S>) listener).listen(service);
+                }
+            }
+            return service;
+        } catch (Exception e) {
+            throw RpcException.unwrap(e);
         }
-        return service;
     }
 
 }

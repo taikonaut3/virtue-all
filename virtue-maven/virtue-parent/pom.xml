@@ -41,7 +41,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>0.0.6-alpha</revision>
+        <revision>0.0.7-alpha</revision>
         <plugin.gpg.version>3.1.0</plugin.gpg.version>
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.javadoc.version>3.6.3</plugin.javadoc.version>

@@ -38,12 +38,12 @@ public class MsgPackSerializer implements Serializer {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
-        if (clazz == String.class) {
+    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
+        if (type == String.class) {
             return (T) new String(bytes);
         }
         try {
-            return jsonMapper.readValue(bytes, clazz);
+            return jsonMapper.readValue(bytes, type);
         } catch (IOException e) {
             throw new SerializationException(e);
         }

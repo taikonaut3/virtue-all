@@ -1,20 +1,20 @@
 package io.virtue.rpc.http1_1;
 
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+import io.virtue.common.constant.Components;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
 import io.virtue.core.CallArgs;
+import io.virtue.rpc.handler.*;
 import io.virtue.rpc.http1_1.config.HttpRequestWrapper;
 import io.virtue.rpc.http1_1.envelope.HttpRequestAdapter;
 import io.virtue.rpc.objectpool.ClientPool;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.Client;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpRequest;
-import io.virtue.common.constant.Components;
-import io.virtue.rpc.handler.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +81,7 @@ public class HttpProtocol extends AbstractProtocol<HttpRequest, FullHttpResponse
             return httpRequestAdapter.nettyHttpRequest();
         } catch (Exception e) {
             logger.error("Create Http Request fail", e);
-            throw new RpcException(e);
+            throw RpcException.unwrap(e);
         }
 
     }
@@ -101,7 +101,6 @@ public class HttpProtocol extends AbstractProtocol<HttpRequest, FullHttpResponse
         DefaultChannelHandlerChain handlerChain = new DefaultChannelHandlerChain();
         handlerChain
                 .addLast(new ClientHeartBeatChannelHandler())
-                .addLast(new ResponseChannelHandler())
                 .addLast(new ClientChannelHandler());
         return handlerChain;
     }
@@ -110,7 +109,6 @@ public class HttpProtocol extends AbstractProtocol<HttpRequest, FullHttpResponse
         DefaultChannelHandlerChain handlerChain = new DefaultChannelHandlerChain();
         handlerChain
                 .addLast(new ServerHeartBeatChannelHandler())
-                .addLast(new RequestChannelHandler())
                 .addLast(new ServerChannelHandler());
         return handlerChain;
     }

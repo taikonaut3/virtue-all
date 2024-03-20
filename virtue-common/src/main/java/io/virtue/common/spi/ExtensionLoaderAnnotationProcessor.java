@@ -70,7 +70,7 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
             fileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", path);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RpcException(e);
+            throw RpcException.unwrap(e);
         }
         return new File(fileObject.toUri());
     }
@@ -108,7 +108,7 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
         @Getter
         private String value;
 
-        private List<String> interfaceList;
+        private final List<String> interfaceList;
 
         public ServiceProviderWrapper(AnnotationMirror annotationMirror) {
             interfaceList = new ArrayList<>();

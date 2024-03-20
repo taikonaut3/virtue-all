@@ -13,7 +13,7 @@ public class FailFast extends AbstractFaultTolerance{
         try {
             return invocation.invoke();
         } catch (Exception e) {
-            throw new RpcException(e);
+            throw RpcException.unwrap(e);
         }
     }
 }

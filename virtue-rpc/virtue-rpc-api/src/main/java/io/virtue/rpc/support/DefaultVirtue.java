@@ -14,7 +14,6 @@ import io.virtue.core.manager.ConfigManager;
 import io.virtue.core.manager.MonitorManager;
 import io.virtue.core.manager.Virtue;
 import io.virtue.event.EventDispatcher;
-import io.virtue.event.EventDispatcherFactory;
 import io.virtue.governance.router.Router;
 import io.virtue.transport.Transporter;
 import lombok.Getter;
@@ -88,8 +87,9 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
     private void initApplicationComponents() {
         ApplicationConfig applicationConfig = configManager.applicationConfig();
         EventDispatcherConfig eventDispatcherConfig = applicationConfig.eventDispatcherConfig();
-        EventDispatcherFactory eventDispatcherFactory = ExtensionLoader.loadService(EventDispatcherFactory.class, eventDispatcherConfig.type());
-        eventDispatcher = eventDispatcherFactory.get(eventDispatcherConfig.toUrl());
+        eventDispatcher = ExtensionLoader.load(EventDispatcher.class)
+                .conditionOnConstructor(eventDispatcherConfig.toUrl())
+                .getService(eventDispatcherConfig.type());
         Router router = ExtensionLoader.loadService(Router.class, applicationConfig.router());
         Transporter transporter = ExtensionLoader.loadService(Transporter.class, applicationConfig.transport());
         attribute(Router.ATTRIBUTE_KEY).set(router);

@@ -47,7 +47,7 @@ public class RpcFuture extends CompletableFuture<Object> {
         this.callArgs = data;
         this.id = url.getParameter(Key.UNIQUE_ID);
         addFuture(id(), this);
-        completeOnTimeout(new TimeoutException("RPC call timeout: " + timeout() + "ms"), timeout(), TimeUnit.MILLISECONDS);
+        completeOnTimeout(new TimeoutException(), timeout(), TimeUnit.MILLISECONDS);
         whenComplete((resp, ex) -> {
             removeFuture(id());
             if (completeConsumer != null) {
@@ -86,10 +86,15 @@ public class RpcFuture extends CompletableFuture<Object> {
         try {
             return super.get(timeout(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
-            throw new RpcException(e);
+            if (e instanceof TimeoutException) {
+                throw new RpcException("RPC call timeout: " + timeout() + "ms");
+            }
+            throw RpcException.unwrap(e);
         } finally {
-            RpcContext.currentContext().attribute(Response.ATTRIBUTE_KEY).set(response);
-            RpcContext.ResponseContext.parse(response.url());
+            if (response != null) {
+                RpcContext.currentContext().attribute(Response.ATTRIBUTE_KEY).set(response);
+                RpcContext.ResponseContext.parse(response.url());
+            }
         }
     }
 

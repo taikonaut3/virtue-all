@@ -25,4 +25,6 @@ public @interface ServiceProvider {
      */
     Class<?>[] interfaces() default {};
 
+    Class<?>[] constructor() default {};
+
 }

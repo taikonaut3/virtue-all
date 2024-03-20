@@ -1,5 +1,6 @@
 package io.virtue.common.url;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.util.ReflectUtil;
 import io.virtue.common.util.StringUtil;
 
@@ -37,7 +38,7 @@ public interface Parameterization {
                         }
                     }
                 } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                    throw RpcException.unwrap(e);
                 }
             }
         }
