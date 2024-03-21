@@ -10,7 +10,7 @@ import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
 
 /**
- * Create Proxy  performance is not good
+ * Create Proxy performance is not good.
  */
 @ServiceProvider(Components.ProxyFactory.BYTEBUDDY)
 public class ByteBuddyProxyFactory extends AbstractProxyFactory {

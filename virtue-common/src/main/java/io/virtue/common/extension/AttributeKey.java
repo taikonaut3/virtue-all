@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @param <T>
  */
-public class AttributeKey<T> {
+public final class AttributeKey<T> {
 
     private static final Map<String, AttributeKey<?>> KEY_POOL = new ConcurrentHashMap<>();
 

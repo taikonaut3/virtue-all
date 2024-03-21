@@ -101,7 +101,7 @@ public interface Virtue extends Accessor, Lifecycle {
     /**
      * Get remoteService by target class
      *
-     * @param target
+     * @param targetClass
      * @param <T>
      * @return remoteService
      */
@@ -151,7 +151,7 @@ public interface Virtue extends Accessor, Lifecycle {
     /**
      * Register clientConfig into current instance
      *
-     * @param configs
+     * @param clientConfigs
      * @return current instance
      */
     default Virtue register(ClientConfig... clientConfigs) {
@@ -165,7 +165,7 @@ public interface Virtue extends Accessor, Lifecycle {
     /**
      * Register serverConfig into current instance
      *
-     * @param configs
+     * @param serverConfigs
      * @return current instance
      */
     default Virtue register(ServerConfig... serverConfigs) {
@@ -179,7 +179,7 @@ public interface Virtue extends Accessor, Lifecycle {
     /**
      * Register registryConfig into current instance
      *
-     * @param configs
+     * @param registryConfigs
      * @return current instance
      */
     default Virtue register(RegistryConfig... registryConfigs) {
@@ -202,6 +202,12 @@ public interface Virtue extends Accessor, Lifecycle {
         return this;
     }
 
+    /**
+     * Application Config
+     *
+     * @param config
+     * @return current instance
+     */
     default Virtue application(ApplicationConfig config) {
         configManager().applicationConfig(config);
         return this;
@@ -218,7 +224,7 @@ public interface Virtue extends Accessor, Lifecycle {
 
     /**
      * Set application-name
-     *
+     * @param applicationName
      * @return current instance
      */
     default Virtue applicationName(String applicationName) {

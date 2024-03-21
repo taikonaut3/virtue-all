@@ -60,10 +60,10 @@ public class SystemInfo {
     }
 
     public Map<String, String> toMap() {
-        return Map.of("cpuUsage", String.valueOf(cpuUsage)
-                , "memoryUsage", String.valueOf(memoryUsage)
-                , "connections", String.valueOf(connections)
-                , "services", String.valueOf(services)
-                , "loadAverage", String.valueOf(loadAverage));
+        return Map.of("cpuUsage", String.valueOf(cpuUsage),
+                "memoryUsage", String.valueOf(memoryUsage),
+                "connections", String.valueOf(connections),
+                "services", String.valueOf(services),
+                "loadAverage", String.valueOf(loadAverage));
     }
 }

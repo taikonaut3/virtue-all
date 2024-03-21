@@ -30,7 +30,7 @@ public interface RemoteCaller<T> extends CallerContainer {
     boolean lazyDiscover();
 
     /**
-     * Direct url
+     * Direct url address.
      */
     InetSocketAddress directAddress();
 

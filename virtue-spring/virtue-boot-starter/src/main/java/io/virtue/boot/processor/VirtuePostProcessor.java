@@ -14,14 +14,14 @@ public class VirtuePostProcessor extends VirtueAdapterPostProcessor {
     public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         if (bean instanceof Virtue virtue) {
             Environment environment = beanFactory.getBean(Environment.class);
-            String app_name = environment.getProperty(EnvironmentKey.APPLICATION_NAME);
-            if (!StringUtils.hasText(app_name)) {
-                app_name = environment.getProperty(EnvironmentKey.SPRING_APPLICATION_NAME);
-                if (!StringUtils.hasText(app_name)) {
+            String applicationName = environment.getProperty(EnvironmentKey.APPLICATION_NAME);
+            if (!StringUtils.hasText(applicationName)) {
+                applicationName = environment.getProperty(EnvironmentKey.SPRING_APPLICATION_NAME);
+                if (!StringUtils.hasText(applicationName)) {
                     throw new SourceException("缺少application-name");
                 }
             }
-            virtue.applicationName(app_name);
+            virtue.applicationName(applicationName);
         }
         return bean;
     }

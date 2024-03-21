@@ -88,12 +88,6 @@ public interface Constant {
 
     String MONITOR_APPLICATION_NAME = "inner-monitor";
 
-    String MONITOR_remoteService_NAME = "virtueMonitor";
-
-    String MONITOR_remoteService = "monitorRemoteService";
-
-    String DEFAULT_virtue_CONFIG = "default_virtue";
-
     String MULTIPLEX_PREFIX = "multiplex_";
 
     String DEFAULT_COMPRESSION = Compression.GZIP;

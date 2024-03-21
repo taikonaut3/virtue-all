@@ -5,7 +5,7 @@ import io.virtue.core.manager.Virtue;
 import java.lang.reflect.Method;
 
 /**
- * The Caller Container For managing the caller
+ * The Caller Container For managing the caller.
  */
 public interface CallerContainer extends Lifecycle {
 
@@ -40,14 +40,14 @@ public interface CallerContainer extends Lifecycle {
     Caller<?> getCaller(String identification);
 
     /**
-     * The Caller container Proxy type
+     * The Caller container Proxy type.
      *
      * @return proxy type
      */
     String proxy();
 
     /**
-     * The belong to virtue
+     * The belong to virtue.
      *
      * @return virtue instance
      */

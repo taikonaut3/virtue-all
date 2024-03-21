@@ -9,29 +9,25 @@ public interface CallArgs {
 
     /**
      * Get the arguments of the method call.
-     *
-     * @return all args
+     * @return
      */
     Object[] args();
 
     /**
      * Get the return type of the method.
-     *
      * @return {@link Caller#returnType()}
      */
     Type returnType();
 
     /**
      * Get the parameter types of the method.
-     *
-     * @return {@link Caller#method()java.lang.reflect.Method#getGenericParameterTypes()}
+     * @return {@link Caller#method()}
      */
     Type[] parameterTypes();
 
     /**
      * Get the caller object for the method.
-     *
-     * @return current caller
+     * @return
      */
     Caller<?> caller();
 

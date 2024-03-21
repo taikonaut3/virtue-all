@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.List;
 
+
 @Getter
 @Accessors(fluent = true)
 public class VirtueServerCaller extends AbstractServerCaller<VirtueCallable> {
@@ -32,8 +33,8 @@ public class VirtueServerCaller extends AbstractServerCaller<VirtueCallable> {
     @Override
     public void doInit() {
         this.remoteServiceName = remoteService().name();
-        this.callMethod = StringUtil.isBlank(parsedAnnotation.name()) ?
-                GenerateUtil.generateKey(method()) : parsedAnnotation.name();
+        this.callMethod = StringUtil.isBlank(parsedAnnotation.name())
+                ? GenerateUtil.generateKey(method()) : parsedAnnotation.name();
     }
 
     @Override

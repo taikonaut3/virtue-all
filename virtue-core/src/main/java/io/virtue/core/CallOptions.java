@@ -6,7 +6,7 @@ import io.virtue.core.config.RegistryConfig;
 import java.util.List;
 
 /**
- * Mapping {@link Options}
+ * Mapping {@link Options}.
  */
 public interface CallOptions extends CommonConfig {
 
@@ -73,7 +73,7 @@ public interface CallOptions extends CommonConfig {
     String clientConfig();
 
     /**
-     * Add RegistryConfigs
+     * Add RegistryConfigs.
      *
      * @param configs
      */

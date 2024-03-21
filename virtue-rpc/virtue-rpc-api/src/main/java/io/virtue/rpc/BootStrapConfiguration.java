@@ -9,8 +9,8 @@ import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.manager.ServerConfigManager;
 import io.virtue.core.manager.Virtue;
 import io.virtue.event.EventDispatcher;
-import io.virtue.registry.RegistryService;
 import io.virtue.registry.RegistryFactory;
+import io.virtue.registry.RegistryService;
 import io.virtue.rpc.event.*;
 import io.virtue.rpc.listener.*;
 import io.virtue.rpc.protocol.Protocol;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * Registry Global Default Listeners and Open Server
+ * Registry Global Default Listeners and Open Server.
  */
 @ServiceProvider("bootstrapConfiguration")
 public class BootStrapConfiguration implements VirtueConfiguration {
@@ -59,7 +59,8 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             // Open Server
             Protocol<?, ?> protocol = ExtensionLoader.loadService(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
-            logger.info("Opened Server[{}] for Protocol[{}] and bind Port(s) {}", server.getClass().getSimpleName(), protocol.protocol(), server.port());
+            logger.info("Opened Server[{}] for Protocol[{}] and bind Port(s) {}",
+                    server.getClass().getSimpleName(), protocol.protocol(), server.port());
         }
     }
 }

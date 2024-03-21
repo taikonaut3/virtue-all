@@ -7,7 +7,7 @@ import io.virtue.core.Invocation;
 import java.util.function.Supplier;
 
 /**
- * The basic Invocation implementation class
+ * The basic Invocation implementation class.
  */
 public class CallInvocation implements Invocation {
 

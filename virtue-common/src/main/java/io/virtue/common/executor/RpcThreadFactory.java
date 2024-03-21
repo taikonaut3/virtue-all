@@ -32,5 +32,4 @@ public class RpcThreadFactory implements ThreadFactory {
         t.setDaemon(isDaemon);
         return t;
     }
-
 }

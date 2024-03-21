@@ -116,7 +116,7 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
     protected abstract void doInit();
 
     private T parseAnnotation(Method method, Class<T> type) {
-        AssertUtil.condition(ReflectUtil.findAnnotation(method,type)!=null, "Only support @" + type.getSimpleName() + " modify Method");
+        AssertUtil.condition(ReflectUtil.findAnnotation(method, type) != null, "Only support @" + type.getSimpleName() + " modify Method");
         return method.getAnnotation(type);
     }
 
@@ -136,7 +136,12 @@ public abstract class AbstractCaller<T extends Annotation> implements Caller<T> 
         filterChain = ExtensionLoader.loadService(FilterChain.class, config.filterChain());
         String[] filterNames = config.filters();
         ConfigManager manager = virtue.configManager();
-        Optional.ofNullable(filterNames).ifPresent(names -> Arrays.stream(names).map(manager.filterManager()::get).filter(Objects::nonNull).forEach(this::addFilter));
+        Optional.ofNullable(filterNames)
+                .ifPresent(names ->
+                        Arrays.stream(names)
+                                .map(manager.filterManager()::get)
+                                .filter(Objects::nonNull)
+                                .forEach(this::addFilter));
     }
 
     @Override

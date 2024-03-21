@@ -14,12 +14,12 @@ import java.lang.annotation.*;
 public @interface RemoteService {
 
     /**
-     * The remoteService name
+     * The remoteService name.
      */
     String value();
 
     /**
-     * The proxy type
+     * The proxy type.
      */
     String proxy() default Components.ProxyFactory.CGLIB;
 

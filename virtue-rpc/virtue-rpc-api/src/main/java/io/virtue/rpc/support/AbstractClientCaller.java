@@ -119,7 +119,13 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
             addRegistryConfig(registryConfig);
         }
         String[] registryNames = getOptions().registries();
-        Optional.ofNullable(registryNames).ifPresent(names -> Arrays.stream(names).map(configManager.registryConfigManager()::get).filter(Objects::nonNull).forEach(this::addRegistryConfig));
+        Optional.ofNullable(registryNames)
+                .ifPresent(names ->
+                        Arrays.stream(names)
+                                .map(configManager.registryConfigManager()::get)
+                                .filter(Objects::nonNull)
+                                .forEach(this::addRegistryConfig)
+                );
         ClientConfig clientConfig = checkAndGetClientConfig();
         url = createUrl(clientConfig.toUrl());
     }
@@ -127,9 +133,9 @@ public abstract class AbstractClientCaller<T extends Annotation> extends Abstrac
     @Override
     public void start() {
         if (!remoteCaller().lazyDiscover()) {
-            if(registryConfigs==null || registryConfigs.isEmpty()){
+            if (registryConfigs == null || registryConfigs.isEmpty()) {
                 logger.warn("Can't find RegistryConfig(s)");
-            }else {
+            } else {
                 for (URL registryUrl : registryConfigUrls) {
                     RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
                     RegistryService registryService = registryFactory.get(registryUrl);

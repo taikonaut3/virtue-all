@@ -144,7 +144,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
-    public void validateObject(T object){
+    public void validateObject(T object) {
         if(Objects.isNull(object)){
             throw new NullPointerException();
         }
@@ -169,7 +169,7 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     private void destroyObject(PooledObject<T> pooledObject){
-        try{
+        try {
             factory.destroyObject(pooledObject);
         }finally {
             destroyCount.incrementAndGet();

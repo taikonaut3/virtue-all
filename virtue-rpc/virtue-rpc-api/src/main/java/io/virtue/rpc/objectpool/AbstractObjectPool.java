@@ -25,9 +25,11 @@ public abstract class AbstractObjectPool<T> implements ObjectPool<T> {
         init();
     }
 
-    protected void before(){}
+    protected void before() {
+    }
 
-    protected void after(PooledObject<T> pooledObject){}
+    protected void after(PooledObject<T> pooledObject) {
+    }
 
     @Override
     public int size() {
@@ -35,7 +37,7 @@ public abstract class AbstractObjectPool<T> implements ObjectPool<T> {
     }
 
     /**
-     * 初始化 object
+     * 初始化 object.
      */
     private void init() {
         int capacity = poolConfig.initCapacity();

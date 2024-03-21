@@ -1,7 +1,7 @@
 package io.virtue.common.util.byteutils;
 
 /**
- * Tool for Writing bytes
+ * Tool for Writing bytes.
  */
 public interface ByteWriter {
 

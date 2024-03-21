@@ -34,7 +34,8 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
         this.codec = codec;
         try {
             connect();
-            logger.debug("Create {} is Successful,Connect to remoteAddress: {} for Protocol({})", this.getClass().getSimpleName(), address(), url.protocol());
+            logger.debug("Create {} is Successful,Connect to remoteAddress: {} for Protocol({})",
+                    this.getClass().getSimpleName(), address(), url.protocol());
         } catch (Throwable e) {
             logger.error("Create Client is Failed,Connect to remoteAddress:" + address(), e);
             throw new ConnectException("Create Client is Failed,Connect to remoteAddress :" + address(), e);

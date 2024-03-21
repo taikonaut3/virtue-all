@@ -14,12 +14,12 @@ import java.util.List;
 
 public class VirtueRegister implements ImportBeanDefinitionRegistrar {
 
-    private final static List<Class<?>> SCAN_POSTPROCESSORS = List.of(
+    private static final List<Class<?>> SCAN_POSTPROCESSORS = List.of(
             RemoteServicePostProcessor.class,
             RemoteCallerPostProcessor.class
     );
 
-    private final static List<Class<?>> GENERAL_POSTPROCESSORS = List.of(
+    private static final List<Class<?>> GENERAL_POSTPROCESSORS = List.of(
             VirtuePostProcessor.class,
             FilterPostProcessor.class,
             ServerConfigPostProcessor.class,
@@ -27,7 +27,7 @@ public class VirtueRegister implements ImportBeanDefinitionRegistrar {
     );
 
     /**
-     * 注册后置处理器
+     * 注册后置处理器.
      */
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, @NonNull BeanDefinitionRegistry registry) {

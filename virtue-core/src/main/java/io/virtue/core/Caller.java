@@ -10,78 +10,74 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
+
 /**
  * Method caller wrapper for the client method and server method.
+ * @param <T> Method Annotation
  */
 public interface Caller<T extends Annotation> extends CommonConfig, Lifecycle {
 
+
     /**
      * The associated annotation instance.
-     *
-     * @return annotation instance
+     * @return
      */
     T parsedAnnotation();
 
     /**
      * The protocol.
-     *
-     * @return current call protocol
+     * @return
      */
     String protocol();
 
     /**
      * Call url core.
-     *
-     * @return by method created url
+     * @return
      */
     URL url();
 
     /**
      * All proxy clients call the entry.
-     *
+     * @param url
      * @param args
+     * @return
      * @throws RpcException
-     * @return method return
      */
     Object call(URL url, CallArgs args) throws RpcException;
 
     /**
      * The client interface call method.
+     * @return
      */
     Method method();
 
     /**
      * The client interface returnType.
-     *
-     * @return method return type
+     * @return
      */
     Type returnType();
 
     /**
      * The client interface returnClass.
-     *
-     * @return method return class
+     * @return
      */
     Class<?> returnClass();
 
     /**
-     * Container holding the caller
-     *
-     * @return container instance
+     * Container holding the caller.
+     * @return
      */
     CallerContainer container();
 
     /**
      * Gets the path as list associated with the server caller.
-     *
-     * @return The path as list
+     * @return
      */
     List<String> pathList();
 
     /**
      * Gets the path associated with the server caller.
-     *
-     * @return The path
+     * @return
      */
     default String path() {
         return URL.toPath(pathList());
@@ -89,17 +85,15 @@ public interface Caller<T extends Annotation> extends CommonConfig, Lifecycle {
 
     /**
      * Caller unique identification.
-     *
-     * @return unique identification
+     * @return
      */
     default String identification() {
         return GenerateUtil.generateCallerIdentification(protocol(), path());
     }
 
     /**
-     * The belong to virtue
-     *
-     * @return virtue instance
+     * The belong to virtue.
+     * @return
      */
     default Virtue virtue() {
         return container().virtue();
