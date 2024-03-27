@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-@ServiceProvider(value = Components.Serialize.JDK, interfaces = {Serializer.class})
+@ServiceProvider(value = Components.Serialization.JDK, interfaces = {Serializer.class})
 public class JdkSerializer implements Serializer {
 
     @Override

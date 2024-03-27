@@ -36,7 +36,7 @@ public class ClientPool {
     }
 
     public Client get(URL url) {
-        boolean isMultiplex = url.getBooleanParameter(Key.MULTIPLEX, true);
+        boolean isMultiplex = url.getBooleanParam(Key.MULTIPLEX, true);
         try {
             if (isMultiplex) {
                 RpcContext.currentContext().attribute(URL.ATTRIBUTE_KEY).set(url);

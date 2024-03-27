@@ -12,7 +12,7 @@ import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.EventDispatcherConfig;
 import io.virtue.core.manager.ConfigManager;
 import io.virtue.core.manager.MonitorManager;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import io.virtue.event.EventDispatcher;
 import io.virtue.governance.router.Router;
 import io.virtue.transport.Transporter;
@@ -27,8 +27,8 @@ import static io.virtue.common.constant.Components.DEFAULT;
  * Virtue application core
  * manage each core component
  */
-@Accessors(fluent = true)
 @Getter
+@Accessors(fluent = true)
 @ServiceProvider(DEFAULT)
 public class DefaultVirtue extends AbstractAccessor implements Virtue {
 

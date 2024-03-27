@@ -90,7 +90,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     public void caught(Channel channel, Throwable cause) throws RpcException {
         URL url = channel.attribute(URL.ATTRIBUTE_KEY).get();
         if (url != null) {
-            String envelope = url.getParameter(Key.ENVELOPE);
+            String envelope = url.getParam(Key.ENVELOPE);
             Event<?> exceptionEvent = envelope.equals(Key.REQUEST) ?
                     new ServerHandlerExceptionEvent(channel, cause) :
                     new ClientHandlerExceptionEvent(channel, cause);

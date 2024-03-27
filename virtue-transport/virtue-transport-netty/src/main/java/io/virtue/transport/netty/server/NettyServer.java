@@ -38,7 +38,7 @@ public final class NettyServer extends AbstractServer {
         bootstrap = new ServerBootstrap();
         bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("NettyServerBoss", true));
         workerGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyServerWorker", true));
-        soBacklog = url.getIntParameter(Key.SO_BACKLOG, Constant.DEFAULT_SO_BACKLOG);
+        soBacklog = url.getIntParam(Key.SO_BACKLOG, Constant.DEFAULT_SO_BACKLOG);
         final NettyServerChannelHandler handler = new NettyServerChannelHandler(channelHandler);
         initServerBootStrap(handler);
     }

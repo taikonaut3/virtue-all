@@ -1,7 +1,9 @@
 package io.virtue.common.url;
 
+
 /**
- * Factory for the SPI instance created from the Url configuration
+ * Factory for the SPI instance created from the Url configuration.
+ * @param <T> service type
  */
 public interface ServiceFactory<T> {
 

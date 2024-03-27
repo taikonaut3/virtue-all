@@ -64,7 +64,7 @@ public class URL extends AbstractAccessor {
 
     public URL(String protocol, InetSocketAddress address, Map<String, String> parameters) {
         this(protocol, address);
-        addParameters(parameters);
+        addParams(parameters);
     }
 
     public URL(String protocol, String ip, int port) {
@@ -84,11 +84,16 @@ public class URL extends AbstractAccessor {
 
     public URL(String protocol, String address, Map<String, String> parameters) {
         this(protocol, address);
-        addParameters(parameters);
+        addParams(parameters);
 
     }
 
-
+    /**
+     * String convert to URL.
+     *
+     * @param url
+     * @return
+     */
     public static URL valueOf(String url) {
         if (url == null || url.trim().isEmpty()) {
             throw new SourceException("url is null");
@@ -108,12 +113,18 @@ public class URL extends AbstractAccessor {
         }
         if (strings.length > 1) {
             String params = strings[1];
-            urlObj.addParameters(urlStringToMap(params));
+            urlObj.addParams(paramsToMap(params));
         }
         return urlObj;
     }
 
-    public static String mapToUrlString(Map<String, String> parameters) {
+    /**
+     * Map convert to URL params.
+     *
+     * @param parameters
+     * @return
+     */
+    public static String toUrlParams(Map<String, String> parameters) {
         return parameters.entrySet().stream()
                 .map(entry -> encodeParam(entry.getKey()) + "=" + encodeParam(entry.getValue()))
                 .collect(Collectors.joining("&"));
@@ -127,8 +138,13 @@ public class URL extends AbstractAccessor {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
-
-    public static Map<String, String> urlStringToMap(String params) {
+    /**
+     * URL params convert to map.
+     *
+     * @param params
+     * @return
+     */
+    public static Map<String, String> paramsToMap(String params) {
         return Arrays.stream(params.split("&"))
                 .map(param -> param.split("="))
                 .filter(keyValue -> keyValue.length == 2)
@@ -138,6 +154,12 @@ public class URL extends AbstractAccessor {
                 ));
     }
 
+    /**
+     * List paths convert path String.
+     *
+     * @param paths
+     * @return
+     */
     public static String toPath(List<String> paths) {
         if (paths == null) {
             return null;
@@ -150,6 +172,12 @@ public class URL extends AbstractAccessor {
         return builder.toString();
     }
 
+    /**
+     * String path convert to List.
+     *
+     * @param path
+     * @return
+     */
     public static List<String> pathToList(String path) {
         List<String> list = new ArrayList<>();
         if (StringUtil.isBlank(path)) {
@@ -164,6 +192,12 @@ public class URL extends AbstractAccessor {
         return list;
     }
 
+    /**
+     * Set address.
+     *
+     * @param address
+     * @return
+     */
     public URL address(String address) {
         this.address = address;
         if (NetUtil.isValidIpPort(address)) {
@@ -174,6 +208,11 @@ public class URL extends AbstractAccessor {
         return this;
     }
 
+    /**
+     * Add path.
+     *
+     * @param path
+     */
     public void addPath(String path) {
         if (StringUtil.isBlank(path)) {
             logger.warn("Add empty path, will skip");
@@ -183,6 +222,12 @@ public class URL extends AbstractAccessor {
         }
     }
 
+    /**
+     * Add path with index.
+     *
+     * @param index
+     * @param path
+     */
     public void addPath(int index, String path) {
         if (StringUtil.isBlank(path)) {
             logger.warn("Add empty path, will skip");
@@ -192,16 +237,32 @@ public class URL extends AbstractAccessor {
         }
     }
 
+    /**
+     * Add paths.
+     *
+     * @param paths
+     */
     public void addPaths(List<String> paths) {
         paths.forEach(this::addPath);
     }
 
+    /**
+     * Remove path by index.
+     *
+     * @param index
+     */
     public void removePath(int index) {
         if (paths.size() > index) {
             paths.remove(index);
         }
     }
 
+    /**
+     * Get path by index.
+     *
+     * @param index
+     * @return
+     */
     public String getPath(int index) {
         if (paths.size() > index) {
             return paths.get(index);
@@ -209,62 +270,155 @@ public class URL extends AbstractAccessor {
         return null;
     }
 
-    public void addParameter(String key, String value) {
+    /**
+     * Add param.
+     *
+     * @param key
+     * @param value
+     */
+    public void addParam(String key, String value) {
         parameters.put(key, value);
     }
 
-    public void addParameters(Map<String, String> parameters) {
+    /**
+     * Add params.
+     *
+     * @param parameters
+     */
+    public void addParams(Map<String, String> parameters) {
         if (parameters != null) this.parameters.putAll(parameters);
     }
 
-    public void replaceParameters(Map<String, String> parameters) {
+    /**
+     * Replace all params.
+     *
+     * @param parameters
+     */
+    public void replaceParams(Map<String, String> parameters) {
         if (parameters != null && !parameters.isEmpty()) {
             this.parameters = parameters;
         }
     }
 
-    public String getParameter(String key, String defaultValue) {
-        return parameters.getOrDefault(key, defaultValue);
-    }
-
-    public String getParameter(String key) {
+    /**
+     * Get param by key,if not return null.
+     *
+     * @param key
+     * @return
+     */
+    public String getParam(String key) {
         return parameters.get(key);
     }
 
-    public boolean getBooleanParameter(String key) {
-        return Boolean.parseBoolean(getParameter(key));
+    /**
+     * Get param by key,if not return defaultValue.
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public String getParam(String key, String defaultValue) {
+        return parameters.getOrDefault(key, defaultValue);
     }
 
-    public boolean getBooleanParameter(String key, boolean defaultValue) {
-        String value = getParameter(key);
+    /**
+     * Get boolean param by key,if not return null.
+     *
+     * @param key
+     * @return
+     */
+    public boolean getBooleanParam(String key) {
+        return Boolean.parseBoolean(getParam(key));
+    }
+
+    /**
+     * Get boolean param by key,if not return defaultValue.
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public boolean getBooleanParam(String key, boolean defaultValue) {
+        String value = getParam(key);
         return StringUtil.isBlank(value) ? defaultValue : Boolean.parseBoolean(value);
     }
 
-    public int getIntParameter(String key) {
-        return Integer.parseInt(getParameter(key));
+    /**
+     * Get int param by key.
+     *
+     * @param key
+     * @return
+     */
+    public int getIntParam(String key) {
+        return Integer.parseInt(getParam(key));
     }
 
-    public int getIntParameter(String key, int defaultValue) {
-        String value = getParameter(key);
+    /**
+     * Get int param by key,if not return defaultValue.
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public int getIntParam(String key, int defaultValue) {
+        String value = getParam(key);
         return StringUtil.isBlank(value) ? defaultValue : Integer.parseInt(value);
     }
 
-    public long getLongParameter(String key) {
-        return Long.parseLong(getParameter(key));
+    /**
+     * Get long param by key.
+     *
+     * @param key
+     * @return
+     */
+    public long getLongParam(String key) {
+        return Long.parseLong(getParam(key));
     }
 
-    public void removeParameter(String key) {
+    /**
+     * Get long param by key,if not return defaultValue.
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public long getLongParam(String key, long defaultValue) {
+        String value = getParam(key);
+        return StringUtil.isBlank(value) ? defaultValue : Long.parseLong(value);
+    }
+
+    /**
+     * Remove param by key.
+     *
+     * @param key
+     */
+    public void removeParam(String key) {
         parameters.remove(key);
     }
 
+    /**
+     * URL authority.
+     *
+     * @return
+     */
     public String authority() {
         return protocol + "://" + address;
     }
 
+    /**
+     * URL uri.
+     *
+     * @return
+     */
     public String uri() {
         return authority() + path();
     }
 
+    /**
+     * Replace all paths.
+     *
+     * @param paths
+     */
     public void replacePaths(List<String> paths) {
         if (paths != null && !paths.isEmpty()) {
             this.paths.clear();
@@ -272,16 +426,31 @@ public class URL extends AbstractAccessor {
         }
     }
 
+    /**
+     * URL path.
+     *
+     * @return
+     */
     public String path() {
         return toPath(paths);
 
     }
 
+    /**
+     * URL path+params.
+     *
+     * @return
+     */
     public String pathAndParams() {
-        String params = mapToUrlString(parameters);
+        String params = toUrlParams(parameters);
         return path() + (StringUtil.isBlank(params) ? "" : "?" + params);
     }
 
+    /**
+     * Deep copy,without {@link io.virtue.common.extension.Accessor}.
+     *
+     * @return
+     */
     public URL deepCopy() {
         URL url = new URL(protocol, address(), parameters);
         url.replacePaths(paths);

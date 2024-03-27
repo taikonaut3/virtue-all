@@ -1,37 +1,41 @@
 package io.virtue.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.virtue.common.exception.CommonException;
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
+import static java.lang.String.format;
+
+/**
+ * Utility class for file operations.
+ */
 public final class FileUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
-
-    private FileUtil() {
-    }
-
+    /**
+     * Write the content to the file.
+     *
+     * @param content    The content to write to the file.
+     * @param targetFile The file to write the content to.
+     */
     public static void writeLineFile(String content, File targetFile) {
         try {
             if (content.isEmpty()) {
                 return;
             }
             if (!targetFile.exists()) {
-                createFileWithParentDirectory(targetFile.getAbsolutePath());
+                createFileWithDir(targetFile.getAbsolutePath());
             }
             try (RandomAccessFile file = new RandomAccessFile(targetFile, "rw");
-                 FileChannel channel = file.getChannel(); FileLock lock = channel.lock()) {
+                 FileChannel channel = file.getChannel(); FileLock ignored = channel.lock()) {
                 StringBuilder sb = new StringBuilder();
                 String line;
                 while ((line = file.readLine()) != null) {
                     sb.append(line).append("\n");
                 }
                 String fileContents = sb.toString();
-
                 if (!fileContents.contains(content)) {
                     fileContents += content + "\n";
                 }
@@ -39,35 +43,44 @@ public final class FileUtil {
                 file.write(fileContents.getBytes());
             }
         } catch (Exception e) {
-            logger.error("Write file is failed", e);
+            throw new CommonException("Write file is failed", e);
         }
     }
 
-    public static void createFileWithParentDirectory(String filePath) {
+    /**
+     * Create File with dir.
+     *
+     * @param filePath The path of the file to create.
+     */
+    public static void createFileWithDir(String filePath) {
         File file = new File(filePath);
         File parentDir = file.getParentFile();
-        createParentDirectories(parentDir);
+        mkdir(parentDir);
         try {
             boolean success = file.createNewFile();
             if (!success) {
-                logger.warn("Create file is not success");
+                throw new CommonException(format("Create file: %s is not success", filePath));
             }
         } catch (Exception e) {
-            logger.error("Create file is failed", e);
+            throw new CommonException(format("Create file: %s is failed", filePath), e);
         }
     }
 
-    private static void createParentDirectories(File directory) {
+    /**
+     * Create dir.
+     *
+     * @param directory The directory to create.
+     */
+    private static void mkdir(File directory) {
         if (!directory.exists()) {
             boolean success = directory.mkdirs();
             if (!success) {
-                logger.warn("Create Parent Directories is not success");
+                throw new CommonException(format("Create dir: %s is not success", directory.getPath()));
             }
-        }
-        File parentDir = directory.getParentFile();
-        if (parentDir != null) {
-            createParentDirectories(parentDir);
         }
     }
 
+    private FileUtil() {
+    }
 }
+

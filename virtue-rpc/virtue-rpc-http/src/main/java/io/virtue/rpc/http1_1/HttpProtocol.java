@@ -7,7 +7,7 @@ import io.virtue.common.constant.Components;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
 import io.virtue.rpc.handler.*;
 import io.virtue.rpc.http1_1.config.HttpRequestWrapper;
 import io.virtue.rpc.http1_1.envelope.HttpRequestAdapter;
@@ -66,13 +66,14 @@ public class HttpProtocol extends AbstractProtocol<HttpRequest, FullHttpResponse
     }
 
     @Override
-    public HttpRequest createRequest(URL url, CallArgs args) {
+    public HttpRequest createRequest(Invocation invocation) {
+        URL url = invocation.url();
         try {
             HttpRequestWrapper wrapper = url.attribute(HttpRequestWrapper.ATTRIBUTE_KEY).get();
             HttpRequestAdapter httpRequestAdapter = new HttpRequestAdapter(url, wrapper);
             Object body = null;
             if (!NO_BODY_METHODS.contains(wrapper.httpMethod())) {
-                body = httpParser.methodParser().parseRequestBody(args, wrapper);
+                body = httpParser.methodParser().parseRequestBody(invocation, wrapper);
             }
             if (body != null) {
                 String contentType = httpRequestAdapter.headers().get(HttpHeaderNames.CONTENT_TYPE);

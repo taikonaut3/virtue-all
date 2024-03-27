@@ -1,8 +1,9 @@
 package io.virtue.core.manager;
 
 import io.virtue.common.util.StringUtil;
-import io.virtue.core.ClientCaller;
-import io.virtue.core.ServerCaller;
+import io.virtue.core.Caller;
+import io.virtue.core.Callee;
+import io.virtue.core.Virtue;
 import io.virtue.core.config.RegistryConfig;
 
 import java.util.List;
@@ -29,8 +30,8 @@ public class RegistryConfigManager extends AbstractRuleManager<RegistryConfig> {
     }
 
     @Override
-    protected void doExecuteRules(RegistryConfig config, List<ServerCaller<?>> matchedServerCallers, List<ClientCaller<?>> matchedClientCallers) {
-        matchedClientCallers.forEach(item -> item.addRegistryConfig(config));
+    protected void doExecuteRules(RegistryConfig config, List<Callee<?>> matchedCallees, List<Caller<?>> matchedCallers) {
+        matchedCallers.forEach(item -> item.addRegistryConfig(config));
     }
 
 }

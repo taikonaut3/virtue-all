@@ -4,10 +4,11 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.StringUtil;
 import io.virtue.core.VirtueConfiguration;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.manager.ServerConfigManager;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import io.virtue.event.EventDispatcher;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
@@ -50,7 +51,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
                 for (RegistryConfig registryConfig : registryConfigs) {
                     URL registryConfigUrl = registryConfig.toUrl();
                     registryConfigUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
-                    registryConfigUrl.addParameter(Key.VIRTUE, virtue.name());
+                    registryConfigUrl.addParam(Key.VIRTUE, virtue.name());
                     RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryConfigUrl.protocol());
                     RegistryService registryService = registryFactory.get(registryConfigUrl);
                     registryService.register(serverUrl);
@@ -59,8 +60,10 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             // Open Server
             Protocol<?, ?> protocol = ExtensionLoader.loadService(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
-            logger.info("Opened Server[{}] for Protocol[{}] and bind Port(s) {}",
-                    server.getClass().getSimpleName(), protocol.protocol(), server.port());
+            logger.info(
+                    "Opened Server[{}] for Protocol[{}] and bind Port(s) {}",
+                    StringUtil.simpleClassName(server), protocol.protocol(), server.port()
+            );
         }
     }
 }

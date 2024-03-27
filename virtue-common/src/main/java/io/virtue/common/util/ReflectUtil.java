@@ -1,16 +1,14 @@
 package io.virtue.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.virtue.common.exception.CommonException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
+
 @SuppressWarnings("unchecked")
 public final class ReflectUtil {
-
-    public static final Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
 
     private static final Map<Class<? extends Annotation>, Annotation> DEFAULT_ANNOTATION_MAP = new LinkedHashMap<>();
 
@@ -22,11 +20,10 @@ public final class ReflectUtil {
             throw new RuntimeException(e);
         }
         try {
-            return parameterTypes == null ? type.getConstructor(new Class[]{}).newInstance() :
-                    type.getConstructor(parameterTypes).newInstance(args);
+            return parameterTypes == null ? type.getConstructor(new Class[]{}).newInstance()
+                    : type.getConstructor(parameterTypes).newInstance(args);
         } catch (Exception e) {
-            logger.error("Create Instance Fail", e);
-            throw new RuntimeException(e);
+            throw new CommonException("Create Instance is Failed for " + type.getName(), e);
         }
 
     }
@@ -36,7 +33,7 @@ public final class ReflectUtil {
         try {
             instance = constructor.newInstance(args);
         } catch (Exception e) {
-            logger.error("Create Instance Fail", e);
+            throw new CommonException("Create Instance is Failed by " + constructor.getName(), e);
         }
         return instance;
     }
@@ -94,14 +91,14 @@ public final class ReflectUtil {
         try {
             constructor = type.getConstructor(parameterTypes);
         } catch (NoSuchMethodException e) {
-            logger.error("No matching constructor was found");
+            throw new CommonException("No matching constructor was found");
         }
         return constructor;
     }
 
     public static List<Field> getAllFields(Class<?> type) {
         List<Field> allFields = new ArrayList<>();
-        do{
+        do {
             Field[] declaredFields = type.getDeclaredFields();
             allFields.addAll(Arrays.asList(declaredFields));
             type = type.getSuperclass();
@@ -109,7 +106,7 @@ public final class ReflectUtil {
         return allFields;
     }
 
-    public static <T extends Annotation> T findAnnotation(AnnotatedElement annotatedElement,Class<T> annotationType) {
+    public static <T extends Annotation> T findAnnotation(AnnotatedElement annotatedElement, Class<T> annotationType) {
         T annotation = annotatedElement.getAnnotation(annotationType);
         if (annotation != null) {
             return annotation;
@@ -141,7 +138,7 @@ public final class ReflectUtil {
         return null;
     }
 
-    public static String formatAnnotationToString(Class<?> annotationType, Object proxy) {
+    private static String formatAnnotationToString(Class<?> annotationType, Object proxy) {
         StringBuilder sb = new StringBuilder();
         sb.append('@').append(annotationType.getName()).append('(');
         Method[] methods = annotationType.getDeclaredMethods();
@@ -155,7 +152,7 @@ public final class ReflectUtil {
                     sb.append(", ");
                 }
             } catch (Exception e) {
-                logger.error("{} toString error", annotationType);
+                throw new CommonException(annotationType + " toString error");
             }
         }
         sb.append(')');

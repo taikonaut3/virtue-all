@@ -3,12 +3,17 @@ package io.virtue.rpc.protocol;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import io.virtue.transport.Transporter;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.server.Server;
 
+/**
+ * Abstract Protocol.
+ * @param <Req> request type
+ * @param <Res> response type
+ */
 public abstract class AbstractProtocol<Req, Res> implements Protocol<Req, Res> {
 
     protected String protocol;

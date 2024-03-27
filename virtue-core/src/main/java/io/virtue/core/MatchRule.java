@@ -1,6 +1,5 @@
 package io.virtue.core;
 
-import io.virtue.core.manager.Virtue;
 import org.intellij.lang.annotations.Language;
 
 /**

@@ -7,7 +7,7 @@ import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
 
-import static io.virtue.common.constant.Components.Serialize.KRYO;
+import static io.virtue.common.constant.Components.Serialization.KRYO;
 
 @ServiceProvider(KRYO)
 public class KryoSerializer implements Serializer {

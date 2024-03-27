@@ -30,14 +30,14 @@ public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        int keepAliveTimeout = url.getIntParameter(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
+        int keepAliveTimeout = url.getIntParam(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
         IdleStateHandler idleStateHandler = NettyIdeStateHandler.create(keepAliveTimeout, isServer);
         initClientPipeline(socketChannel, idleStateHandler);
     }
 
     private void initClientPipeline(SocketChannel socketChannel, IdleStateHandler idleStateHandler) {
         String maxMessageKey = isServer ? Key.MAX_RECEIVE_SIZE : Key.CLIENT_MAX_RECEIVE_SIZE;
-        int maxReceiveSize = url.getIntParameter(maxMessageKey, Constant.DEFAULT_MAX_MESSAGE_SIZE);
+        int maxReceiveSize = url.getIntParam(maxMessageKey, Constant.DEFAULT_MAX_MESSAGE_SIZE);
         HttpMessageConverter converter = new HttpMessageConverter();
         socketChannel.pipeline()
                 .addLast("httpClientCodec", new HttpClientCodec())

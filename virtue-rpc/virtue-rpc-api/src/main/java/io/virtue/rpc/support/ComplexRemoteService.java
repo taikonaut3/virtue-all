@@ -1,20 +1,26 @@
 package io.virtue.rpc.support;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
-import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.ReflectUtil;
-import io.virtue.core.CallerFactory;
+import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
-import io.virtue.core.ServerCaller;
-import io.virtue.core.annotation.CallerFactoryProvider;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
+import io.virtue.core.annotation.InvokerFactory;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Default RemoteService Impl.
+ *
+ * @param <T> target type
+ */
 @ToString
-public class ComplexRemoteService<T> extends AbstractCallerContainer implements RemoteService<T> {
+public class ComplexRemoteService<T> extends AbstractInvokerContainer implements RemoteService<T> {
 
     private static final Class<io.virtue.core.annotation.RemoteService> REMOTE_SERVICE_CLASS =
             io.virtue.core.annotation.RemoteService.class;
@@ -23,6 +29,10 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
     private final Class<T> remoteServiceClass;
 
     private final T target;
+
+    private MethodAccess methodAccess;
+
+    private Map<Method, Integer> methodIndex;
 
     private String remoteServiceName;
 
@@ -45,6 +55,8 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
     public void init() {
         // parse @RemoteService
         parseRemoteService();
+        methodIndex = new HashMap<>();
+        methodAccess = MethodAccess.get(target.getClass());
         // parse ServerCaller
         parseServerCaller();
     }
@@ -59,13 +71,14 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
 
     private void parseServerCaller() {
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
-            CallerFactoryProvider factoryProvider = ReflectUtil.findAnnotation(method, CallerFactoryProvider.class);
+            InvokerFactory factoryProvider = ReflectUtil.findAnnotation(method, InvokerFactory.class);
             if (factoryProvider != null) {
-                CallerFactory callerFactory = ExtensionLoader.loadService(CallerFactory.class, factoryProvider.value());
-                ServerCaller<?> caller = callerFactory.createServerCaller(method, this);
+                io.virtue.core.InvokerFactory invokerFactory = ExtensionLoader.loadService(io.virtue.core.InvokerFactory.class, factoryProvider.value());
+                Callee<?> caller = invokerFactory.createCallee(method, this);
                 if (caller != null) {
-                    callerMap.put(method, caller);
-                    identificationCallerMap.put(caller.identification(), caller);
+                    invokers.put(method, caller);
+                    addInvokerMapping(caller.protocol(), caller.path(), caller);
+                    methodIndex.put(method, methodAccess.getIndex(method.getName(), method.getParameterTypes()));
                     virtue.configManager().serverConfigManager().neededOpenProtocol(caller.protocol());
                 }
             }
@@ -73,13 +86,14 @@ public class ComplexRemoteService<T> extends AbstractCallerContainer implements 
     }
 
     @Override
-    public T target() {
-        return target;
+    public Object invokeMethod(Method method, Object[] args) {
+        Integer methodIndex = this.methodIndex.get(method);
+        return methodAccess.invoke(target,methodIndex,args);
     }
 
     @Override
-    public ServerCaller<?> getCaller(String protocol, String path) {
-        return (ServerCaller<?>) identificationCallerMap.get(GenerateUtil.generateCallerIdentification(protocol, path));
+    public T target() {
+        return target;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package monitor;
 
 import io.virtue.core.SystemInfo;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import org.junit.jupiter.api.Test;
 import oshi.hardware.NetworkIF;
 import oshi.software.os.OperatingSystem;

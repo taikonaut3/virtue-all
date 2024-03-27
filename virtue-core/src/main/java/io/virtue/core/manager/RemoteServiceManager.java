@@ -1,8 +1,8 @@
 package io.virtue.core.manager;
 
-import io.virtue.common.util.GenerateUtil;
+import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
-import io.virtue.core.ServerCaller;
+import io.virtue.core.Virtue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,13 +26,9 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
         register(remoteService.name(), remoteService);
     }
 
-    public ServerCaller<?> getServerCaller(String protocol, String path) {
-        return getServerCaller(GenerateUtil.generateCallerIdentification(protocol, path));
-    }
-
-    public ServerCaller<?> getServerCaller(String identification) {
+    public Callee<?> getServerCaller(String protocol, String path) {
         for (RemoteService<?> remoteService : remoteServices()) {
-            ServerCaller<?> caller = (ServerCaller<?>) remoteService.getCaller(identification);
+            Callee<?> caller = remoteService.getCallee(protocol, path);
             if (caller != null) {
                 return caller;
             }
@@ -50,9 +46,9 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
         return null;
     }
 
-    public List<ServerCaller<?>> serverCallers() {
+    public List<Callee<?>> serverCallers() {
         return remoteServices().stream()
-                .flatMap(container -> Arrays.stream(container.callers()).map(caller -> (ServerCaller<?>) caller))
+                .flatMap(container -> Arrays.stream(container.invokers()).map(caller -> (Callee<?>) caller))
                 .collect(Collectors.toList());
     }
 

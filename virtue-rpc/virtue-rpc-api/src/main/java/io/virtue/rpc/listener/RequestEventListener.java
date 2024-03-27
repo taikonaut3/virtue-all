@@ -6,8 +6,8 @@ import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.DateUtil;
-import io.virtue.core.CallArgs;
-import io.virtue.core.ServerCaller;
+import io.virtue.core.Callee;
+import io.virtue.core.Invocation;
 import io.virtue.rpc.event.RequestEvent;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;
@@ -36,20 +36,20 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         RpcContext.RequestContext.parse(url);
         Protocol<?,?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
-        CallArgs callArgs = protocolParser.parseRequestBody(request);
-        ServerCaller<?> serverCaller = (ServerCaller<?>) callArgs.caller();
-        boolean oneway = url.getBooleanParameter(Key.ONEWAY);
+        Invocation invocation = protocolParser.parseRequestBody(request);
+        Callee<?> callee = (Callee<?>) invocation.invoker();
+        boolean oneway = url.getBooleanParam(Key.ONEWAY);
         Response response = null;
         try {
             if (oneway) {
-                serverCaller.call(url,callArgs);
+                callee.invoke(invocation);
             } else {
-                long timeout = url.getLongParameter(Key.TIMEOUT);
-                String timestamp = url.getParameter(Key.TIMESTAMP);
+                long timeout = url.getLongParam(Key.TIMEOUT);
+                String timestamp = url.getParam(Key.TIMESTAMP);
                 LocalDateTime localDateTime = DateUtil.parse(timestamp, DateUtil.COMPACT_FORMAT);
                 long margin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
                 if (margin < timeout) {
-                    Object result = serverCaller.call(url,callArgs);
+                    Object result = callee.invoke(invocation);
                     long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
                     if (invokeAfterMargin < timeout) {
                         response = Response.success(url, result);
@@ -61,9 +61,9 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
             Object message = protocol.createResponse(url, "Server Exception message: " + e.getMessage());
             response = Response.error(url, message);
         } finally {
-            String responseContextStr = RpcContext.responseContext().toString();
-            url.addParameter(Key.RESPONSE_CONTEXT, responseContextStr);
             if (response != null) {
+                String responseContextStr = RpcContext.responseContext().toString();
+                url.addParam(Key.RESPONSE_CONTEXT, responseContextStr);
                 event.channel().send(response);
             }
         }

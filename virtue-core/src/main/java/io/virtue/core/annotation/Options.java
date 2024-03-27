@@ -5,7 +5,7 @@ import io.virtue.common.constant.Constant;
 import java.lang.annotation.*;
 
 /**
- * Client parameter configuration.
+ * Client invoke parameter configuration.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 public @interface Options {
 
     /**
-     * The default is false,Unit: ms
+     * The default is false,Unit: ms.
      */
     int timeout() default Constant.DEFAULT_TIMEOUT;
 
@@ -25,7 +25,7 @@ public @interface Options {
 
     /**
      * Used {@link io.virtue.governance.router.Router}.
-     * Default is "weight" {@link io.virtue.governance.router.DefaultRouter}.
+     * Default is "default" {@link io.virtue.governance.router.DefaultRouter}.
      */
     String router() default Constant.DEFAULT_ROUTER;
 
@@ -42,7 +42,7 @@ public @interface Options {
     String faultTolerance() default Constant.DEFAULT_FAULT_TOLERANCE;
 
     /**
-     * If {@link Options#faultTolerance()} is "failRetry",
+     * If {@link Options#faultTolerance()} is "failRetry"{@link io.virtue.governance.faulttolerance.FailRetry},
      * Number of retries called when an exception occurred.
      */
     int retires() default Constant.DEFAULT_RETIRES;

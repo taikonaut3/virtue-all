@@ -31,12 +31,12 @@
 //
 //    @Override
 //    public void connect(URL url) {
-//        int connectTimeout = url.getIntParameter(Key.CONNECT_TIMEOUT);
+//        int connectTimeout = url.getIntParam(Key.CONNECT_TIMEOUT);
 //        curatorFramework = CuratorFrameworkFactory.builder()
 //                .connectionTimeoutMs(connectTimeout)
 //                .connectString(url.getAddress())
-//                .sessionTimeoutMs(url.getIntParameter(Key.SESSION_TIMEOUT))
-//                .retryPolicy(new RetryNTimes(url.getIntParameter(Key.RETRIES), url.getIntParameter(Key.RETRY_INTERVAL)))
+//                .sessionTimeoutMs(url.getIntParam(Key.SESSION_TIMEOUT))
+//                .retryPolicy(new RetryNTimes(url.getIntParam(Key.RETRIES), url.getIntParam(Key.RETRY_INTERVAL)))
 //                .build();
 //        curatorFramework.start();
 //        try {

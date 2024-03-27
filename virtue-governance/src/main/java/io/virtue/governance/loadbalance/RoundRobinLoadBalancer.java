@@ -21,7 +21,7 @@ public class RoundRobinLoadBalancer extends AbstractLoadBalancer {
 
     @Override
     protected URL doChoose(Invocation invocation, List<URL> urls) {
-        URL url = invocation.callArgs().caller().url();
+        URL url = invocation.invoker().url();
         AtomicInteger lastIndex = url.attribute(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY).get();
         int current;
         do {

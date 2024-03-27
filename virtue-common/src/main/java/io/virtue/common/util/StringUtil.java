@@ -13,7 +13,9 @@ public interface StringUtil {
     }
 
     static String normalizePath(String path) {
-        return path.replaceAll("^/+", "").replaceAll("/+$", "").replaceAll("/+", "/");
+        return path.replaceAll("^/+", "")
+                .replaceAll("/+$", "")
+                .replaceAll("/+", "/");
     }
 
     static String simpleClassName(Object o) {
@@ -26,12 +28,7 @@ public interface StringUtil {
 
     static String simpleClassName(Class<?> type) {
         Objects.requireNonNull(type);
-        String className = type.getName();
-        final int lastDotIdx = className.lastIndexOf(".");
-        if (lastDotIdx > -1) {
-            return className.substring(lastDotIdx + 1);
-        }
-        return className;
+        return type.getSimpleName();
     }
 
     private static boolean isWhitespace(CharSequence str) {

@@ -1,7 +1,7 @@
 package io.virtue.common.exception;
 
 /**
- * Get Resources Exception
+ * Get Resources Exception.
  */
 public class SourceException extends RpcException {
 

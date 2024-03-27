@@ -17,7 +17,6 @@
 package io.virtue.common.timer;
 
 import java.util.Set;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,11 +28,10 @@ public interface Timer {
     /**
      * Schedules the specified {@link TimerTask} for one-time execution after
      * the specified delay.
-     *
-     * @return a handle which is associated with the specified task
-     * @throws IllegalStateException      if this timer has been {@linkplain #stop() stopped} already
-     * @throws RejectedExecutionException if the pending timeouts are too many and creating new timeout
-     *                                    can cause instability in the system.
+     * @param task
+     * @param delay
+     * @param unit
+     * @return
      */
     Timeout newTimeout(TimerTask task, long delay, TimeUnit unit);
 
@@ -47,7 +45,7 @@ public interface Timer {
     Set<Timeout> stop();
 
     /**
-     * the timer is stop
+     * the timer is stop.
      *
      * @return true for stop
      */

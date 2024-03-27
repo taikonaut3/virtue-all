@@ -5,7 +5,7 @@ import io.virtue.common.constant.Key;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

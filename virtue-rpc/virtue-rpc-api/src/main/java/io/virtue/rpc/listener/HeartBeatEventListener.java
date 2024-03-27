@@ -30,7 +30,7 @@ public class HeartBeatEventListener implements EventListener<HeartBeatEvent> {
         AtomicInteger allIdlerRecord = channel.attribute(Key.ALL_IDLE_TIMES_ATTRIBUTE_KEY).get();
         int spareCloseTimes = Constant.DEFAULT_SPARE_CLOSE_TIMES;
         if (url != null) {
-            spareCloseTimes = url.getIntParameter(Key.SPARE_CLOSE_TIMES, Constant.DEFAULT_SPARE_CLOSE_TIMES);
+            spareCloseTimes = url.getIntParam(Key.SPARE_CLOSE_TIMES, Constant.DEFAULT_SPARE_CLOSE_TIMES);
         }
         logger.trace("Received Event({})", event.getClass().getSimpleName());
         logger.trace("readIdleRecord:{},writeIdleRecord:{},allIdlerRecord:{}", readIdleRecord, writeIdleRecord, allIdlerRecord);

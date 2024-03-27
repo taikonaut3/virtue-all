@@ -31,17 +31,17 @@ public class Request implements Envelope {
     }
 
     public Request(URL url, Object message) {
-        String uniqueId = url.getParameter(Key.UNIQUE_ID);
+        String uniqueId = url.getParam(Key.UNIQUE_ID);
         if (StringUtil.isBlank(uniqueId)) {
             id = INCREASE.getAndIncrement();
             String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
-            url.addParameter(Key.TIMESTAMP, timestamp);
-            url.addParameter(Key.ENVELOPE, Key.REQUEST);
-            url.addParameter(Key.UNIQUE_ID, String.valueOf(id));
+            url.addParam(Key.TIMESTAMP, timestamp);
+            url.addParam(Key.ENVELOPE, Key.REQUEST);
+            url.addParam(Key.UNIQUE_ID, String.valueOf(id));
         } else {
             id = Long.parseLong(uniqueId);
         }
-        this.oneway = url.getBooleanParameter(Key.ONEWAY);
+        this.oneway = url.getBooleanParam(Key.ONEWAY);
         this.url = url;
         this.message = message;
 

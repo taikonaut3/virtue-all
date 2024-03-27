@@ -7,7 +7,7 @@ import io.virtue.common.extension.Attribute;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import io.virtue.registry.AbstractRegistryService;
 import io.vertx.core.Vertx;
 import io.vertx.ext.consul.*;
@@ -55,7 +55,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             ConsulClientOptions options = new ConsulClientOptions()
                     .setHost(url.host())
                     .setPort(url.port())
-                    .setTimeout(url.getIntParameter(Key.CONNECT_TIMEOUT));
+                    .setTimeout(url.getIntParam(Key.CONNECT_TIMEOUT));
             Attribute<Vertx> vertxAttribute = Virtue.get(url).attribute(AttributeKey.get(Key.VERTX));
             vertx = vertxAttribute.get();
             if (vertx == null) {
@@ -81,7 +81,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
                     .setPort(url.port())
                     .setMeta(metaInfo(url));
             if (enableHealthCheck) {
-                int healthCheckInterval = url.getIntParameter(Key.HEALTH_CHECK_INTERVAL,
+                int healthCheckInterval = url.getIntParam(Key.HEALTH_CHECK_INTERVAL,
                         Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
                 CheckOptions checkOpts = new CheckOptions()
                         .setTcp(url.address())
@@ -158,7 +158,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
         Service service = entry.getService();
         Map<String, String> meta = service.getMeta();
         URL serverUrl = new URL(protocol, service.getAddress(), service.getPort());
-        serverUrl.addParameters(meta);
+        serverUrl.addParams(meta);
         return serverUrl;
     }
 }

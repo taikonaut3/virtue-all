@@ -29,12 +29,12 @@ import java.util.Optional;
 public class HttpRequestAdapter extends DefaultFullHttpRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestAdapter.class);
-    private static final JacksonSerializer jsonSerializer;
+    private static final JacksonSerializer jacksonSerializer;
 
     private HttpRequest nettyHttpRequest = this;
 
     static {
-        jsonSerializer = (JacksonSerializer) ExtensionLoader.loadService(Serializer.class, Components.Serialize.JSON);
+        jacksonSerializer = (JacksonSerializer) ExtensionLoader.loadService(Serializer.class, Components.Serialization.JSON);
     }
 
     public HttpRequestAdapter(URL url, HttpRequestWrapper wrapper) {
@@ -91,11 +91,11 @@ public class HttpRequestAdapter extends DefaultFullHttpRequest {
         if (contentType.equals(ContentType.APPLICATION_X_WWW_FORM_URLENCODED)) {
             // x-www-form-urlencoded
             Map<String, String> formData = BeanConverter.convertToMap(body);
-            String formStr = URL.mapToUrlString(formData);
+            String formStr = URL.toUrlParams(formData);
             return Unpooled.copiedBuffer(formStr, StandardCharsets.UTF_8);
         } else if (contentType.equals(ContentType.APPLICATION_JSON)) {
             // application/json
-            byte[] jsonBytes = jsonSerializer.serialize(body);
+            byte[] jsonBytes = jacksonSerializer.serialize(body);
             return Unpooled.copiedBuffer(jsonBytes);
         } else if (contentType.equals(ContentType.TEXT_PLAIN)) {
             // text/plain
@@ -107,7 +107,7 @@ public class HttpRequestAdapter extends DefaultFullHttpRequest {
     }
 
     private Map<String, Object> convertToMap(Object body) {
-        ObjectMapper objectMapper = jsonSerializer.objectMapper();
+        ObjectMapper objectMapper = jacksonSerializer.objectMapper();
         return objectMapper.convertValue(body, new TypeReference<>() {
         });
 

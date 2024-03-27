@@ -3,16 +3,16 @@ package io.virtue.rpc.objectpool;
 import java.time.Instant;
 
 /**
- * @author xiaoquan
- * @date 2024/2/25 14:14
+ * Abstract PooledObject.
+ * @param <T>
  */
-public abstract class AbstractPooledObject<T> implements PooledObject<T>{
+public abstract class AbstractPooledObject<T> implements PooledObject<T> {
 
     protected final T object;
     protected final Instant createInstant = Instant.now();
     protected volatile PooledObjectState state = PooledObjectState.IDLE;
 
-    protected AbstractPooledObject(T object){
+    protected AbstractPooledObject(T object) {
         this.object = object;
     }
 

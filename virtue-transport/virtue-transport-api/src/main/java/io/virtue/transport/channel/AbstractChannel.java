@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
+/**
+ * Abstract Channel.
+ */
 public abstract class AbstractChannel extends AbstractAccessor implements Channel {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractChannel.class);
@@ -21,7 +24,7 @@ public abstract class AbstractChannel extends AbstractAccessor implements Channe
     }
 
     @Override
-    public void close() throws NetWorkException {
+    public void close() {
         doClose();
         accessor.clear();
         logger.debug("Closed {}", this);

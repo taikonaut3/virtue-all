@@ -5,10 +5,11 @@ package io.virtue.common.constant;
  */
 public interface Components {
 
-    String SPRING = "spring";
-
     String DEFAULT = "default";
 
+    /**
+     * EventDispatcher type.
+     */
     interface EventDispatcher {
 
         String FLOW = "flow";
@@ -17,6 +18,9 @@ public interface Components {
 
     }
 
+    /**
+     * ProxyFactory type.
+     */
     interface ProxyFactory {
 
         String JDK = "jdk";
@@ -27,6 +31,9 @@ public interface Components {
 
     }
 
+    /**
+     * Protocol type.
+     */
     interface Protocol {
 
         String VIRTUE = "virtue";
@@ -37,6 +44,9 @@ public interface Components {
 
     }
 
+    /**
+     * Registry type.
+     */
     interface Registry {
 
         String ZOOKEEPER = "zookeeper";
@@ -49,7 +59,10 @@ public interface Components {
 
     }
 
-    interface Serialize {
+    /**
+     * Serialization type.
+     */
+    interface Serialization {
 
         String JDK = "jdk";
 
@@ -65,12 +78,18 @@ public interface Components {
 
     }
 
+    /**
+     * Transport type.
+     */
     interface Transport {
 
         String NETTY = "netty";
 
     }
 
+    /**
+     * FaultTolerance type.
+     */
     interface FaultTolerance {
 
         String FAIL_RETRY = "failRetry";
@@ -79,6 +98,9 @@ public interface Components {
 
     }
 
+    /**
+     * LoadBalance type.
+     */
     interface LoadBalance {
 
         String RANDOM = "random";
@@ -89,12 +111,23 @@ public interface Components {
 
     }
 
-    interface Router {
-
-        String WEIGHT = "weight";
-
+    /**
+     * ByteReader type.
+     */
+    interface ByteReader {
+        String NIO_HEAP = "heap";
     }
 
+    /**
+     * ByteWriter type.
+     */
+    interface ByteWriter {
+        String NIO_HEAP = "heap";
+    }
+
+    /**
+     * Envelope type.
+     */
     interface Envelope {
 
         String REQUEST = "request";
@@ -107,6 +140,9 @@ public interface Components {
 
     }
 
+    /**
+     * Compression type.
+     */
     interface Compression {
         String GZIP = "gzip";
     }

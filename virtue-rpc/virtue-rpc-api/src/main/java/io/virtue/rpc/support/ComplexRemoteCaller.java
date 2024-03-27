@@ -5,12 +5,11 @@ import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectUtil;
 import io.virtue.core.Caller;
-import io.virtue.core.CallerFactory;
-import io.virtue.core.ClientCaller;
+import io.virtue.core.Invoker;
 import io.virtue.core.RemoteCaller;
-import io.virtue.core.annotation.CallerFactoryProvider;
-import io.virtue.core.manager.Virtue;
-import io.virtue.core.support.RpcCallArgs;
+import io.virtue.core.annotation.InvokerFactory;
+import io.virtue.core.Virtue;
+import io.virtue.core.support.TransferableInvocation;
 import io.virtue.proxy.InvocationHandler;
 import io.virtue.proxy.ProxyFactory;
 import io.virtue.proxy.SuperInvoker;
@@ -19,8 +18,13 @@ import lombok.ToString;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 
+/**
+ * Default RemoteCaller Impl.
+ *
+ * @param <T> interface type
+ */
 @ToString
-public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements RemoteCaller<T> {
+public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements RemoteCaller<T> {
 
     private static final Class<io.virtue.core.annotation.RemoteCaller> REMOTE_CALL_CLASS =
             io.virtue.core.annotation.RemoteCaller.class;
@@ -90,18 +94,21 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
 
     private void parseClientCaller() {
         for (Method method : targetInterface.getDeclaredMethods()) {
-            CallerFactoryProvider factoryProvider = ReflectUtil.findAnnotation(method, CallerFactoryProvider.class);
+            InvokerFactory factoryProvider = ReflectUtil.findAnnotation(method, InvokerFactory.class);
             if (factoryProvider != null) {
-                CallerFactory callerFactory = ExtensionLoader.loadService(CallerFactory.class, factoryProvider.value());
-                ClientCaller<?> caller = callerFactory.createClientCaller(method, this);
+                io.virtue.core.InvokerFactory invokerFactory = ExtensionLoader.loadService(io.virtue.core.InvokerFactory.class, factoryProvider.value());
+                Caller<?> caller = invokerFactory.createCaller(method, this);
                 if (caller != null) {
-                    callerMap.put(method, caller);
-                    identificationCallerMap.put(caller.identification(), caller);
+                    invokers.put(method, caller);
+                    addInvokerMapping(caller.protocol(), caller.path(), caller);
                 }
             }
         }
     }
 
+    /**
+     * Client InvocationHandler,Rpc caller invoke.
+     */
     public static class ClientInvocationHandler implements InvocationHandler {
 
         private final RemoteCaller<?> remoteCaller;
@@ -112,10 +119,10 @@ public class ComplexRemoteCaller<T> extends AbstractCallerContainer implements R
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args, SuperInvoker<?> superInvoker) throws Throwable {
-            Caller<?> caller = remoteCaller.getCaller(method);
-            if (caller != null) {
-                RpcCallArgs callArgs = new RpcCallArgs(caller, args);
-                return caller.call(caller.url().deepCopy(),callArgs);
+            Invoker<?> invoker = remoteCaller.getInvoker(method);
+            if (invoker != null) {
+                TransferableInvocation invocation = new TransferableInvocation((Caller<?>) invoker, args);
+                return invoker.invoke(invocation);
             }
             return null;
         }

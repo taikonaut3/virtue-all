@@ -2,7 +2,6 @@ package io.virtue.core;
 
 import com.sun.management.OperatingSystemMXBean;
 import io.virtue.core.manager.RemoteServiceManager;
-import io.virtue.core.manager.Virtue;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -45,7 +44,7 @@ public class SystemInfo {
         RemoteServiceManager remoteServiceManager = virtue.configManager().remoteServiceManager();
         Collection<RemoteService<?>> remoteServices = remoteServiceManager.remoteServices();
         services = remoteServices.stream()
-                .mapToInt(remoteService -> remoteService.callers().length)
+                .mapToInt(remoteService -> remoteService.invokers().length)
                 .sum();
     }
 

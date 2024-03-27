@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static io.virtue.common.constant.Components.Compression.GZIP;
 import static io.virtue.common.constant.Components.Envelope.*;
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
-import static io.virtue.common.constant.Components.Serialize.*;
+import static io.virtue.common.constant.Components.Serialization.*;
 
 /**
  * Store mapping: string -> byte.
@@ -21,11 +21,11 @@ public class  ModeContainer {
     private static final Map<String, List<ModeBean>> modeMap = new ConcurrentHashMap<>();
 
     static {
-        put(Key.SERIALIZE, JDK, (byte) 1);
-        put(Key.SERIALIZE, JSON, (byte) 2);
-        put(Key.SERIALIZE, KRYO, (byte) 3);
-        put(Key.SERIALIZE, FURY, (byte) 4);
-        put(Key.SERIALIZE, MSGPACK, (byte) 5);
+        put(Key.SERIALIZATION, JDK, (byte) 1);
+        put(Key.SERIALIZATION, JSON, (byte) 2);
+        put(Key.SERIALIZATION, KRYO, (byte) 3);
+        put(Key.SERIALIZATION, FURY, (byte) 4);
+        put(Key.SERIALIZATION, MSGPACK, (byte) 5);
         put(Key.ENVELOPE, REQUEST, (byte) 1);
         put(Key.ENVELOPE, RESPONSE, (byte) 2);
         put(Key.ENVELOPE, HEARTBEAT, (byte) 3);

@@ -1,12 +1,13 @@
 package io.virtue.rpc.objectpool;
 
 import io.virtue.common.util.AssertUtil;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * @author Chang Liu
+ * Abstract ObjectPool.
+ * @param <T>
  */
 public abstract class AbstractObjectPool<T> implements ObjectPool<T> {
 

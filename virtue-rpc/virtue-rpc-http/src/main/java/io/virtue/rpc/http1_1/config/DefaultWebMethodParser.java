@@ -1,10 +1,10 @@
 package io.virtue.rpc.http1_1.config;
 
-import io.virtue.common.util.StringUtil;
-import io.virtue.core.CallArgs;
-import io.virtue.rpc.http1_1.HttpParser;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RequestBody;
+import io.virtue.common.util.StringUtil;
+import io.virtue.core.Invocation;
+import io.virtue.rpc.http1_1.HttpParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -45,8 +45,8 @@ public class DefaultWebMethodParser implements MethodParser<HttpCall> {
     }
 
     @Override
-    public Map<String, String> parseParams(CallArgs args, HttpRequestWrapper wrapper) {
-        Parameter[] parameters = args.caller().method().getParameters();
+    public Map<String, String> parseParams(Invocation  invocation, HttpRequestWrapper wrapper) {
+        Parameter[] parameters = invocation.invoker().method().getParameters();
         HashMap<String, String> map = new HashMap<>();
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
@@ -56,7 +56,7 @@ public class DefaultWebMethodParser implements MethodParser<HttpCall> {
                 if (StringUtil.isBlank(key)) {
                     key = parameter.getName();
                 }
-                map.put(key, String.valueOf(args.args()[i]));
+                map.put(key, String.valueOf(invocation.args()[i]));
             }
         }
         wrapper.params().putAll(map);
@@ -64,9 +64,9 @@ public class DefaultWebMethodParser implements MethodParser<HttpCall> {
     }
 
     @Override
-    public String parsePathVariables(CallArgs args, HttpRequestWrapper wrapper) {
+    public String parsePathVariables(Invocation invocation, HttpRequestWrapper wrapper) {
         String path = wrapper.path();
-        Parameter[] parameters = args.caller().method().getParameters();
+        Parameter[] parameters = invocation.invoker().method().getParameters();
         if (StringUtil.isBlank(path)) {
             return path;
         }
@@ -79,28 +79,28 @@ public class DefaultWebMethodParser implements MethodParser<HttpCall> {
                     key = parameter.getName();
                 }
                 String replaceKey = "{" + key + "}";
-                path = path.replace(replaceKey, String.valueOf(args.args()[i]));
+                path = path.replace(replaceKey, String.valueOf(invocation.args()[i]));
             }
         }
         return path;
     }
 
     @Override
-    public Object parseRequestBody(CallArgs args, HttpRequestWrapper wrapper) {
+    public Object parseRequestBody(Invocation invocation, HttpRequestWrapper wrapper) {
         List<Class<? extends Annotation>> executed = List.of(Param.class, PathVariable.class);
-        Parameter[] parameters = args.caller().method().getParameters();
+        Parameter[] parameters = invocation.invoker().method().getParameters();
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
             Annotation[] annotations = parameter.getAnnotations();
             boolean isMatch = false;
             if (annotations.length == 0) {
                 wrapper.headers().put(HttpHeaderNames.CONTENT_TYPE.toString(), ContentType.APPLICATION_X_WWW_FORM_URLENCODED);
-                return args.args()[i];
+                return invocation.args()[i];
             }
             List<? extends Class<? extends Annotation>> annotationTypes = Arrays.stream(annotations).map(Annotation::annotationType).toList();
             if (annotationTypes.contains(RequestBody.class)) {
                 wrapper.headers().put(HttpHeaderNames.CONTENT_TYPE.toString(), ContentType.APPLICATION_JSON);
-                return args.args()[i];
+                return invocation.args()[i];
             }
             for (Annotation annotation : annotations) {
                 if (!executed.contains(annotation.annotationType())) {
@@ -109,7 +109,7 @@ public class DefaultWebMethodParser implements MethodParser<HttpCall> {
                 }
             }
             if (isMatch) {
-                return args.args()[i];
+                return invocation.args()[i];
             }
         }
         return null;

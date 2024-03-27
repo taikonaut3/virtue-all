@@ -13,7 +13,7 @@ import io.virtue.serialization.Serializer;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import static io.virtue.common.constant.Components.Serialize.JSON;
+import static io.virtue.common.constant.Components.Serialization.JSON;
 
 @ServiceProvider(JSON)
 public class JacksonSerializer implements Serializer {
@@ -59,10 +59,10 @@ public class JacksonSerializer implements Serializer {
         try {
             // 遍历 Object[] 数组并匹配相应类型
             for (int i = 0; i < args.length; i++) {
-                Object deserializedObject = args[i];
+                Object deserializeObj = args[i];
                 Type objectType = types[i];
                 // 将反序列化的对象转换为指定类型
-                Object typedObject = objectMapper.convertValue(deserializedObject, objectMapper.constructType(objectType));
+                Object typedObject = objectMapper.convertValue(deserializeObj, objectMapper.constructType(objectType));
                 objects[i] = typedObject;
             }
         } catch (Exception e) {

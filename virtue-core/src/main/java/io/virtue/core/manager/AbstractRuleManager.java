@@ -1,8 +1,9 @@
 package io.virtue.core.manager;
 
-import io.virtue.core.ClientCaller;
+import io.virtue.core.Caller;
 import io.virtue.core.MatchRule;
-import io.virtue.core.ServerCaller;
+import io.virtue.core.Callee;
+import io.virtue.core.Virtue;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -41,21 +42,21 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
     }
 
     public void executeRules() {
-        List<ServerCaller<?>> serverCallers = virtue.configManager().remoteServiceManager().serverCallers();
-        List<ClientCaller<?>> clientCallers = virtue.configManager().remoteCallerManager().clientCallers();
+        List<Callee<?>> callees = virtue.configManager().remoteServiceManager().serverCallers();
+        List<Caller<?>> callers = virtue.configManager().remoteCallerManager().clientCallers();
         for (RuleWrapper<T> ruleWrapper : ruleMap.values()) {
-            List<ServerCaller<?>> matchedServerCallers = matchedServerCallers(ruleWrapper.serverRegexWrapper(), serverCallers);
-            List<ClientCaller<?>> matchedClientCallers = matchedClientCallers(ruleWrapper.clientRegexWrapper(), clientCallers);
-            doExecuteRules(ruleWrapper.config, matchedServerCallers, matchedClientCallers);
+            List<Callee<?>> matchedCallees = matchedServerCallers(ruleWrapper.serverRegexWrapper(), callees);
+            List<Caller<?>> matchedCallers = matchedClientCallers(ruleWrapper.clientRegexWrapper(), callers);
+            doExecuteRules(ruleWrapper.config, matchedCallees, matchedCallers);
         }
     }
 
-    protected abstract void doExecuteRules(T config, List<ServerCaller<?>> matchedServerCallers, List<ClientCaller<?>> matchedClientCallers);
+    protected abstract void doExecuteRules(T config, List<Callee<?>> matchedCallees, List<Caller<?>> matchedCallers);
 
-    private List<ServerCaller<?>> matchedServerCallers(RuleWrapper.RegexWrapper serverRegexWrapper, List<ServerCaller<?>> serverCallers) {
+    private List<Callee<?>> matchedServerCallers(RuleWrapper.RegexWrapper serverRegexWrapper, List<Callee<?>> callees) {
         List<String> protocolRules = serverRegexWrapper.protocolRules;
         List<String> pathRules = serverRegexWrapper.pathRules;
-        return serverCallers.stream().filter(serverCaller -> {
+        return callees.stream().filter(serverCaller -> {
             for (String protocolRule : protocolRules) {
                 if (!isMatch(protocolRule, serverCaller.protocol())) {
                     return false;
@@ -70,10 +71,10 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
         }).collect(Collectors.toList());
     }
 
-    private List<ClientCaller<?>> matchedClientCallers(RuleWrapper.RegexWrapper clientRegexWrapper, List<ClientCaller<?>> clientCallers) {
+    private List<Caller<?>> matchedClientCallers(RuleWrapper.RegexWrapper clientRegexWrapper, List<Caller<?>> callers) {
         List<String> protocolRules = clientRegexWrapper.protocolRules;
         List<String> pathRules = clientRegexWrapper.pathRules;
-        return clientCallers.stream().filter(serverCaller -> {
+        return callers.stream().filter(serverCaller -> {
             for (String protocolRule : protocolRules) {
                 if (!isMatch(protocolRule, serverCaller.protocol())) {
                     return false;

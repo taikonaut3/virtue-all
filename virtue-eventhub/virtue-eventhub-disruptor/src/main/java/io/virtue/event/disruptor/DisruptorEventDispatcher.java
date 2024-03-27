@@ -22,7 +22,7 @@ import java.util.List;
 
 import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
 
-@ServiceProvider(value = DISRUPTOR, constructor = {URL.class})
+@ServiceProvider(DISRUPTOR)
 public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(DisruptorEventDispatcher.class);
@@ -32,7 +32,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     private RingBuffer<EventHolder<?>> ringBuffer;
 
     public DisruptorEventDispatcher(URL url) {
-        this.bufferSize = url.getIntParameter(Key.BUFFER_SIZE, Constant.DEFAULT_BUFFER_SIZE);
+        this.bufferSize = url.getIntParam(Key.BUFFER_SIZE, Constant.DEFAULT_BUFFER_SIZE);
         createDispatcher();
     }
 

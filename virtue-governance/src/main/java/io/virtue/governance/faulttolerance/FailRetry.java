@@ -19,7 +19,7 @@ public class FailRetry extends AbstractFaultTolerance {
     @Override
     public Object doOperation(Invocation invocation) throws RpcException {
         URL url = invocation.url();
-        int retries = url.getIntParameter(Key.RETRIES, Constant.DEFAULT_RETIRES);
+        int retries = url.getIntParam(Key.RETRIES, Constant.DEFAULT_RETIRES);
         for (int start = 0; start <= retries; start++) {
             try {
                 return invocation.invoke();

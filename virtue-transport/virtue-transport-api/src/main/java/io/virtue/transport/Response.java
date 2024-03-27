@@ -24,7 +24,7 @@ public class Response implements Envelope {
     }
 
     public Response(URL url, Object message) {
-        url.addParameter(Key.ENVELOPE, Key.RESPONSE);
+        url.addParam(Key.ENVELOPE, Key.RESPONSE);
         this.url = url;
         this.message = message;
     }

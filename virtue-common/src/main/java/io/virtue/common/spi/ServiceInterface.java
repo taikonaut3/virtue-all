@@ -21,6 +21,15 @@ public @interface ServiceInterface {
 
 
     /**
+     * If this type of constructor exists, then create instance with this constructor,
+     * or use default.
+     *
+     * @return constructor constructor type
+     */
+    Class<?>[] constructor() default {};
+
+
+    /**
      * Whether lazy loading is enabled,
      * Distinguishing it from the JDK's SPI (Service Provider Interface).
      *

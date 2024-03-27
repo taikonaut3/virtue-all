@@ -30,8 +30,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static io.virtue.common.util.StringUtil.simpleClassName;
-
 /**
  * A {@link Timer} optimized for approximated I/O timeout scheduling.
  *
@@ -97,7 +95,7 @@ public class HashedWheelTimer implements Timer {
     private final AtomicLong pendingTimeouts = new AtomicLong(0);
     private final long maxPendingTimeouts;
     /**
-     * 0 - init, 1 - started, 2 - shut down
+     * 0 - init, 1 - started, 2 - shut down.
      */
     @SuppressWarnings({"unused", "FieldMayBeFinal"})
     private volatile int workerState;
@@ -239,8 +237,8 @@ public class HashedWheelTimer implements Timer {
 
         this.maxPendingTimeouts = maxPendingTimeouts;
 
-        if (INSTANCE_COUNTER.incrementAndGet() > INSTANCE_COUNT_LIMIT &&
-                WARNED_TOO_MANY_INSTANCES.compareAndSet(false, true)) {
+        if (INSTANCE_COUNTER.incrementAndGet() > INSTANCE_COUNT_LIMIT
+                && WARNED_TOO_MANY_INSTANCES.compareAndSet(false, true)) {
             reportTooManyInstances();
         }
     }
@@ -275,8 +273,8 @@ public class HashedWheelTimer implements Timer {
 
     private static void reportTooManyInstances() {
         String resourceType = StringUtil.simpleClassName(HashedWheelTimer.class);
-        logger.error("You are creating too many {} instances. {} is a shared resource that must be reused across the JVM, " +
-                "so that only a few instances are created.", resourceType, resourceType);
+        logger.error("You are creating too many {} instances. {} is a shared resource that must be reused across the JVM, "
+                + "so that only a few instances are created.", resourceType, resourceType);
     }
 
     /**
@@ -315,9 +313,9 @@ public class HashedWheelTimer implements Timer {
     public Set<Timeout> stop() {
         if (Thread.currentThread() == workerThread) {
             throw new IllegalStateException(
-                    HashedWheelTimer.class.getSimpleName() +
-                            ".stop() cannot be called from " +
-                            TimerTask.class.getSimpleName());
+                    HashedWheelTimer.class.getSimpleName()
+                            + ".stop() cannot be called from "
+                            + TimerTask.class.getSimpleName());
         }
 
         if (!WORKER_STATE_UPDATER.compareAndSet(this, WORKER_STATE_STARTED, WORKER_STATE_SHUTDOWN)) {
@@ -421,7 +419,7 @@ public class HashedWheelTimer implements Timer {
         HashedWheelTimeout next;
         HashedWheelTimeout prev;
         /**
-         * The bucket to which the timeout was added
+         * The bucket to which the timeout was added.
          */
         HashedWheelBucket bucket;
         @SuppressWarnings({"unused", "FieldMayBeFinal", "RedundantFieldInitialization"})
@@ -536,13 +534,14 @@ public class HashedWheelTimer implements Timer {
     private static final class HashedWheelBucket {
 
         /**
-         * Used for the linked-list datastructure
+         * Used for the linked-list datastructure.
          */
         private HashedWheelTimeout head;
         private HashedWheelTimeout tail;
 
         /**
          * Add {@link HashedWheelTimeout} to this bucket.
+         * @param timeout
          */
         void addTimeout(HashedWheelTimeout timeout) {
             assert timeout.bucket == null;
@@ -558,6 +557,7 @@ public class HashedWheelTimer implements Timer {
 
         /**
          * Expire all {@link HashedWheelTimeout}s for the given {@code deadline}.
+         * @param deadline
          */
         void expireTimeouts(long deadline) {
             HashedWheelTimeout timeout = head;
@@ -614,7 +614,8 @@ public class HashedWheelTimer implements Timer {
         }
 
         /**
-         * Clear this bucket and return all not expired / cancelled {@link Timeout}s.
+         * Clear this bucket and return all not expired.
+         * @param set
          */
         void clearTimeouts(Set<Timeout> set) {
             for (; ; ) {

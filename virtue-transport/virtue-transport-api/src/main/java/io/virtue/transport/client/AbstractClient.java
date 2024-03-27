@@ -11,6 +11,9 @@ import io.virtue.transport.endpoint.EndpointAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Abstract Client.
+ */
 public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
@@ -37,7 +40,6 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
             logger.debug("Create {} is Successful,Connect to remoteAddress: {} for Protocol({})",
                     this.getClass().getSimpleName(), address(), url.protocol());
         } catch (Throwable e) {
-            logger.error("Create Client is Failed,Connect to remoteAddress:" + address(), e);
             throw new ConnectException("Create Client is Failed,Connect to remoteAddress :" + address(), e);
         }
     }

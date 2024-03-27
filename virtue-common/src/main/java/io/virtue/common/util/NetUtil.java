@@ -1,8 +1,7 @@
 package io.virtue.common.util;
 
 import io.virtue.common.constant.SystemKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.virtue.common.exception.CommonException;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -13,7 +12,6 @@ import java.util.regex.Pattern;
 
 public final class NetUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(NetUtil.class);
     private static volatile InetAddress LOCAL_ADDRESS = null;
     private static final String IP_REGEX = "^((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$";
     private static final String PORT_REGEX = "^\\d{1,5}$";
@@ -102,10 +100,12 @@ public final class NetUtil {
                 }
             }
         } catch (SocketException e) {
-            logger.error("", e);
+            throw new CommonException(e);
         }
         return null;
     }
 
-    private NetUtil() {}
+    private NetUtil() {
+
+    }
 }

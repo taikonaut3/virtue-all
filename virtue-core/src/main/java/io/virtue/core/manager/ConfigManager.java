@@ -1,5 +1,6 @@
 package io.virtue.core.manager;
 
+import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import lombok.Getter;
 import lombok.Setter;

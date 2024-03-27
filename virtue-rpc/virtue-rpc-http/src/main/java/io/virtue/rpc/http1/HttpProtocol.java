@@ -2,7 +2,7 @@ package io.virtue.rpc.http1;
 
 import io.virtue.common.constant.Components;
 import io.virtue.common.url.URL;
-import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
 import io.virtue.rpc.http1.envelope.HttpRequest;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;
@@ -21,7 +21,7 @@ public class HttpProtocol implements Protocol<HttpRequest, Object> {
     }
 
     @Override
-    public HttpRequest createRequest(URL url, CallArgs args) {
+    public HttpRequest createRequest(Invocation invocation) {
         return null;
     }
 

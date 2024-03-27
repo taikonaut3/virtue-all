@@ -1,6 +1,6 @@
 package io.virtue.boot;
 
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 

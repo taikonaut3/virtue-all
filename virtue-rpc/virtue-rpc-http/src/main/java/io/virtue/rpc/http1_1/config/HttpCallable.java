@@ -1,6 +1,6 @@
 package io.virtue.rpc.http1_1.config;
 
-import io.virtue.core.annotation.CallerFactoryProvider;
+import io.virtue.core.annotation.InvokerFactory;
 import io.virtue.core.annotation.Config;
 import io.virtue.common.constant.Components;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@CallerFactoryProvider(Components.Protocol.HTTP)
+@InvokerFactory(Components.Protocol.HTTP)
 public @interface HttpCallable {
 
     /**

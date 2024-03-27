@@ -1,151 +1,344 @@
 package io.virtue.rpc.support;
 
+import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
+import io.virtue.common.exception.RpcException;
+import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.CollectionUtil;
+import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectUtil;
+import io.virtue.common.util.StringUtil;
 import io.virtue.core.Caller;
-import io.virtue.core.CallerContainer;
-import io.virtue.core.annotation.Config;
+import io.virtue.core.Invocation;
+import io.virtue.core.RemoteCaller;
+import io.virtue.core.Virtue;
+import io.virtue.core.annotation.Options;
+import io.virtue.core.config.ClientConfig;
+import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.filter.Filter;
-import io.virtue.core.filter.FilterChain;
+import io.virtue.core.filter.FilterScope;
+import io.virtue.core.manager.ClientConfigManager;
 import io.virtue.core.manager.ConfigManager;
-import io.virtue.core.manager.Virtue;
-import io.virtue.rpc.protocol.Protocol;
+import io.virtue.governance.discovery.ServiceDiscovery;
+import io.virtue.governance.faulttolerance.FaultTolerance;
+import io.virtue.governance.loadbalance.LoadBalancer;
+import io.virtue.governance.router.Router;
+import io.virtue.registry.RegistryFactory;
+import io.virtue.registry.RegistryService;
+import io.virtue.rpc.RpcFuture;
+import io.virtue.transport.Request;
+import io.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Abstract ClientCaller.
+ *
+ * @param <T>
+ */
+@Setter
 @Getter
 @Accessors(fluent = true, chain = true)
-public abstract class AbstractCaller<T extends Annotation> implements Caller<T> {
+public abstract class AbstractCaller<T extends Annotation> extends AbstractInvoker<T> implements Caller<T> {
 
-    protected final Virtue virtue;
+    private static final Logger logger = LoggerFactory.getLogger(AbstractCaller.class);
 
-    protected CallerContainer container;
+    protected String directUrl;
 
-    protected Method method;
+    protected Type returnType;
 
-    protected volatile List<Filter> filters;
+    protected volatile List<RegistryConfig> registryConfigs;
 
-    protected Protocol<?, ?> protocolInstance;
+    protected List<URL> registryConfigUrls;
 
-    protected FilterChain filterChain;
+    @Parameter(Key.RETRIES)
+    protected int retires;
 
-    protected T parsedAnnotation;
+    @Parameter(Key.ASYNC)
+    protected boolean async;
 
-    protected URL url;
+    @Parameter(Key.LOAD_BALANCE)
+    protected String loadBalance;
 
-    protected volatile boolean isStart = false;
+    @Parameter(Key.SERVICE_DISCOVERY)
+    protected String serviceDiscovery;
 
-    @Parameter(Key.VIRTUE)
-    protected String virtueName;
+    @Parameter(Key.ROUTER)
+    protected String router;
 
-    @Setter
-    protected String protocol;
+    @Parameter(Key.FAULT_TOLERANCE)
+    protected String faultTolerance;
 
-    @Setter
-    @Parameter(Key.APPLICATION)
-    protected String remoteApplication;
-    @Setter
-    @Parameter(Key.GROUP)
-    protected String group;
-    @Setter
-    @Parameter(Key.VERSION)
-    protected String version;
-    @Setter
-    @Parameter(Key.SERIALIZE)
-    protected String serialize;
-    @Setter
-    @Parameter(Key.COMPRESSION)
-    protected String compression;
+    @Parameter(Key.TIMEOUT)
+    protected int timeout;
 
-    protected AbstractCaller(Method method, CallerContainer container, String protocol, Class<T> annoType) {
-        AssertUtil.notNull(method, container, protocol, annoType);
-        this.parsedAnnotation = parseAnnotation(method, annoType);
-        virtue = container.virtue();
-        virtueName = virtue.name();
-        this.method = method;
-        this.container = container;
-        this.remoteApplication = container.remoteApplication();
-        this.protocol = protocol;
-        this.protocolInstance = ExtensionLoader.loadService(Protocol.class, protocol);
-        parseConfig(getConfig());
-        init();
-        if (url != null) {
-            url.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
-        }
+    @Parameter(Key.ONEWAY)
+    protected boolean oneWay;
+
+    @Parameter(Key.MULTIPLEX)
+    protected boolean multiplex;
+
+    @Parameter(Key.CLIENT)
+    protected String clientConfig;
+
+    protected AbstractCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
+        super(method, remoteCaller, protocol, annoType);
     }
 
     @Override
-    public void addFilter(Filter... filters) {
-        if (this.filters == null) {
-            synchronized (this) {
-                if (this.filters == null) {
-                    this.filters = new ArrayList<>();
+    public void init() {
+        Options ops = getOptions();
+        // check
+        checkAsyncReturnType(method);
+        checkDirectUrl(ops);
+        // set
+        router(ops.router());
+        timeout(ops.timeout());
+        retires(ops.retires());
+        serviceDiscovery(ops.serviceDiscovery());
+        loadBalance(ops.loadBalance());
+        faultTolerance(ops.faultTolerance());
+        oneWay(returnType().getTypeName().equals("void"));
+        multiplex(ops.multiplex());
+        clientConfig(ops.client());
+        // subclass init
+        doInit();
+        // parse core
+        ConfigManager configManager = virtue.configManager();
+        for (RegistryConfig registryConfig : configManager.registryConfigManager().globalConfigs()) {
+            addRegistryConfig(registryConfig);
+        }
+        String[] registryNames = ops.registries();
+        Optional.ofNullable(registryNames)
+                .ifPresent(names -> Arrays.stream(names)
+                        .map(configManager.registryConfigManager()::get)
+                        .filter(Objects::nonNull)
+                        .forEach(this::addRegistryConfig)
+                );
+        ClientConfig clientConfig = checkAndGetClientConfig();
+        url = createUrl(clientConfig.toUrl());
+    }
+
+    @Override
+    public void start() {
+        if (!remoteCaller().lazyDiscover()) {
+            if (registryConfigs == null || registryConfigs.isEmpty()) {
+                logger.warn("Can't find RegistryConfig(s)");
+            } else {
+                for (URL registryUrl : registryConfigUrls) {
+                    RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
+                    RegistryService registryService = registryFactory.get(registryUrl);
+                    registryService.discover(url);
                 }
             }
         }
-        CollectionUtil.addToList(this.filters, (oldFilter, newFilter) -> oldFilter == newFilter, filters);
+    }
+
+    private Options getOptions() {
+        if (method.isAnnotationPresent(Options.class)) {
+            return method.getAnnotation(Options.class);
+        }
+        if (options() != null) {
+            return options();
+        }
+        return ReflectUtil.getDefaultInstance(Options.class);
+    }
+
+    @Override
+    public void addRegistryConfig(RegistryConfig... configs) {
+        if (registryConfigs == null) {
+            synchronized (this) {
+                if (registryConfigs == null) {
+                    registryConfigs = new LinkedList<>();
+                    registryConfigUrls = new LinkedList<>();
+                }
+            }
+        }
+        CollectionUtil.addToList(this.registryConfigs,
+                (registryConfig, config) ->
+                        Objects.equals(config.type(), registryConfig.type())
+                                && config.host().equals(registryConfig.host())
+                                && config.port() == registryConfig.port(),
+                config -> {
+                    URL configUrl = config.toUrl();
+                    configUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
+                    configUrl.addParam(Key.VIRTUE, virtue.name());
+                    registryConfigUrls.add(configUrl);
+                }, configs);
+
+    }
+
+    @Override
+    public Object invoke(Invocation invocation) throws RpcException {
+        Object result = null;
+        try {
+            List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
+            invocation.revise(() -> doRpcCall(invocation));
+            result = filterChain.filter(invocation, preFilters);
+        } catch (Exception e) {
+            logger.error("Remote Call fail " + this, e);
+            throw RpcException.unwrap(e);
+        } finally {
+            RpcContext.clear();
+        }
+        return result;
+    }
+
+    protected Object call(Invocation invocation) throws RpcException {
+        String faultToleranceName = invocation.url().getParam(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
+        FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceName);
+        invocation.revise(() -> {
+            RpcFuture future = send(invocation);
+            return async() ? future : future.get();
+        });
+        return faultTolerance.operation(invocation);
     }
 
     @Override
     public Type returnType() {
-        return method.getGenericReturnType();
+        return returnType;
     }
 
     @Override
     public Class<?> returnClass() {
-        return method.getReturnType();
-    }
-
-    protected Config config() {
-        return null;
-    }
-
-    protected abstract URL createUrl(URL url);
-
-    protected abstract void doInit();
-
-    private T parseAnnotation(Method method, Class<T> type) {
-        AssertUtil.condition(ReflectUtil.findAnnotation(method, type) != null, "Only support @" + type.getSimpleName() + " modify Method");
-        return method.getAnnotation(type);
-    }
-
-    private Config getConfig() {
-        if (method.isAnnotationPresent(Config.class)) {
-            return method.getAnnotation(Config.class);
+        Class<?> returnType = method.getReturnType();
+        if (async()) {
+            return (Class<?>) ((ParameterizedType) returnType()).getRawType();
+        } else {
+            return returnType;
         }
-        if (config() != null) {
-            return config();
-        }
-        return ReflectUtil.getDefaultInstance(Config.class);
-    }
-
-    private void parseConfig(Config config) {
-        serialize(config.serialize());
-        compression(config.compression());
-        filterChain = ExtensionLoader.loadService(FilterChain.class, config.filterChain());
-        String[] filterNames = config.filters();
-        ConfigManager manager = virtue.configManager();
-        Optional.ofNullable(filterNames)
-                .ifPresent(names ->
-                        Arrays.stream(names)
-                                .map(manager.filterManager()::get)
-                                .filter(Objects::nonNull)
-                                .forEach(this::addFilter));
     }
 
     @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "[" + path() + "]." + method.toString();
+    public RemoteCaller<?> remoteCaller() {
+        return (RemoteCaller<?>) container();
+    }
+
+    @Override
+    protected URL createUrl(URL clientUrl) {
+        String address = remoteApplication;
+        if (!StringUtil.isBlank(directUrl)) {
+            address = directUrl;
+        }
+        URL url = new URL(protocol, address);
+        url.replacePaths(pathList());
+        url.addParams(clientUrl.parameters());
+        url.addParams(parameterization());
+        url.attribute(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY).set(new AtomicInteger(-1));
+        return url;
+    }
+
+    protected Object doRpcCall(Invocation invocation) {
+        URL url = invocation.url();
+        Caller<?> caller = (Caller<?>) invocation.invoker();
+        if (StringUtil.isBlank(caller.directUrl())) {
+            // ServiceDiscovery
+            String serviceDiscoveryName = url.getParam(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
+            ServiceDiscovery serviceDiscovery = ExtensionLoader.loadService(ServiceDiscovery.class, serviceDiscoveryName);
+            URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls()).stream()
+                    .flatMap(Collection::stream)
+                    .toArray(URL[]::new);
+            List<URL> availableServiceUrls = serviceDiscovery.discover(invocation, registryConfigUrls);
+            // Router
+            Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
+            if (router == null) {
+                String routerName = virtue.configManager().applicationConfig().router();
+                routerName = StringUtil.isBlank(routerName) ? Constant.DEFAULT_ROUTER : routerName;
+                router = ExtensionLoader.loadService(Router.class, routerName);
+            }
+            List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
+            // LoadBalance
+            String loadBalancerName = url.getParam(Key.LOAD_BALANCE, Constant.DEFAULT_LOAD_BALANCE);
+            LoadBalancer loadBalancer = ExtensionLoader.loadService(LoadBalancer.class, loadBalancerName);
+            URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
+            url.address(selectedServiceUrl.address()).addParams(selectedServiceUrl.parameters());
+        }
+        // Invocation revise
+        invocation.revise(() -> call(invocation));
+        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
+        return filterChain.filter(invocation, postFilters);
+    }
+
+    protected RpcFuture send(Invocation invocation) {
+        URL url = invocation.url();
+        Client client = getClient(url.address());
+        Object message = protocolInstance.createRequest(invocation);
+        Request request = new Request(url, message);
+        RpcFuture future = new RpcFuture(url, invocation);
+        future.client(client);
+        String requestContextStr = RpcContext.requestContext().toString();
+        url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
+        // request
+        client.send(request);
+        return future;
+    }
+
+    private Client getClient(String address) {
+        ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
+        ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
+        URL clientUrl = new URL(protocol, address);
+        if (clientConfig == null) {
+            clientConfig = clientConfigManager.get(protocol);
+        }
+        clientUrl.addParams(clientConfig.parameterization());
+        clientUrl.addParam(Key.MULTIPLEX, String.valueOf(multiplex));
+        return protocolInstance.openClient(clientUrl);
+    }
+
+    private void checkAsyncReturnType(Method method) {
+        returnType = method.getGenericReturnType();
+        if (returnType instanceof ParameterizedType parameterizedType) {
+            if (parameterizedType.getRawType() == CompletableFuture.class) {
+                returnType = parameterizedType.getActualTypeArguments()[0];
+                async(true);
+            }
+        }
+    }
+
+    private void checkDirectUrl(Options options) {
+        String url = options.url();
+        if (!StringUtil.isBlank(url)) {
+            try {
+                NetUtil.toInetSocketAddress(url);
+                directUrl(url);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Illegal direct connection address", e);
+            }
+        } else {
+            if (remoteCaller().directAddress() != null) {
+                directUrl(NetUtil.getAddress(remoteCaller().directAddress()));
+            }
+        }
+    }
+
+    private ClientConfig checkAndGetClientConfig() {
+        ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
+        ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
+        if (clientConfig == null) {
+            clientConfig = clientConfigManager.get(protocol);
+        }
+        if (clientConfig == null) {
+            clientConfig = new ClientConfig(protocol);
+            clientConfigManager.register(clientConfig);
+        }
+        return clientConfig;
+    }
+
+    protected Options options() {
+        return null;
     }
 }

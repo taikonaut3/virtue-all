@@ -13,11 +13,11 @@ public class Filter2 implements Filter {
     @Override
     public Object doFilter(Invocation invocation) {
         System.out.println("Filter222222");
-        System.out.println(invocation.callArgs().caller().url());
+        System.out.println(invocation.invoker().url());
         URL url = invocation.url();
-        Object arg = invocation.callArgs().args()[0];
+        Object arg = invocation.args()[0];
         if (arg.equals("world")) {
-            url.addParameter(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_RETRY);
+            url.addParam(Key.FAULT_TOLERANCE, Components.FaultTolerance.FAIL_RETRY);
         }
         return invocation.invoke();
     }

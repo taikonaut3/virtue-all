@@ -2,13 +2,13 @@ package io.virtue.core.annotation;
 
 import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Constant;
-import io.virtue.core.Caller;
+import io.virtue.core.Invoker;
 import io.virtue.core.filter.Filter;
 
 import java.lang.annotation.*;
 
 /**
- * Common core for the client and the server.
+ * Common config for the client and the server.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -28,22 +28,22 @@ public @interface Config {
     /**
      * Serialization type.
      */
-    String serialize() default Constant.DEFAULT_SERIALIZE;
+    String serialization() default Constant.DEFAULT_SERIALIZATION;
 
     /**
-     * Compression type
+     * Compression type.
      */
     String compression() default Constant.DEFAULT_COMPRESSION;
 
     /**
-     * Invoke Filter.
+     * The filter chain for {@link Invoker}.
+     */
+    String filterChain() default Components.DEFAULT;
+
+    /**
+     * Invoke Filters.
      * @see Filter
      */
     String[] filters() default {};
-
-    /**
-     * The filter chain for {@link Caller}
-     */
-    String filterChain() default Components.DEFAULT;
 }
 

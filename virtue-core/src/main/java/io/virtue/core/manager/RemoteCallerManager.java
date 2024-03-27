@@ -1,7 +1,8 @@
 package io.virtue.core.manager;
 
-import io.virtue.core.ClientCaller;
+import io.virtue.core.Caller;
 import io.virtue.core.RemoteCaller;
+import io.virtue.core.Virtue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,15 +27,6 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         return remoteCallers;
     }
 
-    public ClientCaller<?> getClientCaller(String identification) {
-        for (RemoteCaller<?> remoteCaller : remoteCallers()) {
-            ClientCaller<?> caller = (ClientCaller<?>) remoteCaller.getCaller(identification);
-            if (caller != null) {
-                return caller;
-            }
-        }
-        return null;
-    }
 
     public synchronized void register(RemoteCaller<?> remoteCaller) {
         List<RemoteCaller<?>> remoteCallers = map.computeIfAbsent(remoteCaller.remoteApplication(), k -> new LinkedList<>());
@@ -54,9 +46,9 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         return null;
     }
 
-    public List<ClientCaller<?>> clientCallers() {
+    public List<Caller<?>> clientCallers() {
         return remoteCallers().stream()
-                .flatMap(container -> Arrays.stream(container.callers()).map(caller -> (ClientCaller<?>) caller))
+                .flatMap(container -> Arrays.stream(container.invokers()).map(caller -> (Caller<?>) caller))
                 .collect(Collectors.toList());
     }
 

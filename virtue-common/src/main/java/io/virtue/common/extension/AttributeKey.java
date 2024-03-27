@@ -35,6 +35,11 @@ public final class AttributeKey<T> {
         return (AttributeKey<T>) key;
     }
 
+    /**
+     * key name.
+     *
+     * @return
+     */
     public String name() {
         return name;
     }

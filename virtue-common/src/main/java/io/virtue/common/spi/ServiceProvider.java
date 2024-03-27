@@ -25,6 +25,11 @@ public @interface ServiceProvider {
      */
     Class<?>[] interfaces() default {};
 
-    Class<?>[] constructor() default {};
+    /**
+     * Scope default is {@link Scope.SINGLETON}.
+     *
+     * @return
+     */
+    Scope scope() default Scope.SINGLETON;
 
 }

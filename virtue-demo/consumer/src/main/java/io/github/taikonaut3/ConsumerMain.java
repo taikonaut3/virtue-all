@@ -1,15 +1,16 @@
 package io.github.taikonaut3;
 
+import io.github.taikonaut3.filter.CallerResultFilter;
 import io.github.taikonaut3.filter.Filter1;
 import io.github.taikonaut3.filter.Filter2;
 import io.github.taikonaut3.filter.TestFilter;
 import io.github.taikonaut3.model.ParentObject;
 import io.virtue.boot.EnableVirtue;
 import io.virtue.core.MatchRule;
+import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
-import io.virtue.core.manager.Virtue;
 import org.example.Message;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,7 @@ public class ConsumerMain {
                 .register("filter1", new Filter1().addProtocolRule(virtue, MatchRule.Scope.client,".*"))
                 .register("filter2",new Filter2())
                 .register("testFilter",new TestFilter())
+                .register("callerResultFilter", new CallerResultFilter())
                 .router("^virtue://.*/345/list",":2333")
                 //.register(new RegistryConfig("nacos://127.0.0.1:8848"))
                 .proxy(Consumer.class)

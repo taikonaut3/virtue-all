@@ -36,7 +36,7 @@ public final class NettyClient extends AbstractClient {
     @Override
     protected void doInit() throws ConnectException {
         bootstrap = new Bootstrap();
-        int configTimeout = url.getIntParameter(Key.CONNECT_TIMEOUT, Constant.DEFAULT_CONNECT_TIMEOUT);
+        int configTimeout = url.getIntParam(Key.CONNECT_TIMEOUT, Constant.DEFAULT_CONNECT_TIMEOUT);
         connectTimeout = Math.min(configTimeout, Constant.DEFAULT_MAX_CONNECT_TIMEOUT);
         final NettyClientChannelHandler handler = new NettyClientChannelHandler(channelHandler);
         initBootStrap(handler);

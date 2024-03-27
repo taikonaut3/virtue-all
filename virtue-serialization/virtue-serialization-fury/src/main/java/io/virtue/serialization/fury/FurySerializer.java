@@ -11,7 +11,7 @@ import io.virtue.serialization.Serializer;
 /**
  * 测试出 fury的序列化并不理想
  */
-@ServiceProvider(Components.Serialize.FURY)
+@ServiceProvider(Components.Serialization.FURY)
 public class FurySerializer implements Serializer {
 
     private final ThreadSafeFury fury;

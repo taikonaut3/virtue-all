@@ -1,6 +1,6 @@
 package objectpool;
 
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import io.virtue.rpc.objectpool.DefaultPooledObject;
 import io.virtue.rpc.objectpool.PooledObject;
 import io.virtue.rpc.objectpool.PooledObjectFactory;

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Abstract EventDispatcher.
+ */
 public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     protected final Map<Class<? extends Event<?>>, List<EventListener<?>>> listenerMap;

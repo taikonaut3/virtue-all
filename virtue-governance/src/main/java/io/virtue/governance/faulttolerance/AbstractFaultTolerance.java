@@ -5,6 +5,9 @@ import io.virtue.core.Invocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Abstract FaultTolerance.
+ */
 public abstract class AbstractFaultTolerance implements FaultTolerance {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractFaultTolerance.class);

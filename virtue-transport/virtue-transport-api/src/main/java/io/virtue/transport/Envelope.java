@@ -13,7 +13,7 @@ public interface Envelope extends Serializable {
     URL url();
 
     default Long id() {
-        return url().getLongParameter(Key.UNIQUE_ID);
+        return url().getLongParam(Key.UNIQUE_ID);
     }
 
 }

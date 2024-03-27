@@ -1,17 +1,17 @@
 package io.virtue.rpc.http1;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.virtue.common.constant.Components;
 import io.virtue.common.spi.ExtensionLoader;
-import io.virtue.core.CallArgs;
-import io.virtue.core.Caller;
+import io.virtue.core.Invocation;
+import io.virtue.core.Invoker;
 import io.virtue.rpc.RpcFuture;
 import io.virtue.rpc.http1_1.config.MethodParser;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.virtue.common.constant.Components;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -31,7 +31,7 @@ public class HttpParser implements ProtocolParser {
     private MethodParser<?> methodParser = new DefaultWebMethodParser(this);
 
     @Override
-    public CallArgs parseRequestBody(Request request) {
+    public Invocation parseRequestBody(Request request) {
         return null;
     }
 
@@ -41,11 +41,11 @@ public class HttpParser implements ProtocolParser {
         ByteBuf byteBuf = httpResponse.content();
         byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
-        Serializer serializer = ExtensionLoader.loadService(Serializer.class, Components.Serialize.JSON);
+        Serializer serializer = ExtensionLoader.loadService(Serializer.class, Components.Serialization.JSON);
         RpcFuture future = RpcFuture.getFuture(String.valueOf(response.id()));
-        Caller<?> caller = future.callArgs().caller();
-        Type type = caller.returnType();
-        Object object = serializer.deserialize(bytes, caller.returnClass());
+        Invoker<?> invoker = future.invocation().invoker();
+        Type type = invoker.returnType();
+        Object object = serializer.deserialize(bytes, invoker.returnClass());
         return serializer.convert(object, type);
     }
 

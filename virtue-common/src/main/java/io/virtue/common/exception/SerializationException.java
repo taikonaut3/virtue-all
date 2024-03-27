@@ -1,6 +1,7 @@
 package io.virtue.common.exception;
 
-public class SerializationException extends RpcException {
+public class SerializationException extends CommonException {
+
 
     public SerializationException(String msg, Throwable e) {
         super(msg, e);

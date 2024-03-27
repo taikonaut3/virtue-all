@@ -6,7 +6,7 @@ import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.core.MatchRule;
 import io.virtue.core.manager.RegistryConfigManager;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

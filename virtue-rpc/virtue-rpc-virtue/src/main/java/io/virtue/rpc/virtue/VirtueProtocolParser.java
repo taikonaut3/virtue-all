@@ -1,6 +1,6 @@
 package io.virtue.rpc.virtue;
 
-import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
@@ -13,9 +13,9 @@ import io.virtue.transport.Response;
 public class VirtueProtocolParser implements ProtocolParser {
 
     @Override
-    public CallArgs parseRequestBody(Request request) {
+    public Invocation parseRequestBody(Request request) {
         VirtueRequest virtueRequest = (VirtueRequest) request.message();
-        return (CallArgs) virtueRequest.body();
+        return (Invocation) virtueRequest.body();
     }
 
     @Override

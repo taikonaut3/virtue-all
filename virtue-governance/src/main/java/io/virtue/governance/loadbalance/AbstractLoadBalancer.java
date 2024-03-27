@@ -6,6 +6,9 @@ import io.virtue.core.Invocation;
 
 import java.util.List;
 
+/**
+ * Abstract LoadBalancer.
+ */
 public abstract class AbstractLoadBalancer implements LoadBalancer {
 
     @Override

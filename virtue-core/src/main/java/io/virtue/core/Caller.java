@@ -1,102 +1,30 @@
 package io.virtue.core;
 
-import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.GenerateUtil;
-import io.virtue.core.manager.Virtue;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
 
-
 /**
- * Method caller wrapper for the client method and server method.
- * @param <T> Method Annotation
+ * Client caller for making remote service calls.
+ *
+ * @param <T> The type of annotation used to specify the remote service.
  */
-public interface Caller<T extends Annotation> extends CommonConfig, Lifecycle {
-
-
-    /**
-     * The associated annotation instance.
-     * @return
-     */
-    T parsedAnnotation();
+public interface Caller<T extends Annotation> extends Invoker<T>, Options {
 
     /**
-     * The protocol.
-     * @return
+     * Gets the remote caller associated with this client caller.
+     *
+     * @return remote caller instance
      */
-    String protocol();
+    RemoteCaller<?> remoteCaller();
 
     /**
-     * Call url core.
-     * @return
+     * Convert RegistryConfig to URL
+     *
+     * @return all registry url core
      */
-    URL url();
-
-    /**
-     * All proxy clients call the entry.
-     * @param url
-     * @param args
-     * @return
-     * @throws RpcException
-     */
-    Object call(URL url, CallArgs args) throws RpcException;
-
-    /**
-     * The client interface call method.
-     * @return
-     */
-    Method method();
-
-    /**
-     * The client interface returnType.
-     * @return
-     */
-    Type returnType();
-
-    /**
-     * The client interface returnClass.
-     * @return
-     */
-    Class<?> returnClass();
-
-    /**
-     * Container holding the caller.
-     * @return
-     */
-    CallerContainer container();
-
-    /**
-     * Gets the path as list associated with the server caller.
-     * @return
-     */
-    List<String> pathList();
-
-    /**
-     * Gets the path associated with the server caller.
-     * @return
-     */
-    default String path() {
-        return URL.toPath(pathList());
-    }
-
-    /**
-     * Caller unique identification.
-     * @return
-     */
-    default String identification() {
-        return GenerateUtil.generateCallerIdentification(protocol(), path());
-    }
-
-    /**
-     * The belong to virtue.
-     * @return
-     */
-    default Virtue virtue() {
-        return container().virtue();
-    }
+    List<URL> registryConfigUrls();
 
 }
+

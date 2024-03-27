@@ -1,6 +1,6 @@
 package io.virtue.rpc.http1_1.config;
 
-import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -12,10 +12,10 @@ public interface MethodParser<A extends Annotation> {
 
     HttpRequestWrapper parse(Method method);
 
-    Map<String, String> parseParams(CallArgs args, HttpRequestWrapper wrapper);
+    Map<String, String> parseParams(Invocation invocation, HttpRequestWrapper wrapper);
 
-    String parsePathVariables(CallArgs args, HttpRequestWrapper wrapper);
+    String parsePathVariables(Invocation invocation, HttpRequestWrapper wrapper);
 
-    Object parseRequestBody(CallArgs args, HttpRequestWrapper wrapper);
+    Object parseRequestBody(Invocation invocation, HttpRequestWrapper wrapper);
 
 }

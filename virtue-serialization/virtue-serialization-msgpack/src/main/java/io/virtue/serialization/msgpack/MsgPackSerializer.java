@@ -13,7 +13,7 @@ import org.msgpack.jackson.dataformat.MessagePackFactory;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import static io.virtue.common.constant.Components.Serialize.MSGPACK;
+import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
 /**
  * MsgPackSerializer
@@ -55,10 +55,10 @@ public class MsgPackSerializer implements Serializer {
         try {
             // 遍历 Object[] 数组并匹配相应类型
             for (int i = 0; i < args.length; i++) {
-                Object deserializedObject = args[i];
+                Object deserializeObj = args[i];
                 Type objectType = types[i];
                 // 将反序列化的对象转换为指定类型
-                Object typedObject = jsonMapper.convertValue(deserializedObject, jsonMapper.constructType(objectType));
+                Object typedObject = jsonMapper.convertValue(deserializeObj, jsonMapper.constructType(objectType));
                 objects[i] = typedObject;
             }
         } catch (Exception e) {

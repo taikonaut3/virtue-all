@@ -27,7 +27,7 @@ public final class NettyCustomCodec {
     public NettyCustomCodec(URL url, Codec codec, boolean isServer) {
         this.codec = codec;
         String maxMessageKey = isServer ? Key.MAX_RECEIVE_SIZE : Key.CLIENT_MAX_RECEIVE_SIZE;
-        int maxReceiveSize = url.getIntParameter(maxMessageKey, Constant.DEFAULT_MAX_MESSAGE_SIZE);
+        int maxReceiveSize = url.getIntParam(maxMessageKey, Constant.DEFAULT_MAX_MESSAGE_SIZE);
         encoder = new NettyEncoder();
         decoder = new NettyDecoder(maxReceiveSize);
     }

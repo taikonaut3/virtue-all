@@ -10,7 +10,7 @@ import io.virtue.common.exception.ConnectException;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import io.virtue.registry.AbstractRegistryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +123,7 @@ public class NacosRegistryService extends AbstractRegistryService {
 
     private URL instanceToUrl(String protocol, Instance instance) {
         URL url = new URL(protocol, instance.getIp(), instance.getPort());
-        url.addParameters(instance.getMetadata());
+        url.addParams(instance.getMetadata());
         return url;
     }
 }

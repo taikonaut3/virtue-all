@@ -3,7 +3,7 @@ package io.virtue.boot;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import jakarta.annotation.Resource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

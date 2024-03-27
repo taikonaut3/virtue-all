@@ -1,6 +1,7 @@
 package io.virtue.core.manager;
 
 import io.virtue.common.util.StringUtil;
+import io.virtue.core.Virtue;
 import io.virtue.core.config.ClientConfig;
 
 /**

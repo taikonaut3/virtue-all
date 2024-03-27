@@ -4,7 +4,7 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.SystemInfo;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     protected AbstractRegistryService(URL url) {
         registryUrl = url;
-        enableHealthCheck = url.getBooleanParameter(Key.ENABLE_HEALTH_CHECK, true);
+        enableHealthCheck = url.getBooleanParam(Key.ENABLE_HEALTH_CHECK, true);
         connect(url);
     }
 
@@ -58,14 +58,14 @@ public abstract class AbstractRegistryService implements RegistryService {
     }
 
     public String instanceId(URL url) {
-        String application = url.getParameter(Key.APPLICATION);
+        String application = url.getParam(Key.APPLICATION);
         return application + "-" + url.protocol() + ":" + url.port();
     }
 
     public String serviceName(URL url) {
         String applicationName = Virtue.get(url).applicationName();
         applicationName = StringUtil.isBlank(applicationName) ? this.getClass().getModule().getName() : applicationName;
-        return url.getParameter(Key.APPLICATION, applicationName);
+        return url.getParam(Key.APPLICATION, applicationName);
     }
 
     protected abstract void subscribeService(URL url);

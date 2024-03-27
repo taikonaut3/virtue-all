@@ -48,7 +48,7 @@ public interface Constant {
 
     int DEFAULT_MAX_MESSAGE_SIZE = 1024 * 32;
 
-    String DEFAULT_SERIALIZE = Serialize.KRYO;
+    String DEFAULT_SERIALIZATION = Serialization.KRYO;
 
     int DEFAULT_MAX_HEADER_SIZE = 10000;
 

@@ -6,7 +6,7 @@ import io.virtue.rpc.virtue.config.VirtueCallable;
 
 import java.util.List;
 
-import static io.virtue.common.constant.Components.Serialize.MSGPACK;
+import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
 @RemoteService("345")
 public class Provider {
@@ -26,7 +26,7 @@ public class Provider {
         return "hello";
     }
 
-    @VirtueCallable(name = "list", config = @Config(serialize = MSGPACK))
+    @VirtueCallable(name = "list", config = @Config(serialization = MSGPACK))
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }

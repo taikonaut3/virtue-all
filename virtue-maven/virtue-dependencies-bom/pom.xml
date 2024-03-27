@@ -41,6 +41,7 @@
         <spring.boot.version>3.2.0</spring.boot.version>
         <spring.cloud.version>2023.0.0</spring.cloud.version>
         <bytebuddy.version>1.14.11</bytebuddy.version>
+        <reflectasm.version>1.11.9</reflectasm.version>
         <oshi.version>6.4.11</oshi.version>
         <commons.pool.version>2.12.0</commons.pool.version>
         <jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
@@ -89,6 +90,11 @@
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
                 <version>${bytebuddy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>reflectasm</artifactId>
+                <version>${reflectasm.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core -->
             <dependency>

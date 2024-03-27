@@ -5,7 +5,7 @@ import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
 import io.virtue.transport.Response;
 import io.virtue.transport.client.Client;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class RpcFuture extends CompletableFuture<Object> {
 
     private final URL url;
 
-    private final CallArgs callArgs;
+    private final Invocation invocation;
 
     @Setter
     private Response response;
@@ -42,10 +42,10 @@ public class RpcFuture extends CompletableFuture<Object> {
     @Setter
     private Consumer<RpcFuture> completeConsumer;
 
-    public RpcFuture(URL url, CallArgs data) {
+    public RpcFuture(URL url, Invocation invocation) {
         this.url = url;
-        this.callArgs = data;
-        this.id = url.getParameter(Key.UNIQUE_ID);
+        this.invocation = invocation;
+        this.id = url.getParam(Key.UNIQUE_ID);
         addFuture(id(), this);
         completeOnTimeout(new TimeoutException(), timeout(), TimeUnit.MILLISECONDS);
         whenComplete((resp, ex) -> {
@@ -54,7 +54,7 @@ public class RpcFuture extends CompletableFuture<Object> {
                 completeConsumer.accept(this);
             }
         });
-        boolean oneway = url.getBooleanParameter(Key.ONEWAY);
+        boolean oneway = url.getBooleanParam(Key.ONEWAY);
         if (oneway) {
             complete(null);
         }
@@ -99,11 +99,11 @@ public class RpcFuture extends CompletableFuture<Object> {
     }
 
     public int timeout() {
-        return url.getIntParameter(Key.TIMEOUT);
+        return url.getIntParam(Key.TIMEOUT);
     }
 
     public Type returnType() {
-        return callArgs.returnType();
+        return invocation.returnType();
     }
 
 }

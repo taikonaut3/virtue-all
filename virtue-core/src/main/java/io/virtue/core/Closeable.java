@@ -1,18 +1,17 @@
 package io.virtue.core;
 
-import io.virtue.common.exception.RpcException;
-
+/**
+ * Close and check Resource.
+ */
 public interface Closeable {
 
     /**
-     * Close Resource
-     *
-     * @throws RpcException
+     * Close Resource.
      */
-    void close() throws RpcException;
+    void close();
 
     /**
-     * Whether the Resource is Active
+     * Whether the Resource is Active.
      *
      * @return
      */

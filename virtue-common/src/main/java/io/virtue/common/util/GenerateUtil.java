@@ -26,7 +26,7 @@ public interface GenerateUtil {
         return builder.toString();
     }
 
-    static String generateCallerIdentification(String protocol, String path) {
+    static String generateInvokerMapping(String protocol, String path) {
         return protocol + ":" + path;
     }
 }

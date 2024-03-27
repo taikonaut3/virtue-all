@@ -1,6 +1,6 @@
 package io.virtue.boot;
 
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

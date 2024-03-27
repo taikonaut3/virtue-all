@@ -85,7 +85,7 @@ public interface Key {
 
     String MULTIPLEX = "multiplex";
 
-    String SERIALIZE = "serialize";
+    String SERIALIZATION = "serialization";
 
     String LOAD_BALANCE = "loadBalance";
 

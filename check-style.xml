@@ -31,15 +31,16 @@
         <module name="UnusedImports"/>
         <!-- Checks for Javadoc comments.                     -->
         <!-- See https://checkstyle.org/checks/javadoc/index.html -->
-        <module name="InvalidJavadocPosition"/>
         <module name="JavadocMissingWhitespaceAfterAsterisk"/>
         <module name="JavadocMethod">
             <property name="allowMissingReturnTag" value="true"/>
         </module>
         <module name="MissingJavadocMethod">
-            <property name="tokens" value="METHOD_DEF"/>
+            <property name="tokens" value="METHOD_DEF,ANNOTATION_FIELD_DEF"/>
         </module>
-        <module name="JavadocType"/>
+        <module name="JavadocType">
+            <property name="allowUnknownTags" value="true"/>
+        </module>
         <module name="MissingJavadocType"/>
         <module name="JavadocStyle"/>
         <!-- 命名检查 -->
@@ -123,8 +124,6 @@
         <module name="EmptyStatement"/>
         <!-- 检查在重写了equals方法后是否重写了hashCode方法 -->
         <module name="EqualsHashCode"/>
-        <!-- 检查子表达式中是否有赋值操作 -->
-        <module name="InnerAssignment"/>
         <!-- 检查switch语句是否有default -->
         <module name="MissingSwitchDefault"/>
         <!-- 检查是否有过度复杂的布尔表达式 -->
@@ -154,10 +153,6 @@
         <module name="Regexp">
             <property name="format" value="System\.out\.println"/>
             <property name="illegalPattern" value="true"/>
-        </module>
-        <!-- return个数 3个-->
-        <module name="ReturnCount">
-            <property name="max" value="3"/>
         </module>
         <!--try catch 异常处理数量 3-->
         <module name="NestedTryDepth ">

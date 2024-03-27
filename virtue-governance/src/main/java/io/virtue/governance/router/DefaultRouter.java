@@ -6,7 +6,7 @@ import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Invocation;
 import io.virtue.core.config.RouterConfig;
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -27,13 +27,13 @@ public class DefaultRouter implements Router {
     public List<URL> route(Invocation invocation, List<URL> urls) {
         URL url = invocation.url();
         // filter by group and version
-        String group = url.getParameter(Key.GROUP);
-        String version = url.getParameter(Key.VERSION);
+        String group = url.getParam(Key.GROUP);
+        String version = url.getParam(Key.VERSION);
         if (!StringUtil.isBlank(group)) {
-            urls = urls.stream().filter(item -> Objects.equals(item.getParameter(Key.GROUP), group)).collect(Collectors.toList());
+            urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.GROUP), group)).collect(Collectors.toList());
         }
         if(!StringUtil.isBlank(version)){
-            urls = urls.stream().filter(item -> Objects.equals(item.getParameter(Key.VIRTUE), version)).collect(Collectors.toList());
+            urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.VIRTUE), version)).collect(Collectors.toList());
         }
         // filter by router rule
         Virtue virtue = Virtue.get(url);

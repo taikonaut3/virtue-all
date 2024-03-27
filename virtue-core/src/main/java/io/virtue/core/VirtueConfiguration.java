@@ -1,7 +1,6 @@
 package io.virtue.core;
 
 import io.virtue.common.spi.ServiceInterface;
-import io.virtue.core.manager.Virtue;
 
 @ServiceInterface(lazyLoad = false)
 public interface VirtueConfiguration {

@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
  *
  * @param <T> The type of the remote service interface.
  */
-public interface RemoteCaller<T> extends CallerContainer {
+public interface RemoteCaller<T> extends InvokerContainer {
 
     /**
      * Gets the target interface of the remote service.
@@ -25,7 +25,7 @@ public interface RemoteCaller<T> extends CallerContainer {
 
     /**
      * Is it only when the first call is made that the registration center is actually connected to Get the available services.
-     * The default gets available services when {@link ClientCaller} creation is complete.
+     * The default gets available services when {@link Caller} creation is complete.
      */
     boolean lazyDiscover();
 
@@ -34,5 +34,15 @@ public interface RemoteCaller<T> extends CallerContainer {
      */
     InetSocketAddress directAddress();
 
+    /**
+     * Gets the caller for the specified protocol and path.
+     *
+     * @param protocol
+     * @param path
+     * @return
+     */
+    default Caller<?> getCaller(String protocol, String path) {
+        return (Caller<?>) getInvoker(protocol, path);
+    }
 }
 

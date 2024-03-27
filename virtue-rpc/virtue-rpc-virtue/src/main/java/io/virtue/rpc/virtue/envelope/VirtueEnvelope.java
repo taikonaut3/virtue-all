@@ -33,11 +33,11 @@ public abstract class VirtueEnvelope implements Serializable {
     }
 
     public Serializer serializer() {
-        return ExtensionLoader.loadService(Serializer.class, url.getParameter(Key.SERIALIZE));
+        return ExtensionLoader.loadService(Serializer.class, url.getParam(Key.SERIALIZATION));
     }
 
     public Compression compression() {
-        return ExtensionLoader.loadService(Compression.class, url.getParameter(Key.COMPRESSION));
+        return ExtensionLoader.loadService(Compression.class, url.getParam(Key.COMPRESSION));
     }
 
 }

@@ -4,7 +4,7 @@ import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.core.CallArgs;
+import io.virtue.core.Invocation;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.virtue.client.VirtueClientChannelHandlerChain;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
@@ -33,7 +33,7 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
 
     @Override
     public Client openClient(URL url) {
-        boolean isMultiplex = url.getBooleanParameter(Key.MULTIPLEX, false);
+        boolean isMultiplex = url.getBooleanParam(Key.MULTIPLEX, false);
         Client client;
         if (isMultiplex) {
             String key = url.authority();
@@ -46,14 +46,15 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     }
 
     @Override
-    public VirtueRequest createRequest(URL url, CallArgs args) {
-        url.addParameter(Key.BODY_TYPE, args.getClass().getName());
-        return new VirtueRequest(url, args);
+    public VirtueRequest createRequest(Invocation invocation) {
+        URL url = invocation.url();
+        url.addParam(Key.BODY_TYPE, invocation.getClass().getName());
+        return new VirtueRequest(url, invocation);
     }
 
     @Override
     public VirtueResponse createResponse(URL url, Object payload) {
-        url.addParameter(Key.BODY_TYPE, payload.getClass().getName());
+        url.addParam(Key.BODY_TYPE, payload.getClass().getName());
         return new VirtueResponse(url, payload);
     }
 

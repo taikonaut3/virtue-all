@@ -9,7 +9,7 @@ import org.example.Message;
 import java.util.Date;
 import java.util.List;
 
-import static io.virtue.common.constant.Components.Serialize.MSGPACK;
+import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
 @RemoteService("345")
 public class Provider {
@@ -29,19 +29,19 @@ public class Provider {
         return "hello";
     }
 
-    @VirtueCallable(name = "list", config = @Config(serialize = MSGPACK,filters = "testFilter"))
+    @VirtueCallable(name = "list", config = @Config(serialization = MSGPACK,filters = "testFilter"))
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }
 
-    @Config(serialize = MSGPACK)
+    @Config(serialization = MSGPACK)
     @VirtueCallable(name = "list2")
     public List<ParentObject> list2(List<ParentObject> list1, List<ParentObject> list2) {
         return ParentObject.getObjList("list server2");
     }
 
     @VirtueCallable(name = "exchangeMessage")
-    @Config(filters = "testFilter")
+    @Config(filters = {"testFilter","calleeResultFilter"})
     public Message exchangeMessage(Message message) {
         message.setDate(new Date());
         message.setName("server " + message.getDate().toString());

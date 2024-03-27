@@ -33,7 +33,7 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         NettyCustomCodec nettyCustomCodec = new NettyCustomCodec(url, codec, isServer);
-        int keepAliveTimeout = url.getIntParameter(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
+        int keepAliveTimeout = url.getIntParam(Key.KEEP_ALIVE_TIMEOUT, Constant.DEFAULT_KEEP_ALIVE_TIMEOUT);
         IdleStateHandler idleStateHandler = NettyIdeStateHandler.create(keepAliveTimeout, isServer);
         socketChannel.pipeline()
                 .addLast("decoder", nettyCustomCodec.getDecoder())

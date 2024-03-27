@@ -3,6 +3,7 @@ package io.virtue.core.manager;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
+import io.virtue.core.Virtue;
 import io.virtue.core.config.ServerConfig;
 
 import java.util.ArrayList;
@@ -42,10 +43,10 @@ public class ServerConfigManager extends AbstractManager<ServerConfig> {
             if (serverConfig != null) {
                 URL url = serverConfig.toUrl();
                 url.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
-                url.addParameter(Key.VIRTUE, virtue.name());
+                url.addParam(Key.VIRTUE, virtue.name());
                 String applicationName = virtue.applicationName();
                 if (!StringUtil.isBlank(applicationName)) {
-                    url.addParameter(Key.APPLICATION, applicationName);
+                    url.addParam(Key.APPLICATION, applicationName);
                 }
                 urls.add(url);
             }

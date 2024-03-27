@@ -2,20 +2,22 @@ package io.virtue.rpc.protocol;
 
 import io.virtue.common.spi.ServiceInterface;
 import io.virtue.common.url.URL;
-import io.virtue.core.CallArgs;
-import io.virtue.transport.Request;
-import io.virtue.transport.Response;
+import io.virtue.core.Invocation;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.ServerConfig;
+import io.virtue.core.Virtue;
+import io.virtue.transport.Request;
+import io.virtue.transport.Response;
 import io.virtue.transport.client.Client;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.server.Server;
-import io.virtue.common.constant.Components;
+
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
 /**
  * Communication protocol used to exchange data between client and server.
  */
-@ServiceInterface(Components.Protocol.VIRTUE)
+@ServiceInterface(value = VIRTUE, constructor = {Virtue.class})
 public interface Protocol<Req, Res> {
 
     /**
@@ -30,7 +32,7 @@ public interface Protocol<Req, Res> {
      * @param payload the message payload of the request
      * @return {@link Request}
      */
-    Req createRequest(URL url, CallArgs args);
+    Req createRequest(Invocation invocation);
 
     /**
      * Create a new response for the given URL and message body.

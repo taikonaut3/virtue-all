@@ -34,9 +34,15 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
         Set<? extends Element> serviceInterfaceElements = roundEnvironment.getElementsAnnotatedWith(ServiceProvider.class);
         for (Element element : serviceInterfaceElements) {
             if (element instanceof TypeElement typeElement) {
-                List<? extends AnnotationMirror> annotationMirrors = typeElement.getAnnotationMirrors().stream().filter(annotationMirror -> annotationMirror.getAnnotationType().toString().equals(SERVICE_PROVIDER_NAME)).toList();
+                List<? extends AnnotationMirror> annotationMirrors = typeElement.getAnnotationMirrors().stream()
+                        .filter(annotationMirror ->
+                                annotationMirror.getAnnotationType().toString().equals(SERVICE_PROVIDER_NAME))
+                        .toList();
                 ServiceProviderWrapper wrapper = new ServiceProviderWrapper(annotationMirrors.get(0));
-                List<String> allInterfaces = getAllInterfaces(typeElement).stream().map(typeMirror -> getTypeElement(typeMirror).getQualifiedName().toString()).toList();
+                List<String> allInterfaces = getAllInterfaces(typeElement).stream()
+                        .map(typeMirror ->
+                                getTypeElement(typeMirror).getQualifiedName().toString())
+                        .toList();
                 if (wrapper.interfaces().isEmpty()) {
                     for (String interfaceType : allInterfaces) {
                         String path = SPI_FIX_PATH + interfaceType;
@@ -110,7 +116,7 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
 
         private final List<String> interfaceList;
 
-        public ServiceProviderWrapper(AnnotationMirror annotationMirror) {
+         ServiceProviderWrapper(AnnotationMirror annotationMirror) {
             interfaceList = new ArrayList<>();
             Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
             for (ExecutableElement key : elementValues.keySet()) {

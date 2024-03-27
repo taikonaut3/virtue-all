@@ -4,14 +4,14 @@ import com.google.protobuf.MessageLite;
 import io.virtue.common.exception.ConversionException;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
-import io.virtue.core.CallArgs;
-import io.virtue.core.support.RpcCallArgs;
+import io.virtue.core.Invocation;
+import io.virtue.core.support.TransferableInvocation;
 import io.virtue.serialization.Serializer;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import static io.virtue.common.constant.Components.Serialize.PROTOBUF;
+import static io.virtue.common.constant.Components.Serialization.PROTOBUF;
 
 @ServiceProvider(PROTOBUF)
 public class ProtobufSerializer implements Serializer {
@@ -21,8 +21,8 @@ public class ProtobufSerializer implements Serializer {
         try {
             if (input instanceof MessageLite message) {
                 return message.toByteArray();
-            } else if (input instanceof CallArgs callArgs) {
-                for (Object arg : callArgs.args()) {
+            } else if (input instanceof Invocation invocation) {
+                for (Object arg : invocation.args()) {
                     if (arg instanceof MessageLite messageLite) {
                         return serialize(messageLite);
                     }
@@ -38,10 +38,10 @@ public class ProtobufSerializer implements Serializer {
     @SuppressWarnings("unchecked")
     public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
         try {
-            if (CallArgs.class.isAssignableFrom(type)) {
-                RpcCallArgs callArgs = new RpcCallArgs();
-                callArgs.args(new Object[]{bytes});
-                return (T) callArgs;
+            if (Invocation.class.isAssignableFrom(type)) {
+                TransferableInvocation invocation = new TransferableInvocation();
+                invocation.setArgs(new Object[]{bytes});
+                return (T) invocation;
             }
             return (T) bytes;
         } catch (Exception e) {

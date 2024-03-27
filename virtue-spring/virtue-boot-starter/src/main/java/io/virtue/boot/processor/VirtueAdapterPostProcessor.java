@@ -1,6 +1,6 @@
 package io.virtue.boot.processor;
 
-import io.virtue.core.manager.Virtue;
+import io.virtue.core.Virtue;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
