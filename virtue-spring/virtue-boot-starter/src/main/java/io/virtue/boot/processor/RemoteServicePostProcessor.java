@@ -17,9 +17,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * RemoteService PostProcessor.
+ */
 public class RemoteServicePostProcessor extends PreferentialCreateConfig implements BeanDefinitionRegistryPostProcessor {
 
-    private final static List<Class<? extends Annotation>> EXPORT_ANNOTATION_TYPES = List.of(
+    private static final List<Class<? extends Annotation>> EXPORT_ANNOTATION_TYPES = List.of(
             RemoteService.class
     );
 

@@ -2,6 +2,9 @@ package io.virtue.proxy;
 
 import java.lang.reflect.UndeclaredThrowableException;
 
+/**
+ * Abstract ProxyFactory.
+ */
 public abstract class AbstractProxyFactory implements ProxyFactory {
 
     @Override

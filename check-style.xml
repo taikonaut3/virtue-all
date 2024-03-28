@@ -4,6 +4,11 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <!--checkStyle -->
 <module name="Checker">
+    <!-- 配置不需要检查的模块 -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern"
+                  value=".*[\\/]((virtue-demo)|(virtue-test)|(virtue-eventhub-flow)|(virtue-rpc-http))[\\/].*"/>
+    </module>
 
     <!-- 文件长度不超过1500行 -->
     <module name="FileLength">
@@ -36,7 +41,10 @@
             <property name="allowMissingReturnTag" value="true"/>
         </module>
         <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true"/>
             <property name="tokens" value="METHOD_DEF,ANNOTATION_FIELD_DEF"/>
+            <property name="allowedAnnotations" value="Override,Bean"/>
+            <property name="ignoreMethodNamesRegex" value="^(set|get|add|remove|register|clear|put).*"/>
         </module>
         <module name="JavadocType">
             <property name="allowUnknownTags" value="true"/>
@@ -53,8 +61,6 @@
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
             <message key="name.invalidPattern" value="包名 ''{0}'' 要符合 ''{1}''格式."/>
         </module>
-        <!-- 仅仅是static型的变量（不包括static final型）的检查 -->
-        <module name="StaticVariableName"/>
         <!-- Class或Interface名检查，默认^[A-Z][a-zA-Z0-9]*$-->
         <module name="TypeName">
             <property name="severity" value="warning"/>

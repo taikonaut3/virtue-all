@@ -1,5 +1,13 @@
 package io.virtue.transport.netty.client;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ConnectException;
@@ -10,20 +18,16 @@ import io.virtue.transport.client.AbstractClient;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyChannel;
 import io.virtue.transport.netty.ProtocolInitializer;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Base on netty client.
+ */
 public final class NettyClient extends AbstractClient {
 
-    private static final NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyClientWorker", true));
+    private static final NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS,
+            new DefaultThreadFactory("NettyClientWorker", true));
 
     private Bootstrap bootstrap;
 

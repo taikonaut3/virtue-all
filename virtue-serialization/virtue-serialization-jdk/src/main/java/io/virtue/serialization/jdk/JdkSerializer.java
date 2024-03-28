@@ -1,6 +1,5 @@
 package io.virtue.serialization.jdk;
 
-import io.virtue.common.constant.Components;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
@@ -10,7 +9,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-@ServiceProvider(value = Components.Serialization.JDK, interfaces = {Serializer.class})
+import static io.virtue.common.constant.Components.Serialization.JDK;
+
+/**
+ * JDK serializer.
+ */
+@ServiceProvider(value = JDK)
 public class JdkSerializer implements Serializer {
 
     @Override

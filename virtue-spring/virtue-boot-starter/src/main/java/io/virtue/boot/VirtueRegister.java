@@ -12,6 +12,9 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
+/**
+ * All PostProcessor register.
+ */
 public class VirtueRegister implements ImportBeanDefinitionRegistrar {
 
     private static final List<Class<?>> SCAN_POSTPROCESSORS = List.of(

@@ -6,7 +6,7 @@ import io.virtue.transport.channel.Channel;
 import io.virtue.transport.endpoint.Endpoint;
 
 /**
- * Net client
+ * Net client.
  */
 public interface Client extends Endpoint, Closeable {
 

@@ -5,8 +5,11 @@ import io.virtue.transport.channel.Channel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
+/**
+ * Abstract ChannelHandlerExceptionEvent for server and client.
+ */
 @Getter
+@Accessors(fluent = true)
 public abstract class ChannelHandlerExceptionEvent extends AbstractEvent<Throwable> {
 
     private final Channel channel;

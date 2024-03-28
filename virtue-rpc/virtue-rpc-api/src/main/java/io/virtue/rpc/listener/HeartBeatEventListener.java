@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Close idle connections according to core
- * {@link ClientConfig#spareCloseTimes}
- * to reduce resource waste
+ * Close idle connections according to core {@link ClientConfig#spareCloseTimes} to reduce resource waste.
  */
 public class HeartBeatEventListener implements EventListener<HeartBeatEvent> {
 

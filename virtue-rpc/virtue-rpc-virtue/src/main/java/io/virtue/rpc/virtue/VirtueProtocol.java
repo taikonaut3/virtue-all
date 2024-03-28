@@ -15,6 +15,9 @@ import io.virtue.transport.client.Client;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Virtue Protocol implementation.
+ */
 @ServiceProvider(Components.Protocol.VIRTUE)
 public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, VirtueResponse> {
 

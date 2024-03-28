@@ -3,9 +3,9 @@ package io.virtue.common.exception;
 /**
  * Get Resources Exception.
  */
-public class SourceException extends RpcException {
+public class ResourceException extends RpcException {
 
-    public SourceException(String msg) {
+    public ResourceException(String msg) {
         super(msg);
     }
 

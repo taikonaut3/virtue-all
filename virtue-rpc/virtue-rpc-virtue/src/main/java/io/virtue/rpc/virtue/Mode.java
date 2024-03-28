@@ -6,8 +6,18 @@ package io.virtue.rpc.virtue;
  */
 public interface Mode {
 
+    /**
+     * Mapping name.
+     *
+     * @return
+     */
     String name();
 
+    /**
+     * Mapping byte.
+     *
+     * @return
+     */
     byte type();
 
 }

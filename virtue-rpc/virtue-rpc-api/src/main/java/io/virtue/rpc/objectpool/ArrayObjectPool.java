@@ -11,11 +11,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 /**
- * ArrayObjectPool
- * @author Chang Liu
+ * ArrayObjectPool.
+ * @param <T>
  */
 @SuppressWarnings("unchecked")
-public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
+public class ArrayObjectPool<T> extends AbstractObjectPool<T> {
     private final PooledObject<T>[] pooledObjectArr;
     private final ReentrantLock mainLock = new ReentrantLock();
     private final Condition available = mainLock.newCondition();
@@ -32,27 +32,28 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
-    public T poll() throws InterruptedException{
+    public T poll() throws InterruptedException {
         T t = get();
-        if(Objects.nonNull(t)){
+        if (Objects.nonNull(t)) {
             return t;
         }
         mainLock.lock();
-        try{
+        try {
             // keep waiting
-            while(Objects.isNull(t)){
+            while (Objects.isNull(t)) {
                 available.await();
                 t = get();
             }
-        }finally {
+        } finally {
             mainLock.unlock();
         }
         return t;
     }
-    private T doGet(){
+
+    private T doGet() {
         for (int i = 0; i < size; i++) {
             if (pooledObjectArr[i].state() == PooledObjectState.IDLE) {
-                synchronized(generateMemoryLockKey(i).intern()){
+                synchronized (generateMemoryLockKey(i).intern()) {
                     if (pooledObjectArr[i].state() == PooledObjectState.IDLE) {
                         pooledObjectArr[i].state(PooledObjectState.ALLOCATED);
                         return pooledObjectArr[i].getObject();
@@ -66,24 +67,24 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     @Override
     public T poll(long time, TimeUnit timeUnit) throws InterruptedException {
         T t = get();
-        if(Objects.nonNull(t)){
+        if (Objects.nonNull(t)) {
             return t;
         }
         long deadLine = timeUnit.toNanos(time);
         mainLock.lock();
-        try{
-            while(Objects.isNull(t)){
+        try {
+            while (Objects.isNull(t)) {
                 long remaining = deadLine - System.nanoTime();
-                if(remaining <= 0L){
+                if (remaining <= 0L) {
                     return null;
                 }
                 remaining = available.awaitNanos(timeUnit.toNanos(remaining));
-                if(remaining <= 0L){
+                if (remaining <= 0L) {
                     return null;
                 }
                 t = get();
             }
-        }finally {
+        } finally {
             mainLock.unlock();
         }
         return t;
@@ -91,10 +92,12 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
 
     @Override
     public T get() {
-        boolean isFull = Arrays.stream(pooledObjectArr).filter(Objects::nonNull).allMatch(pooledObject -> pooledObject.state() == PooledObjectState.ALLOCATED);
-        if(isFull){
-            if(size == poolConfig.initCapacity()){
-               return null;
+        boolean isFull = Arrays.stream(pooledObjectArr)
+                .filter(Objects::nonNull)
+                .allMatch(pooledObject -> pooledObject.state() == PooledObjectState.ALLOCATED);
+        if (isFull) {
+            if (size == poolConfig.initCapacity()) {
+                return null;
             }
             addObject();
         }
@@ -102,34 +105,34 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
     }
 
     @Override
-    public void back(T object){
+    public void back(T object) {
         validateObject(object);
         for (int i = 0; i < size; i++) {
             PooledObject<T> pooledObject = pooledObjectArr[i];
-            if(pooledObject.getObject() == object){
+            if (pooledObject.getObject() == object) {
                 pooledObjectArr[i].state(PooledObjectState.IDLE);
                 break;
             }
         }
         mainLock.lock();
-        try{
+        try {
             available.signal();
-        }finally {
+        } finally {
             mainLock.unlock();
         }
     }
 
-    private String generateMemoryLockKey(int index){
-        return String.format(LOCK_KEY_FORMAT,index);
+    private String generateMemoryLockKey(int index) {
+        return String.format(LOCK_KEY_FORMAT, index);
     }
 
     @Override
-    public void addObject(){
+    public void addObject() {
         PooledObject<T> pooledObject = factory.makeObject();
         AssertUtil.notNull(pooledObject);
         validateObject(pooledObject.getObject());
         mainLock.lock();
-        try{
+        try {
             if (size == poolConfig.initCapacity()) {
                 throw new RuntimeException("Pool capacity is full and cannot continue to be added");
             }
@@ -138,50 +141,50 @@ public class ArrayObjectPool<T> extends AbstractObjectPool<T>{
             available.signal();
             size++;
             createdCount.incrementAndGet();
-        }finally {
+        } finally {
             mainLock.unlock();
         }
     }
 
     @Override
     public void validateObject(T object) {
-        if(Objects.isNull(object)){
+        if (Objects.isNull(object)) {
             throw new NullPointerException();
         }
     }
 
     @Override
-    public void destroy(T object){
+    public void destroy(T object) {
         validateObject(object);
         mainLock.lock();
-        try{
+        try {
             for (int i = 0; i < size; i++) {
                 PooledObject<T> pooledObject = pooledObjectArr[i];
-                if(pooledObject.getObject() == object){
-                    fastRemove(pooledObjectArr,i,() -> null);
+                if (pooledObject.getObject() == object) {
+                    fastRemove(pooledObjectArr, i, () -> null);
                     pooledObject.state(PooledObjectState.INVALID);
                     destroyObject(pooledObject);
                 }
             }
-        }finally {
+        } finally {
             mainLock.unlock();
         }
     }
 
-    private void destroyObject(PooledObject<T> pooledObject){
+    private void destroyObject(PooledObject<T> pooledObject) {
         try {
             factory.destroyObject(pooledObject);
-        }finally {
+        } finally {
             destroyCount.incrementAndGet();
         }
     }
 
-    private void fastRemove(PooledObject<T>[] pooledObjectArr, int index, Supplier<PooledObject<T>> defaultValue){
-       int newSize;
-       // is not last element
-       if((newSize = size - 1) > index){
-           System.arraycopy(pooledObjectArr,index + 1,pooledObjectArr,index,newSize - index);
-       }
+    private void fastRemove(PooledObject<T>[] pooledObjectArr, int index, Supplier<PooledObject<T>> defaultValue) {
+        int newSize;
+        // is not last element
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(pooledObjectArr, index + 1, pooledObjectArr, index, newSize - index);
+        }
         pooledObjectArr[size = newSize] = defaultValue.get();
     }
 

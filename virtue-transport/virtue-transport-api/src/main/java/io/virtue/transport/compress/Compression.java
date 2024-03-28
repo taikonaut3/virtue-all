@@ -11,7 +11,7 @@ import io.virtue.common.constant.Components;
 public interface Compression {
 
     /**
-     * compress date
+     * Compress date.
      *
      * @param data
      * @return
@@ -20,7 +20,7 @@ public interface Compression {
     byte[] compress(byte[] data) throws CompressionException;
 
     /**
-     * decompress compressedData
+     * Decompress compressedData.
      *
      * @param compressedData
      * @return

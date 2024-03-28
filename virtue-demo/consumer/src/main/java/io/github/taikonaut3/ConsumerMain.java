@@ -25,7 +25,7 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")
 public class ConsumerMain {
     public static void main(String[] args) {
-        //pringApplication.run(ConsumerMain.class, args);
+        //SpringApplication.run(ConsumerMain.class, args);
         simpleTest();
     }
 

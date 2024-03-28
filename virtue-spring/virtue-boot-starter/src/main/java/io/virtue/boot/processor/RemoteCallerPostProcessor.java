@@ -1,7 +1,7 @@
 package io.virtue.boot.processor;
 
 import io.virtue.boot.EnableVirtue;
-import io.virtue.boot.RemoteCallFactoryBean;
+import io.virtue.boot.RemoteCallerFactoryBean;
 import io.virtue.common.exception.RpcException;
 import io.virtue.core.annotation.RemoteCaller;
 import org.springframework.beans.BeansException;
@@ -22,14 +22,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * RemoteCaller PostProcessor.
+ */
 public class RemoteCallerPostProcessor extends PreferentialCreateConfig implements BeanDefinitionRegistryPostProcessor {
 
-    private final static List<Class<? extends Annotation>> REMOTE_CALL_ANNOTATION_TYPES = List.of(
+    private static final List<Class<? extends Annotation>> REMOTE_CALL_ANNOTATION_TYPES = List.of(
             RemoteCaller.class
     );
 
     private final String[] remoteCallPackages;
-
 
     public RemoteCallerPostProcessor(EnableVirtue enableVirtue) {
         ArrayList<String> list = new ArrayList<>();
@@ -40,11 +42,11 @@ public class RemoteCallerPostProcessor extends PreferentialCreateConfig implemen
 
     @Override
     public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
-        RemoteCallScanner remoteCallScanner = new RemoteCallScanner();
+        RemoteCallerScanner remoteCallerScanner = new RemoteCallerScanner();
         for (String pkg : remoteCallPackages) {
-            List<? extends Class<?>> RemoteCallInterfaces = remoteCallScanner.findClasses(pkg);
-            for (Class<?> type : RemoteCallInterfaces) {
-                BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RemoteCallFactoryBean.class);
+            List<? extends Class<?>> remoteCallInterfaces = remoteCallerScanner.findClasses(pkg);
+            for (Class<?> type : remoteCallInterfaces) {
+                BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RemoteCallerFactoryBean.class);
                 builder.addConstructorArgValue(type);
                 AbstractBeanDefinition definition = builder.getBeanDefinition();
                 String beanName = "";
@@ -62,15 +64,15 @@ public class RemoteCallerPostProcessor extends PreferentialCreateConfig implemen
 
     @Override
     public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
-        if (bean instanceof RemoteCallFactoryBean<?> remoteCallFactoryBean) {
-            remoteCallFactoryBean.setVirtue(virtue());
+        if (bean instanceof RemoteCallerFactoryBean<?> remoteCallerFactoryBean) {
+            remoteCallerFactoryBean.setVirtue(virtue());
         }
         return bean;
     }
 
-    private static final class RemoteCallScanner extends ClassPathScanningCandidateComponentProvider {
+    private static final class RemoteCallerScanner extends ClassPathScanningCandidateComponentProvider {
 
-        public RemoteCallScanner() {
+        RemoteCallerScanner() {
             for (Class<? extends Annotation> annotationType : REMOTE_CALL_ANNOTATION_TYPES) {
                 addIncludeFilter(new AnnotationTypeFilter(annotationType));
             }

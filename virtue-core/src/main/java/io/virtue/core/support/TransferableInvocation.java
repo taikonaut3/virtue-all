@@ -61,10 +61,19 @@ public class TransferableInvocation implements Invocation {
         return this;
     }
 
+    /**
+     * Adaptation serialization.
+     *
+     * @return
+     */
     public Object[] getArgs() {
         return args();
     }
 
+    /**
+     * Adaptation serialization.
+     * @param args
+     */
     public void setArgs(Object[] args) {
         args(args);
     }

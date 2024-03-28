@@ -4,6 +4,9 @@ import io.virtue.core.filter.Filter;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 
+/**
+ * Filter PostProcessor.
+ */
 public class FilterPostProcessor extends VirtueAdapterPostProcessor {
 
     @Override

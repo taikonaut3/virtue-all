@@ -9,6 +9,9 @@ import io.virtue.serialization.Serializer;
 
 import static io.virtue.common.constant.Components.Serialization.KRYO;
 
+/**
+ * Kryo serializer.
+ */
 @ServiceProvider(KRYO)
 public class KryoSerializer implements Serializer {
 

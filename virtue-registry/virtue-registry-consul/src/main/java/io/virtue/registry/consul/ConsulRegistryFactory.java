@@ -7,7 +7,7 @@ import io.virtue.registry.RegistryService;
 import io.virtue.common.constant.Components;
 
 /**
- * Use Vertx-Consul-Client
+ * Consul RegistryFactory.
  */
 @ServiceProvider(Components.Registry.CONSUL)
 public class ConsulRegistryFactory extends AbstractRegistryFactory {

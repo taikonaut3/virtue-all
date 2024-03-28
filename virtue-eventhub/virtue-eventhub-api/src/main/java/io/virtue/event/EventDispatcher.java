@@ -8,7 +8,7 @@ import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
 /**
  * Event dispatcher that can register, remove,and dispatch event listeners for specific types of events.
  */
-@ServiceInterface(value = DISRUPTOR,constructor = {URL.class})
+@ServiceInterface(value = DISRUPTOR, constructor = {URL.class})
 public interface EventDispatcher {
 
     /**

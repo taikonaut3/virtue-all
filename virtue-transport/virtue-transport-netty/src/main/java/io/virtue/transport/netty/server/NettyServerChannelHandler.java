@@ -7,6 +7,9 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
+/**
+ * Base channel handler for netty server.
+ */
 @io.netty.channel.ChannelHandler.Sharable
 public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapter {
 

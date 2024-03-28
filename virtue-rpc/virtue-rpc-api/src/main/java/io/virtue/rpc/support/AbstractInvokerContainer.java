@@ -67,7 +67,7 @@ public abstract class AbstractInvokerContainer implements InvokerContainer {
         return mappingInvokers.get(invokerMapping);
     }
 
-    public void addInvokerMapping(String protocol, String path, Invoker<?> invoker){
+    protected void addInvokerMapping(String protocol, String path, Invoker<?> invoker) {
         String invokerMapping = GenerateUtil.generateInvokerMapping(protocol, path);
         mappingInvokers.put(invokerMapping, invoker);
     }

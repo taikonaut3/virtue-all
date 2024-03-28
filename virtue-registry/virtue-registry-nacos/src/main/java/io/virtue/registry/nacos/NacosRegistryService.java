@@ -6,7 +6,6 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import io.virtue.common.constant.Key;
-import io.virtue.common.exception.ConnectException;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
@@ -19,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Based on nacos-client’s RegistryService.
+ */
 public class NacosRegistryService extends AbstractRegistryService {
 
     private static final Logger logger = LoggerFactory.getLogger(NacosRegistryService.class);
@@ -35,7 +37,7 @@ public class NacosRegistryService extends AbstractRegistryService {
     }
 
     @Override
-    public void connect(URL url) throws ConnectException {
+    public void connect(URL url) {
         try {
             namingService = NamingFactory.createNamingService(url.address());
             String serviceName = serviceName(url);
@@ -44,7 +46,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             }
         } catch (NacosException e) {
             logger.error("Connect to Nacos: {} Fail", url.address());
-            throw new ConnectException(e);
+            throw RpcException.unwrap(e);
         }
     }
 

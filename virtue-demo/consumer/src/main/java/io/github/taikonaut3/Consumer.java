@@ -23,28 +23,29 @@ public interface Consumer {
     @VirtueCall(service = "345", callMethod = "hello")
     String hello(String world);
 
-    @Config(filters = {"filter1"},serialization = JSON)
+    @Config(filters = {"filter1"}, serialization = JSON)
     @VirtueCall(service = "345", callMethod = "hello")
     CompletableFuture<String> helloAsync(String world);
 
-    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"))
+    @VirtueCall(service = "345", callMethod = "hello")
+    @Config(filters = "test")
     CompletableFuture<Response> helloResp(String world);
 
-    @VirtueCall(service = "345", callMethod = "hello", config = @Config(filters = "test"))
+    @VirtueCall(service = "345", callMethod = "hello")
+    @Config(filters = "test")
     CompletableFuture<VirtueResponse> helloDynamicRes(String world);
 
-    @VirtueCall(service = "345",callMethod = "exchangeMessage")
-    @Config(filters = {"testFilter","callerResultFilter"})
+    @VirtueCall(service = "345", callMethod = "exchangeMessage")
+    @Config(filters = {"testFilter", "callerResultFilter"})
     Message exchangeMessage(Message message);
 
-    @Config(filters = {"filter1","filter2"},serialization = MSGPACK)
+    @Config(filters = {"filter1", "filter2"}, serialization = MSGPACK)
     @Options(faultTolerance = Components.FaultTolerance.FAIL_RETRY)
-    @VirtueCall(service = "345",callMethod = "list")
+    @VirtueCall(service = "345", callMethod = "list")
     List<ParentObject> list(List<ParentObject> list);
 
-
-    @Config(filters = {"filter1","filter2"},serialization = MSGPACK)
-    @VirtueCall(service = "345",callMethod = "list2")
-    List<ParentObject> list(List<ParentObject> list1,List<ParentObject> list2);
+    @Config(filters = {"filter1", "filter2"}, serialization = MSGPACK)
+    @VirtueCall(service = "345", callMethod = "list2")
+    List<ParentObject> list(List<ParentObject> list1, List<ParentObject> list2);
 
 }

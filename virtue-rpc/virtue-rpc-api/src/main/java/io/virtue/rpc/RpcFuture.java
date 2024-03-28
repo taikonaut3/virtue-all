@@ -19,8 +19,11 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
-@Accessors(fluent = true)
+/**
+ * Base on CompletableFuture.
+ */
 @Getter
+@Accessors(fluent = true)
 public class RpcFuture extends CompletableFuture<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcFuture.class);
@@ -75,7 +78,7 @@ public class RpcFuture extends CompletableFuture<Object> {
     }
 
     /**
-     * Returns a null if no value is returned
+     * Returns a null if no value is returned.
      *
      * @return
      * @throws InterruptedException
@@ -98,10 +101,20 @@ public class RpcFuture extends CompletableFuture<Object> {
         }
     }
 
+    /**
+     * Rpc timeout.
+     *
+     * @return
+     */
     public int timeout() {
         return url.getIntParam(Key.TIMEOUT);
     }
 
+    /**
+     * Method return type.
+     *
+     * @return
+     */
     public Type returnType() {
         return invocation.returnType();
     }

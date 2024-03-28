@@ -5,6 +5,11 @@ import io.virtue.event.EventListener;
 
 import java.util.concurrent.Executor;
 
+/**
+ * Abstract envelope event listener.
+ *
+ * @param <T>
+ */
 public abstract class EnvelopeEventListener<T extends Event<?>> implements EventListener<T> {
 
     protected Executor executor;

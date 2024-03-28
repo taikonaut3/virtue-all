@@ -29,7 +29,8 @@ public class Provider {
         return "hello";
     }
 
-    @VirtueCallable(name = "list", config = @Config(serialization = MSGPACK,filters = "testFilter"))
+    @VirtueCallable(name = "list")
+    @Config(serialization = MSGPACK,filters = "testFilter")
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }

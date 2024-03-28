@@ -3,7 +3,7 @@ package io.virtue.common.util;
 import java.util.Objects;
 
 /**
- * Assert tool, which provides some common assertions methods.
+ * Utility class for assert operations.
  */
 public final class AssertUtil {
 

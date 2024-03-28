@@ -1,8 +1,8 @@
 package io.virtue.transport.netty;
 
+import io.netty.channel.Channel;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.transport.channel.AbstractChannel;
-import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +10,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Base on netty channel.
+ */
 public final class NettyChannel extends AbstractChannel {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyChannel.class);

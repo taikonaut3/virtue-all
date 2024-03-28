@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * RemoteCaller Manager
+ * RemoteCaller Manager.
  */
 public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> {
 
@@ -19,6 +19,11 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         super(virtue);
     }
 
+    /**
+     * Get all remote callers.
+     *
+     * @return
+     */
     public Collection<RemoteCaller<?>> remoteCallers() {
         LinkedList<RemoteCaller<?>> remoteCallers = new LinkedList<>();
         for (List<RemoteCaller<?>> value : map.values()) {
@@ -27,7 +32,10 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         return remoteCallers;
     }
 
-
+    /**
+     * Register remote caller.
+     * @param remoteCaller
+     */
     public synchronized void register(RemoteCaller<?> remoteCaller) {
         List<RemoteCaller<?>> remoteCallers = map.computeIfAbsent(remoteCaller.remoteApplication(), k -> new LinkedList<>());
         remoteCallers.add(remoteCaller);
@@ -46,7 +54,12 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         return null;
     }
 
-    public List<Caller<?>> clientCallers() {
+    /**
+     * Get all caller.
+     *
+     * @return
+     */
+    public List<Caller<?>> allCaller() {
         return remoteCallers().stream()
                 .flatMap(container -> Arrays.stream(container.invokers()).map(caller -> (Caller<?>) caller))
                 .collect(Collectors.toList());

@@ -7,7 +7,7 @@ import io.virtue.registry.RegistryService;
 import io.virtue.common.constant.Components;
 
 /**
- * Use Nacoe-Client
+ * Nacos RegistryFactory.
  */
 @ServiceProvider(Components.Registry.NACOS)
 public class NacosRegistryFactory extends AbstractRegistryFactory {

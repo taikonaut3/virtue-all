@@ -4,6 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Simplified implementation of {@link ByteWriter}.
+ */
 public final class DefaultByteWriter implements ByteWriter {
 
     private final ByteArrayOutputStream outputStream;

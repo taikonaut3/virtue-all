@@ -5,6 +5,9 @@ import io.virtue.common.url.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Abstract RegistryFactory.
+ */
 public abstract class AbstractRegistryFactory implements RegistryFactory {
 
     private static final Map<String, RegistryService> registries = new ConcurrentHashMap<>();

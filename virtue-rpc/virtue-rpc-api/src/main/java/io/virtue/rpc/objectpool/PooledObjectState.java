@@ -5,18 +5,19 @@ import io.virtue.rpc.objectpool.listener.PooledObjectEvent;
 import io.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
 
 /**
- * 池中对象的状态
+ * 池中对象的状态.
+ *
  * @author Chang Liu
  */
 public enum PooledObjectState {
     /**
-     * 空闲
+     * 空闲.
      */
     IDLE,
     /**
-     * 无效
+     * 无效.
      */
-    INVALID(){
+    INVALID() {
         @Override
         public Event<PooledObject<?>> getEvent(PooledObject<?> pooledObject) {
             PooledObjectEvent<PooledObject<?>> pooledObjectEvent = new PooledObjectInvalidEvent<>();
@@ -25,11 +26,11 @@ public enum PooledObjectState {
         }
     },
     /**
-     * 正在使用
+     * 正在使用.
      */
     ALLOCATED;
 
-    public Event<PooledObject<?>> getEvent(PooledObject<?> pooledObject){
+    public Event<PooledObject<?>> getEvent(PooledObject<?> pooledObject) {
         return null;
     }
 }

@@ -9,6 +9,11 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract rule manager.
+ *
+ * @param <T>
+ */
 public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
 
     protected final Map<T, RuleWrapper<T>> ruleMap = new HashMap<>();
@@ -17,6 +22,13 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
         super(virtue);
     }
 
+    /**
+     * Add protocol rule.
+     *
+     * @param config
+     * @param scope
+     * @param rules
+     */
     public void addProtocolRule(T config, MatchRule.Scope scope, String... rules) {
         RuleWrapper<T> ruleWrapper = ruleMap.computeIfAbsent(config, RuleWrapper<T>::new);
         if (scope == MatchRule.Scope.all) {
@@ -29,6 +41,13 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
         }
     }
 
+    /**
+     * Add path rule.
+     *
+     * @param config
+     * @param scope
+     * @param rules
+     */
     public void addPathRule(T config, MatchRule.Scope scope, String... rules) {
         RuleWrapper<T> ruleWrapper = ruleMap.computeIfAbsent(config, RuleWrapper<T>::new);
         if (scope == MatchRule.Scope.all) {
@@ -41,9 +60,12 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
         }
     }
 
+    /**
+     * Execute rules.
+     */
     public void executeRules() {
-        List<Callee<?>> callees = virtue.configManager().remoteServiceManager().serverCallers();
-        List<Caller<?>> callers = virtue.configManager().remoteCallerManager().clientCallers();
+        List<Callee<?>> callees = virtue.configManager().remoteServiceManager().allCallee();
+        List<Caller<?>> callers = virtue.configManager().remoteCallerManager().allCaller();
         for (RuleWrapper<T> ruleWrapper : ruleMap.values()) {
             List<Callee<?>> matchedCallees = matchedServerCallers(ruleWrapper.serverRegexWrapper(), callees);
             List<Caller<?>> matchedCallers = matchedClientCallers(ruleWrapper.clientRegexWrapper(), callers);

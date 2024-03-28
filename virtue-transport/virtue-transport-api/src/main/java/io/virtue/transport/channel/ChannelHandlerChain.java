@@ -1,19 +1,19 @@
 package io.virtue.transport.channel;
 
 /**
- * Connect the ChannelHandler in order
+ * Connect the ChannelHandler in order.
  */
 public interface ChannelHandlerChain extends ChannelHandler {
 
     /**
-     * Just the addition of the Inbound ChannelHandler
+     * Just the addition of the Inbound ChannelHandler.
      *
      * @param channelHandler
      */
     ChannelHandlerChain addLast(ChannelHandler channelHandler);
 
     /**
-     * Gets all Inbound ChannelHandler
+     * Gets all Inbound ChannelHandler.
      *
      * @return
      */

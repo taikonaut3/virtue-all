@@ -4,8 +4,6 @@ import io.virtue.common.constant.Components;
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.RemoteCaller;
-import io.virtue.core.annotation.Config;
-import io.virtue.core.annotation.Options;
 import io.virtue.rpc.support.AbstractCaller;
 import io.virtue.rpc.virtue.config.VirtueCall;
 import lombok.Getter;
@@ -16,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * Virtue protocol caller.
+ */
 @Getter
 @Accessors(fluent = true)
 public class VirtueCaller extends AbstractCaller<VirtueCall> {
@@ -33,19 +34,8 @@ public class VirtueCaller extends AbstractCaller<VirtueCall> {
     @Override
     public void doInit() {
         remoteServiceName = parsedAnnotation.service();
-        callMethod = StringUtil.isBlank(parsedAnnotation.callMethod()) ?
-                GenerateUtil.generateKey(method()) : parsedAnnotation.callMethod();
-    }
-
-    @Override
-    protected Config config() {
-        return parsedAnnotation.config();
-    }
-
-
-    @Override
-    protected Options options() {
-        return parsedAnnotation.options();
+        callMethod = StringUtil.isBlank(parsedAnnotation.callMethod())
+                ? GenerateUtil.generateKey(method()) : parsedAnnotation.callMethod();
     }
 
     @Override

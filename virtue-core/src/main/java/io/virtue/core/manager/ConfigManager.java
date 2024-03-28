@@ -7,10 +7,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * All Config Manager
+ * All Config Manager.
  */
-@Accessors(fluent = true)
 @Getter
+@Accessors(fluent = true)
 public class ConfigManager {
 
     private final RemoteServiceManager remoteServiceManager;

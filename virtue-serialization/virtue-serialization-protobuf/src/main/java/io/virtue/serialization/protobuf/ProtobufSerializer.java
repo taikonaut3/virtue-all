@@ -13,6 +13,9 @@ import java.lang.reflect.Type;
 
 import static io.virtue.common.constant.Components.Serialization.PROTOBUF;
 
+/**
+ * Protobuf Serializer.
+ */
 @ServiceProvider(PROTOBUF)
 public class ProtobufSerializer implements Serializer {
 

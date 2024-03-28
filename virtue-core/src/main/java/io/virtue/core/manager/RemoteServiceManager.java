@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * RemoteService Manager
+ * RemoteService Manager.
  */
 public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
@@ -18,10 +18,19 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
         super(virtue);
     }
 
+    /**
+     * Get all remote services.
+     *
+     * @return
+     */
     public Collection<RemoteService<?>> remoteServices() {
         return map.values();
     }
 
+    /**
+     * Register a remote service.
+     * @param remoteService
+     */
     public void register(RemoteService<?> remoteService) {
         register(remoteService.name(), remoteService);
     }
@@ -37,16 +46,20 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> RemoteService<T> get(Class<T> interfaceType) {
-        if (interfaceType.isAnnotationPresent(io.virtue.core.annotation.RemoteService.class)) {
-            io.virtue.core.annotation.RemoteService annotation = interfaceType.getAnnotation(io.virtue.core.annotation.RemoteService.class);
+    public <T> RemoteService<T> get(Class<T> type) {
+        if (type.isAnnotationPresent(io.virtue.core.annotation.RemoteService.class)) {
+            var annotation = type.getAnnotation(io.virtue.core.annotation.RemoteService.class);
             return (RemoteService<T>) get(annotation.value());
 
         }
         return null;
     }
 
-    public List<Callee<?>> serverCallers() {
+    /**
+     * Get all server callee.
+     * @return
+     */
+    public List<Callee<?>> allCallee() {
         return remoteServices().stream()
                 .flatMap(container -> Arrays.stream(container.invokers()).map(caller -> (Callee<?>) caller))
                 .collect(Collectors.toList());

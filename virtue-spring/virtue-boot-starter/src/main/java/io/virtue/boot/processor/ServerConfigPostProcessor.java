@@ -4,6 +4,9 @@ import io.virtue.core.config.ServerConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 
+/**
+ * ServerConfig PostProcessor.
+ */
 public class ServerConfigPostProcessor extends VirtueAdapterPostProcessor {
 
 

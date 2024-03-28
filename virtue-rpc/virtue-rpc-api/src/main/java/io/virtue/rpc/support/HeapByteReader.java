@@ -1,19 +1,14 @@
 package io.virtue.rpc.support;
 
-import io.virtue.common.spi.Scope;
-import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.util.bytes.ByteReader;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static io.virtue.common.constant.Components.ByteReader.NIO_HEAP;
-
 /**
  * Use HeapByteBuffer asReadOnlyBuffer.
  */
-@ServiceProvider(value = NIO_HEAP, scope = Scope.PROTOTYPE)
 public class HeapByteReader implements ByteReader {
 
     private final ByteBuffer buffer;

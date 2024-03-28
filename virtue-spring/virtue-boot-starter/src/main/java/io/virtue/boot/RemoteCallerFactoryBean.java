@@ -4,7 +4,11 @@ import io.virtue.core.RemoteCaller;
 import io.virtue.core.Virtue;
 import org.springframework.beans.factory.FactoryBean;
 
-public class RemoteCallFactoryBean<T> implements FactoryBean<T> {
+/**
+ * RemoteCaller FactoryBean.
+ * @param <T>
+ */
+public class RemoteCallerFactoryBean<T> implements FactoryBean<T> {
 
     private final Class<T> interfaceType;
 
@@ -12,10 +16,14 @@ public class RemoteCallFactoryBean<T> implements FactoryBean<T> {
 
     private RemoteCaller<T> remoteCaller;
 
-    public RemoteCallFactoryBean(Class<T> interfaceType) {
+    public RemoteCallerFactoryBean(Class<T> interfaceType) {
         this.interfaceType = interfaceType;
     }
 
+    /**
+     * Set virtue.
+     * @param virtue
+     */
     public void setVirtue(Virtue virtue) {
         this.virtue = virtue;
     }

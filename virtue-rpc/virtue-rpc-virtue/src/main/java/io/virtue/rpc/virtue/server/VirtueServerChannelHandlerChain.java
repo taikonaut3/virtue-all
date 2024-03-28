@@ -8,7 +8,7 @@ import io.virtue.rpc.handler.ServerHeartBeatChannelHandler;
  * +---------------------------------------ServerChannelHandlerChain---------------------------------------+
  * +--------------------------------+--------------------------------------+-------------------------------+
  * |{@link ServerHeartBeatChannelHandler} -> {@link virtueServerConvertChannelHandler} -> {@link ServerChannelHandler} |
- * +--------------------------------+--------------------------------------+-------------------------------+
+ * +--------------------------------+--------------------------------------+-------------------------------+.
  */
 public class VirtueServerChannelHandlerChain extends DefaultChannelHandlerChain {
 

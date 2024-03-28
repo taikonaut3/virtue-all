@@ -4,6 +4,9 @@ import io.virtue.common.constant.Constant;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * Application Config.
+ */
 @Data
 @Accessors(fluent = true, chain = true)
 public class ApplicationConfig {

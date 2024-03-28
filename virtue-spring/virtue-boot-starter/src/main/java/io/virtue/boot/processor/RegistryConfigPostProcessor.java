@@ -4,6 +4,9 @@ import io.virtue.core.config.RegistryConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 
+/**
+ * RegistryConfig PostProcessor.
+ */
 public class RegistryConfigPostProcessor extends VirtueAdapterPostProcessor {
 
 

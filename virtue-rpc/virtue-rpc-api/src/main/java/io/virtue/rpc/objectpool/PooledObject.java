@@ -3,9 +3,10 @@ package io.virtue.rpc.objectpool;
 import java.time.Instant;
 
 /**
- * @author Chang Liu
+ *
+ * @param <T>
  */
-public interface PooledObject<T>{
+public interface PooledObject<T> {
     /**
      * Get the underlying object.
      *

@@ -11,7 +11,7 @@ import java.util.List;
 import static io.virtue.common.constant.Components.DEFAULT;
 
 /**
- * Default FilterChain impl
+ * Default FilterChain impl.
  */
 @ServiceProvider(DEFAULT)
 public class DefaultFilterChain implements FilterChain {
@@ -22,7 +22,7 @@ public class DefaultFilterChain implements FilterChain {
         return doFilter(invocation, filterInvocation, filters, 0);
     }
 
-    private Object doFilter(Invocation invocation,Invocation filterInvocation, List<Filter> filters, int index) {
+    private Object doFilter(Invocation invocation, Invocation filterInvocation, List<Filter> filters, int index) {
         if (filters == null || index == filters.size()) {
             return invocation.invoke();
         }
@@ -31,7 +31,7 @@ public class DefaultFilterChain implements FilterChain {
     }
 
     static class FilterInvocation extends TransferableInvocation {
-        public FilterInvocation(Invocation invocation) {
+        FilterInvocation(Invocation invocation) {
             basic(invocation.invoker(), invocation.args());
             url(invocation.url());
         }

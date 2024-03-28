@@ -1,9 +1,9 @@
 package io.virtue.common.exception;
 
 /**
- * Common Util Exception.
+ * Common Exception.
  */
-public class CommonException extends RuntimeException{
+public class CommonException extends RuntimeException {
 
 
     public CommonException(String msg, Throwable e) {

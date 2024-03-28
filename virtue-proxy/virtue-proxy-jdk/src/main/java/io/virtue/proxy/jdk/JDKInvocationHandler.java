@@ -6,7 +6,7 @@ import io.virtue.proxy.SuperInvoker;
 import java.lang.reflect.Method;
 
 /**
- * JDK InvocationHandler Impl
+ * JDK InvocationHandler Impl.
  */
 public class JDKInvocationHandler implements java.lang.reflect.InvocationHandler {
 

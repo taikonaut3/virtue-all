@@ -15,7 +15,8 @@ import java.util.Objects;
 import static io.virtue.common.constant.Components.DEFAULT;
 
 /**
- * must open virtue-registry
+ * Default ServiceDiscovery.
+ * <p>Deduplication based on address.</p>
  */
 @ServiceProvider(DEFAULT)
 public class DefaultServiceDiscovery implements ServiceDiscovery {

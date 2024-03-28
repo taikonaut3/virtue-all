@@ -3,7 +3,7 @@ package io.virtue.rpc.support;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
-import io.virtue.common.util.ReflectUtil;
+import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
 import io.virtue.core.Virtue;
@@ -30,9 +30,9 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
 
     private final T target;
 
-    private MethodAccess methodAccess;
+    private final MethodAccess methodAccess;
 
-    private Map<Method, Integer> methodIndex;
+    private final Map<Method, Integer> methodIndex;
 
     private String remoteServiceName;
 
@@ -40,14 +40,17 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     public ComplexRemoteService(Virtue virtue, T target) {
         super(virtue);
         AssertUtil.notNull(target);
-        AssertUtil.condition(checkRemoteService(target.getClass()), "remoteService this Method Only support @RemoteService modifier's Object");
+        AssertUtil.condition(checkRemoteService(target.getClass()),
+                "remoteService this Method Only support @RemoteService modifier's Object");
         this.target = target;
         this.remoteServiceClass = (Class<T>) target.getClass();
+        this.methodIndex = new HashMap<>();
+        this.methodAccess = MethodAccess.get(target.getClass());
         init();
 
     }
 
-    public static boolean checkRemoteService(Class<?> remoteServiceClass) {
+    private static boolean checkRemoteService(Class<?> remoteServiceClass) {
         return remoteServiceClass.isAnnotationPresent(REMOTE_SERVICE_CLASS);
     }
 
@@ -55,14 +58,12 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     public void init() {
         // parse @RemoteService
         parseRemoteService();
-        methodIndex = new HashMap<>();
-        methodAccess = MethodAccess.get(target.getClass());
         // parse ServerCaller
         parseServerCaller();
     }
 
     private void parseRemoteService() {
-        io.virtue.core.annotation.RemoteService service = remoteServiceClass.getAnnotation(REMOTE_SERVICE_CLASS);
+        var service = remoteServiceClass.getAnnotation(REMOTE_SERVICE_CLASS);
         remoteApplication = virtue.applicationName();
         remoteServiceName = service.value();
         proxy = service.proxy();
@@ -71,15 +72,15 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
 
     private void parseServerCaller() {
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
-            InvokerFactory factoryProvider = ReflectUtil.findAnnotation(method, InvokerFactory.class);
+            InvokerFactory factoryProvider = ReflectionUtil.findAnnotation(method, InvokerFactory.class);
             if (factoryProvider != null) {
-                io.virtue.core.InvokerFactory invokerFactory = ExtensionLoader.loadService(io.virtue.core.InvokerFactory.class, factoryProvider.value());
-                Callee<?> caller = invokerFactory.createCallee(method, this);
-                if (caller != null) {
-                    invokers.put(method, caller);
-                    addInvokerMapping(caller.protocol(), caller.path(), caller);
+                var invokerFactory = ExtensionLoader.loadService(io.virtue.core.InvokerFactory.class, factoryProvider.value());
+                Callee<?> callee = invokerFactory.createCallee(method, this);
+                if (callee != null) {
+                    invokers.put(method, callee);
+                    addInvokerMapping(callee.protocol(), callee.path(), callee);
                     methodIndex.put(method, methodAccess.getIndex(method.getName(), method.getParameterTypes()));
-                    virtue.configManager().serverConfigManager().neededOpenProtocol(caller.protocol());
+                    virtue.configManager().serverConfigManager().neededOpenProtocol(callee.protocol());
                 }
             }
         }
@@ -88,7 +89,7 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     @Override
     public Object invokeMethod(Method method, Object[] args) {
         Integer methodIndex = this.methodIndex.get(method);
-        return methodAccess.invoke(target,methodIndex,args);
+        return methodAccess.invoke(target, methodIndex, args);
     }
 
     @Override

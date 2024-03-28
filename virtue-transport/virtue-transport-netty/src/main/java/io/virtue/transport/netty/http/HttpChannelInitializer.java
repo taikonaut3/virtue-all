@@ -12,7 +12,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
- * Initializes the channel of Netty for HTTP Codec
+ * Initializes the channel of Netty for HTTP Codec.
  */
 public class HttpChannelInitializer extends ChannelInitializer<SocketChannel> {
 

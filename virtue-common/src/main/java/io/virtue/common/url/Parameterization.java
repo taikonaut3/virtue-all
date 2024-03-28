@@ -1,7 +1,7 @@
 package io.virtue.common.url;
 
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.util.ReflectUtil;
+import io.virtue.common.util.ReflectionUtil;
 import io.virtue.common.util.StringUtil;
 
 import java.lang.reflect.Field;
@@ -23,7 +23,7 @@ public interface Parameterization {
      */
     default Map<String, String> parameterization() {
         HashMap<String, String> map = new HashMap<>();
-        List<Field> fields = ReflectUtil.getAllFields(this.getClass());
+        List<Field> fields = ReflectionUtil.getAllFields(this.getClass());
         for (Field field : fields) {
             if (field.isAnnotationPresent(Parameter.class)) {
                 String key = field.getAnnotation(Parameter.class).value();

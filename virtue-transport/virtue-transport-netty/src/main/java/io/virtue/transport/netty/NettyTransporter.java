@@ -12,8 +12,11 @@ import io.virtue.transport.server.Server;
 
 import static io.virtue.common.constant.Components.Transport.NETTY;
 
+/**
+ * Base on netty's transporter.
+ */
 @ServiceProvider(NETTY)
-public final class NettyTransport implements Transporter {
+public final class NettyTransporter implements Transporter {
 
     @Override
     public Client connect(URL url, ChannelHandler handler, Codec codec) {

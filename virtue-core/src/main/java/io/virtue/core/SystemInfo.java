@@ -11,9 +11,12 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Map;
 
-@Accessors(fluent = true)
+/**
+ * SystemInfo.
+ */
 @Data
 @ToString
+@Accessors(fluent = true)
 public class SystemInfo {
 
     private double cpuUsage;
@@ -48,6 +51,12 @@ public class SystemInfo {
                 .sum();
     }
 
+    /**
+     * Convert map to SystemInfo.
+     *
+     * @param map
+     * @return
+     */
     public static SystemInfo valueOf(Map<String, String> map) {
         SystemInfo systemInfo = new SystemInfo();
         systemInfo.cpuUsage(Double.parseDouble(map.get("cpuUsage")));
@@ -58,6 +67,11 @@ public class SystemInfo {
         return systemInfo;
     }
 
+    /**
+     * SystemInfo to map.
+     *
+     * @return
+     */
     public Map<String, String> toMap() {
         return Map.of("cpuUsage", String.valueOf(cpuUsage),
                 "memoryUsage", String.valueOf(memoryUsage),

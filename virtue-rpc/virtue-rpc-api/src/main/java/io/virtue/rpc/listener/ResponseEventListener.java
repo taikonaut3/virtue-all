@@ -14,12 +14,15 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
+/**
+ * Responsible for handling the response event.
+ */
 public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseEventListener.class);
 
     public ResponseEventListener() {
-        super(RpcThreadPool.defaultCPUExecutor("handle-response"));
+        super(RpcThreadPool.defaultCPUExecutor("RequestHandler"));
     }
 
     @Override

@@ -4,11 +4,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * 生成工具类
+ * Utility class for generate operations.
  */
-public interface GenerateUtil {
+public final class GenerateUtil {
 
-    static String generateKey(Method method) {
+    /**
+     * The method that generates the method key.
+     *
+     * @param method
+     * @return
+     */
+    public static String generateKey(Method method) {
         StringBuilder builder = new StringBuilder();
         String name = method.getName();
         builder.append(name);
@@ -26,7 +32,14 @@ public interface GenerateUtil {
         return builder.toString();
     }
 
-    static String generateInvokerMapping(String protocol, String path) {
+    /**
+     * The method that generates the invoker map.
+     *
+     * @param protocol
+     * @param path
+     * @return
+     */
+    public static String generateInvokerMapping(String protocol, String path) {
         return protocol + ":" + path;
     }
 }

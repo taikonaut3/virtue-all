@@ -4,7 +4,8 @@ import io.virtue.event.EventListener;
 import io.virtue.rpc.objectpool.PooledObject;
 
 /**
- * @author Chang Liu
+ *
+ * @param <S>
  */
 public abstract class PooledObjectListener<S extends PooledObjectEvent<PooledObject<?>>> implements EventListener<S> {
 }

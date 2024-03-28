@@ -19,10 +19,11 @@ public interface Router {
     AttributeKey<Router> ATTRIBUTE_KEY = AttributeKey.get(Key.ROUTER);
 
     /**
-     * Routes the list of URLs based on the given call arguments.
+     * Routes the list of URLs based on the given invocation and server urls.
      *
-     * @param invocation the invocation to be performed
-     * @return the list of routed urls.
+     * @param invocation
+     * @param urls
+     * @return
      */
     List<URL> route(Invocation invocation, List<URL> urls);
 }

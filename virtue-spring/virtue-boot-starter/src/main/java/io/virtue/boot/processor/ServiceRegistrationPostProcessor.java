@@ -5,6 +5,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.cloud.client.serviceregistry.AbstractAutoServiceRegistration;
 import org.springframework.lang.NonNull;
 
+/**
+ * ServiceRegistration PostProcessor.
+ */
 public class ServiceRegistrationPostProcessor extends VirtueAdapterPostProcessor {
 
     @Override

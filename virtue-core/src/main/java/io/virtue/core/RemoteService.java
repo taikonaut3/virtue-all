@@ -23,6 +23,14 @@ public interface RemoteService<T> extends InvokerContainer {
      */
     String name();
 
+    /**
+     * Invokes the specified method.
+     * <p>It is not recommended to use it directly{@link Method#invoke(Object, Object...)}</p>
+     *
+     * @param method
+     * @param args
+     * @return
+     */
     Object invokeMethod(Method method, Object[] args);
 
     /**

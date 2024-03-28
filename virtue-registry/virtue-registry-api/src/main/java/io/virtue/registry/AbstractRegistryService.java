@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Abstract RegistryService.
+ */
 public abstract class AbstractRegistryService implements RegistryService {
 
     protected final Map<String, List<String>> discoverHealthServices = new ConcurrentHashMap<>();
@@ -29,14 +32,14 @@ public abstract class AbstractRegistryService implements RegistryService {
     public List<URL> discover(URL url) {
         String serviceName = serviceName(url);
         List<URL> urls;
-        // 1、判断是否缓存中是否有可用的服务
+        // 1、Determine whether a service is available in the cache
         List<String> serverUrls = discoverHealthServices.get(serviceName);
         if (serverUrls == null || serverUrls.isEmpty()) {
             boolean noSubscribe = serverUrls == null;
-            // 2、注册中心中发现可用服务
+            // 2、Available services are found in the registry
             urls = doDiscover(url);
             serverUrls = urls.stream().map(URL::toString).toList();
-            // 3、订阅服务的变更
+            // 3、Changes to Subscription Services
             if (noSubscribe) subscribeService(url);
             discoverHealthServices.put(serviceName, serverUrls);
         } else {
@@ -48,7 +51,7 @@ public abstract class AbstractRegistryService implements RegistryService {
         return urls;
     }
 
-    public Map<String, String> metaInfo(URL url) {
+    protected Map<String, String> metaInfo(URL url) {
         Virtue virtue = Virtue.get(url);
         Map<String, String> systemInfo = new SystemInfo(virtue).toMap();
         HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
@@ -57,12 +60,12 @@ public abstract class AbstractRegistryService implements RegistryService {
         return registryMeta;
     }
 
-    public String instanceId(URL url) {
+    protected String instanceId(URL url) {
         String application = url.getParam(Key.APPLICATION);
         return application + "-" + url.protocol() + ":" + url.port();
     }
 
-    public String serviceName(URL url) {
+    protected String serviceName(URL url) {
         String applicationName = Virtue.get(url).applicationName();
         applicationName = StringUtil.isBlank(applicationName) ? this.getClass().getModule().getName() : applicationName;
         return url.getParam(Key.APPLICATION, applicationName);

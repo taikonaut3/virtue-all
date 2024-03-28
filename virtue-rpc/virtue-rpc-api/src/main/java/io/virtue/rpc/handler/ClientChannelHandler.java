@@ -3,9 +3,12 @@ package io.virtue.rpc.handler;
 import io.virtue.common.exception.RpcException;
 import io.virtue.rpc.event.ResponseEvent;
 import io.virtue.transport.Response;
-import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
+import io.virtue.transport.channel.ChannelHandlerAdapter;
 
+/**
+ * Client ChannelHandler.
+ */
 public final class ClientChannelHandler extends ChannelHandlerAdapter {
 
     @Override

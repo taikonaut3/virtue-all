@@ -9,7 +9,7 @@ import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.NetUtil;
-import io.virtue.common.util.ReflectUtil;
+import io.virtue.common.util.ReflectionUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
@@ -101,7 +101,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     @Override
     public void init() {
-        Options ops = getOptions();
+        Options ops = options();
         // check
         checkAsyncReturnType(method);
         checkDirectUrl(ops);
@@ -148,14 +148,11 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         }
     }
 
-    private Options getOptions() {
+    private Options options() {
         if (method.isAnnotationPresent(Options.class)) {
             return method.getAnnotation(Options.class);
         }
-        if (options() != null) {
-            return options();
-        }
-        return ReflectUtil.getDefaultInstance(Options.class);
+        return ReflectionUtil.getDefaultInstance(Options.class);
     }
 
     @Override
@@ -338,7 +335,4 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         return clientConfig;
     }
 
-    protected Options options() {
-        return null;
-    }
 }

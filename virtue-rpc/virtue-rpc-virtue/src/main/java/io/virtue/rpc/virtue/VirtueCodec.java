@@ -3,7 +3,7 @@ package io.virtue.rpc.virtue;
 import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.CodecException;
-import io.virtue.common.exception.SourceException;
+import io.virtue.common.exception.ResourceException;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.bytes.ByteReader;
@@ -12,6 +12,8 @@ import io.virtue.core.Callee;
 import io.virtue.core.Virtue;
 import io.virtue.core.support.TransferableInvocation;
 import io.virtue.rpc.RpcFuture;
+import io.virtue.rpc.support.HeapByteReader;
+import io.virtue.rpc.support.HeapByteWriter;
 import io.virtue.rpc.virtue.envelope.VirtueEnvelope;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
@@ -113,9 +115,7 @@ public class VirtueCodec implements Codec {
     }
 
     private Request decodeRequest(byte[] bytes) throws Exception {
-        ByteReader byteReader = ExtensionLoader.load(ByteReader.class)
-                .conditionOnConstructor(new Object[]{bytes})
-                .getDefault();
+        ByteReader byteReader = new HeapByteReader(bytes);
         // magic
         int magic = byteReader.readInt();
         if (magic != MAGIC_REQ) {
@@ -131,9 +131,7 @@ public class VirtueCodec implements Codec {
     }
 
     private Response decodeResponse(byte[] bytes) throws Exception {
-        ByteReader byteReader = ExtensionLoader.load(ByteReader.class)
-                .conditionOnConstructor(new Object[]{bytes})
-                .getDefault();
+        ByteReader byteReader = new HeapByteReader(bytes);
         // magic
         int magic = byteReader.readInt();
         if (magic != MAGIC_RES) {
@@ -161,9 +159,7 @@ public class VirtueCodec implements Codec {
         byte[] message = encodeBody(virtueEnvelope);
         /* write */
         int capacity = computeCapacity(urlBytes, message);
-        ByteWriter byteWriter = ExtensionLoader.load(ByteWriter.class)
-                .conditionOnConstructor(capacity)
-                .getDefault();
+        ByteWriter byteWriter = new HeapByteWriter(capacity);
         byteWriter.writeInt(magic);
         if (responseCode != null) {
             byteWriter.writeByte(responseCode);
@@ -230,7 +226,7 @@ public class VirtueCodec implements Codec {
             Virtue virtue = Virtue.get(url);
             Callee<?> callee = virtue.configManager().remoteServiceManager().getServerCaller(url.protocol(), url.path());
             if (callee == null) {
-                throw new SourceException("Can't find  ProviderCaller[" + url.path() + "]");
+                throw new ResourceException("Can't find  ProviderCaller[" + url.path() + "]");
             }
             invocation = new TransferableInvocation(url, callee, invocation.args());
             Object[] args = converter.convert(invocation.args(), invocation.parameterTypes());

@@ -58,7 +58,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
                 }
             }
             // Open Server
-            Protocol<?, ?> protocol = ExtensionLoader.loadService(Protocol.class, serverUrl.protocol());
+            var protocol = ExtensionLoader.loadService(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
             logger.info(
                     "Opened Server[{}] for Protocol[{}] and bind Port(s) {}",

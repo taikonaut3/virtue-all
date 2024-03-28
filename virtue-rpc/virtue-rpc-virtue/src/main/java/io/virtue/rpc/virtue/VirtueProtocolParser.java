@@ -8,7 +8,7 @@ import io.virtue.transport.Request;
 import io.virtue.transport.Response;
 
 /**
- * VirtueProtocolParser
+ * Virtue ProtocolParser.
  */
 public class VirtueProtocolParser implements ProtocolParser {
 

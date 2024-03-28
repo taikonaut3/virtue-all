@@ -1,11 +1,13 @@
 package io.virtue.registry;
 
-import io.virtue.common.exception.ConnectException;
 import io.virtue.common.url.URL;
 import io.virtue.core.Closeable;
 
 import java.util.List;
 
+/**
+ * RegistryService For service registration and discovery.
+ */
 public interface RegistryService extends Closeable {
 
 
@@ -14,7 +16,7 @@ public interface RegistryService extends Closeable {
      *
      * @param url The URL of the registry to connect to.
      */
-    void connect(URL url) throws ConnectException;
+    void connect(URL url);
 
     /**
      * Registers the specified URL with the registry.

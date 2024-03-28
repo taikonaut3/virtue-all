@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * Based on the GZIP compression algorithm.
+ */
 @ServiceProvider(Components.Compression.GZIP)
 public class GzipCompression implements Compression {
 

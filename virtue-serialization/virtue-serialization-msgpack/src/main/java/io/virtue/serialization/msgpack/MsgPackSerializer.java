@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
 import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
 /**
- * MsgPackSerializer
+ * MessagePack Serializer.
  */
 @ServiceProvider(MSGPACK)
 public class MsgPackSerializer implements Serializer {

@@ -1,5 +1,8 @@
 package io.virtue.common.exception;
 
+/**
+ * Connect Exception.
+ */
 public class ConnectException extends NetWorkException {
 
     public ConnectException(Throwable t) {

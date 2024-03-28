@@ -4,7 +4,6 @@ import io.virtue.common.constant.Components;
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.RemoteService;
-import io.virtue.core.annotation.Config;
 import io.virtue.rpc.support.AbstractCallee;
 import io.virtue.rpc.virtue.config.VirtueCallable;
 import lombok.Getter;
@@ -15,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.List;
 
-
+/**
+ * Virtue protocol Callee.
+ */
 @Getter
 @Accessors(fluent = true)
 public class VirtueCallee extends AbstractCallee<VirtueCallable> {
@@ -35,11 +36,6 @@ public class VirtueCallee extends AbstractCallee<VirtueCallable> {
         this.remoteServiceName = remoteService().name();
         this.callMethod = StringUtil.isBlank(parsedAnnotation.name())
                 ? GenerateUtil.generateKey(method()) : parsedAnnotation.name();
-    }
-
-    @Override
-    protected Config config() {
-        return parsedAnnotation.config();
     }
 
     @Override

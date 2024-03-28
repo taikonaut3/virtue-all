@@ -8,6 +8,9 @@ import io.virtue.event.AbstractEvent;
 import io.virtue.transport.Response;
 import lombok.Getter;
 
+/**
+ * ResponseEvent.
+ */
 @Getter
 public class ResponseEvent extends AbstractEvent<Response> {
 
@@ -16,7 +19,7 @@ public class ResponseEvent extends AbstractEvent<Response> {
     public ResponseEvent(Response response) {
         super(response);
         URL url = response.url();
-        Protocol<?,?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
+        var protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
         this.body = protocolParser.parseResponseBody(response);
     }

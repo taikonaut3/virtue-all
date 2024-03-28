@@ -1,6 +1,8 @@
 package io.virtue.common.exception;
 
-
+/**
+ * Compression Exception.
+ */
 public class CompressionException extends RpcException {
 
     public CompressionException(String msg, Throwable e) {

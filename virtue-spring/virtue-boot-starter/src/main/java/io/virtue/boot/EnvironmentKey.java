@@ -1,5 +1,8 @@
 package io.virtue.boot;
 
+/**
+ * Application environment key.
+ */
 public interface EnvironmentKey {
 
     String SPRING_APPLICATION_NAME = "spring.application.name";

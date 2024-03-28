@@ -8,7 +8,7 @@ import io.virtue.core.filter.Filter;
 import java.util.List;
 
 /**
- * Filter Manager
+ * Filter Manager.
  */
 public class FilterManager extends AbstractRuleManager<Filter> {
 
@@ -18,8 +18,8 @@ public class FilterManager extends AbstractRuleManager<Filter> {
 
     @Override
     protected void doExecuteRules(Filter filter, List<Callee<?>> matchedCallees, List<Caller<?>> matchedCallers) {
-        matchedCallees.forEach(item->item.addFilter(filter));
-        matchedCallers.forEach(item->item.addFilter(filter));
+        matchedCallees.forEach(item -> item.addFilter(filter));
+        matchedCallers.forEach(item -> item.addFilter(filter));
     }
 
 }

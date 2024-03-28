@@ -9,7 +9,7 @@ import io.virtue.common.spi.ServiceProvider;
 import io.virtue.serialization.Serializer;
 
 /**
- * 测试出 fury的序列化并不理想
+ * 测试出 fury的序列化并不理想.
  */
 @ServiceProvider(Components.Serialization.FURY)
 public class FurySerializer implements Serializer {

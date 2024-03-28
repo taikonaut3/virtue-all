@@ -1,13 +1,16 @@
 package io.virtue.boot.processor;
 
 import io.virtue.boot.EnvironmentKey;
-import io.virtue.common.exception.SourceException;
+import io.virtue.common.exception.ResourceException;
 import io.virtue.core.Virtue;
 import org.springframework.beans.BeansException;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
+/**
+ * Virtue PostProcessor.
+ */
 public class VirtuePostProcessor extends VirtueAdapterPostProcessor {
 
     @Override
@@ -18,7 +21,7 @@ public class VirtuePostProcessor extends VirtueAdapterPostProcessor {
             if (!StringUtils.hasText(applicationName)) {
                 applicationName = environment.getProperty(EnvironmentKey.SPRING_APPLICATION_NAME);
                 if (!StringUtils.hasText(applicationName)) {
-                    throw new SourceException("缺少application-name");
+                    throw new ResourceException("缺少application-name");
                 }
             }
             virtue.applicationName(applicationName);

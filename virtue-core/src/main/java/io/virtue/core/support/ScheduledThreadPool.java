@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import static io.virtue.common.constant.Components.DEFAULT;
 
+/**
+ * Base on {@link ScheduledExecutorService}.
+ */
 @ServiceProvider(DEFAULT)
 public class ScheduledThreadPool implements Scheduler {
     private final ScheduledExecutorService executorService;

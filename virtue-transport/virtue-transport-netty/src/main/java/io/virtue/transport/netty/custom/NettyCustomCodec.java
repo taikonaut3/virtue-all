@@ -12,7 +12,7 @@ import io.virtue.common.constant.Key;
 import lombok.Getter;
 
 /**
- * Read the Envelope by data length
+ * Read the Envelope by data length.
  */
 public final class NettyCustomCodec {
 
@@ -45,7 +45,7 @@ public final class NettyCustomCodec {
 
     class NettyDecoder extends LengthFieldBasedFrameDecoder {
 
-        public NettyDecoder(int maxFrameLength) {
+         NettyDecoder(int maxFrameLength) {
             // First int is total length
             super(maxFrameLength, 0, 4, 0, 4, true);
         }

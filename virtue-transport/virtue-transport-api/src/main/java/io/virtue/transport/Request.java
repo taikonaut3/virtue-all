@@ -11,6 +11,9 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Rpc request.
+ */
 @Data
 @Accessors(fluent = true)
 public class Request implements Envelope {

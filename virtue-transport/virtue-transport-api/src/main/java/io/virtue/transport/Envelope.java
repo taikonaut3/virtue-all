@@ -5,13 +5,24 @@ import io.virtue.common.url.URL;
 
 import java.io.Serializable;
 
-
+/**
+ * The exchange message's envelope .
+ */
 public interface Envelope extends Serializable {
 
     long serialVersionUID = 1L;
 
+    /**
+     * Get url.
+     *
+     * @return
+     */
     URL url();
 
+    /**
+     * Get unique id.
+     * @return
+     */
     default Long id() {
         return url().getLongParam(Key.UNIQUE_ID);
     }

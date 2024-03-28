@@ -7,6 +7,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.NonNull;
 
+/**
+ * Get BeanFactory adapter.
+ */
 public abstract class VirtueAdapterPostProcessor implements BeanFactoryPostProcessor, BeanPostProcessor {
 
     protected ConfigurableListableBeanFactory beanFactory;

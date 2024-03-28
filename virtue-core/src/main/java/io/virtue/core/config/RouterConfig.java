@@ -5,9 +5,12 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.intellij.lang.annotations.Language;
 
-@Accessors(fluent = true, chain = true)
+/**
+ * Router config.
+ */
 @Getter
 @ToString
+@Accessors(fluent = true, chain = true)
 public class RouterConfig {
 
     private final String urlRegex;
@@ -18,6 +21,12 @@ public class RouterConfig {
         this.urlRegex = urlRegex;
     }
 
+    /**
+     * Match target regex.
+     *
+     * @param matchTargetRegex
+     * @return
+     */
     public RouterConfig match(@Language("RegExp") String matchTargetRegex) {
         this.matchTargetRegex = matchTargetRegex;
         return this;

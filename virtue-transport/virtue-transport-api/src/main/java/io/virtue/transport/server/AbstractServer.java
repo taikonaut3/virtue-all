@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
+/**
+ * Abstract server.
+ */
 public abstract class AbstractServer extends EndpointAdapter implements Server {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractServer.class);

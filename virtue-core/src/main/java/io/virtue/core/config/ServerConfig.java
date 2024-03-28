@@ -10,11 +10,11 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * Server Config
+ * Server Config.
  */
-@Accessors(fluent = true, chain = true)
 @Getter
 @Setter
+@Accessors(fluent = true, chain = true)
 public class ServerConfig extends UrlTypeConfig {
 
     @Parameter(Key.USERNAME)

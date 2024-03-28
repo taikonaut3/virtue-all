@@ -1,19 +1,14 @@
 package io.virtue.rpc.support;
 
-import io.virtue.common.spi.Scope;
-import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.util.bytes.ByteWriter;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static io.virtue.common.constant.Components.ByteWriter.NIO_HEAP;
-
 /**
  * Use HeapByteBuffer.
  */
-@ServiceProvider(value = NIO_HEAP, scope = Scope.PROTOTYPE)
 public class HeapByteWriter implements ByteWriter {
 
     private final ByteBuffer buffer;

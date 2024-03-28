@@ -1,7 +1,7 @@
 package io.virtue.rpc.objectpool;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.exception.SourceException;
+import io.virtue.common.exception.ResourceException;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.url.URL;
 import io.virtue.transport.Transporter;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * ClientPool
+ * ClientPool.
  */
 public class ClientPool {
 
@@ -45,7 +45,7 @@ public class ClientPool {
             return getCustom(url);
         } catch (Exception e) {
             logger.error("Get Client fail for: " + url, e);
-            throw new SourceException("Get Client fail for: " + url);
+            throw new ResourceException("Get Client fail for: " + url);
         }
     }
 
@@ -66,6 +66,11 @@ public class ClientPool {
         return client;
     }
 
+    /**
+     * Return the client.
+     *
+     * @param client
+     */
     public void returnClient(Client client) {
         clientPool.returnObject(client);
     }

@@ -10,10 +10,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Accessors(fluent = true, chain = true)
+/**
+ * Client Config.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
+@Accessors(fluent = true, chain = true)
 public class ClientConfig extends UrlTypeConfig {
 
     @Parameter(Key.SSL)

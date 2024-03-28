@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * ServerConfig Manager
+ * ServerConfig Manager.
  */
 public class ServerConfigManager extends AbstractManager<ServerConfig> {
 
@@ -30,12 +30,22 @@ public class ServerConfigManager extends AbstractManager<ServerConfig> {
         register(config.type(), config);
     }
 
+    /**
+     * Add a protocol type that needs to be opened.
+     *
+     * @param protocol
+     */
     public void neededOpenProtocol(String protocol) {
         if (!neededOpenProtocols.contains(protocol)) {
             neededOpenProtocols.add(protocol);
         }
     }
 
+    /**
+     * By added the protocol type, get the ServerConfig and Open Server.
+     *
+     * @return
+     */
     public List<URL> neededOpenServer() {
         ArrayList<URL> urls = new ArrayList<>();
         for (String neededOpenProtocol : neededOpenProtocols) {

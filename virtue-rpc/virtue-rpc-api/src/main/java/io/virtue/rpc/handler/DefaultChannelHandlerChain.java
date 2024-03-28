@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * DefaultChannelHandlerChain.
+ */
 public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements ChannelHandlerChain {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultChannelHandlerChain.class);
@@ -91,9 +94,9 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
         URL url = channel.attribute(URL.ATTRIBUTE_KEY).get();
         if (url != null) {
             String envelope = url.getParam(Key.ENVELOPE);
-            Event<?> exceptionEvent = envelope.equals(Key.REQUEST) ?
-                    new ServerHandlerExceptionEvent(channel, cause) :
-                    new ClientHandlerExceptionEvent(channel, cause);
+            Event<?> exceptionEvent = envelope.equals(Key.REQUEST)
+                    ? new ServerHandlerExceptionEvent(channel, cause)
+                    : new ClientHandlerExceptionEvent(channel, cause);
             getEventDispatcher(url).dispatchEvent(exceptionEvent);
         }
 //        channels.remove(NetUtil.getAddress(channel.remoteAddress()));

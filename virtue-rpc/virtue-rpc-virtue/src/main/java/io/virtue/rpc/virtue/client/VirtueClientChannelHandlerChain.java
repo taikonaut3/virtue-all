@@ -5,10 +5,7 @@ import io.virtue.rpc.handler.ClientHeartBeatChannelHandler;
 import io.virtue.rpc.handler.DefaultChannelHandlerChain;
 
 /**
- * +------------------------------------------ClientChannelHandlerChain------------------------------------------+
- * +----------------------------------+----------------------------------------+---------------------------------+
- * |{@link ClientHeartBeatChannelHandler} -> {@link virtueClientConvertChannelHandler} -> {@link ClientChannelHandler} |
- * +----------------------------------+----------------------------------------+---------------------------------+
+ * VirtueClientChannelHandlerChain.
  */
 public class VirtueClientChannelHandlerChain extends DefaultChannelHandlerChain {
 

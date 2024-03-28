@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Follow-up consideration for extensions
+ * Follow-up consideration for extensions.
  */
 public class HeartBeatChannelHandler extends ChannelHandlerAdapter {
 
@@ -26,6 +26,12 @@ public class HeartBeatChannelHandler extends ChannelHandlerAdapter {
         super.heartBeat(channel, event);
     }
 
+    /**
+     * Add watch event key.
+     *
+     * @param key
+     * @return
+     */
     public HeartBeatChannelHandler addWatchEventKey(AttributeKey<AtomicInteger> key) {
         watchEventKeys.add(key);
         return this;

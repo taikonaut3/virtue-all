@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import static io.virtue.common.constant.Components.FaultTolerance.FAIL_RETRY;
 
+/**
+ * FailRetry when an exception occurs in the RPC call.
+ */
 @ServiceProvider(FAIL_RETRY)
 public class FailRetry extends AbstractFaultTolerance {
 
@@ -24,7 +27,7 @@ public class FailRetry extends AbstractFaultTolerance {
             try {
                 return invocation.invoke();
             } catch (Exception e) {
-                logger.error("An exception occurred in the calling service: " + e.getMessage() + ",Start retry: " + start , e);
+                logger.error("An exception occurred in the calling service: " + e.getMessage() + ",Start retry: " + start, e);
             }
         }
         throw new RpcException("An exception occurred in the calling service,Retry times: " + retries);

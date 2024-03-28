@@ -11,8 +11,8 @@ import lombok.experimental.Accessors;
  * @Author WenBo Zhou
  * @Date 2024/2/29 13:34
  */
-@Accessors(fluent = true)
 @Getter
+@Accessors(fluent = true)
 public class HttpRequest extends HttpEnvelope {
 
     private final static String VERSION = Components.Protocol.HTTP1;

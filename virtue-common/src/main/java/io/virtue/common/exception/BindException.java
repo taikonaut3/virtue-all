@@ -1,5 +1,8 @@
 package io.virtue.common.exception;
 
+/**
+ * Bind Exception.
+ */
 public class BindException extends NetWorkException {
 
     public BindException(String msg, Throwable e) {

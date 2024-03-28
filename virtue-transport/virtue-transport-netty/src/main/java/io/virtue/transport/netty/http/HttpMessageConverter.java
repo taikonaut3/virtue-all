@@ -13,10 +13,10 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
- * EnvelopeConverter
+ * EnvelopeConverter.
  */
-@Accessors(fluent = true)
 @Getter
+@Accessors(fluent = true)
 public final class HttpMessageConverter {
 
     private final ChannelHandler requestConverter = new RequestConverter();

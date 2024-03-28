@@ -4,6 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Rpc Exception.
+ */
 public class RpcException extends RuntimeException {
 
     public RpcException(String msg, Throwable e) {
@@ -18,6 +21,12 @@ public class RpcException extends RuntimeException {
         super(e);
     }
 
+    /**
+     * Reverse unwrap exception until the root exception is found.
+     *
+     * @param wrapped
+     * @return
+     */
     public static RpcException unwrap(Throwable wrapped) {
         Throwable unwrapped = wrapped;
 

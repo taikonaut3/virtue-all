@@ -2,6 +2,9 @@ package io.virtue.transport.endpoint;
 
 import java.net.InetSocketAddress;
 
+/**
+ * EndpointAdapter.
+ */
 public class EndpointAdapter implements Endpoint {
 
     protected InetSocketAddress address;

@@ -43,7 +43,7 @@ public interface ChannelHandler {
     void caught(Channel channel, Throwable cause) throws RpcException;
 
     /**
-     * Gets all access Current ChannelHandlerChain's Channel
+     * Gets all access Current ChannelHandlerChain's Channel.
      *
      * @return
      */

@@ -11,7 +11,7 @@ import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
 
 /**
- * Response status check
+ * Response status check.
  */
 public class ResponseChannelHandler extends ChannelHandlerAdapter {
 
@@ -37,7 +37,7 @@ public class ResponseChannelHandler extends ChannelHandlerAdapter {
 
     protected void onError(Channel channel, Response response) {
         URL url = response.url();
-        Protocol<?,?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
+        var protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
         Object body = protocolParser.parseResponseBody(response);
         throw new RpcException(String.valueOf(body));

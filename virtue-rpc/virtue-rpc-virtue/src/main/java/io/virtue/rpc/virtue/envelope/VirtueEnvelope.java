@@ -12,6 +12,9 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Virtue Envelope.
+ */
 @Getter
 @Setter
 @Accessors(fluent = true)
@@ -32,10 +35,20 @@ public abstract class VirtueEnvelope implements Serializable {
         body(body);
     }
 
+    /**
+     * Get serializer.
+     *
+     * @return
+     */
     public Serializer serializer() {
         return ExtensionLoader.loadService(Serializer.class, url.getParam(Key.SERIALIZATION));
     }
 
+    /**
+     * Get compression.
+     *
+     * @return
+     */
     public Compression compression() {
         return ExtensionLoader.loadService(Compression.class, url.getParam(Key.COMPRESSION));
     }

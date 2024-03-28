@@ -7,7 +7,6 @@ import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.core.Invocation;
 import io.virtue.core.Invoker;
 import io.virtue.rpc.RpcFuture;
-import io.virtue.rpc.http1_1.config.MethodParser;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 @Accessors(fluent = true)
 public class HttpParser implements ProtocolParser {
 
-    private MethodParser<?> methodParser = new DefaultWebMethodParser(this);
 
     @Override
     public Invocation parseRequestBody(Request request) {

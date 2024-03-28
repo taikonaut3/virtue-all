@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static io.virtue.common.constant.Components.DEFAULT;
 
 /**
- * DefaultRouter
+ * Default Router.
  */
 @ServiceProvider(DEFAULT)
 public class DefaultRouter implements Router {
@@ -32,7 +32,7 @@ public class DefaultRouter implements Router {
         if (!StringUtil.isBlank(group)) {
             urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.GROUP), group)).collect(Collectors.toList());
         }
-        if(!StringUtil.isBlank(version)){
+        if (!StringUtil.isBlank(version)) {
             urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.VIRTUE), version)).collect(Collectors.toList());
         }
         // filter by router rule

@@ -6,6 +6,9 @@ import io.virtue.common.url.URL;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * Rpc response.
+ */
 @Data
 @Accessors(fluent = true)
 public class Response implements Envelope {
@@ -34,13 +37,24 @@ public class Response implements Envelope {
         code(code);
     }
 
-
-    public static Response success(URL url,Object message){
-        return new Response(SUCCESS,url,message);
+    /**
+     * Create a success response.
+     * @param url
+     * @param message
+     * @return
+     */
+    public static Response success(URL url, Object message) {
+        return new Response(SUCCESS, url, message);
     }
 
-    public static Response error(URL url,Object message){
-        return new Response(ERROR,url,message);
+    /**
+     * Create a error response.
+     * @param url
+     * @param message
+     * @return
+     */
+    public static Response error(URL url, Object message) {
+        return new Response(ERROR, url, message);
     }
 
 }

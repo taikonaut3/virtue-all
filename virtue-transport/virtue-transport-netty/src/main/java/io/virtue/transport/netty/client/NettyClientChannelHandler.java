@@ -1,13 +1,16 @@
 package io.virtue.transport.netty.client;
 
-import io.virtue.transport.Response;
-import io.virtue.transport.channel.ChannelHandler;
-import io.virtue.transport.netty.NettyChannel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import io.virtue.transport.Response;
+import io.virtue.transport.channel.ChannelHandler;
+import io.virtue.transport.netty.NettyChannel;
 
+/**
+ * Base channel handler for netty client.
+ */
 @io.netty.channel.ChannelHandler.Sharable
 public final class NettyClientChannelHandler extends SimpleChannelInboundHandler<Response> {
 

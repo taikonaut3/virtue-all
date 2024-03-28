@@ -32,42 +32,42 @@ public interface Virtue extends Accessor, Lifecycle {
     AttributeKey<Virtue> ATTRIBUTE_KEY = AttributeKey.get(Key.VIRTUE);
 
     /**
-     * Virtue name
+     * Virtue name.
      *
      * @return name
      */
     String name();
 
     /**
-     * Get configManager
+     * Get configManager.
      *
      * @return configManager
      */
     ConfigManager configManager();
 
     /**
-     * Get eventDispatcher
+     * Get eventDispatcher.
      *
      * @return eventDispatcher
      */
     EventDispatcher eventDispatcher();
 
     /**
-     * Get scheduler
+     * Get scheduler.
      *
      * @return scheduler
      */
     Scheduler scheduler();
 
     /**
-     * Get monitorManager
+     * Get monitorManager.
      *
      * @return monitorManager
      */
     MonitorManager monitorManager();
 
     /**
-     * Create {@link RemoteCaller} and register into current instance
+     * Create {@link RemoteCaller} and register into current instance.
      *
      * @param target
      * @param <T>
@@ -76,7 +76,7 @@ public interface Virtue extends Accessor, Lifecycle {
     <T> Virtue proxy(Class<T> target);
 
     /**
-     * Create {@link RemoteService} and register into current instance
+     * Create {@link RemoteService} and register into current instance.
      *
      * @param target
      * @param <T>
@@ -85,7 +85,7 @@ public interface Virtue extends Accessor, Lifecycle {
     <T> Virtue wrap(T target);
 
     /**
-     * Get remoteCaller by target interface
+     * Get remoteCaller by target interface.
      *
      * @param target
      * @param <T>
@@ -95,9 +95,8 @@ public interface Virtue extends Accessor, Lifecycle {
         return configManager().remoteCallerManager().get(target);
     }
 
-
     /**
-     * Get remoteService by target class
+     * Get remoteService by target class.
      *
      * @param targetClass
      * @param <T>
@@ -108,7 +107,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Config Router rule
+     * Config Router rule.
      *
      * @param urlRegex
      * @param targetRegex
@@ -120,7 +119,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Register remoteService into current instance
+     * Register remoteService into current instance.
      *
      * @param remoteServices
      * @return current instance
@@ -132,8 +131,9 @@ public interface Virtue extends Accessor, Lifecycle {
                         .forEach(remoteService -> configManager().remoteServiceManager().register(remoteService)));
         return this;
     }
+
     /**
-     * Register remoteCaller into current instance
+     * Register remoteCaller into current instance.
      *
      * @param remoteCallers
      * @return current instance
@@ -147,7 +147,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Register clientConfig into current instance
+     * Register clientConfig into current instance.
      *
      * @param clientConfigs
      * @return current instance
@@ -161,7 +161,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Register serverConfig into current instance
+     * Register serverConfig into current instance.
      *
      * @param serverConfigs
      * @return current instance
@@ -175,7 +175,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Register registryConfig into current instance
+     * Register registryConfig into current instance.
      *
      * @param registryConfigs
      * @return current instance
@@ -189,7 +189,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Register filter into current instance
+     * Register filter into current instance.
      *
      * @param name
      * @param filter
@@ -201,7 +201,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Application Config
+     * Application Config.
      *
      * @param config
      * @return current instance
@@ -212,7 +212,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Get application-name
+     * Get application-name.
      *
      * @return application-name
      */
@@ -221,7 +221,8 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Set application-name
+     * Set application-name.
+     *
      * @param applicationName
      * @return current instance
      */
@@ -231,7 +232,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Get virtue instance from url
+     * Get virtue instance from url.
      *
      * @param url
      * @return Virtue instance
@@ -252,7 +253,7 @@ public interface Virtue extends Accessor, Lifecycle {
     }
 
     /**
-     * Get default virtue instance
+     * Get default virtue instance.
      *
      * @return default virtue instance
      * @see io.virtue.rpc.support.DefaultVirtue

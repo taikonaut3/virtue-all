@@ -1,7 +1,7 @@
 package io.virtue.common.url;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.exception.SourceException;
+import io.virtue.common.exception.ResourceException;
 import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.util.AssertUtil;
@@ -96,7 +96,7 @@ public class URL extends AbstractAccessor {
      */
     public static URL valueOf(String url) {
         if (url == null || url.trim().isEmpty()) {
-            throw new SourceException("url is null");
+            throw new ResourceException("url is null");
         }
         String[] strings = url.split("\\?");
         String fixed = strings[0];

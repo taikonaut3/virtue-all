@@ -6,7 +6,7 @@ import io.virtue.core.manager.FilterManager;
 import io.virtue.core.Virtue;
 
 /**
- * Filter can interceptor rpc call
+ * Filter can interceptor rpc call.
  */
 public interface Filter extends MatchRule<Filter> {
 

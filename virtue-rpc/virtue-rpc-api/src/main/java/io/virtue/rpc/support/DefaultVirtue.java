@@ -24,8 +24,7 @@ import java.util.List;
 import static io.virtue.common.constant.Components.DEFAULT;
 
 /**
- * Virtue application core
- * manage each core component
+ * Virtue application core manage each core component.
  */
 @Getter
 @Accessors(fluent = true)
@@ -96,6 +95,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
         attribute(Transporter.ATTRIBUTE_KEY).set(transporter);
     }
 
+    @Override
     public synchronized void start() {
         RpcContext.currentContext().attribute(ATTRIBUTE_KEY).set(this);
         for (VirtueConfiguration configuration : configurations) {

@@ -6,6 +6,9 @@ import io.virtue.rpc.event.HeartBeatEvent;
 import io.virtue.transport.channel.HeartBeatChannelHandler;
 import io.virtue.transport.channel.Channel;
 
+/**
+ * Server HeartBeatChannelHandler.
+ */
 public class ServerHeartBeatChannelHandler extends HeartBeatChannelHandler {
 
     public ServerHeartBeatChannelHandler() {

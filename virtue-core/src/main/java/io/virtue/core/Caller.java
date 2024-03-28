@@ -20,7 +20,7 @@ public interface Caller<T extends Annotation> extends Invoker<T>, Options {
     RemoteCaller<?> remoteCaller();
 
     /**
-     * Convert RegistryConfig to URL
+     * Convert RegistryConfig to URL.
      *
      * @return all registry url core
      */

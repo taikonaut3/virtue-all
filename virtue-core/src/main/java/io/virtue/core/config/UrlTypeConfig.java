@@ -9,9 +9,12 @@ import lombok.experimental.Accessors;
 
 import java.net.InetSocketAddress;
 
-@Accessors(fluent = true, chain = true)
+/**
+ * Url Type Config can convert URL.
+ */
 @Getter
 @Setter
+@Accessors(fluent = true, chain = true)
 public abstract class UrlTypeConfig implements Parameterization {
 
     protected String type;
@@ -22,12 +25,23 @@ public abstract class UrlTypeConfig implements Parameterization {
 
     protected int port;
 
+    /**
+     * Convert to URL.
+     *
+     * @return
+     */
     public abstract URL toUrl();
 
     public String getAddress() {
         return NetUtil.getAddress(host, port);
     }
 
+    /**
+     * Set address.
+     *
+     * @param address
+     * @return
+     */
     public UrlTypeConfig address(String address) {
         InetSocketAddress inetSocketAddress = NetUtil.toInetSocketAddress(address);
         this.host = inetSocketAddress.getHostString();

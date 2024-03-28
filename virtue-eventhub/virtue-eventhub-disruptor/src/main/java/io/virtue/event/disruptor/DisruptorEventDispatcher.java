@@ -21,7 +21,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
+import static io.virtue.common.util.StringUtil.simpleClassName;
 
+/**
+ * Disruptor based event dispatcher.
+ */
 @ServiceProvider(DISRUPTOR)
 public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
@@ -38,23 +42,23 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
     private void createDispatcher() {
         Disruptor<EventHolder<?>> disruptor = new Disruptor<>(EventHolder::new, bufferSize,
-                new RpcThreadFactory("event-disruptor"));
+                new RpcThreadFactory("EventDisruptor"));
         this.ringBuffer = disruptor.getRingBuffer();
         disruptor.handleEventsWith(this::handleEvent);
         disruptor.setDefaultExceptionHandler(new ExceptionHandler<>() {
             @Override
             public void handleEventException(Throwable ex, long sequence, EventHolder<?> event) {
-                logger.error(this.getClass().getSimpleName() + " Handle Event Error", ex);
+                logger.error(simpleClassName(this) + " Handle Event Error", ex);
             }
 
             @Override
             public void handleOnStartException(Throwable ex) {
-                logger.error(this.getClass().getSimpleName() + " Start Error", ex);
+                logger.error(simpleClassName(this) + " Start Error", ex);
             }
 
             @Override
             public void handleOnShutdownException(Throwable ex) {
-                logger.error(this.getClass().getSimpleName() + " Shutdown Error", ex);
+                logger.error(simpleClassName(this) + " Shutdown Error", ex);
             }
         });
         disruptor.start();
@@ -63,13 +67,13 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     @Override
     public <E extends Event<?>> void addListener(Class<E> eventType, EventListener<E> listener) {
         super.addListener(eventType, listener);
-        logger.debug("Register Listener[{}] listen Event[{}]", listener.getClass().getSimpleName(), eventType.getSimpleName());
+        logger.debug("Register Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
     }
 
     @Override
     public <E extends Event<?>> void removeListener(Class<E> eventType, EventListener<E> listener) {
         super.removeListener(eventType, listener);
-        logger.debug("Remove Listener[{}] listen Event[{}]", listener.getClass().getSimpleName(), eventType.getSimpleName());
+        logger.debug("Remove Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
     }
 
     @Override
@@ -79,12 +83,13 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
             EventHolder<E> holder = (EventHolder<E>) eventHolder;
             holder.event(event);
         });
-        logger.trace("DispatchEvent ({})", event.getClass().getSimpleName());
+        logger.trace("DispatchEvent ({})", simpleClassName(event));
     }
 
     @SuppressWarnings("unchecked")
     private <E extends Event<?>> void handleEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) {
         E event = holder.event();
+
         List<EventListener<?>> listeners = listenerMap.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
                 .flatMap(entry -> entry.getValue().stream())
@@ -94,8 +99,9 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
             if (listener.check(event)) {
                 try {
                     listener.onEvent(event);
+                    logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
                 } catch (Exception e) {
-                    logger.error("Handle Failed Event(" + event.getClass().getSimpleName() + ") current Listener ", e);
+                    logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
                     throw RpcException.unwrap(e);
                 }
             }
@@ -105,7 +111,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     @Getter
     @Setter
     @Accessors(fluent = true)
-    private static class EventHolder<E extends Event<?>> {
+    private static final class EventHolder<E extends Event<?>> {
         private E event;
     }
 

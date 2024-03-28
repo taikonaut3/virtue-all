@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
- * 启动 virtue
+ * Virtue Stater for Spring Boot.
  */
 public class SpringBootVirtueStarter implements ApplicationListener<ContextRefreshedEvent> {
 

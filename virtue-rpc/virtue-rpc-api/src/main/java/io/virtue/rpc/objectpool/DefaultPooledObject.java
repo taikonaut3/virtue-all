@@ -5,7 +5,8 @@ import io.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
 import io.virtue.rpc.objectpool.listener.PooledObjectInvalidListener;
 
 /**
- * @author Chang Liu
+ * DefaultPooledObject.
+ * @param <T>
  */
 public class DefaultPooledObject<T> extends AbstractPooledObject<T> {
 
@@ -23,6 +24,11 @@ public class DefaultPooledObject<T> extends AbstractPooledObject<T> {
         virtue.eventDispatcher().dispatchEvent(state.getEvent(this));
     }
 
+    /**
+     * Set virtue.
+     *
+     * @param virtue
+     */
     public void virtue(Virtue virtue) {
         this.virtue = virtue;
         synchronized (object) {

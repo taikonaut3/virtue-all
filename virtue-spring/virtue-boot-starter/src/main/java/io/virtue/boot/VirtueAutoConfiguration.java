@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * Virtue auto configuration.
+ */
 @EnableConfigurationProperties
 public class VirtueAutoConfiguration {
 

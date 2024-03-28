@@ -1,5 +1,13 @@
 package io.virtue.transport.netty.server;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.BindException;
@@ -10,15 +18,10 @@ import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyChannel;
 import io.virtue.transport.netty.ProtocolInitializer;
 import io.virtue.transport.server.AbstractServer;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.util.concurrent.DefaultThreadFactory;
 
+/**
+ * Base on netty server.
+ */
 public final class NettyServer extends AbstractServer {
 
     private ServerBootstrap bootstrap;

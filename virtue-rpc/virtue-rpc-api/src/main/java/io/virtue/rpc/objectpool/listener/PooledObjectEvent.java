@@ -4,8 +4,10 @@ import io.virtue.event.AbstractEvent;
 import io.virtue.rpc.objectpool.PooledObject;
 
 /**
- * @author Chang Liu
+ * PooledObjectEvent.
+ *
+ * @param <S>
  */
-public abstract class PooledObjectEvent<S extends PooledObject<?>> extends AbstractEvent<S>{
+public abstract class PooledObjectEvent<S extends PooledObject<?>> extends AbstractEvent<S> {
 
 }

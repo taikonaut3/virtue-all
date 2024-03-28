@@ -1,16 +1,16 @@
 package io.virtue.registry.consul;
 
+import io.vertx.core.Vertx;
+import io.vertx.ext.consul.*;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
-import io.virtue.common.exception.ConnectException;
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.Attribute;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Virtue;
 import io.virtue.registry.AbstractRegistryService;
-import io.vertx.core.Vertx;
-import io.vertx.ext.consul.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +21,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Based on vertx-consul’s RegistryService.
+ */
 public class ConsulRegistryService extends AbstractRegistryService {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsulRegistryService.class);
@@ -50,7 +53,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
     }
 
     @Override
-    public void connect(URL url) throws ConnectException {
+    public void connect(URL url) {
         try {
             ConsulClientOptions options = new ConsulClientOptions()
                     .setHost(url.host())
@@ -65,7 +68,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             consulClient = ConsulClient.create(vertx, options);
         } catch (Exception e) {
             logger.error("Connect to Consul: {} Fail", url.address());
-            throw new ConnectException(e);
+            throw RpcException.unwrap(e);
         }
     }
 
@@ -141,7 +144,8 @@ public class ConsulRegistryService extends AbstractRegistryService {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.nextResult().getList();
                 List<String> healthServerUrls = serviceEntries.stream()
-                        .filter(instance -> instance.aggregatedStatus() == CheckStatus.PASSING && instance.getService().getMeta().containsKey(Key.PROTOCOL))
+                        .filter(instance -> instance.aggregatedStatus() == CheckStatus.PASSING
+                                && instance.getService().getMeta().containsKey(Key.PROTOCOL))
                         .map(instance -> serviceEntryToUrl(instance.getService().getMeta().get(Key.PROTOCOL), instance).toString())
                         .toList();
                 discoverHealthServices.put(serviceName, healthServerUrls);

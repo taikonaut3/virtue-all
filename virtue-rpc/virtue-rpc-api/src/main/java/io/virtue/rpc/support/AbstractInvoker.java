@@ -6,7 +6,7 @@ import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.CollectionUtil;
-import io.virtue.common.util.ReflectUtil;
+import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Invoker;
 import io.virtue.core.InvokerContainer;
 import io.virtue.core.Virtue;
@@ -27,7 +27,7 @@ import java.util.*;
 import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
- * Abstract Caller.
+ * Abstract Invoker.
  * @param <T>
  */
 @Getter
@@ -84,7 +84,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
         this.remoteApplication = container.remoteApplication();
         this.protocol = protocol;
         this.protocolInstance = ExtensionLoader.loadService(Protocol.class, protocol);
-        parseConfig(getConfig());
+        parseConfig(config());
         init();
         if (url != null) {
             url.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
@@ -113,27 +113,21 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
         return method.getReturnType();
     }
 
-    protected Config config() {
-        return null;
-    }
-
     protected abstract URL createUrl(URL url);
 
     protected abstract void doInit();
 
     private T parseAnnotation(Method method, Class<T> type) {
-        AssertUtil.condition(ReflectUtil.findAnnotation(method, type) != null, "Only support @" + type.getSimpleName() + " modify Method");
+        AssertUtil.condition(ReflectionUtil.findAnnotation(method, type) != null,
+                "Only support @" + type.getSimpleName() + " modify Method");
         return method.getAnnotation(type);
     }
 
-    private Config getConfig() {
+    private Config config() {
         if (method.isAnnotationPresent(Config.class)) {
             return method.getAnnotation(Config.class);
         }
-        if (config() != null) {
-            return config();
-        }
-        return ReflectUtil.getDefaultInstance(Config.class);
+        return ReflectionUtil.getDefaultInstance(Config.class);
     }
 
     private void parseConfig(Config config) {

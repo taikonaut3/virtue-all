@@ -3,6 +3,9 @@ package io.virtue.common.util.bytes;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Simple implementation of {@link ByteReader}.
+ */
 public final class DefaultByteReader implements ByteReader {
 
     private final byte[] buffer;

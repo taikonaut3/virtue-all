@@ -8,14 +8,14 @@ import io.virtue.common.constant.Components;
 import java.lang.reflect.Proxy;
 
 /**
- * Create Proxy By JDK
+ * Create Proxy By JDK.
  */
 @ServiceProvider(Components.ProxyFactory.JDK)
 public class JDKProxyFactory extends AbstractProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) throws Exception{
+    protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) throws Exception {
         return (T) Proxy.newProxyInstance(
                 interfaceClass.getClassLoader(),
                 new Class[]{interfaceClass},
@@ -25,7 +25,7 @@ public class JDKProxyFactory extends AbstractProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T> T doCreateProxy(T target, InvocationHandler handler) throws Exception{
+    protected <T> T doCreateProxy(T target, InvocationHandler handler) throws Exception {
         return (T) Proxy.newProxyInstance(
                 target.getClass().getClassLoader(),
                 target.getClass().getInterfaces(),

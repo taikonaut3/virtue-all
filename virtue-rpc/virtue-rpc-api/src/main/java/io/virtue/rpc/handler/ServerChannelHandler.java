@@ -5,6 +5,9 @@ import io.virtue.transport.Request;
 import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
 
+/**
+ * Server ChannelHandler.
+ */
 public final class ServerChannelHandler extends ChannelHandlerAdapter {
 
 

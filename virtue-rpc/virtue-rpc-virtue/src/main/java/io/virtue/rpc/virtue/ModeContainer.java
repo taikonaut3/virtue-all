@@ -1,7 +1,7 @@
 package io.virtue.rpc.virtue;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.exception.SourceException;
+import io.virtue.common.exception.ResourceException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class  ModeContainer {
                 return value;
             }
         }
-        throw new SourceException("Can't find Key: " + key + " name is " + name);
+        throw new ResourceException("Can't find Key: " + key + " name is " + name);
     }
 
     public static Mode getMode(String key, byte type) {
@@ -51,9 +51,16 @@ public class  ModeContainer {
                 return value;
             }
         }
-        throw new SourceException("Can't find Key: " + key + " type is " + type);
+        throw new ResourceException("Can't find Key: " + key + " type is " + type);
     }
 
+    /**
+     * Put mode into container.
+     *
+     * @param key
+     * @param name
+     * @param type
+     */
     public static void put(String key, String name, byte type) {
         List<ModeBean> values = modeMap.computeIfAbsent(key, k -> new LinkedList<>());
         ModeBean modeBean = new ModeBean(name, type);
@@ -64,6 +71,12 @@ public class  ModeContainer {
         return modeMap;
     }
 
+    /**
+     * Mode Wrapper.
+     *
+     * @param name
+     * @param type
+     */
     public record ModeBean(String name, byte type) implements Mode {
 
     }

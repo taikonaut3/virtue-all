@@ -1,5 +1,8 @@
 package io.virtue.common.exception;
 
+/**
+ * Serialization Exception.
+ */
 public class SerializationException extends CommonException {
 
 

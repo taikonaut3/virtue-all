@@ -15,6 +15,9 @@ import java.lang.reflect.Type;
 
 import static io.virtue.common.constant.Components.Serialization.JSON;
 
+/**
+ * Jackson JSON Serializer.
+ */
 @ServiceProvider(JSON)
 public class JacksonSerializer implements Serializer {
 
@@ -22,10 +25,6 @@ public class JacksonSerializer implements Serializer {
 
     public JacksonSerializer() {
         this.objectMapper = JsonMapper.builder().configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true).build();
-    }
-
-    public ObjectMapper objectMapper() {
-        return objectMapper;
     }
 
     @Override

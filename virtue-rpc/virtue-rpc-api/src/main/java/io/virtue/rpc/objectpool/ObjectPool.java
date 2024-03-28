@@ -3,26 +3,25 @@ package io.virtue.rpc.objectpool;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Chang Liu
+ * @param <T>
  */
 public interface ObjectPool<T> {
 
     /**
      * Get an object from the pool, blocking until one is available.
      *
-     * @return PooledObject<T>
-     * @throws InterruptedException  if interrupted while waiting
+     * @return
+     * @throws InterruptedException
      */
     T poll() throws InterruptedException;
 
     /**
      * Get an object from the pool, waiting up to the specified wait time if necessary.
-     *
-     * @param time the maximum time to wait
-     * @param timeUnit the time unit of the time argument
-     * @return PooledObject<T>
-     * @throws InterruptedException if interrupted while waiting
-     * */
+     * @param time
+     * @param timeUnit
+     * @return
+     * @throws InterruptedException
+     */
     T poll(long time, TimeUnit timeUnit) throws InterruptedException;
 
     /**
@@ -49,8 +48,8 @@ public interface ObjectPool<T> {
      *
      * @param count the number of objects to add
      **/
-    default void addObjects(int count){
-        if(count < 0){
+    default void addObjects(int count) {
+        if (count < 0) {
             throw new IllegalArgumentException("Count must be greater than 0");
         }
         for (int i = 0; i < count; i++) {
@@ -73,7 +72,7 @@ public interface ObjectPool<T> {
     void destroy(T object);
 
     /**
-     * pool object size
+     * pool object size.
      *
      * @return size
      */

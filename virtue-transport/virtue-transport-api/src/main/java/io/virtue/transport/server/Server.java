@@ -8,7 +8,7 @@ import io.virtue.transport.endpoint.Endpoint;
 import java.net.InetSocketAddress;
 
 /**
- * Net server
+ * Net server.
  */
 public interface Server extends Endpoint, Closeable {
 

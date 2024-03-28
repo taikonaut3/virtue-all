@@ -3,7 +3,8 @@ package io.virtue.rpc.objectpool.listener;
 import io.virtue.rpc.objectpool.PooledObject;
 
 /**
- * @author Chang Liu
+ *
+ * @param <S>
  */
 public class PooledObjectInvalidEvent<S extends PooledObject<?>> extends PooledObjectEvent<S> {
 

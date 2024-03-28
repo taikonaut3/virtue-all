@@ -4,6 +4,9 @@ import io.virtue.core.config.ClientConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.NonNull;
 
+/**
+ * ClientConfig PostProcessor.
+ */
 public class ClientConfigPostProcessor extends VirtueAdapterPostProcessor {
     @Override
     public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {

@@ -31,8 +31,6 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
 
     protected String desc;
 
-    private int methodIndex;
-
     protected AbstractCallee(Method method, RemoteService<?> remoteService, String protocol, Class<T> annoType) {
         super(method, remoteService, protocol, annoType);
     }

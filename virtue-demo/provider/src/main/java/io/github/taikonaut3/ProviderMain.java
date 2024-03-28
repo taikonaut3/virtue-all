@@ -18,6 +18,7 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 public class ProviderMain {
     public static void main(String[] args) {
         SpringApplication.run(ProviderMain.class, args);
+        //simpleTest();
     }
 
     public static void simpleTest() {

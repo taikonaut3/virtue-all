@@ -29,6 +29,9 @@ public interface MatchRule<T> {
      */
     T addPathRule(Virtue virtue, Scope scope, @Language("RegExp") String... regex);
 
+    /**
+     * Rule scope.
+     */
     enum Scope {
         client, server, all
     }

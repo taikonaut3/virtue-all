@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Mapping {@link io.virtue.core.annotation.Options}.
  */
-public interface Options{
+public interface Options {
 
     /**
      * Supports async call,The default is false.

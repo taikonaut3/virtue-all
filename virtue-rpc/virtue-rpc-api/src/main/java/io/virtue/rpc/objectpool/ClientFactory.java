@@ -11,7 +11,7 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 /**
- * ClientFactory
+ * ClientFactory.
  */
 public class ClientFactory implements PooledObjectFactory<Client> {
 
