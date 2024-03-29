@@ -37,6 +37,7 @@ public interface Consumer {
 
     @VirtueCall(service = "345", callMethod = "exchangeMessage")
     @Config(filters = {"testFilter", "callerResultFilter"})
+    @Options(faultTolerance = Components.FaultTolerance.TIMEOUT_RETRY)
     Message exchangeMessage(Message message);
 
     @Config(filters = {"filter1", "filter2"}, serialization = MSGPACK)

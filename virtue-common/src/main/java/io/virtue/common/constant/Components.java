@@ -96,6 +96,8 @@ public interface Components {
 
         String FAIL_FAST = "failFast";
 
+        String TIMEOUT_RETRY = "timeoutRetry";
+
     }
 
     /**
