@@ -11,13 +11,10 @@ import io.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 
 /**
  * Base on CompletableFuture.
@@ -25,8 +22,6 @@ import java.util.function.Consumer;
 @Getter
 @Accessors(fluent = true)
 public class RpcFuture extends CompletableFuture<Object> {
-
-    private static final Logger logger = LoggerFactory.getLogger(RpcFuture.class);
 
     public static final Map<String, RpcFuture> futures = new ConcurrentHashMap<>();
 
@@ -42,21 +37,12 @@ public class RpcFuture extends CompletableFuture<Object> {
     @Setter
     private Client client;
 
-    @Setter
-    private Consumer<RpcFuture> completeConsumer;
-
     public RpcFuture(URL url, Invocation invocation) {
         this.url = url;
         this.invocation = invocation;
         this.id = url.getParam(Key.UNIQUE_ID);
         addFuture(id(), this);
-        completeOnTimeout(new TimeoutException(), timeout(), TimeUnit.MILLISECONDS);
-        whenComplete((resp, ex) -> {
-            removeFuture(id());
-            if (completeConsumer != null) {
-                completeConsumer.accept(this);
-            }
-        });
+        whenComplete((resp, ex) -> removeFuture(id()));
         boolean oneway = url.getBooleanParam(Key.ONEWAY);
         if (oneway) {
             complete(null);

@@ -35,7 +35,7 @@ public class RegistryConfigManager extends AbstractRuleManager<RegistryConfig> {
      * @param registryConfig
      */
     public void register(RegistryConfig registryConfig) {
-        String name = StringUtil.isBlank(registryConfig.name()) ? registryConfig.type() : registryConfig.name();
+        String name = StringUtil.isBlankOrDefault(registryConfig.name(), registryConfig.type());
         register(name, registryConfig);
     }
 

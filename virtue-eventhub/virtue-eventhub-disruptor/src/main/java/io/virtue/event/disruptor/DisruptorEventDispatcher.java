@@ -89,7 +89,6 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     @SuppressWarnings("unchecked")
     private <E extends Event<?>> void handleEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) {
         E event = holder.event();
-
         List<EventListener<?>> listeners = listenerMap.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
                 .flatMap(entry -> entry.getValue().stream())

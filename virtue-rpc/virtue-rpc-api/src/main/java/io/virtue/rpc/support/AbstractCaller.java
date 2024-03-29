@@ -254,7 +254,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
             if (router == null) {
                 String routerName = virtue.configManager().applicationConfig().router();
-                routerName = StringUtil.isBlank(routerName) ? Constant.DEFAULT_ROUTER : routerName;
+                routerName = StringUtil.isBlankOrDefault(routerName, Constant.DEFAULT_ROUTER);
                 router = ExtensionLoader.loadService(Router.class, routerName);
             }
             List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);

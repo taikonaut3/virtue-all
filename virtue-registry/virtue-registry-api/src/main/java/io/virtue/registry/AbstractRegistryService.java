@@ -67,7 +67,7 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     protected String serviceName(URL url) {
         String applicationName = Virtue.get(url).applicationName();
-        applicationName = StringUtil.isBlank(applicationName) ? this.getClass().getModule().getName() : applicationName;
+        applicationName = StringUtil.isBlankOrDefault(applicationName, this.getClass().getModule().getName());
         return url.getParam(Key.APPLICATION, applicationName);
     }
 

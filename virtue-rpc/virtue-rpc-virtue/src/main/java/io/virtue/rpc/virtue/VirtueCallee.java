@@ -34,8 +34,7 @@ public class VirtueCallee extends AbstractCallee<VirtueCallable> {
     @Override
     public void doInit() {
         this.remoteServiceName = remoteService().name();
-        this.callMethod = StringUtil.isBlank(parsedAnnotation.name())
-                ? GenerateUtil.generateKey(method()) : parsedAnnotation.name();
+        this.callMethod = StringUtil.isBlankOrDefault(parsedAnnotation.name(), GenerateUtil.generateKey(method()));
     }
 
     @Override

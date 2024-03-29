@@ -1,6 +1,5 @@
 package io.virtue.rpc.virtue;
 
-import io.virtue.common.constant.Components;
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.RemoteCaller;
@@ -13,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
+
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
 /**
  * Virtue protocol caller.
@@ -28,14 +29,13 @@ public class VirtueCaller extends AbstractCaller<VirtueCall> {
     private String callMethod;
 
     public VirtueCaller(Method method, RemoteCaller<?> remoteCaller) {
-        super(method, remoteCaller, Components.Protocol.VIRTUE, VirtueCall.class);
+        super(method, remoteCaller, VIRTUE, VirtueCall.class);
     }
 
     @Override
     public void doInit() {
         remoteServiceName = parsedAnnotation.service();
-        callMethod = StringUtil.isBlank(parsedAnnotation.callMethod())
-                ? GenerateUtil.generateKey(method()) : parsedAnnotation.callMethod();
+        callMethod = StringUtil.isBlankOrDefault(parsedAnnotation.callMethod(), GenerateUtil.generateKey(method()));
     }
 
     @Override
