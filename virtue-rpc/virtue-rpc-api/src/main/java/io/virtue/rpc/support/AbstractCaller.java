@@ -185,28 +185,30 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
-        Object result = null;
         try {
+            String faultToleranceName = invocation.url().getParam(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
+            FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceName);
             List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
-            invocation.revise(() -> doRpcCall(invocation));
-            result = filterChain.filter(invocation, preFilters);
+            invocation.revise(() -> {
+                invocation.revise(() -> doRpcCall(invocation));
+                return filterChain.filter(invocation, preFilters);
+            });
+            return faultTolerance.operation(invocation);
         } catch (Exception e) {
             logger.error("Remote Call fail " + this, e);
             throw RpcException.unwrap(e);
         } finally {
             RpcContext.clear();
         }
-        return result;
     }
 
     protected Object call(Invocation invocation) throws RpcException {
-        String faultToleranceName = invocation.url().getParam(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
-        FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceName);
+        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
         invocation.revise(() -> {
             RpcFuture future = send(invocation);
             return async() ? future : future.get();
         });
-        return faultTolerance.operation(invocation);
+        return filterChain.filter(invocation, postFilters);
     }
 
     @Override
@@ -264,10 +266,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
             url.address(selectedServiceUrl.address()).addParams(selectedServiceUrl.parameters());
         }
-        // Invocation revise
-        invocation.revise(() -> call(invocation));
-        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-        return filterChain.filter(invocation, postFilters);
+        return call(invocation);
     }
 
     protected RpcFuture send(Invocation invocation) {
