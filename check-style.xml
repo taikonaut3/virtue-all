@@ -27,6 +27,11 @@
         <property name="format" value="printStackTrace"/>
         <property name="message" value="Prohibit invoking printStackTrace in source code !"/>
     </module>
+    <!-- 禁止使用System.out.println -->
+    <module name="Regexp">
+        <property name="format" value="System\.out\.println"/>
+        <property name="illegalPattern" value="true"/>
+    </module>
 
     <!-- 每个java文件一个语法树 -->
     <module name="TreeWalker">
@@ -154,11 +159,6 @@
         <!-- 检查未被注释的main方法,排除以Application结尾命名的类 -->
         <module name="UncommentedMain">
             <property name="excludedClasses" value=".*[Application,Test]$"/>
-        </module>
-        <!-- 禁止使用System.out.println -->
-        <module name="Regexp">
-            <property name="format" value="System\.out\.println"/>
-            <property name="illegalPattern" value="true"/>
         </module>
         <!--try catch 异常处理数量 3-->
         <module name="NestedTryDepth ">

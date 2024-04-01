@@ -1,19 +1,15 @@
 package io.virtue.governance.router;
 
-import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.StringUtil;
 import io.virtue.core.Invocation;
-import io.virtue.core.config.RouterConfig;
 import io.virtue.core.Virtue;
+import io.virtue.core.config.RouterConfig;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static io.virtue.common.constant.Components.DEFAULT;
 
@@ -27,14 +23,14 @@ public class DefaultRouter implements Router {
     public List<URL> route(Invocation invocation, List<URL> urls) {
         URL url = invocation.url();
         // filter by group and version
-        String group = url.getParam(Key.GROUP);
-        String version = url.getParam(Key.VERSION);
-        if (!StringUtil.isBlank(group)) {
-            urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.GROUP), group)).collect(Collectors.toList());
-        }
-        if (!StringUtil.isBlank(version)) {
-            urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.VIRTUE), version)).collect(Collectors.toList());
-        }
+//        String group = url.getParam(Key.GROUP);
+//        String version = url.getParam(Key.VERSION);
+//        if (!StringUtil.isBlank(group)) {
+//            urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.GROUP), group)).collect(Collectors.toList());
+//        }
+//        if (!StringUtil.isBlank(version)) {
+//            urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.VIRTUE), version)).collect(Collectors.toList());
+//        }
         // filter by router rule
         Virtue virtue = Virtue.get(url);
         Collection<RouterConfig> routerConfigs = virtue.configManager().routerConfigManager().getManagerMap().values();

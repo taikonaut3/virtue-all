@@ -24,7 +24,9 @@ public class MsgPackSerializer implements Serializer {
     private final JsonMapper jsonMapper;
 
     public MsgPackSerializer() {
-        jsonMapper = JsonMapper.builder(new MessagePackFactory()).enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER).build();
+        jsonMapper = JsonMapper.builder(new MessagePackFactory())
+                .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
+                .build();
     }
 
     @Override

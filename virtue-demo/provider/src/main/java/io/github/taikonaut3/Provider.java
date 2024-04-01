@@ -46,7 +46,6 @@ public class Provider {
     public Message exchangeMessage(Message message) {
         message.setDate(new Date());
         message.setName("server " + message.getDate().toString());
-        int i = 1 / 0;
         return message;
     }
 
