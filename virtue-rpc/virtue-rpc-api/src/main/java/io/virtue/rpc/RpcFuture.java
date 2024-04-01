@@ -76,7 +76,7 @@ public class RpcFuture extends CompletableFuture<Object> {
             return super.get(timeout(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             if (e instanceof TimeoutException) {
-                throw new RpcException("RPC call timeout: " + timeout() + "ms",e);
+                throw new RpcException("RPC call timeout: " + timeout() + "ms", e);
             }
             throw RpcException.unwrap(e);
         } finally {

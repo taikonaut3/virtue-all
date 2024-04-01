@@ -15,7 +15,7 @@ import static io.virtue.common.constant.Components.LoadBalance.RANDOM;
 public interface LoadBalancer {
 
     /**
-     * Selects an url for the given invocation from a list of available urls.
+     * Choose an url for the given invocation from a list of available urls.
      *
      * @param invocation the invocation to be performed
      * @param urls       the list of available URLs

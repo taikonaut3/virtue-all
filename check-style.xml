@@ -34,7 +34,7 @@
         <module name="RedundantImport"/>
         <!-- 没用的import检查，比如：1.没有被用到2.重复的3.import java.lang的4.import 与该类在同一个package的 -->
         <module name="UnusedImports"/>
-        <!-- Checks for Javadoc comments.                     -->
+        <!-- Checks for Javadoc comments 对接口和注解的注释检查，对普通类的public修饰的方法检查，以及对所有类的类注释检查-->
         <!-- See https://checkstyle.org/checks/javadoc/index.html -->
         <module name="JavadocMissingWhitespaceAfterAsterisk"/>
         <module name="JavadocMethod">

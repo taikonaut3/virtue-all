@@ -131,6 +131,8 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     }
 
     private void parseConfig(Config config) {
+        group(config.group());
+        version(config.version());
         serialization(config.serialization());
         compression(config.compression());
         filterChain = ExtensionLoader.loadService(FilterChain.class, config.filterChain());
