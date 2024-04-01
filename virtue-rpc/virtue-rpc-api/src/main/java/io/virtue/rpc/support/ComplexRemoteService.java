@@ -71,6 +71,28 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
         mappingCallee.clear();
     }
 
+    @Override
+    public Object invokeMethod(Method method, Object[] args) {
+        Integer methodIndex = this.methodIndex.get(method);
+        return methodAccess.invoke(target, methodIndex, args);
+    }
+
+    @Override
+    public Callee<?> getCallee(String protocol, String path) {
+        String mapping = GenerateUtil.generateCalleeMapping(protocol, path);
+        return mappingCallee.get(mapping);
+    }
+
+    @Override
+    public T target() {
+        return target;
+    }
+
+    @Override
+    public String name() {
+        return remoteServiceName;
+    }
+
     private void parseRemoteService() {
         var service = remoteServiceClass.getAnnotation(REMOTE_SERVICE_CLASS);
         remoteApplication = virtue.applicationName();
@@ -93,28 +115,6 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
                 }
             }
         }
-    }
-
-    @Override
-    public Object invokeMethod(Method method, Object[] args) {
-        Integer methodIndex = this.methodIndex.get(method);
-        return methodAccess.invoke(target, methodIndex, args);
-    }
-
-    @Override
-    public Callee<?> getCallee(String protocol, String path) {
-        String mapping = GenerateUtil.generateCalleeMapping(protocol, path);
-        return mappingCallee.get(mapping);
-    }
-
-    @Override
-    public T target() {
-        return target;
-    }
-
-    @Override
-    public String name() {
-        return remoteServiceName;
     }
 
     private void addInvokerMapping(String protocol, String path, Callee<?> callee) {

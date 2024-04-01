@@ -64,16 +64,16 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
     }
 
     @Override
+    public RemoteService<?> remoteService() {
+        return (RemoteService<?>) container();
+    }
+
+    @Override
     protected URL createUrl(URL serverUrl) {
         serverUrl.replacePaths(pathList());
         serverUrl.addParams(parameterization());
         serverUrl.addParam(Key.CLASS, remoteService().target().getClass().getName());
         return serverUrl;
-    }
-
-    @Override
-    public RemoteService<?> remoteService() {
-        return (RemoteService<?>) container();
     }
 
 }
