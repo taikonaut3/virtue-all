@@ -289,4 +289,17 @@ public final class ReflectionUtil {
         return String.valueOf(value);
     }
 
+    /**
+     * Get class by the type.
+     *
+     * @param type
+     * @return
+     */
+    public static Class<?> getClassByType(Type type) {
+        if (type instanceof ParameterizedType parameterizedType) {
+            return (Class<?>) parameterizedType.getRawType();
+        } else {
+            return (Class<?>) type;
+        }
+    }
 }

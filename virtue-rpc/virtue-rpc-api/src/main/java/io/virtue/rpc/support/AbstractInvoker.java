@@ -62,12 +62,6 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     @Parameter(Key.APPLICATION)
     protected String remoteApplication;
     @Setter
-    @Parameter(Key.GROUP)
-    protected String group;
-    @Setter
-    @Parameter(Key.VERSION)
-    protected String version;
-    @Setter
     @Parameter(Key.SERIALIZATION)
     protected String serialization;
     @Setter
@@ -131,8 +125,6 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     }
 
     private void parseConfig(Config config) {
-        group(config.group());
-        version(config.version());
         serialization(config.serialization());
         compression(config.compression());
         filterChain = ExtensionLoader.loadService(FilterChain.class, config.filterChain());

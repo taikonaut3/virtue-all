@@ -21,7 +21,7 @@ public @interface VirtueCall {
      * @return
      * @see RemoteService#value()
      */
-    String service() default "";
+    String service();
 
     /**
      * Remote Method.

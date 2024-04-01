@@ -5,6 +5,7 @@ import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.SystemInfo;
 import io.virtue.core.Virtue;
+import io.virtue.core.config.ApplicationConfig;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,10 +54,12 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     protected Map<String, String> metaInfo(URL url) {
         Virtue virtue = Virtue.get(url);
+        ApplicationConfig applicationConfig = virtue.configManager().applicationConfig();
         Map<String, String> systemInfo = new SystemInfo(virtue).toMap();
         HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
         registryMeta.put(Key.PROTOCOL, url.protocol());
-        registryMeta.put(Key.WEIGHT, String.valueOf(virtue.configManager().applicationConfig().weight()));
+        registryMeta.put(Key.WEIGHT, String.valueOf(applicationConfig.weight()));
+        registryMeta.put(Key.GROUP, applicationConfig.group());
         return registryMeta;
     }
 

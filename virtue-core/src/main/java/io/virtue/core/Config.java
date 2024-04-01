@@ -14,16 +14,6 @@ import java.util.List;
 public interface Config extends Parameterization {
 
     /**
-     * The group from the @Config.
-     */
-    String group();
-
-    /**
-     * The version from the @Config.
-     */
-    String version();
-
-    /**
      * The serialization type from the @Config.
      */
     String serialization();

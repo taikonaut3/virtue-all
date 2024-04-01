@@ -10,6 +10,11 @@ import java.util.List;
 public interface Options {
 
     /**
+     * The group from the @Config.
+     */
+    String group();
+
+    /**
      * Supports async call,The default is false.
      * If true,Then the returnType should be {@link java.util.concurrent.CompletableFuture}
      */

@@ -13,6 +13,11 @@ import java.lang.annotation.*;
 public @interface Options {
 
     /**
+     * The group.
+     */
+    String group() default Constant.DEFAULT_GROUP;
+
+    /**
      * The default is false,Unit: ms.
      */
     int timeout() default Constant.DEFAULT_TIMEOUT;

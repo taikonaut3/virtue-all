@@ -39,7 +39,7 @@ public final class GenerateUtil {
      * @param path
      * @return
      */
-    public static String generateInvokerMapping(String protocol, String path) {
-        return protocol + ":" + path;
+    public static String generateCalleeMapping(String protocol, String path) {
+        return protocol + "[" + path + "]";
     }
 }

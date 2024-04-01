@@ -30,15 +30,6 @@ public interface InvokerContainer extends Lifecycle {
     Invoker<?> getInvoker(Method method);
 
     /**
-     * Gets the caller associated with the specified protocol and path.
-     *
-     * @param protocol  the protocol for which to get the associated invoker
-     * @param path  the path for which to get the associated invoker
-     * @return
-     */
-    Invoker<?> getInvoker(String protocol, String path);
-
-    /**
      * The Caller container Proxy type.
      *
      * @return proxy type

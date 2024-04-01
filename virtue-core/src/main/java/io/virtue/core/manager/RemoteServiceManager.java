@@ -37,9 +37,9 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
     public Callee<?> getServerCaller(String protocol, String path) {
         for (RemoteService<?> remoteService : remoteServices()) {
-            Callee<?> caller = remoteService.getCallee(protocol, path);
-            if (caller != null) {
-                return caller;
+            Callee<?> callee = remoteService.getCallee(protocol, path);
+            if (callee != null) {
+                return callee;
             }
         }
         return null;

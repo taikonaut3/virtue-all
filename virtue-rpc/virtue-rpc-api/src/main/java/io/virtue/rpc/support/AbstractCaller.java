@@ -65,6 +65,10 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     protected List<URL> registryConfigUrls;
 
+    @Setter
+    @Parameter(Key.GROUP)
+    protected String group;
+
     @Parameter(Key.RETRIES)
     protected int retires;
 
@@ -106,13 +110,14 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         checkAsyncReturnType(method);
         checkDirectUrl(ops);
         // set
+        group(ops.group());
         router(ops.router());
         timeout(ops.timeout());
         retires(ops.retires());
         serviceDiscovery(ops.serviceDiscovery());
         loadBalance(ops.loadBalance());
         faultTolerance(ops.faultTolerance());
-        oneWay(returnType().getTypeName().equals("void"));
+        oneWay(returnClass() == Void.TYPE);
         multiplex(ops.multiplex());
         clientConfig(ops.client());
         // subclass init
@@ -127,8 +132,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
                 .ifPresent(names -> Arrays.stream(names)
                         .map(configManager.registryConfigManager()::get)
                         .filter(Objects::nonNull)
-                        .forEach(this::addRegistryConfig)
-                );
+                        .forEach(this::addRegistryConfig));
         ClientConfig clientConfig = checkAndGetClientConfig();
         url = createUrl(clientConfig.toUrl());
     }
@@ -213,11 +217,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
     @Override
     public Class<?> returnClass() {
         Class<?> returnType = method.getReturnType();
-        if (async()) {
-            return (Class<?>) ((ParameterizedType) returnType()).getRawType();
-        } else {
-            return returnType;
-        }
+        return async() ? ReflectionUtil.getClassByType(returnType()) : returnType;
     }
 
     @Override

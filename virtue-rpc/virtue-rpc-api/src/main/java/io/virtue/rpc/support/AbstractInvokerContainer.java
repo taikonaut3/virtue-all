@@ -1,7 +1,6 @@
 package io.virtue.rpc.support;
 
 import io.virtue.common.util.AssertUtil;
-import io.virtue.common.util.GenerateUtil;
 import io.virtue.core.Invoker;
 import io.virtue.core.InvokerContainer;
 import io.virtue.core.Virtue;
@@ -20,7 +19,7 @@ import java.util.Map;
 public abstract class AbstractInvokerContainer implements InvokerContainer {
 
     protected Map<Method, Invoker<?>> invokers = new HashMap<>();
-    protected Map<String, Invoker<?>> mappingInvokers = new HashMap<>();
+
     @Getter
     protected Virtue virtue;
     @Setter
@@ -43,7 +42,6 @@ public abstract class AbstractInvokerContainer implements InvokerContainer {
     @Override
     public void stop() {
         invokers.clear();
-        mappingInvokers.clear();
     }
 
     @Override
@@ -61,14 +59,4 @@ public abstract class AbstractInvokerContainer implements InvokerContainer {
         return remoteApplication;
     }
 
-    @Override
-    public Invoker<?> getInvoker(String protocol, String path) {
-        String invokerMapping = GenerateUtil.generateInvokerMapping(protocol, path);
-        return mappingInvokers.get(invokerMapping);
-    }
-
-    protected void addInvokerMapping(String protocol, String path, Invoker<?> invoker) {
-        String invokerMapping = GenerateUtil.generateInvokerMapping(protocol, path);
-        mappingInvokers.put(invokerMapping, invoker);
-    }
 }

@@ -1,6 +1,7 @@
 package io.github.taikonaut3;
 
 import io.github.taikonaut3.model.ParentObject;
+import io.github.taikonaut3.model.TestGeneric;
 import io.virtue.common.constant.Components;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.Options;
@@ -18,6 +19,12 @@ import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
 @RemoteCaller(value = "provider")
 public interface Consumer {
+
+    @VirtueCall(service = "345", callMethod = "hello")
+    void hello();
+
+    @VirtueCall(service = "345", callMethod = "helloGeneric")
+    CompletableFuture<List<TestGeneric<String>>> helloGeneric();
 
     @Config(filters = {"filter2"}, serialization = JSON)
     @VirtueCall(service = "345", callMethod = "hello")

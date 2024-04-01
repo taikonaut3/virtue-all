@@ -100,7 +100,6 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
                 Caller<?> caller = invokerFactory.createCaller(method, this);
                 if (caller != null) {
                     invokers.put(method, caller);
-                    addInvokerMapping(caller.protocol(), caller.path(), caller);
                 }
             }
         }

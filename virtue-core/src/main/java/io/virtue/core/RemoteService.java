@@ -40,9 +40,7 @@ public interface RemoteService<T> extends InvokerContainer {
      * @param path     The path used for the callee
      * @return The callee
      */
-    default Callee<?> getCallee(String protocol, String path) {
-        return (Callee<?>) getInvoker(protocol, path);
-    }
+    Callee<?> getCallee(String protocol, String path);
 
 }
 

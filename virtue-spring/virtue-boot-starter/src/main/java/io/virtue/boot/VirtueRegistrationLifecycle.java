@@ -25,6 +25,7 @@ public class VirtueRegistrationLifecycle<R extends Registration> implements Regi
         ApplicationConfig config = virtue.configManager().applicationConfig();
         registration.getMetadata().put(Key.PROTOCOL, Components.Protocol.HTTP);
         registration.getMetadata().put(Key.WEIGHT, String.valueOf(config.weight()));
+        registration.getMetadata().put(Key.GROUP, config.group());
     }
 
     @Override

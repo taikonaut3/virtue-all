@@ -33,16 +33,5 @@ public interface RemoteCaller<T> extends InvokerContainer {
      * Direct url address.
      */
     InetSocketAddress directAddress();
-
-    /**
-     * Gets the caller for the specified protocol and path.
-     *
-     * @param protocol
-     * @param path
-     * @return
-     */
-    default Caller<?> getCaller(String protocol, String path) {
-        return (Caller<?>) getInvoker(protocol, path);
-    }
 }
 

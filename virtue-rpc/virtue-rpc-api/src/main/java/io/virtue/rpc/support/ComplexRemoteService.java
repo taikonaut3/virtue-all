@@ -3,6 +3,7 @@ package io.virtue.rpc.support;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
+import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
@@ -34,6 +35,8 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
 
     private final Map<Method, Integer> methodIndex;
 
+    private final Map<String, Callee<?>> mappingCallee = new HashMap<>();
+
     private String remoteServiceName;
 
     @SuppressWarnings("unchecked")
@@ -60,6 +63,12 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
         parseRemoteService();
         // parse ServerCaller
         parseServerCaller();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        mappingCallee.clear();
     }
 
     private void parseRemoteService() {
@@ -93,6 +102,12 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     }
 
     @Override
+    public Callee<?> getCallee(String protocol, String path) {
+        String mapping = GenerateUtil.generateCalleeMapping(protocol, path);
+        return mappingCallee.get(mapping);
+    }
+
+    @Override
     public T target() {
         return target;
     }
@@ -100,6 +115,11 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     @Override
     public String name() {
         return remoteServiceName;
+    }
+
+    private void addInvokerMapping(String protocol, String path, Callee<?> callee) {
+        String mapping = GenerateUtil.generateCalleeMapping(protocol, path);
+        mappingCallee.put(mapping, callee);
     }
 
 }
