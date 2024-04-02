@@ -35,8 +35,10 @@
                 <configuration>
                     <annotationProcessors>
                         <!-- 添加 Lombok 注解处理器 -->
-                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
-                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$ClaimingProcessor</annotationProcessor>
+                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
+                        </annotationProcessor>
+                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$ClaimingProcessor
+                        </annotationProcessor>
                     </annotationProcessors>
                 </configuration>
             </plugin>

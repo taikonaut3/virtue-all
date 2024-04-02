@@ -24,7 +24,7 @@ public interface Serializer extends Converter {
      * deserialize a byte array into an object of the specified class.
      *
      * @param bytes The byte array to deserialization.
-     * @param type The class of the object to deserialization.
+     * @param type  The class of the object to deserialization.
      * @param <T>   The type of the object to deserialization.
      * @return The deserialize object.
      * @throws SerializationException if an error occurs during deserialization.

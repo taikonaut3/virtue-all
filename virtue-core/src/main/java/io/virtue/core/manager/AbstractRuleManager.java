@@ -1,8 +1,8 @@
 package io.virtue.core.manager;
 
+import io.virtue.core.Callee;
 import io.virtue.core.Caller;
 import io.virtue.core.MatchRule;
-import io.virtue.core.Callee;
 import io.virtue.core.Virtue;
 
 import java.util.*;

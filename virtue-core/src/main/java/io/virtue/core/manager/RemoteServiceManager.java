@@ -29,6 +29,7 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
     /**
      * Register a remote service.
+     *
      * @param remoteService
      */
     public void register(RemoteService<?> remoteService) {
@@ -57,6 +58,7 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
 
     /**
      * Get all server callee.
+     *
      * @return
      */
     public List<Callee<?>> allCallee() {

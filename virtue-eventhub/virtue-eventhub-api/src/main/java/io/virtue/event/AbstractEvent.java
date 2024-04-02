@@ -4,6 +4,7 @@ import io.virtue.common.extension.AbstractAccessor;
 
 /**
  * Abstract Event.
+ *
  * @param <S>
  */
 public abstract class AbstractEvent<S> extends AbstractAccessor implements Event<S> {

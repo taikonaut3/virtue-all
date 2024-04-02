@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Abstract Manager.
+ *
  * @param <T> manage type
  */
 public abstract class AbstractManager<T> {
@@ -22,6 +23,7 @@ public abstract class AbstractManager<T> {
 
     /**
      * Add config.
+     *
      * @param name
      * @param value
      */
@@ -31,6 +33,7 @@ public abstract class AbstractManager<T> {
 
     /**
      * Remove config by name.
+     *
      * @param name
      */
     public void remove(String name) {
@@ -39,6 +42,7 @@ public abstract class AbstractManager<T> {
 
     /**
      * Get config by name.
+     *
      * @param name
      * @return
      */
@@ -48,6 +52,7 @@ public abstract class AbstractManager<T> {
 
     /**
      * Get all config map.
+     *
      * @return
      */
     public Map<String, T> getManagerMap() {

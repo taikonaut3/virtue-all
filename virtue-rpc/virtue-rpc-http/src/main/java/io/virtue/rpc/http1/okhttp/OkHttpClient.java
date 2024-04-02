@@ -12,7 +12,6 @@ public class OkHttpClient implements HttpClient {
 
     private okhttp3.OkHttpClient okHttpClient;
 
-
     @Override
     public RpcFuture send(HttpRequest request) {
         return null;

@@ -15,5 +15,4 @@ public class MonitorManager {
 
     private List<RemoteCaller<?>> remoteCallers = new ArrayList<>();
 
-
 }

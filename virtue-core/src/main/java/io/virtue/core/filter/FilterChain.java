@@ -1,8 +1,8 @@
 package io.virtue.core.filter;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.spi.ServiceInterface;
 import io.virtue.core.Invocation;
-import io.virtue.common.constant.Components;
 
 import java.util.List;
 

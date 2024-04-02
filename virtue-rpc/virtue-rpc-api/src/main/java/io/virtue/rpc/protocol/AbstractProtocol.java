@@ -11,6 +11,7 @@ import io.virtue.transport.server.Server;
 
 /**
  * Abstract Protocol.
+ *
  * @param <Req> request type
  * @param <Res> response type
  */

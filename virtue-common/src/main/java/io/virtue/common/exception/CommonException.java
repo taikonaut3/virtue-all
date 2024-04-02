@@ -5,7 +5,6 @@ package io.virtue.common.exception;
  */
 public class CommonException extends RuntimeException {
 
-
     public CommonException(String msg, Throwable e) {
         super(msg, e);
     }

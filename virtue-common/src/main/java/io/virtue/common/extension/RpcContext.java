@@ -83,19 +83,6 @@ public class RpcContext {
     public static class RequestContext extends StringAccessor<RequestContext> {
 
         /**
-         * Clear context.
-         */
-        public void clear() {
-            accessor.clear();
-            REQUEST_CONTEXT.remove();
-        }
-
-        @Override
-        public String toString() {
-            return URL.toUrlParams(accessor);
-        }
-
-        /**
          * Parse the request context in the URL.
          *
          * @param url
@@ -108,25 +95,25 @@ public class RpcContext {
                 }
             }
         }
-    }
-
-    /**
-     * Response Context.
-     */
-    public static class ResponseContext extends StringAccessor<ResponseContext> {
 
         /**
          * Clear context.
          */
         public void clear() {
             accessor.clear();
-            RESPONSE_CONTEXT.remove();
+            REQUEST_CONTEXT.remove();
         }
 
         @Override
         public String toString() {
             return URL.toUrlParams(accessor);
         }
+    }
+
+    /**
+     * Response Context.
+     */
+    public static class ResponseContext extends StringAccessor<ResponseContext> {
 
         /**
          * Parse the response context in the URL.
@@ -140,6 +127,19 @@ public class RpcContext {
                     responseContext().set(entry.getKey(), entry.getValue());
                 }
             }
+        }
+
+        /**
+         * Clear context.
+         */
+        public void clear() {
+            accessor.clear();
+            RESPONSE_CONTEXT.remove();
+        }
+
+        @Override
+        public String toString() {
+            return URL.toUrlParams(accessor);
         }
     }
 

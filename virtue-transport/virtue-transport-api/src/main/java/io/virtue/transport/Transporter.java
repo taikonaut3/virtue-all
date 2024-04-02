@@ -33,6 +33,7 @@ public interface Transporter {
 
     /**
      * Connects to the server specified by the URL with the given handler and the given codec.
+     *
      * @param url
      * @param handler
      * @param codec

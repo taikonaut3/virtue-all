@@ -14,7 +14,7 @@ public class TestFilter implements Filter {
     @Override
     public Object doFilter(Invocation invocation) {
         try {
-            RpcContext.requestContext().set("qqq","www");
+            RpcContext.requestContext().set("qqq", "www");
             return invocation.invoke();
         } finally {
             String s = RpcContext.responseContext().get("123");

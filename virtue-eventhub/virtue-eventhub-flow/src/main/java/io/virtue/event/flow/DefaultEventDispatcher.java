@@ -1,11 +1,11 @@
 package io.virtue.event.flow;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.event.AbstractEventDispatcher;
 import io.virtue.event.Event;
 import io.virtue.event.EventDispatcher;
 import io.virtue.event.EventListener;
-import io.virtue.common.constant.Components;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.FactoryBean;
 
 /**
  * RemoteCaller FactoryBean.
+ *
  * @param <T>
  */
 public class RemoteCallerFactoryBean<T> implements FactoryBean<T> {

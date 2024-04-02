@@ -1,7 +1,7 @@
 package io.virtue.rpc.http1.config;
 
-import io.virtue.core.annotation.InvokerFactory;
 import io.virtue.common.constant.Components;
+import io.virtue.core.annotation.InvokerFactory;
 
 import java.lang.annotation.*;
 

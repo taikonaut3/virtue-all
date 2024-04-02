@@ -26,7 +26,6 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     private static final Class<io.virtue.core.annotation.RemoteService> REMOTE_SERVICE_CLASS =
             io.virtue.core.annotation.RemoteService.class;
 
-
     private final Class<T> remoteServiceClass;
 
     private final T target;

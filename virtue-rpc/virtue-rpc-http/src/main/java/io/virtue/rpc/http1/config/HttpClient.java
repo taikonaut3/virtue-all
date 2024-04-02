@@ -9,7 +9,6 @@ import io.virtue.rpc.http1.envelope.HttpRequest;
  */
 public interface HttpClient {
 
-
     RpcFuture send(HttpRequest request);
 
 //    @Override

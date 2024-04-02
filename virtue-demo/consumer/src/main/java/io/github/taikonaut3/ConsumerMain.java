@@ -33,7 +33,7 @@ public class ConsumerMain {
         Consumer consumer = context.getBean("consumer", Consumer.class);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 10; i++) {
-            executorService.execute(()->{
+            executorService.execute(() -> {
                 Message message = new Message();
                 message.setDate(new Date());
                 message.setName("client" + message.getDate().toString());
@@ -51,11 +51,11 @@ public class ConsumerMain {
         virtue.wrap(new Provider());
         Consumer consumer = virtue.application(new ApplicationConfig("consumer"))
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
-                .register("filter1", new Filter1().addProtocolRule(virtue, MatchRule.Scope.client,".*"))
-                .register("filter2",new Filter2())
-                .register("testFilter",new TestFilter())
+                .register("filter1", new Filter1().addProtocolRule(virtue, MatchRule.Scope.client, ".*"))
+                .register("filter2", new Filter2())
+                .register("testFilter", new TestFilter())
                 .register("callerResultFilter", new CallerResultFilter())
-                .router("^virtue://.*/345/list",":2333")
+                .router("^virtue://.*/345/list", ":2333")
                 //.register(new RegistryConfig("nacos://127.0.0.1:8848"))
                 .proxy(Consumer.class)
                 .remoteCaller(Consumer.class)

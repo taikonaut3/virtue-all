@@ -10,7 +10,6 @@ import java.util.List;
  */
 public interface RegistryService extends Closeable {
 
-
     /**
      * Connects to the registry using the specified URL.
      *

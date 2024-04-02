@@ -37,6 +37,7 @@ public class ChannelHandlerAdapter implements ChannelHandler {
 
     /**
      * Get the event dispatcher.
+     *
      * @param url
      * @return
      */

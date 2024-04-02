@@ -34,6 +34,7 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
 
     /**
      * Register remote caller.
+     *
      * @param remoteCaller
      */
     public synchronized void register(RemoteCaller<?> remoteCaller) {

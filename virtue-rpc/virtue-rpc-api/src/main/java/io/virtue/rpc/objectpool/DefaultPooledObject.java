@@ -6,6 +6,7 @@ import io.virtue.rpc.objectpool.listener.PooledObjectInvalidListener;
 
 /**
  * DefaultPooledObject.
+ *
  * @param <T>
  */
 public class DefaultPooledObject<T> extends AbstractPooledObject<T> {

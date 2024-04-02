@@ -7,6 +7,10 @@ import java.util.Objects;
  */
 public final class StringUtil {
 
+    private StringUtil() {
+
+    }
+
     /**
      * Determines whether the string is null, that is, null, 0 in length, or contains only whitespace characters.
      *
@@ -28,6 +32,8 @@ public final class StringUtil {
         return isBlank(target) ? defaultValue : target;
     }
 
+    // 获取对象简单类名，如果对象为null，返回"null_object"；否则返回对象类名的简称
+
     /**
      * Normalize the path to remove the beginning '/', the end '/', and the redundant '/'.
      *
@@ -39,8 +45,6 @@ public final class StringUtil {
                 .replaceAll("/+$", "")
                 .replaceAll("/+", "/");
     }
-
-    // 获取对象简单类名，如果对象为null，返回"null_object"；否则返回对象类名的简称
 
     /**
      * Get the simple class name of the object.
@@ -83,9 +87,5 @@ public final class StringUtil {
             }
         }
         return true;
-    }
-
-    private StringUtil() {
-
     }
 }

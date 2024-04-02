@@ -1,8 +1,8 @@
 package io.virtue.transport.compress;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.exception.CompressionException;
 import io.virtue.common.spi.ServiceInterface;
-import io.virtue.common.constant.Components;
 
 /**
  * Compression interface.

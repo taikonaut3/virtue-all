@@ -38,6 +38,7 @@ public interface Invoker<T extends Annotation> extends Config, Lifecycle {
 
     /**
      * All proxy clients invoke the entry.
+     *
      * @param invocation
      * @return
      * @throws RpcException

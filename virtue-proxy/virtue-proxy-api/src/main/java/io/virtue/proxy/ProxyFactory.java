@@ -11,11 +11,10 @@ import static io.virtue.common.constant.Components.ProxyFactory.JDK;
 public interface ProxyFactory {
 
     /**
-     *
      * @param interfaceClass the interface to be implemented by the proxy object
      * @param handler        the invocation handler to dispatch method invocations to
-     * @return a new proxy object that implements the specified interface
      * @param <T>
+     * @return a new proxy object that implements the specified interface
      */
     <T> T createProxy(Class<T> interfaceClass, InvocationHandler handler);
 
@@ -24,8 +23,8 @@ public interface ProxyFactory {
      *
      * @param target  the object to be proxied
      * @param handler the invocation handler to dispatch method invocations to
-     * @return a new proxy object that wraps the specified target object
      * @param <T>
+     * @return a new proxy object that wraps the specified target object
      */
     <T> T createProxy(T target, InvocationHandler handler);
 

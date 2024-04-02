@@ -1,9 +1,9 @@
 package io.virtue.proxy.jdk;
 
+import io.virtue.common.constant.Components;
 import io.virtue.common.spi.ServiceProvider;
 import io.virtue.proxy.AbstractProxyFactory;
 import io.virtue.proxy.InvocationHandler;
-import io.virtue.common.constant.Components;
 
 import java.lang.reflect.Proxy;
 

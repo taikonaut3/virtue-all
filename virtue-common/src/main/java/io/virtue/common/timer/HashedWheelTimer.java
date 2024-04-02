@@ -541,6 +541,7 @@ public class HashedWheelTimer implements Timer {
 
         /**
          * Add {@link HashedWheelTimeout} to this bucket.
+         *
          * @param timeout
          */
         void addTimeout(HashedWheelTimeout timeout) {
@@ -557,6 +558,7 @@ public class HashedWheelTimer implements Timer {
 
         /**
          * Expire all {@link HashedWheelTimeout}s for the given {@code deadline}.
+         *
          * @param deadline
          */
         void expireTimeouts(long deadline) {
@@ -615,6 +617,7 @@ public class HashedWheelTimer implements Timer {
 
         /**
          * Clear this bucket and return all not expired.
+         *
          * @param set
          */
         void clearTimeouts(Set<Timeout> set) {

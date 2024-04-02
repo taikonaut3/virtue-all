@@ -1,15 +1,15 @@
 package io.virtue.transport.netty.http;
 
-import io.virtue.common.constant.Constant;
-import io.virtue.common.constant.Key;
-import io.virtue.common.url.URL;
-import io.virtue.transport.netty.NettyIdeStateHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.virtue.common.constant.Constant;
+import io.virtue.common.constant.Key;
+import io.virtue.common.url.URL;
+import io.virtue.transport.netty.NettyIdeStateHandler;
 
 /**
  * Initializes the channel of Netty for HTTP Codec.

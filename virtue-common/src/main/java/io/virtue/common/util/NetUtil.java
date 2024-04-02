@@ -15,12 +15,15 @@ import java.util.regex.Pattern;
  */
 public final class NetUtil {
 
-    private static volatile InetAddress LOCAL_ADDRESS = null;
-
     // Regular expression foR ip address
     private static final String IP_REGEX = "^((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)$";
     // Regular expression for a port number
     private static final String PORT_REGEX = "^\\d{1,5}$";
+    private static volatile InetAddress LOCAL_ADDRESS = null;
+
+    private NetUtil() {
+
+    }
 
     /**
      * Determines whether a given string is a valid combination of IP address and port number.
@@ -142,9 +145,5 @@ public final class NetUtil {
             throw new CommonException(e);
         }
         return null;
-    }
-
-    private NetUtil() {
-
     }
 }

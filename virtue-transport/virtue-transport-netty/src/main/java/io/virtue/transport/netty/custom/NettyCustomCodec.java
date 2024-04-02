@@ -1,7 +1,5 @@
 package io.virtue.transport.netty.custom;
 
-import io.virtue.common.url.URL;
-import io.virtue.transport.codec.Codec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,6 +7,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
+import io.virtue.common.url.URL;
+import io.virtue.transport.codec.Codec;
 import lombok.Getter;
 
 /**
@@ -45,7 +45,7 @@ public final class NettyCustomCodec {
 
     class NettyDecoder extends LengthFieldBasedFrameDecoder {
 
-         NettyDecoder(int maxFrameLength) {
+        NettyDecoder(int maxFrameLength) {
             // First int is total length
             super(maxFrameLength, 0, 4, 0, 4, true);
         }

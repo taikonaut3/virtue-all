@@ -105,18 +105,17 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
         return interfaces;
     }
 
-    private  TypeElement getTypeElement(TypeMirror typeMirror) {
+    private TypeElement getTypeElement(TypeMirror typeMirror) {
         return (TypeElement) processingEnv.getTypeUtils().asElement(typeMirror);
     }
 
     private static class ServiceProviderWrapper {
 
+        private final List<String> interfaceList;
         @Getter
         private String value;
 
-        private final List<String> interfaceList;
-
-         ServiceProviderWrapper(AnnotationMirror annotationMirror) {
+        ServiceProviderWrapper(AnnotationMirror annotationMirror) {
             interfaceList = new ArrayList<>();
             Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
             for (ExecutableElement key : elementValues.keySet()) {
@@ -133,7 +132,6 @@ public class ExtensionLoaderAnnotationProcessor extends AbstractProcessor {
         public List<String> interfaces() {
             return interfaceList;
         }
-
 
         private List<String> getPropertyTypes(AnnotationValue value) {
             List<String> propertyTypes = new ArrayList<>();

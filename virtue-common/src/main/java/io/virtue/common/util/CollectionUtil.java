@@ -12,6 +12,9 @@ import java.util.function.Consumer;
 @SuppressWarnings("unchecked")
 public final class CollectionUtil {
 
+    private CollectionUtil() {
+    }
+
     /**
      * Adds items to a collection based on the provided predicate.
      *
@@ -86,9 +89,6 @@ public final class CollectionUtil {
      */
     public static boolean isNotEmpty(Map<?, ?> value) {
         return !isEmpty(value);
-    }
-
-    private CollectionUtil() {
     }
 
 }

@@ -3,8 +3,8 @@ package io.virtue.rpc.handler;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.rpc.event.HeartBeatEvent;
-import io.virtue.transport.channel.HeartBeatChannelHandler;
 import io.virtue.transport.channel.Channel;
+import io.virtue.transport.channel.HeartBeatChannelHandler;
 
 /**
  * Server HeartBeatChannelHandler.

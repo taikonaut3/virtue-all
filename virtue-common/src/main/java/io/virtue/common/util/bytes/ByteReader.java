@@ -45,12 +45,14 @@ public interface ByteReader {
 
     /**
      * Read a float value.
+     *
      * @return
      */
     float readFloat();
 
     /**
      * Read a double value.
+     *
      * @return
      */
     double readDouble();
@@ -82,6 +84,7 @@ public interface ByteReader {
 
     /**
      * The number of readable bytes.
+     *
      * @return
      */
     int readableBytes();

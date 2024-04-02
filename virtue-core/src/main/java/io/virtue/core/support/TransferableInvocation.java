@@ -72,6 +72,7 @@ public class TransferableInvocation implements Invocation {
 
     /**
      * Adaptation serialization.
+     *
      * @param args
      */
     public void setArgs(Object[] args) {

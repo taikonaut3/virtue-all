@@ -11,9 +11,10 @@ import io.virtue.rpc.http1.envelope.HttpRequest;
  */
 public class DynamicHttpClient implements HttpClient {
 
-    public DynamicHttpClient(URL url){
+    public DynamicHttpClient(URL url) {
 
     }
+
     @Override
     public RpcFuture send(HttpRequest request) {
         return null;

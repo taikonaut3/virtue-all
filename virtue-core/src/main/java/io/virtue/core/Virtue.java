@@ -32,6 +32,37 @@ public interface Virtue extends Accessor, Lifecycle {
     AttributeKey<Virtue> ATTRIBUTE_KEY = AttributeKey.get(Key.VIRTUE);
 
     /**
+     * Get virtue instance from url.
+     *
+     * @param url
+     * @return Virtue instance
+     */
+    static Virtue get(URL url) {
+        Attribute<Virtue> attribute = url.attribute(ATTRIBUTE_KEY);
+        Virtue virtue = attribute.get();
+        if (virtue == null) {
+            virtue = RpcContext.currentContext().attribute(ATTRIBUTE_KEY).get();
+            if (virtue == null) {
+                virtue = ExtensionLoader.loadService(Virtue.class, url.getParam(Key.VIRTUE));
+            }
+            if (virtue != null) {
+                attribute.set(virtue);
+            }
+        }
+        return virtue;
+    }
+
+    /**
+     * Get default virtue instance.
+     *
+     * @return default virtue instance
+     * @see io.virtue.rpc.support.DefaultVirtue
+     */
+    static Virtue getDefault() {
+        return ExtensionLoader.loadService(Virtue.class);
+    }
+
+    /**
      * Virtue name.
      *
      * @return name
@@ -229,36 +260,5 @@ public interface Virtue extends Accessor, Lifecycle {
     default Virtue applicationName(String applicationName) {
         configManager().applicationConfig().name(applicationName);
         return this;
-    }
-
-    /**
-     * Get virtue instance from url.
-     *
-     * @param url
-     * @return Virtue instance
-     */
-    static Virtue get(URL url) {
-        Attribute<Virtue> attribute = url.attribute(ATTRIBUTE_KEY);
-        Virtue virtue = attribute.get();
-        if (virtue == null) {
-            virtue = RpcContext.currentContext().attribute(ATTRIBUTE_KEY).get();
-            if (virtue == null) {
-                virtue = ExtensionLoader.loadService(Virtue.class, url.getParam(Key.VIRTUE));
-            }
-            if (virtue != null) {
-                attribute.set(virtue);
-            }
-        }
-        return virtue;
-    }
-
-    /**
-     * Get default virtue instance.
-     *
-     * @return default virtue instance
-     * @see io.virtue.rpc.support.DefaultVirtue
-     */
-    static Virtue getDefault() {
-        return ExtensionLoader.loadService(Virtue.class);
     }
 }

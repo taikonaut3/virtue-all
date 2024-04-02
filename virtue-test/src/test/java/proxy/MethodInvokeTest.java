@@ -24,39 +24,39 @@ public class MethodInvokeTest {
         long time3 = 0;
         for (int i = 0; i < num; i++) {
             long start = System.currentTimeMillis();
-            methodAccess.invoke(cat, "eat",food);
+            methodAccess.invoke(cat, "eat", food);
             long end = System.currentTimeMillis();
             time3 += (end - start);
         }
-        System.out.println("ASM反射调用：总"+time3+"-"+ time3 / num + "ms");
+        System.out.println("ASM反射调用：总" + time3 + "-" + time3 / num + "ms");
         long time4 = 0;
         for (int i = 0; i < num; i++) {
             long start = System.currentTimeMillis();
             int eatIndex = methodAccess.getIndex("eat", String.class);
-            methodAccess.invoke(cat,eatIndex,food);
+            methodAccess.invoke(cat, eatIndex, food);
             long end = System.currentTimeMillis();
             time4 += (end - start);
         }
-        System.out.println("ASM反射调用优化：总"+time4+"-"+ time4 / num + "ms");
+        System.out.println("ASM反射调用优化：总" + time4 + "-" + time4 / num + "ms");
 
         long time1 = 0;
         for (int i = 0; i < num; i++) {
             long start = System.currentTimeMillis();
-            eatMethod.invoke(cat,food);
+            eatMethod.invoke(cat, food);
             long end = System.currentTimeMillis();
             time1 += (end - start);
         }
-        System.out.println("普通反射调用：总"+time1+"-"+ time1 / num + "ms");
+        System.out.println("普通反射调用：总" + time1 + "-" + time1 / num + "ms");
 
         long time2 = 0;
         for (int i = 0; i < num; i++) {
             long start = System.currentTimeMillis();
             eatMethod.setAccessible(true);
-            eatMethod.invoke(cat,food);
+            eatMethod.invoke(cat, food);
             long end = System.currentTimeMillis();
             time2 += (end - start);
         }
-        System.out.println("普通反射调用优化：总"+time2+"-"+  time2 / num + "ms");
+        System.out.println("普通反射调用优化：总" + time2 + "-" + time2 / num + "ms");
 
         long time5 = 0;
         for (int i = 0; i < num; i++) {
@@ -65,7 +65,7 @@ public class MethodInvokeTest {
             long end = System.currentTimeMillis();
             time5 += (end - start);
         }
-        System.out.println("普通调用：总"+time5+"-"+  time5 / num + "ms");
+        System.out.println("普通调用：总" + time5 + "-" + time5 / num + "ms");
 
     }
 

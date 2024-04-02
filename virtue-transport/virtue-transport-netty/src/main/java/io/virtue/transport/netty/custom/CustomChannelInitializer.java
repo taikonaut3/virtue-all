@@ -1,14 +1,14 @@
 package io.virtue.transport.netty.custom;
 
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyIdeStateHandler;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * Initializes the channel of Netty for Custom Codec.

@@ -4,6 +4,7 @@ import java.time.Instant;
 
 /**
  * Abstract PooledObject.
+ *
  * @param <T>
  */
 public abstract class AbstractPooledObject<T> implements PooledObject<T> {

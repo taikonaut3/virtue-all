@@ -21,6 +21,7 @@ public interface Envelope extends Serializable {
 
     /**
      * Get unique id.
+     *
      * @return
      */
     default Long id() {

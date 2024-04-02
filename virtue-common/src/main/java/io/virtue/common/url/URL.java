@@ -34,19 +34,14 @@ public class URL extends AbstractAccessor {
     private static final Logger logger = LoggerFactory.getLogger(URL.class);
 
     private final List<String> paths;
-
-    private Map<String, String> parameters;
-
     @Setter
     protected String host;
-
     @Setter
     protected int port;
-
     @Setter
     protected String protocol;
-
     protected String address;
+    private Map<String, String> parameters;
 
     public URL() {
         this.paths = new LinkedList<>();

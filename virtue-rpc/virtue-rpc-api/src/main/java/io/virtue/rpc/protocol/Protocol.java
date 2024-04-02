@@ -13,9 +13,9 @@ import io.virtue.transport.server.Server;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
-
 /**
  * Communication protocol used to exchange data between client and server.
+ *
  * @param <Req> Request type
  * @param <Res> Response type
  */
@@ -23,12 +23,13 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 public interface Protocol<Req, Res> {
 
     /**
-     *  This protocol.
+     * This protocol.
      */
     String protocol();
 
     /**
      * Create a new request for the given URL and message body.
+     *
      * @param invocation
      * @return
      */

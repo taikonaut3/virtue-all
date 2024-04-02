@@ -7,8 +7,8 @@ import io.virtue.rpc.RpcFuture;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.transport.Response;
-import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.channel.Channel;
+import io.virtue.transport.channel.ChannelHandlerAdapter;
 
 /**
  * Response status check.

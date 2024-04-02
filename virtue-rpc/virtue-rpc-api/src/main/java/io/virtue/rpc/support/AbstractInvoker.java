@@ -28,6 +28,7 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
  * Abstract Invoker.
+ *
  * @param <T>
  */
 @Getter

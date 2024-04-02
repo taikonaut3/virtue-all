@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Abstract ObjectPool.
+ *
  * @param <T>
  */
 public abstract class AbstractObjectPool<T> implements ObjectPool<T> {

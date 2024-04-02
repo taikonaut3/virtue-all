@@ -32,7 +32,7 @@ public class Provider {
     }
 
     @VirtueCallable(name = "list")
-    @Config(serialization = MSGPACK,filters = "testFilter")
+    @Config(serialization = MSGPACK, filters = "testFilter")
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }
@@ -43,9 +43,9 @@ public class Provider {
         return ParentObject.getObjList("list server2");
     }
 
-    @Bulkhead(name="bulkheadApi")
+    @Bulkhead(name = "bulkheadApi")
     @VirtueCallable(name = "exchangeMessage")
-    @Config(filters = {"testFilter","calleeResultFilter"})
+    @Config(filters = {"testFilter", "calleeResultFilter"})
     public Message exchangeMessage(Message message) {
         message.setDate(new Date());
         message.setName("server " + message.getDate().toString());

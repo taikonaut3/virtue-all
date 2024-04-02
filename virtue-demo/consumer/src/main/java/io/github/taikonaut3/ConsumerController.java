@@ -14,10 +14,8 @@ public class ConsumerController {
     @Resource
     Consumer consumer;
 
-
     @Resource
     Virtue virtue;
-
 
     @GetMapping("list")
     public List<ParentObject> list() {

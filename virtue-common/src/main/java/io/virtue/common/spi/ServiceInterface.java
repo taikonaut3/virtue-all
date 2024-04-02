@@ -19,7 +19,6 @@ public @interface ServiceInterface {
      */
     String value() default "";
 
-
     /**
      * If this type of constructor exists, then create instance with this constructor,
      * or use default.
@@ -27,7 +26,6 @@ public @interface ServiceInterface {
      * @return constructor constructor type
      */
     Class<?>[] constructor() default {};
-
 
     /**
      * Whether lazy loading is enabled,

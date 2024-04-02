@@ -14,23 +14,21 @@ import java.util.List;
  */
 public class MonitorTest {
 
-
-
     @Test
-    public void test1(){
+    public void test1() {
         Virtue virtue = Virtue.getDefault();
         SystemInfo systemInfo = new SystemInfo(virtue);
         System.out.println(systemInfo);
     }
 
     @Test
-    public void test2(){
+    public void test2() {
         oshi.SystemInfo systemInfo = new oshi.SystemInfo();
         OperatingSystem system = systemInfo.getOperatingSystem();
         List<NetworkIF> networkIFs = systemInfo.getHardware().getNetworkIFs();
         for (NetworkIF net : networkIFs) {
-            if(net.getIfOperStatus()== NetworkIF.IfOperStatus.UP){
-                System.out.println("接收的包:"+net.getPacketsRecv()+",发送的包:"+net.getPacketsSent());
+            if (net.getIfOperStatus() == NetworkIF.IfOperStatus.UP) {
+                System.out.println("接收的包:" + net.getPacketsRecv() + ",发送的包:" + net.getPacketsSent());
             }
         }
     }

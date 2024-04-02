@@ -3,7 +3,6 @@ package io.virtue.rpc.objectpool;
 import java.time.Instant;
 
 /**
- *
  * @param <T>
  */
 public interface PooledObject<T> {

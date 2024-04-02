@@ -17,7 +17,6 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true, chain = true)
 public class EventDispatcherConfig extends UrlTypeConfig {
 
-
     @Parameter(Key.BUFFER_SIZE)
     private int bufferSize = Constant.DEFAULT_BUFFER_SIZE;
 

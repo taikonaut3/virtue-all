@@ -12,14 +12,15 @@ import java.util.function.Supplier;
 
 /**
  * ArrayObjectPool.
+ *
  * @param <T>
  */
 @SuppressWarnings("unchecked")
 public class ArrayObjectPool<T> extends AbstractObjectPool<T> {
+    private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
     private final PooledObject<T>[] pooledObjectArr;
     private final ReentrantLock mainLock = new ReentrantLock();
     private final Condition available = mainLock.newCondition();
-    private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
 
     public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory, ObjectPoolConfig poolConfig) {
         super(virtue, factory, poolConfig);

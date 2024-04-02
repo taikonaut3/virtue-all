@@ -39,6 +39,7 @@ public class Response implements Envelope {
 
     /**
      * Create a success response.
+     *
      * @param url
      * @param message
      * @return
@@ -49,6 +50,7 @@ public class Response implements Envelope {
 
     /**
      * Create a error response.
+     *
      * @param url
      * @param message
      * @return

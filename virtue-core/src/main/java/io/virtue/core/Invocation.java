@@ -19,12 +19,14 @@ public interface Invocation {
 
     /**
      * Get the arguments of the method call.
+     *
      * @return
      */
     Object[] args();
 
     /**
      * Get the return type of the method.
+     *
      * @return {@link Invoker#returnType()}
      */
     Type returnType();

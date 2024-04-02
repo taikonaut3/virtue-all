@@ -3,9 +3,9 @@ package io.virtue.common.extension;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Store data for type String.
+ *
  * @param <T> current instance
  */
 @SuppressWarnings("unchecked")

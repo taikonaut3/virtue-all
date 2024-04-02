@@ -1,14 +1,14 @@
 package io.virtue.transport.netty.http;
 
-import io.virtue.common.constant.Key;
-import io.virtue.common.url.URL;
-import io.virtue.transport.Request;
-import io.virtue.transport.Response;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.util.AttributeKey;
+import io.virtue.common.constant.Key;
+import io.virtue.common.url.URL;
+import io.virtue.transport.Request;
+import io.virtue.transport.Response;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -19,11 +19,9 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public final class HttpMessageConverter {
 
-    private final ChannelHandler requestConverter = new RequestConverter();
-
-    private final ChannelHandler responseConverter = new ResponseConverter();
-
     private static final AttributeKey<URL> urlKey = AttributeKey.newInstance(Key.URL);
+    private final ChannelHandler requestConverter = new RequestConverter();
+    private final ChannelHandler responseConverter = new ResponseConverter();
 
     static class RequestConverter extends ChannelOutboundHandlerAdapter {
         @Override

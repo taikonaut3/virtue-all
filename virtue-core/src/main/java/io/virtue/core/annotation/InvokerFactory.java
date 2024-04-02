@@ -20,5 +20,4 @@ public @interface InvokerFactory {
      */
     String value();
 
-
 }
