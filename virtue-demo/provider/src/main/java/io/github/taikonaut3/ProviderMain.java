@@ -2,13 +2,18 @@ package io.github.taikonaut3;
 
 import io.virtue.boot.EnableVirtue;
 import io.virtue.common.constant.Key;
+import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
-import io.virtue.core.Virtue;
+import org.example.Message;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.virtue.common.constant.Components.Registry.CONSUL;
@@ -17,7 +22,9 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")
 public class ProviderMain {
     public static void main(String[] args) {
-        SpringApplication.run(ProviderMain.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(ProviderMain.class, args);
+        Provider provider = context.getBean(Provider.class);
+
         //simpleTest();
     }
 

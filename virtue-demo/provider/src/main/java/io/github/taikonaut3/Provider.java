@@ -1,5 +1,6 @@
 package io.github.taikonaut3;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.taikonaut3.model2.ParentObject;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
@@ -12,6 +13,7 @@ import java.util.List;
 import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
 @RemoteService("345")
+//@Service
 public class Provider {
 
     @VirtueCallable(name = "hello")
@@ -41,16 +43,17 @@ public class Provider {
         return ParentObject.getObjList("list server2");
     }
 
+    @Bulkhead(name="bulkheadApi")
     @VirtueCallable(name = "exchangeMessage")
     @Config(filters = {"testFilter","calleeResultFilter"})
     public Message exchangeMessage(Message message) {
         message.setDate(new Date());
         message.setName("server " + message.getDate().toString());
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Thread.sleep(6000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         return message;
     }
 

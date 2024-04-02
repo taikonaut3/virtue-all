@@ -7,3 +7,22 @@ spring:
         prefer-ip-address: true
 server:
   port: 8081
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        waitDurationInOpenState: 60000 # 熔断器从打开到半开需要的时间
+        failureRateThreshold: 100 # 熔断器打开的失败阈值
+        eventConsumerBufferSize: 5 # 事件缓冲区大小
+        registerHealthIndicator: true # 健康监测
+        automaticTransitionFromOpenToHalfOpenEnabled: true # 是否自动从打开到半开，不需要触发
+    instances:
+      testCircuitBreaker:
+        baseConfig: default
+        waitDurationInOpenState: 60000
+        failureRateThreshold: 100
+  bulkhead:
+    instances:
+      bulkheadApi:
+        max-concurrent-calls: 3

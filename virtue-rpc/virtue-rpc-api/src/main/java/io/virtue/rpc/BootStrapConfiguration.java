@@ -62,8 +62,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             Server server = protocol.openServer(serverUrl);
             logger.info(
                     "Opened Server[{}] for Protocol[{}] and bind Port(s) {}",
-                    StringUtil.simpleClassName(server), protocol.protocol(), server.port()
-            );
+                    StringUtil.simpleClassName(server), protocol.protocol(), server.port());
         }
     }
 }

@@ -33,5 +33,27 @@ public interface RemoteCaller<T> extends InvokerContainer {
      * Direct url address.
      */
     InetSocketAddress directAddress();
+
+    /**
+     * Set fallBacker.
+     *
+     * @param fallBacker
+     */
+    void fallBacker(T fallBacker);
+
+    /**
+     * Current interface's fallBacker.
+     *
+     * @return
+     */
+    T fallBacker();
+
+    /**
+     * If Rpc call failed,then invoke fallBacker.
+     *
+     * @param invocation
+     * @return
+     */
+    Object invokeFallBack(Invocation invocation);
 }
 

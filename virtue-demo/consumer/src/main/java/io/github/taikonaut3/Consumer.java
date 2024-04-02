@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import static io.virtue.common.constant.Components.Serialization.JSON;
 import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
-@RemoteCaller(value = "provider")
+@RemoteCaller(value = "provider",fallback = ConsumerFallBacker.class)
 public interface Consumer {
 
     @VirtueCall(service = "345", callMethod = "hello")

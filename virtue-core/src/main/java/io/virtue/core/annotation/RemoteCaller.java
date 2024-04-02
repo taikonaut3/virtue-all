@@ -30,4 +30,11 @@ public @interface RemoteCaller {
      */
     boolean lazyDiscover() default false;
 
+    /**
+     * If Rpc call failed, then invoke fallBacker.
+     *
+     * @return
+     */
+    Class<?> fallback() default Void.class;
+
 }

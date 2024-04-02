@@ -156,5 +156,6 @@ public interface Key {
     AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(WRITE_IDLE_TIMES);
     AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(READER_IDLE_TIMES);
     AttributeKey<AtomicInteger> LAST_CALL_INDEX_ATTRIBUTE_KEY = AttributeKey.get(LAST_CALL_INDEX);
+    AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.get("callException");
     String VERTX = "vertx";
 }

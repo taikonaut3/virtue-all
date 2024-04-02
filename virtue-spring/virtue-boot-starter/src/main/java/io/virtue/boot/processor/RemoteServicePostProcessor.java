@@ -48,8 +48,8 @@ public class RemoteServicePostProcessor extends PreferentialCreateConfig impleme
                 assert className != null;
                 Class<?> type = ClassUtils.resolveClassName(className, null);
                 if (type.isAnnotationPresent(RemoteService.class)) {
-                    RemoteService export = type.getAnnotation(RemoteService.class);
-                    registry.registerBeanDefinition(export.value(), beanDefinition);
+                    RemoteService service = type.getAnnotation(RemoteService.class);
+                    registry.registerBeanDefinition(service.value(), beanDefinition);
                 }
             }
         }

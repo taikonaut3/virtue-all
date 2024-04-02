@@ -59,6 +59,25 @@ public final class ReflectionUtil {
     }
 
     /**
+     * Get the real class of the target class.
+     *
+     * @param type
+     * @return
+     */
+    public static Class<?> getTargetClass(Class<?> type) {
+        List<String> proxyNames = List.of("CGLIB", "ByteBuddy");
+        for (String proxyName : proxyNames) {
+            if (type.getName().contains(proxyName)) {
+                Class<?> superclass = type.getSuperclass();
+                if (superclass != null && superclass != Object.class) {
+                    return superclass;
+                }
+            }
+        }
+        return type;
+    }
+
+    /**
      * Get the default instance of the annotation.
      *
      * @param annotationType The type of annotation to get

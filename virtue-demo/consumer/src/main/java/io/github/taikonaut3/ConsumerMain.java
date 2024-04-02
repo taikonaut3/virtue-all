@@ -12,11 +12,15 @@ import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
 import org.example.Message;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.virtue.common.constant.Components.Registry.CONSUL;
@@ -25,8 +29,21 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")
 public class ConsumerMain {
     public static void main(String[] args) {
-        //SpringApplication.run(ConsumerMain.class, args);
-        simpleTest();
+        ConfigurableApplicationContext context = SpringApplication.run(ConsumerMain.class, args);
+        Consumer consumer = context.getBean("consumer", Consumer.class);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < 10; i++) {
+            executorService.execute(()->{
+                Message message = new Message();
+                message.setDate(new Date());
+                message.setName("client" + message.getDate().toString());
+                Message message1 = consumer.exchangeMessage(message);
+                System.out.println(message1);
+            });
+
+        }
+
+        //simpleTest();
     }
 
     public static void simpleTest() {

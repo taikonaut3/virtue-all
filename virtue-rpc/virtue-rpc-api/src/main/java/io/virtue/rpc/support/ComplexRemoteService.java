@@ -46,7 +46,7 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
         AssertUtil.condition(checkRemoteService(target.getClass()),
                 "remoteService this Method Only support @RemoteService modifier's Object");
         this.target = target;
-        this.remoteServiceClass = (Class<T>) target.getClass();
+        this.remoteServiceClass = (Class<T>) ReflectionUtil.getTargetClass(target.getClass());
         this.methodIndex = new HashMap<>();
         this.methodAccess = MethodAccess.get(target.getClass());
         init();

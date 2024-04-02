@@ -1,6 +1,8 @@
 package proxy;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
+import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.proxy.ProxyFactory;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -65,5 +67,14 @@ public class MethodInvokeTest {
         }
         System.out.println("普通调用：总"+time5+"-"+  time5 / num + "ms");
 
+    }
+
+    @Test
+    public void test2() {
+        ProxyFactory byteBuddy = ExtensionLoader.loadService(ProxyFactory.class, "byteBuddy");
+        ProxyFactory cglib = ExtensionLoader.loadService(ProxyFactory.class, "cglib");
+        Cat cat = byteBuddy.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
+        Cat cat1 = cglib.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
+        System.out.println(cat);
     }
 }

@@ -62,14 +62,6 @@ public class RemoteCallerPostProcessor extends PreferentialCreateConfig implemen
         }
     }
 
-    @Override
-    public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
-        if (bean instanceof RemoteCallerFactoryBean<?> remoteCallerFactoryBean) {
-            remoteCallerFactoryBean.setVirtue(virtue());
-        }
-        return bean;
-    }
-
     private static final class RemoteCallerScanner extends ClassPathScanningCandidateComponentProvider {
 
         RemoteCallerScanner() {

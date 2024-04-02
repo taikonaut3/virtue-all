@@ -26,6 +26,7 @@ public class VirtueRegister implements ImportBeanDefinitionRegistrar {
             VirtuePostProcessor.class,
             FilterPostProcessor.class,
             ServerConfigPostProcessor.class,
+            ClientConfigPostProcessor.class,
             RegistryConfigPostProcessor.class
     );
 

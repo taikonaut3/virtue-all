@@ -1,13 +1,11 @@
 package io.virtue.rpc.support;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectionUtil;
-import io.virtue.core.Caller;
-import io.virtue.core.Invoker;
-import io.virtue.core.RemoteCaller;
-import io.virtue.core.Virtue;
+import io.virtue.core.*;
 import io.virtue.core.annotation.InvokerFactory;
 import io.virtue.core.support.TransferableInvocation;
 import io.virtue.proxy.InvocationHandler;
@@ -36,6 +34,8 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
     private boolean lazyDiscover;
 
     private InetSocketAddress directAddress;
+
+    private FallBackerWrapper<T> fallBackerWrapper;
 
     public ComplexRemoteCaller(Virtue virtue, Class<T> target) {
         super(virtue);
@@ -73,6 +73,21 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
     @Override
     public InetSocketAddress directAddress() {
         return directAddress;
+    }
+
+    @Override
+    public void fallBacker(T fallBacker) {
+        this.fallBackerWrapper = new FallBackerWrapper<>(fallBacker);
+    }
+
+    @Override
+    public T fallBacker() {
+        return fallBackerWrapper == null ? null : fallBackerWrapper.fallBacker;
+    }
+
+    @Override
+    public Object invokeFallBack(Invocation invocation) {
+        return fallBackerWrapper.invoke(invocation);
     }
 
     @Override
@@ -126,5 +141,22 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
             return null;
         }
 
+    }
+
+    static class FallBackerWrapper<T> {
+        private final T fallBacker;
+
+        private final MethodAccess methodAccess;
+
+        FallBackerWrapper(T fallBacker) {
+            this.fallBacker = fallBacker;
+            methodAccess = MethodAccess.get(fallBacker.getClass());
+        }
+
+        Object invoke(Invocation invocation) {
+            Method method = invocation.invoker().method();
+            int index = methodAccess.getIndex(method.getName(), method.getParameterTypes());
+            return methodAccess.invoke(fallBacker, index, invocation.args());
+        }
     }
 }
