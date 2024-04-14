@@ -15,7 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static io.virtue.common.constant.Constant.*;
+import static io.virtue.common.constant.Constant.EXTENSION_NAME;
+import static io.virtue.common.constant.Constant.SPI_FIX_PATH;
 
 /**
  * Extend JDK SPI.
@@ -24,7 +25,7 @@ import static io.virtue.common.constant.Constant.*;
  * @see Extension
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
-    @SupportedAnnotationTypes({EXTENSION_NAME})
+@SupportedAnnotationTypes({EXTENSION_NAME})
 public class ExtensionAnnotationProcessor extends AbstractProcessor {
 
     private Map<String, File> fileMap;

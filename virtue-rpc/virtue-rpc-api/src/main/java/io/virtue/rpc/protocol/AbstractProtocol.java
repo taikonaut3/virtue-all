@@ -18,32 +18,22 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Abstract Protocol.
  *
- * @param <Req> request type
+ * @param <Req>  request type
  * @param <Resp> response type
  */
 public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp> {
 
-    private Virtue virtue;
-
-    protected String protocol;
-
-    protected Codec serverCodec;
-
-    protected Codec clientCodec;
-
     private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
-
     private final Map<String, Client> customClients = new ConcurrentHashMap<>();
-
+    protected String protocol;
+    protected Codec serverCodec;
+    protected Codec clientCodec;
     protected ChannelHandler clientHandler;
-
     protected ChannelHandler serverHandler;
-
     protected ProtocolParser protocolParser;
-
     protected Transporter transporter;
-
     protected String transport;
+    protected Virtue virtue;
 
     protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec, ProtocolParser protocolParser) {
         this(protocol, serverCodec, clientCodec, new BaseClientChannelHandlerChain(), new BaseServerChannelHandlerChain(), protocolParser);

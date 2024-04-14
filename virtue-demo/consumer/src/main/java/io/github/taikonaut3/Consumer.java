@@ -62,6 +62,4 @@ public interface Consumer {
     @Http2Call(path = "http2Test")
     List<ParentObject> http2Test(@Body List<ParentObject> list);
 
-
-
 }

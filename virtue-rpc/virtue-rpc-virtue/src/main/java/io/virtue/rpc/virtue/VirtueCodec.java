@@ -212,6 +212,7 @@ public class VirtueCodec implements Codec {
                 simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
         return serializer.deserialize(decompress, bodyType);
     }
+
     @SuppressWarnings("unchecked")
     private void findDecodedConstructor() {
         try {

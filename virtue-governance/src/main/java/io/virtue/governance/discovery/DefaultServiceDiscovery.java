@@ -1,8 +1,8 @@
 package io.virtue.governance.discovery;
 
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.spi.Extension;
+import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.core.Invocation;

@@ -15,7 +15,6 @@ public class Request implements Envelope {
 
     public static final AttributeKey<Request> ATTRIBUTE_KEY = AttributeKey.of(Key.REQUEST);
 
-
     private boolean oneway;
 
     private URL url;

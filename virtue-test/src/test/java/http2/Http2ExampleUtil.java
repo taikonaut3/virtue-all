@@ -39,10 +39,11 @@ public final class Http2ExampleUtil {
      */
     private static final int BLOCK_SIZE = 1024;
 
-    private Http2ExampleUtil() { }
+    private Http2ExampleUtil() {
+    }
 
     /**
-     * @param string the string to be converted to an integer.
+     * @param string       the string to be converted to an integer.
      * @param defaultValue the default value
      * @return the integer value of a string or the default value, if the string is either null or empty.
      */
@@ -55,6 +56,7 @@ public final class Http2ExampleUtil {
 
     /**
      * Reads an InputStream into a byte array.
+     *
      * @param input the InputStream.
      * @return a byte array representation of the InputStream.
      * @throws IOException if an I/O exception of some sort happens while reading the InputStream.
@@ -70,7 +72,7 @@ public final class Http2ExampleUtil {
 
     /**
      * @param query the decoder of query string
-     * @param key the key to lookup
+     * @param key   the key to lookup
      * @return the first occurrence of that key in the string parameters
      */
     public static String firstValue(QueryStringDecoder query, String key) {

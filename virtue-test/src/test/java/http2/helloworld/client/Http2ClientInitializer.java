@@ -20,20 +20,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.codec.http.HttpClientUpgradeHandler;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpVersion;
-import io.netty.handler.codec.http2.DefaultHttp2Connection;
-import io.netty.handler.codec.http2.DelegatingDecompressorFrameListener;
-import io.netty.handler.codec.http2.Http2ClientUpgradeCodec;
-import io.netty.handler.codec.http2.Http2Connection;
-import io.netty.handler.codec.http2.Http2FrameLogger;
-import io.netty.handler.codec.http2.HttpToHttp2ConnectionHandler;
-import io.netty.handler.codec.http2.HttpToHttp2ConnectionHandlerBuilder;
-import io.netty.handler.codec.http2.InboundHttp2ToHttpAdapterBuilder;
+import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http2.*;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 import io.netty.handler.ssl.SslContext;
@@ -126,9 +114,20 @@ public class Http2ClientInitializer extends ChannelInitializer<SocketChannel> {
         HttpClientUpgradeHandler upgradeHandler = new HttpClientUpgradeHandler(sourceCodec, upgradeCodec, 65536);
 
         ch.pipeline().addLast(sourceCodec,
-                              upgradeHandler,
-                              new UpgradeRequestHandler(),
-                              new UserEventLogger());
+                upgradeHandler,
+                new UpgradeRequestHandler(),
+                new UserEventLogger());
+    }
+
+    /**
+     * Class that logs any User Events triggered on this channel.
+     */
+    private static class UserEventLogger extends ChannelInboundHandlerAdapter {
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            System.out.println("User Event Triggered: " + evt);
+            ctx.fireUserEventTriggered(evt);
+        }
     }
 
     /**
@@ -157,17 +156,6 @@ public class Http2ClientInitializer extends ChannelInitializer<SocketChannel> {
             ctx.pipeline().remove(this);
 
             configureEndOfPipeline(ctx.pipeline());
-        }
-    }
-
-    /**
-     * Class that logs any User Events triggered on this channel.
-     */
-    private static class UserEventLogger extends ChannelInboundHandlerAdapter {
-        @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-            System.out.println("User Event Triggered: " + evt);
-            ctx.fireUserEventTriggered(evt);
         }
     }
 }

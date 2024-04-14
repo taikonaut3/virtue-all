@@ -20,14 +20,7 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http2.DefaultHttp2DataFrame;
-import io.netty.handler.codec.http2.DefaultHttp2Headers;
-import io.netty.handler.codec.http2.DefaultHttp2HeadersFrame;
-import io.netty.handler.codec.http2.DefaultHttp2WindowUpdateFrame;
-import io.netty.handler.codec.http2.Http2DataFrame;
-import io.netty.handler.codec.http2.Http2FrameStream;
-import io.netty.handler.codec.http2.Http2Headers;
-import io.netty.handler.codec.http2.Http2HeadersFrame;
+import io.netty.handler.codec.http2.*;
 import io.netty.util.CharsetUtil;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
@@ -44,29 +37,6 @@ public class HelloWorldHttp2Handler extends ChannelDuplexHandler {
 
     static final ByteBuf RESPONSE_BYTES = unreleasableBuffer(
             copiedBuffer("Hello World", CharsetUtil.UTF_8)).asReadOnly();
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
-        cause.printStackTrace();
-        ctx.close();
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof Http2HeadersFrame) {
-            onHeadersRead(ctx, (Http2HeadersFrame) msg);
-        } else if (msg instanceof Http2DataFrame) {
-            onDataRead(ctx, (Http2DataFrame) msg);
-        } else {
-            super.channelRead(ctx, msg);
-        }
-    }
-
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        ctx.flush();
-    }
 
     /**
      * If receive a frame with end-of-stream set, send a pre-canned response.
@@ -106,5 +76,28 @@ public class HelloWorldHttp2Handler extends ChannelDuplexHandler {
         Http2Headers headers = new DefaultHttp2Headers().status(OK.codeAsText());
         ctx.write(new DefaultHttp2HeadersFrame(headers).stream(stream));
         ctx.write(new DefaultHttp2DataFrame(payload, true).stream(stream));
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        super.exceptionCaught(ctx, cause);
+        cause.printStackTrace();
+        ctx.close();
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof Http2HeadersFrame) {
+            onHeadersRead(ctx, (Http2HeadersFrame) msg);
+        } else if (msg instanceof Http2DataFrame) {
+            onDataRead(ctx, (Http2DataFrame) msg);
+        } else {
+            super.channelRead(ctx, msg);
+        }
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        ctx.flush();
     }
 }

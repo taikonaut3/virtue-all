@@ -15,7 +15,7 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 /**
  * Communication protocol used to exchange data between client and server.
  *
- * @param <Req> Request type
+ * @param <Req>  Request type
  * @param <Resp> Response type
  */
 @Extensible(value = VIRTUE)

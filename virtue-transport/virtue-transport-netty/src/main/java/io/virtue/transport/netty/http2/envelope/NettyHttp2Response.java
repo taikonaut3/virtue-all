@@ -13,9 +13,8 @@ import java.util.Map;
  */
 public class NettyHttp2Response extends DefaultHttpEnvelope implements Http2Response {
 
-    private StreamEnvelope streamEnvelope;
-
     private final int statusCode;
+    private StreamEnvelope streamEnvelope;
 
     public NettyHttp2Response(StreamEnvelope streamEnvelope) {
         super(HttpVersion.HTTP_2_0,

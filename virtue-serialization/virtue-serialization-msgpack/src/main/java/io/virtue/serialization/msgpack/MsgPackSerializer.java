@@ -14,7 +14,6 @@ import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 @Extension(MSGPACK)
 public class MsgPackSerializer extends JacksonSerializer {
 
-
     public MsgPackSerializer() {
         super.jsonMapper = JsonMapper.builder(new MessagePackFactory())
                 .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)

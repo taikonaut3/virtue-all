@@ -26,6 +26,7 @@ public class NettyIdeStateHandler extends IdleStateHandler {
         super(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds, TimeUnit.MILLISECONDS);
         this.handler = handler;
     }
+
     /**
      * Create a {@link IdleStateHandler} for server.
      *

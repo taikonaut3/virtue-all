@@ -50,7 +50,7 @@ public class Http2Test {
                     data.readBytes(bytes);
                     HashMap<CharSequence, CharSequence> headers = new HashMap<>();
                     headers.put("zzz", "123");
-                    streamEnvelope.url().set(HttpMethod.ATTRIBUTE_KEY,streamEnvelope.method());
+                    streamEnvelope.url().set(HttpMethod.ATTRIBUTE_KEY, streamEnvelope.method());
                     Http2Response http2Response = transporter.newResponse(200, streamEnvelope.url(), headers, bytes);
                 }
             }

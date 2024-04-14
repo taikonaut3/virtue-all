@@ -24,13 +24,10 @@ import io.virtue.transport.server.AbstractServer;
  */
 public class NettyServer extends AbstractServer {
 
-    private ServerBootstrap bootstrap;
-
-    private NioEventLoopGroup bossGroup;
-
-    private NioEventLoopGroup workerGroup;
-
     protected Channel channel;
+    private ServerBootstrap bootstrap;
+    private NioEventLoopGroup bossGroup;
+    private NioEventLoopGroup workerGroup;
 
     public NettyServer(URL url, ChannelHandler handler, Codec codec) throws BindException {
         super(url, handler, codec);

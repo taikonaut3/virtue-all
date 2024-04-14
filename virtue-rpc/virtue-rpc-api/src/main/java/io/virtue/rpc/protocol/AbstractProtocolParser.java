@@ -6,9 +6,9 @@ import io.virtue.core.Callee;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.core.Virtue;
-import io.virtue.transport.RpcFuture;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
+import io.virtue.transport.RpcFuture;
 
 import static io.virtue.common.util.StringUtil.simpleClassName;
 

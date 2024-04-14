@@ -47,6 +47,7 @@ public final class Http2ClientStreamFrameResponseHandler extends SimpleChannelIn
     /**
      * Waits for the latch to be decremented (i.e. for an end of stream message to be received), or for
      * the latch to expire after 5 seconds.
+     *
      * @return true if a successful HTTP/2 end of stream message was received.
      */
     public boolean responseSuccessfullyCompleted() {

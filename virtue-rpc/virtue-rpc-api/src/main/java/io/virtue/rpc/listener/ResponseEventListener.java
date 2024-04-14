@@ -2,9 +2,9 @@ package io.virtue.rpc.listener;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.executor.RpcThreadPool;
-import io.virtue.transport.RpcFuture;
 import io.virtue.rpc.event.ResponseEvent;
 import io.virtue.transport.Response;
+import io.virtue.transport.RpcFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
