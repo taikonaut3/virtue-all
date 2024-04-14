@@ -1,10 +1,11 @@
 package core;
 
-import io.virtue.common.spi.ExtensionLoader;
-import io.virtue.common.url.URL;
-import io.virtue.core.config.EventDispatcherConfig;
-import io.virtue.event.EventDispatcher;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author WenBo Zhou
@@ -12,10 +13,33 @@ import org.junit.jupiter.api.Test;
  */
 public class CoreTest {
 
+    private final Map<String, String> map = new ConcurrentHashMap<>();
+
     @Test
     public void test1() {
-        URL url = new EventDispatcherConfig().toUrl();
-        EventDispatcher eventDispatcher = ExtensionLoader.load(EventDispatcher.class).conditionOnConstructor(url).getService("disruptor");
-        System.out.println(eventDispatcher);
+
+    }
+
+    @Test
+    public void test2() {
+        ExecutorService executorService = Executors.newFixedThreadPool(200);
+        for (int i = 0; i < 1000; i++) {
+            executorService.execute(() -> {
+                System.out.println(get("111"));
+            });
+        }
+    }
+
+    private String get(String key) {
+        String value = map.get(key);
+        if (value == null) {
+            synchronized (this) {
+                if (map.get(key) == null) {
+                    value = "111";
+                    map.put(key, value);
+                }
+            }
+        }
+        return value;
     }
 }

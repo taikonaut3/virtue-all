@@ -9,7 +9,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.virtue.common.constant.Constant;
-import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ConnectException;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.url.URL;
@@ -22,16 +21,17 @@ import io.virtue.transport.netty.ProtocolInitializer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Base on netty client.
+ * Client base on netty.
  */
-public final class NettyClient extends AbstractClient {
+public class NettyClient extends AbstractClient {
 
-    private static final NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS,
-            new DefaultThreadFactory("NettyClientWorker", true));
+    private static final NioEventLoopGroup NIO_EVENT_LOOP_GROUP = new NioEventLoopGroup(
+            Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyClientWorker", true)
+    );
 
-    private Bootstrap bootstrap;
-
-    private Channel channel;
+    protected Bootstrap bootstrap;
+    protected Channel channel;
+    protected io.netty.channel.ChannelHandler nettyHandler;
 
     public NettyClient(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
         super(url, channelHandler, codec);
@@ -40,27 +40,21 @@ public final class NettyClient extends AbstractClient {
     @Override
     protected void doInit() throws ConnectException {
         bootstrap = new Bootstrap();
-        int configTimeout = url.getIntParam(Key.CONNECT_TIMEOUT, Constant.DEFAULT_CONNECT_TIMEOUT);
-        connectTimeout = Math.min(configTimeout, Constant.DEFAULT_MAX_CONNECT_TIMEOUT);
-        final NettyClientChannelHandler handler = new NettyClientChannelHandler(channelHandler);
-        initBootStrap(handler);
-    }
-
-    private void initBootStrap(NettyClientChannelHandler handler) {
-        bootstrap.group(nioEventLoopGroup)
+        nettyHandler = new NettyClientChannelHandler(super.channelHandler);
+        bootstrap.group(NIO_EVENT_LOOP_GROUP)
+                .channel(NioSocketChannel.class)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .channel(NioSocketChannel.class)
-                .handler(ProtocolInitializer.getInitializer(url, handler, codec, false));
+                .handler(ProtocolInitializer.getForClient(url, nettyHandler, codec));
     }
 
     @Override
     protected void doConnect() throws ConnectException {
         ChannelFuture future = bootstrap.connect(toInetSocketAddress());
-        boolean ret = future.awaitUninterruptibly(connectTimeout, TimeUnit.MILLISECONDS);
-        if (ret && future.isSuccess()) {
+        boolean success = future.awaitUninterruptibly(connectTimeout, TimeUnit.MILLISECONDS);
+        if (success && future.isSuccess()) {
             channel = future.channel();
             super.channel = NettyChannel.getChannel(channel);
         } else if (future.cause() != null) {
@@ -73,7 +67,7 @@ public final class NettyClient extends AbstractClient {
     @Override
     protected void doClose() throws NetWorkException {
         try {
-            nioEventLoopGroup.shutdownGracefully();
+            NIO_EVENT_LOOP_GROUP.shutdownGracefully();
             NettyChannel.removeChannel(channel);
         } catch (Throwable e) {
             throw new NetWorkException(e);

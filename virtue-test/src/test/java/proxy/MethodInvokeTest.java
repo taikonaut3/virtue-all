@@ -71,8 +71,8 @@ public class MethodInvokeTest {
 
     @Test
     public void test2() {
-        ProxyFactory byteBuddy = ExtensionLoader.loadService(ProxyFactory.class, "byteBuddy");
-        ProxyFactory cglib = ExtensionLoader.loadService(ProxyFactory.class, "cglib");
+        ProxyFactory byteBuddy = ExtensionLoader.loadExtension(ProxyFactory.class, "byteBuddy");
+        ProxyFactory cglib = ExtensionLoader.loadExtension(ProxyFactory.class, "cglib");
         Cat cat = byteBuddy.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
         Cat cat1 = cglib.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
         System.out.println(cat);

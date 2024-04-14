@@ -1,6 +1,7 @@
 package io.virtue.boot.processor;
 
 import io.virtue.boot.EnableVirtue;
+import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.annotation.RemoteService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -57,7 +58,7 @@ public class RemoteServicePostProcessor extends PreferentialCreateConfig impleme
 
     @Override
     public Object postProcessAfterInitialization(Object bean, @NonNull String beanName) throws BeansException {
-        if (bean.getClass().isAnnotationPresent(RemoteService.class)) {
+        if (ReflectionUtil.getTargetClass(bean.getClass()).isAnnotationPresent(RemoteService.class)) {
             virtue().wrap(bean);
         }
         return bean;

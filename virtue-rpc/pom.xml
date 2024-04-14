@@ -15,7 +15,8 @@
     <modules>
         <module>virtue-rpc-api</module>
         <module>virtue-rpc-virtue</module>
-        <module>virtue-rpc-http</module>
+        <module>virtue-rpc-http1</module>
+        <module>virtue-rpc-http2</module>
     </modules>
 
 </project>

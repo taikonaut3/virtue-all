@@ -3,7 +3,7 @@ package io.virtue.governance.faulttolerance;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 
@@ -14,7 +14,7 @@ import static io.virtue.common.constant.Components.FaultTolerance.TIMEOUT_RETRY;
 /**
  * TimeoutRetry when an exception occurs in the RPC call.
  */
-@ServiceProvider(TIMEOUT_RETRY)
+@Extension(TIMEOUT_RETRY)
 public class TimeoutRetry extends AbstractFaultTolerance {
     @Override
     protected Object doOperation(Invocation invocation) throws RpcException {

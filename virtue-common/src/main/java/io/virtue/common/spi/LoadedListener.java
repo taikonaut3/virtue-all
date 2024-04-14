@@ -1,7 +1,7 @@
 package io.virtue.common.spi;
 
 /**
- * SPI listener, when the Service instantiation is Created.
+ * SPI listener, when the Extension instantiation is Created.
  *
  * @param <T> service type
  */
@@ -9,7 +9,7 @@ package io.virtue.common.spi;
 public interface LoadedListener<T> {
 
     /**
-     * When the service is created, invoke this method.
+     * When the extension is created, invoke this method.
      *
      * @param service
      */

@@ -1,7 +1,7 @@
 package io.github.taikonaut3;
 
-import io.github.taikonaut3.model.ParentObject;
-import io.github.taikonaut3.model.TestGeneric;
+import org.example.model1.ParentObject;
+import org.example.model1.TestGeneric;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.transport.Response;
 import org.example.Message;
@@ -62,6 +62,11 @@ public class ConsumerFallBacker implements Consumer {
 
     @Override
     public List<ParentObject> list(List<ParentObject> list1, List<ParentObject> list2) {
+        return null;
+    }
+
+    @Override
+    public List<ParentObject> http2Test(List<ParentObject> list) {
         return null;
     }
 }

@@ -17,7 +17,7 @@ public final class StringUtil {
      * @param str
      * @return
      */
-    public static boolean isBlank(String str) {
+    public static boolean isBlank(CharSequence str) {
         return (str == null || str.isEmpty() || isWhitespace(str));
     }
 

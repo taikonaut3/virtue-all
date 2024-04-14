@@ -1,6 +1,6 @@
 package io.virtue.core;
 
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +9,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
 /**
  * Used for publishing disposable or periodic tasks.
  */
-@ServiceInterface(DEFAULT)
+@Extensible(DEFAULT)
 public interface Scheduler {
 
     /**

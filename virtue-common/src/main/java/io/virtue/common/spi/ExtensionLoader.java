@@ -2,7 +2,6 @@ package io.virtue.common.spi;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.util.ReflectionUtil;
-import io.virtue.common.util.StringUtil;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
@@ -33,29 +32,27 @@ public final class ExtensionLoader<S> {
 
     private static final Map<Class<?>, Set<LoadedListener<?>>> LISTENERMAP = new ConcurrentHashMap<>();
 
-    private final Map<String, ProviderWrapper> providerWrappers;
+    private final Map<String, ExtensionWrapper> extensionWrappers;
 
-    private final Map<String, S> services;
+    private final Map<String, S> extensions;
 
     private final Class<S> type;
 
-    private final String defaultService;
+    private final String defaultExtension;
 
     private final boolean lazyLoad;
 
-    private Object[] args;
-
     private ExtensionLoader(Class<S> type) {
         this.type = type;
-        this.defaultService = type.getAnnotation(ServiceInterface.class).value();
-        this.lazyLoad = type.getAnnotation(ServiceInterface.class).lazyLoad();
-        this.services = new ConcurrentHashMap<>();
-        this.providerWrappers = new ConcurrentHashMap<>();
-        loadServiceProvider(type);
+        this.defaultExtension = type.getAnnotation(Extensible.class).value();
+        this.lazyLoad = type.getAnnotation(Extensible.class).lazyLoad();
+        this.extensions = new ConcurrentHashMap<>();
+        this.extensionWrappers = new ConcurrentHashMap<>();
+        loadExtensionWrappers(type);
     }
 
     /**
-     * Load service with listeners.
+     * Load extension with listeners.
      *
      * @param type
      * @param loadedListeners
@@ -66,39 +63,36 @@ public final class ExtensionLoader<S> {
     @SafeVarargs
     public static <S> ExtensionLoader<S> load(Class<S> type, LoadedListener<S>... loadedListeners) {
         if (type == null) {
-            throw new IllegalArgumentException("Service type is null");
+            throw new IllegalArgumentException("extension type is null");
         }
         if (!type.isInterface()) {
-            throw new IllegalArgumentException("Service type(" + type + ") is not interface");
+            throw new IllegalArgumentException("extension type(" + type + ") is not interface");
         }
-        if (!type.isAnnotationPresent(ServiceInterface.class)) {
-            throw new IllegalArgumentException("Service type(" + type + ") can not be load because WITHOUT @ServiceInterface");
+        if (!type.isAnnotationPresent(Extensible.class)) {
+            throw new IllegalArgumentException("extension type(" + type + ") can not be load because WITHOUT @extensionInterface");
         }
-        ExtensionLoader<?> extensionLoader = LOADED_MAP.get(type.getTypeName());
-        if (extensionLoader == null) {
-            extensionLoader = new ExtensionLoader<>(type);
-            LOADED_MAP.putIfAbsent(type.getTypeName(), extensionLoader);
-        }
+
+        ExtensionLoader<?> extensionLoader = LOADED_MAP.computeIfAbsent(type.getTypeName(), k -> new ExtensionLoader<>(type));
         addListener(type, loadedListeners);
         return (ExtensionLoader<S>) extensionLoader;
     }
 
     /**
-     * Load service with serviceName and listeners.
+     * Load extension with extensionName and listeners.
      *
      * @param type
-     * @param serviceName
+     * @param extensionName
      * @param loadedListeners
      * @param <S>
      * @return
      */
     @SafeVarargs
-    public static <S> S loadService(Class<S> type, String serviceName, LoadedListener<S>... loadedListeners) {
-        return load(type, loadedListeners).getService(serviceName);
+    public static <S> S loadExtension(Class<S> type, String extensionName, LoadedListener<S>... loadedListeners) {
+        return load(type, loadedListeners).getExtension(extensionName);
     }
 
     /**
-     * Load default service with listeners.
+     * Load default extension with listeners.
      *
      * @param type
      * @param loadedListeners
@@ -106,12 +100,12 @@ public final class ExtensionLoader<S> {
      * @return
      */
     @SafeVarargs
-    public static <S> S loadService(Class<S> type, LoadedListener<S>... loadedListeners) {
+    public static <S> S loadExtension(Class<S> type, LoadedListener<S>... loadedListeners) {
         return load(type, loadedListeners).getDefault();
     }
 
     /**
-     * Load all services with listeners.
+     * Load all extensions with listeners.
      *
      * @param type
      * @param loadedListeners
@@ -119,12 +113,12 @@ public final class ExtensionLoader<S> {
      * @return
      */
     @SafeVarargs
-    public static <S> List<S> loadServices(Class<S> type, LoadedListener<S>... loadedListeners) {
-        return load(type, loadedListeners).getServices();
+    public static <S> List<S> loadExtensions(Class<S> type, LoadedListener<S>... loadedListeners) {
+        return load(type, loadedListeners).getExtensions();
     }
 
     /**
-     * Add listener for service.
+     * Add listener for extension.
      *
      * @param interfaceType
      * @param loadedListeners
@@ -139,29 +133,40 @@ public final class ExtensionLoader<S> {
     }
 
     @SuppressWarnings("unchecked")
-    private void loadServiceProvider(Class<S> type) {
-        /**========================load services from {@link PREFIX}========================*/
+    private void loadExtensionWrappers(Class<S> type) {
+        /**========================load extensions from {@link PREFIX}========================*/
         try {
             Enumeration<URL> resources = classLoader().getResources(PREFIX + type.getTypeName());
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
-                /**=======================load legal services to {@link services}========================*/
+                /**=======================load legal extensions to {@link extensions}========================*/
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                    String serviceClassName;
-                    while ((serviceClassName = br.readLine()) != null) {
-                        Class<?> serviceClass = classLoader().loadClass(serviceClassName);
-                        if (!this.type.isAssignableFrom(serviceClass)) {
-                            throw new IllegalArgumentException(format("Load service type(%s) failed, %s is not %s’s subclass",
+                    String extensionClassName;
+                    while ((extensionClassName = br.readLine()) != null) {
+                        Class<?> extensionClass = classLoader().loadClass(extensionClassName);
+                        if (!this.type.isAssignableFrom(extensionClass)) {
+                            throw new IllegalArgumentException(format("Load extension type(%s) failed, %s is not %s’s subclass",
                                     this.type, type, this.type));
                         }
-                        if (serviceClass.isAnnotationPresent(ServiceProvider.class)) {
-                            ServiceProvider provider = serviceClass.getAnnotation(ServiceProvider.class);
-                            String key = StringUtil.isBlankOrDefault(provider.value(), serviceClass.getName());
-                            ProviderWrapper wrapper = new ProviderWrapper((Class<? extends S>) serviceClass);
-                            if (!lazyLoad) {
-                                services.putIfAbsent(key, createInstance(wrapper));
+                        if (extensionClass.isAnnotationPresent(Extension.class)) {
+                            Extension extension = extensionClass.getAnnotation(Extension.class);
+                            String[] values = extension.value();
+                            values = Arrays.stream(values).distinct().toArray(String[]::new);
+                            if (values.length == 0) {
+                                values = new String[]{extensionClassName};
                             }
-                            providerWrappers.put(key, wrapper);
+                            ExtensionWrapper wrapper = new ExtensionWrapper((Class<? extends S>) extensionClass);
+                            if (!lazyLoad) {
+                                S instance = createInstance(wrapper);
+                                for (String key : values) {
+                                    extensionWrappers.put(key, wrapper);
+                                    extensions.putIfAbsent(key, instance);
+                                }
+                            } else {
+                                for (String key : values) {
+                                    extensionWrappers.put(key, wrapper);
+                                }
+                            }
                         }
                     }
                 }
@@ -174,90 +179,63 @@ public final class ExtensionLoader<S> {
     }
 
     /**
-     * Get service by serviceName.
+     * Get extension by extensionName.
      *
-     * @param serviceName
+     * @param extensionName
      * @return
      */
-    public S getService(String serviceName) {
-        ProviderWrapper wrapper = providerWrappers.get(serviceName);
+    public S getExtension(String extensionName) {
+        ExtensionWrapper wrapper = extensionWrappers.get(extensionName);
         if (wrapper == null) {
-            throw new IllegalArgumentException(format("Load service type(%s:%s) failed,Unknown the [%s] Please check is Exist",
-                    this.type, serviceName, serviceName));
+            throw new IllegalArgumentException(format("Load extension type(%s:%s) failed,Unknown the [%s] Please check is Exist",
+                    this.type, extensionName, extensionName));
         }
         if (!this.type.isAssignableFrom(wrapper.type())) {
-            throw new IllegalArgumentException(format("Load service type(%s:%s) failed,%s is not %s’s subclass",
-                    this.type, serviceName, wrapper.type(), this.type));
+            throw new IllegalArgumentException(format("Load extension type(%s:%s) failed,%s is not %s’s subclass",
+                    this.type, extensionName, wrapper.type(), this.type));
         }
-        if (wrapper.provider().scope() == Scope.PROTOTYPE) {
+        if (wrapper.extension().scope() == Scope.PROTOTYPE) {
             return createInstance(wrapper);
         }
-        S service = services.get(serviceName);
-        if (Objects.nonNull(service)) {
-            return service;
+        S extension = extensions.computeIfAbsent(extensionName, k -> createInstance(wrapper));
+        for (String value : wrapper.values()) {
+            extensions.putIfAbsent(value, extension);
         }
-        synchronized (serviceName.intern()) {
-            service = services.get(serviceName);
-            if (Objects.nonNull(service)) {
-                return service;
-            }
-            service = createInstance(wrapper);
-            services.putIfAbsent(serviceName, service);
-
-        }
-        return service;
+        return extension;
     }
 
     /**
-     * Get default service.
+     * Get default extension.
      *
      * @return
      */
     public S getDefault() {
-        return getService(defaultService);
+        return getExtension(defaultExtension);
     }
 
     /**
-     * Get all services.
+     * Get all extensions.
      *
      * @return
      */
-    public List<S> getServices() {
+    public List<S> getExtensions() {
         ArrayList<S> list = new ArrayList<>();
-        for (String key : providerWrappers.keySet()) {
-            list.add(getService(key));
+        for (String key : extensionWrappers.keySet()) {
+            list.add(getExtension(key));
         }
         return list;
     }
 
-    /**
-     * Condition on constructor.
-     *
-     * @param args
-     * @return
-     */
-    public ExtensionLoader<S> conditionOnConstructor(Object... args) {
-        this.args = args;
-        return this;
-    }
-
     @SuppressWarnings("unchecked")
-    private S createInstance(ProviderWrapper wrapper) {
-        S service = null;
-        if (wrapper.constructor() != null) {
-            if (args != null && args.length > 0) {
-                service = ReflectionUtil.createInstance(wrapper.constructor(), args);
-            }
-        } else {
-            service = ReflectionUtil.createInstance(wrapper.type());
-        }
+    private S createInstance(ExtensionWrapper wrapper) {
+        S extension = ReflectionUtil.createInstance(wrapper.noArgsConstructor);
         Set<LoadedListener<?>> listeners = LISTENERMAP.get(type);
         if (listeners != null) {
             for (LoadedListener<?> listener : listeners) {
-                ((LoadedListener<S>) listener).listen(service);
+                ((LoadedListener<S>) listener).listen(extension);
             }
         }
-        return service;
+        return extension;
     }
 
     private ClassLoader classLoader() {
@@ -266,26 +244,22 @@ public final class ExtensionLoader<S> {
 
     @Getter
     @Accessors(fluent = true)
-    private class ProviderWrapper {
+    private class ExtensionWrapper {
 
         private final Class<? extends S> type;
 
-        private final ServiceProvider provider;
+        private final Extension extension;
 
-        // If exist {@link ServiceInterface#constructor()}.
-        private Constructor<? extends S> constructor;
+        private final List<String> values;
 
-        ProviderWrapper(Class<? extends S> type) {
+        private final Constructor<S> noArgsConstructor;
+
+        @SuppressWarnings("unchecked")
+        ExtensionWrapper(Class<? extends S> type) {
             this.type = type;
-            this.provider = type.getAnnotation(ServiceProvider.class);
-            Class<?>[] constructorParameters = ExtensionLoader.this.type.getAnnotation(ServiceInterface.class).constructor();
-            if (constructorParameters != null && constructorParameters.length > 0) {
-                try {
-                    constructor = ReflectionUtil.finfConstructor(type, constructorParameters);
-                } catch (Exception ignored) {
-
-                }
-            }
+            this.extension = type.getAnnotation(Extension.class);
+            this.values = Arrays.stream(extension.value()).distinct().toList();
+            this.noArgsConstructor = (Constructor<S>) ReflectionUtil.finfConstructor(type, new Class[]{});
         }
     }
 }

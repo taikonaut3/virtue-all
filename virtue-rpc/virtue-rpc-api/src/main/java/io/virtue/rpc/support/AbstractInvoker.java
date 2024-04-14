@@ -78,11 +78,11 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
         this.container = container;
         this.remoteApplication = container.remoteApplication();
         this.protocol = protocol;
-        this.protocolInstance = ExtensionLoader.loadService(Protocol.class, protocol);
+        this.protocolInstance = ExtensionLoader.loadExtension(Protocol.class, protocol);
         parseConfig(config());
         init();
         if (url != null) {
-            url.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
+            url.set(Virtue.ATTRIBUTE_KEY, virtue);
         }
     }
 
@@ -108,6 +108,11 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
         return method.getReturnType();
     }
 
+    @Override
+    public String toString() {
+        return simpleClassName(this) + "[" + path() + "]." + method.toString();
+    }
+
     protected abstract URL createUrl(URL url);
 
     protected abstract void doInit();
@@ -128,7 +133,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     private void parseConfig(Config config) {
         serialization(config.serialization());
         compression(config.compression());
-        filterChain = ExtensionLoader.loadService(FilterChain.class, config.filterChain());
+        filterChain = ExtensionLoader.loadExtension(FilterChain.class, config.filterChain());
         String[] filterNames = config.filters();
         ConfigManager manager = virtue.configManager();
         Optional.ofNullable(filterNames)
@@ -140,8 +145,4 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
                 );
     }
 
-    @Override
-    public String toString() {
-        return simpleClassName(this) + "[" + path() + "]." + method.toString();
-    }
 }

@@ -1,11 +1,11 @@
 package io.virtue.core;
 
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 
 /**
  * Ability to scale over the life cycle of Virtue.
  */
-@ServiceInterface(lazyLoad = false)
+@Extensible(lazyLoad = false)
 public interface VirtueConfiguration {
 
     /**

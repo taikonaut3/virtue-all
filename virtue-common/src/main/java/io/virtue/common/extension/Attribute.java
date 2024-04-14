@@ -7,6 +7,12 @@ package io.virtue.common.extension;
  */
 public class Attribute<T> {
 
+    private final AttributeKey<T> key;
+
+    public Attribute(AttributeKey<T> key) {
+        this.key = key;
+    }
+
     private T attribute;
 
     /**
@@ -25,5 +31,18 @@ public class Attribute<T> {
      */
     public void set(T attribute) {
         this.attribute = attribute;
+    }
+
+    /**
+     * Get attribute object,if attribute is null then remove it from accessor.
+     *
+     * @param accessor
+     * @return
+     */
+    public T get(Accessor accessor) {
+        if (attribute == null) {
+            accessor.remove(key);
+        }
+        return get();
     }
 }

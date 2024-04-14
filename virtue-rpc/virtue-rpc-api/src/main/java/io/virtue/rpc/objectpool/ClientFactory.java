@@ -43,7 +43,7 @@ public class ClientFactory implements PooledObjectFactory<Client> {
 
     @Override
     public PooledObject<Client> makeObject() throws Exception {
-        URL url = RpcContext.currentContext().attribute(URL.ATTRIBUTE_KEY).get();
+        URL url = RpcContext.currentContext().get(URL.ATTRIBUTE_KEY);
         Client client = transporter.connect(url, handler, codec);
         return new DefaultPooledObject<>(client);
     }

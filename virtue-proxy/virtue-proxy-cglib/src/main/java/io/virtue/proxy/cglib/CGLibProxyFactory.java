@@ -1,7 +1,7 @@
 package io.virtue.proxy.cglib;
 
 import io.virtue.common.constant.Components;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.proxy.AbstractProxyFactory;
 import io.virtue.proxy.InvocationHandler;
 import org.springframework.cglib.proxy.Enhancer;
@@ -9,7 +9,7 @@ import org.springframework.cglib.proxy.Enhancer;
 /**
  * Create Proxy By CGLIB.
  */
-@ServiceProvider(Components.ProxyFactory.CGLIB)
+@Extension(Components.ProxyFactory.CGLIB)
 public class CGLibProxyFactory extends AbstractProxyFactory {
 
     @Override

@@ -1,6 +1,6 @@
 package io.virtue.governance.loadbalance;
 
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 
@@ -14,7 +14,7 @@ import static io.virtue.common.constant.Components.LoadBalance.ROUND_ROBIN;
  * Randomly assign requests to any server in the server cluster,
  * This strategy is simple and fast, but it can lead to an uneven server load.
  */
-@ServiceProvider(ROUND_ROBIN)
+@Extension(ROUND_ROBIN)
 public class RandomLoadBalancer extends AbstractLoadBalancer {
 
     @Override

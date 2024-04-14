@@ -1,6 +1,6 @@
 package io.github.taikonaut3;
 
-import io.github.taikonaut3.model2.ParentObject;
+import org.example.model2.ParentObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

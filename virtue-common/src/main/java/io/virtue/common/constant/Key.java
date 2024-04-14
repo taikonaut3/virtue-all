@@ -41,6 +41,8 @@ public interface Key {
 
     String ENABLED = "enabled";
 
+    String HTTP2_TRANSPORT = "h2_transport";
+
     String VERSION = "version";
 
     String GROUP = "group";
@@ -152,10 +154,11 @@ public interface Key {
     String HTTP_METHOD = "httpMethod";
 
     String VIRTUE = "virtue";
-    AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(ALL_IDLE_TIMES);
-    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(WRITE_IDLE_TIMES);
-    AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.get(READER_IDLE_TIMES);
-    AttributeKey<AtomicInteger> LAST_CALL_INDEX_ATTRIBUTE_KEY = AttributeKey.get(LAST_CALL_INDEX);
-    AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.get("callException");
+    AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(ALL_IDLE_TIMES);
+    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(WRITE_IDLE_TIMES);
+    AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(READER_IDLE_TIMES);
+    AttributeKey<AtomicInteger> LAST_CALL_INDEX_ATTRIBUTE_KEY = AttributeKey.of(LAST_CALL_INDEX);
+    AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.of("callException");
+    AttributeKey<Object> SERVICE_RESPONSE = AttributeKey.of("serviceResponse");
     String VERTX = "vertx";
 }

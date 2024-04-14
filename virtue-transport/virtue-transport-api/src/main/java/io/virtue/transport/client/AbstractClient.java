@@ -1,5 +1,7 @@
 package io.virtue.transport.client;
 
+import io.virtue.common.constant.Constant;
+import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ConnectException;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.url.URL;
@@ -18,7 +20,7 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
 
-    public int connectTimeout;
+    protected int connectTimeout;
 
     protected Channel channel;
 
@@ -35,6 +37,7 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
         this.url = url;
         this.channelHandler = channelHandler;
         this.codec = codec;
+        this.connectTimeout = url.getIntParam(Key.CONNECT_TIMEOUT, Constant.DEFAULT_CONNECT_TIMEOUT);
         try {
             connect();
             logger.debug("Create {} is Successful,Connect to remoteAddress: {} for Protocol({})",

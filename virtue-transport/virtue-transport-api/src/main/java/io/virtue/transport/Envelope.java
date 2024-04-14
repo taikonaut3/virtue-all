@@ -24,7 +24,7 @@ public interface Envelope extends Serializable {
      *
      * @return
      */
-    default Long id() {
+    default long id() {
         return url().getLongParam(Key.UNIQUE_ID);
     }
 

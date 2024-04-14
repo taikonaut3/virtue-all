@@ -4,7 +4,7 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.serialization.Serializer;
-import io.virtue.transport.compress.Compression;
+import io.virtue.transport.compress.Compressor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -41,7 +41,7 @@ public abstract class VirtueEnvelope implements Serializable {
      * @return
      */
     public Serializer serializer() {
-        return ExtensionLoader.loadService(Serializer.class, url.getParam(Key.SERIALIZATION));
+        return ExtensionLoader.loadExtension(Serializer.class, url.getParam(Key.SERIALIZATION));
     }
 
     /**
@@ -49,8 +49,8 @@ public abstract class VirtueEnvelope implements Serializable {
      *
      * @return
      */
-    public Compression compression() {
-        return ExtensionLoader.loadService(Compression.class, url.getParam(Key.COMPRESSION));
+    public Compressor compression() {
+        return ExtensionLoader.loadExtension(Compressor.class, url.getParam(Key.COMPRESSION));
     }
 
 }

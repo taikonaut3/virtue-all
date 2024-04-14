@@ -1,6 +1,6 @@
 package io.virtue.core;
 
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 
 import java.lang.reflect.Method;
 
@@ -9,7 +9,7 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 /**
  * InvokerFactory is used to create different caller for different protocols.
  */
-@ServiceInterface(VIRTUE)
+@Extensible(VIRTUE)
 public interface InvokerFactory {
 
     /**

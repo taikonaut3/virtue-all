@@ -7,9 +7,9 @@ import static io.virtue.common.constant.Components.*;
  */
 public interface Constant {
 
-    String SERVICE_INTERFACE_NAME = "io.virtue.common.spi.ServiceInterface";
+    String EXTENSIBLE_NAME = "io.virtue.common.spi.Extensible";
 
-    String SERVICE_PROVIDER_NAME = "io.virtue.common.spi.ServiceProvider";
+    String EXTENSION_NAME = "io.virtue.common.spi.Extension";
 
     int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
 

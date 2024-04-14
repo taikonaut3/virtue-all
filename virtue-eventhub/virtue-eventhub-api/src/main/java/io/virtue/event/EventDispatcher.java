@@ -1,14 +1,13 @@
 package io.virtue.event;
 
-import io.virtue.common.spi.ServiceInterface;
-import io.virtue.common.url.URL;
+import io.virtue.common.spi.Extensible;
 
 import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
 
 /**
  * Event dispatcher that can register, remove,and dispatch event listeners for specific types of events.
  */
-@ServiceInterface(value = DISRUPTOR, constructor = {URL.class})
+@Extensible(value = DISRUPTOR)
 public interface EventDispatcher {
 
     /**

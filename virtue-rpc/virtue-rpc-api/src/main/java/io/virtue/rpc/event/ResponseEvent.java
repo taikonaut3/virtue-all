@@ -7,11 +7,13 @@ import io.virtue.rpc.protocol.Protocol;
 import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.transport.Response;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /**
  * ResponseEvent.
  */
 @Getter
+@Accessors(fluent = true)
 public class ResponseEvent extends AbstractEvent<Response> {
 
     private final Object body;
@@ -19,7 +21,7 @@ public class ResponseEvent extends AbstractEvent<Response> {
     public ResponseEvent(Response response) {
         super(response);
         URL url = response.url();
-        var protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
+        var protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
         this.body = protocolParser.parseResponseBody(response);
     }

@@ -6,25 +6,41 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Accessor abstract class.
  */
+
+@SuppressWarnings("unchecked")
 public abstract class AbstractAccessor implements Accessor {
 
     protected Map<AttributeKey<?>, Attribute<?>> accessor = new ConcurrentHashMap<>();
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> Attribute<T> attribute(AttributeKey<T> key) {
+    public <T> T get(AttributeKey<T> key) {
         Attribute<?> attribute = accessor.get(key);
-        if (attribute == null) {
-            attribute = new Attribute<T>();
-            accessor.put(key, attribute);
+        if (attribute == null || attribute.get() == null) {
+            return null;
         }
-        return (Attribute<T>) attribute;
+        return (T) attribute.get();
     }
 
     @Override
-    public Accessor remove(String key) {
-        AttributeKey<Object> attributeKey = AttributeKey.get(key);
-        accessor.remove(attributeKey);
+    public <T> void set(AttributeKey<T> key, T value) {
+        Attribute<T> attribute = (Attribute<T>) accessor.get(key);
+        if (attribute != null) {
+            attribute.set(value);
+        } else {
+            attribute = new Attribute<>(key);
+            attribute.set(value);
+            accessor.put(key, attribute);
+        }
+    }
+
+    @Override
+    public Accessor remove(AttributeKey<?> key) {
+        accessor.remove(key);
         return this;
+    }
+
+    @Override
+    public void clear() {
+        accessor.clear();
     }
 }

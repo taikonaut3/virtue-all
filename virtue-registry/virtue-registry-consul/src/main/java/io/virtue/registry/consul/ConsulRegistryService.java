@@ -5,7 +5,6 @@ import io.vertx.ext.consul.*;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.extension.Attribute;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
@@ -59,11 +58,12 @@ public class ConsulRegistryService extends AbstractRegistryService {
                     .setHost(url.host())
                     .setPort(url.port())
                     .setTimeout(url.getIntParam(Key.CONNECT_TIMEOUT));
-            Attribute<Vertx> vertxAttribute = Virtue.get(url).attribute(AttributeKey.get(Key.VERTX));
-            vertx = vertxAttribute.get();
+            AttributeKey<Vertx> vertxKey = AttributeKey.of(Key.VERTX);
+            Virtue virtue = Virtue.get(url);
+            vertx = virtue.get(vertxKey);
             if (vertx == null) {
                 vertx = Vertx.vertx();
-                vertxAttribute.set(vertx);
+                virtue.set(vertxKey, vertx);
             }
             consulClient = ConsulClient.create(vertx, options);
         } catch (Exception e) {

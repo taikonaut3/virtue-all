@@ -1,5 +1,7 @@
 package io.virtue.core.manager;
 
+import io.virtue.common.util.NetUtil;
+import io.virtue.common.util.StringUtil;
 import io.virtue.core.Caller;
 import io.virtue.core.RemoteCaller;
 import io.virtue.core.Virtue;
@@ -38,14 +40,18 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
      * @param remoteCaller
      */
     public synchronized void register(RemoteCaller<?> remoteCaller) {
-        List<RemoteCaller<?>> remoteCallers = map.computeIfAbsent(remoteCaller.remoteApplication(), k -> new LinkedList<>());
+        String key = remoteCaller.remoteApplication();
+        if (StringUtil.isBlank(key)) {
+            key = NetUtil.getAddress(remoteCaller.directAddress());
+        }
+        List<RemoteCaller<?>> remoteCallers = map.computeIfAbsent(key, k -> new LinkedList<>());
         remoteCallers.add(remoteCaller);
     }
 
     @SuppressWarnings("unchecked")
     public <T> RemoteCaller<T> get(Class<T> interfaceType) {
         if (interfaceType.isAnnotationPresent(io.virtue.core.annotation.RemoteCaller.class)) {
-            io.virtue.core.annotation.RemoteCaller annotation = interfaceType.getAnnotation(io.virtue.core.annotation.RemoteCaller.class);
+            var annotation = interfaceType.getAnnotation(io.virtue.core.annotation.RemoteCaller.class);
             for (RemoteCaller<?> remoteCaller : get(annotation.value())) {
                 if (remoteCaller.targetInterface() == interfaceType) {
                     return (RemoteCaller<T>) remoteCaller;

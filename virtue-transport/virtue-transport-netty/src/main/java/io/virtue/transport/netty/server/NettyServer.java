@@ -22,7 +22,7 @@ import io.virtue.transport.server.AbstractServer;
 /**
  * Base on netty server.
  */
-public final class NettyServer extends AbstractServer {
+public class NettyServer extends AbstractServer {
 
     private ServerBootstrap bootstrap;
 
@@ -30,7 +30,7 @@ public final class NettyServer extends AbstractServer {
 
     private NioEventLoopGroup workerGroup;
 
-    private Channel channel;
+    protected Channel channel;
 
     public NettyServer(URL url, ChannelHandler handler, Codec codec) throws BindException {
         super(url, handler, codec);
@@ -42,18 +42,15 @@ public final class NettyServer extends AbstractServer {
         bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("NettyServerBoss", true));
         workerGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyServerWorker", true));
         soBacklog = url.getIntParam(Key.SO_BACKLOG, Constant.DEFAULT_SO_BACKLOG);
-        final NettyServerChannelHandler handler = new NettyServerChannelHandler(channelHandler);
-        initServerBootStrap(handler);
-    }
-
-    private void initServerBootStrap(NettyServerChannelHandler handler) {
+        var handler = new NettyServerChannelHandler(channelHandler);
         bootstrap.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, soBacklog)
+                .option(ChannelOption.TCP_FASTOPEN_CONNECT, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(ProtocolInitializer.getInitializer(url, handler, codec, true));
+                .childHandler(ProtocolInitializer.getForServer(url, handler, codec));
     }
 
     @Override

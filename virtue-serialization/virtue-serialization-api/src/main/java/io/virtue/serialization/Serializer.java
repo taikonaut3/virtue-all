@@ -1,14 +1,14 @@
 package io.virtue.serialization;
 
 import io.virtue.common.exception.SerializationException;
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 
 import static io.virtue.common.constant.Components.Serialization.KRYO;
 
 /**
  * Serialization interface that extends the Converter interface.
  */
-@ServiceInterface(KRYO)
+@Extensible(KRYO)
 public interface Serializer extends Converter {
 
     /**

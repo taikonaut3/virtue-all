@@ -1,15 +1,16 @@
 package io.virtue.rpc.virtue;
 
-import io.virtue.common.constant.Components;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.core.*;
 
 import java.lang.reflect.Method;
 
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
+
 /**
  * Virtue InvokerFactory.
  */
-@ServiceProvider(Components.Protocol.VIRTUE)
+@Extension(VIRTUE)
 public class VirtueInvokerFactory implements InvokerFactory {
 
     @Override

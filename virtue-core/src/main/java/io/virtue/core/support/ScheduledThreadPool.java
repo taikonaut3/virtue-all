@@ -1,7 +1,7 @@
 package io.virtue.core.support;
 
 import io.virtue.common.constant.Constant;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.core.Scheduler;
 
 import java.util.concurrent.Executors;
@@ -13,7 +13,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
 /**
  * Base on {@link ScheduledExecutorService}.
  */
-@ServiceProvider(DEFAULT)
+@Extension(DEFAULT)
 public class ScheduledThreadPool implements Scheduler {
     private final ScheduledExecutorService executorService;
 

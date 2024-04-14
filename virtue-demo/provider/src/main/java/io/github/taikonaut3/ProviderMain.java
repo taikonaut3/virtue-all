@@ -19,7 +19,7 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 public class ProviderMain {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ProviderMain.class, args);
-        Provider provider = context.getBean(Provider.class);
+        Virtue virtue = context.getBean(Virtue.class);
 
         //simpleTest();
     }
@@ -45,6 +45,11 @@ public class ProviderMain {
     @Bean
     public ServerConfig serverConfig() {
         return new ServerConfig(VIRTUE, 2333);
+    }
+
+    @Bean
+    public ServerConfig h2ServerConfig() {
+        return new ServerConfig("h2", 8082).ssl(true);
     }
 
     @Bean

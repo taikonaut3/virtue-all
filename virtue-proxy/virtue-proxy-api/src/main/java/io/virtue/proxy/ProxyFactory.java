@@ -1,13 +1,13 @@
 package io.virtue.proxy;
 
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 
 import static io.virtue.common.constant.Components.ProxyFactory.JDK;
 
 /**
  * Factory for creating proxies.
  */
-@ServiceInterface(JDK)
+@Extensible(JDK)
 public interface ProxyFactory {
 
     /**

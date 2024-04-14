@@ -104,7 +104,7 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
             InvokerFactory factoryProvider = ReflectionUtil.findAnnotation(method, InvokerFactory.class);
             if (factoryProvider != null) {
-                var invokerFactory = ExtensionLoader.loadService(io.virtue.core.InvokerFactory.class, factoryProvider.value());
+                var invokerFactory = ExtensionLoader.loadExtension(io.virtue.core.InvokerFactory.class, factoryProvider.value());
                 Callee<?> callee = invokerFactory.createCallee(method, this);
                 if (callee != null) {
                     invokers.put(method, callee);

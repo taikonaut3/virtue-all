@@ -49,9 +49,9 @@ public final class ReflectionUtil {
      * @return An instance of the class created
      */
     public static <T> T createInstance(Constructor<T> constructor, Object... args) {
-        T instance = null;
+        T instance;
         try {
-            instance = constructor.newInstance(args);
+            instance = (args == null || args.length == 0) ? constructor.newInstance() : constructor.newInstance(args);
         } catch (Exception e) {
             throw new CommonException("Create Instance is Failed by " + constructor.getName(), e);
         }

@@ -8,7 +8,6 @@ import io.virtue.common.util.NetUtil;
 import io.virtue.event.Event;
 import io.virtue.rpc.event.ClientHandlerExceptionEvent;
 import io.virtue.rpc.event.ServerHandlerExceptionEvent;
-import io.virtue.transport.Envelope;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.channel.ChannelHandlerAdapter;
@@ -81,9 +80,6 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     @Override
     public void received(Channel channel, Object message) throws RpcException {
-        if (message instanceof Envelope envelope) {
-            channel.attribute(URL.ATTRIBUTE_KEY).set(envelope.url());
-        }
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.received(channel, message);
         }
@@ -91,7 +87,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     @Override
     public void caught(Channel channel, Throwable cause) throws RpcException {
-        URL url = channel.attribute(URL.ATTRIBUTE_KEY).get();
+        URL url = channel.get(URL.ATTRIBUTE_KEY);
         if (url != null) {
             String envelope = url.getParam(Key.ENVELOPE);
             Event<?> exceptionEvent = envelope.equals(Key.REQUEST)

@@ -1,11 +1,13 @@
 package io.github.taikonaut3;
 
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
-import io.github.taikonaut3.model2.ParentObject;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
+import io.virtue.rpc.h2.config.Body;
+import io.virtue.rpc.h2.config.Http2Callable;
 import io.virtue.rpc.virtue.config.VirtueCallable;
 import org.example.Message;
+import org.example.model2.ParentObject;
 
 import java.util.Date;
 import java.util.List;
@@ -55,6 +57,11 @@ public class Provider {
 //            throw new RuntimeException(e);
 //        }
         return message;
+    }
+
+    @Http2Callable(path = "http2Test")
+    public List<ParentObject> http2Test(@Body List<ParentObject> list) {
+        return ParentObject.getObjList("list server2");
     }
 
 }

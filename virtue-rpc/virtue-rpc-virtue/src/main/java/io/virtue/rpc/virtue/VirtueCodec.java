@@ -3,32 +3,25 @@ package io.virtue.rpc.virtue;
 import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.CodecException;
-import io.virtue.common.exception.ResourceException;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.bytes.ByteReader;
 import io.virtue.common.util.bytes.ByteWriter;
-import io.virtue.core.Callee;
-import io.virtue.core.Virtue;
-import io.virtue.core.support.TransferableInvocation;
-import io.virtue.rpc.RpcFuture;
-import io.virtue.rpc.support.HeapByteReader;
-import io.virtue.rpc.support.HeapByteWriter;
+import io.virtue.common.util.bytes.HeapByteReader;
+import io.virtue.common.util.bytes.HeapByteWriter;
 import io.virtue.rpc.virtue.envelope.VirtueEnvelope;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
-import io.virtue.serialization.Converter;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
 import io.virtue.transport.codec.Codec;
-import io.virtue.transport.compress.Compression;
+import io.virtue.transport.compress.Compressor;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -151,10 +144,10 @@ public class VirtueCodec implements Codec {
         // compress type
         String compression = url.getParam(Key.COMPRESSION);
         Mode compressMode = ModeContainer.getMode(Key.COMPRESSION, compression);
-        Compression compressionInstance = virtueEnvelope.compression();
+        Compressor compressorInstance = virtueEnvelope.compression();
         /*  ---------------- url ------------------  */
         String urlStr = url.toString();
-        byte[] urlBytes = compressionInstance.compress(urlStr.getBytes(StandardCharsets.UTF_8));
+        byte[] urlBytes = compressorInstance.compress(urlStr.getBytes(StandardCharsets.UTF_8));
         /*  ---------------- body ------------------  */
         byte[] message = encodeBody(virtueEnvelope);
         /* write */
@@ -181,11 +174,11 @@ public class VirtueCodec implements Codec {
         }
         // compression type
         Mode compressionMode = ModeContainer.getMode(Key.COMPRESSION, reader.readByte());
-        Compression compressionInstance = ExtensionLoader.loadService(Compression.class, compressionMode.name());
+        Compressor compressorInstance = ExtensionLoader.loadExtension(Compressor.class, compressionMode.name());
         // url
         int urlLength = reader.readInt();
         byte[] urlCompressedBytes = reader.readBytes(urlLength);
-        byte[] urlBytes = compressionInstance.decompress(urlCompressedBytes);
+        byte[] urlBytes = compressorInstance.decompress(urlCompressedBytes);
         String urlStr = new String(urlBytes);
         URL url = URL.valueOf(urlStr);
         // body
@@ -196,53 +189,29 @@ public class VirtueCodec implements Codec {
 
     private byte[] encodeBody(VirtueEnvelope virtueEnvelope) {
         Serializer serializer = virtueEnvelope.serializer();
-        Compression compression = virtueEnvelope.compression();
+        Compressor compressor = virtueEnvelope.compression();
         byte[] bytes = serializer.serialize(virtueEnvelope.body());
         logger.debug("{}: [serialization: {}],[compression: {}]",
-                simpleClassName(this), simpleClassName(serializer), simpleClassName(compression));
-        return compression.compress(bytes);
+                simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
+        return compressor.compress(bytes);
     }
 
     private Object decodeBody(URL url, byte[] bodyBytes) {
         String serializationName = url.getParam(Key.SERIALIZATION);
         String compressionName = url.getParam(Key.COMPRESSION);
-        Serializer serializer = ExtensionLoader.loadService(Serializer.class, serializationName);
-        Compression compression = ExtensionLoader.loadService(Compression.class, compressionName);
+        Serializer serializer = ExtensionLoader.loadExtension(Serializer.class, serializationName);
+        Compressor compressor = ExtensionLoader.loadExtension(Compressor.class, compressionName);
         Class<?> bodyType;
         try {
             bodyType = Class.forName(url.getParam(Key.BODY_TYPE));
         } catch (ClassNotFoundException e) {
             bodyType = Object.class;
         }
-        byte[] decompress = compression.decompress(bodyBytes);
+        byte[] decompress = compressor.decompress(bodyBytes);
         logger.debug("{}: [deserialization: {}],[decompression: {}]",
-                simpleClassName(this), simpleClassName(serializer), simpleClassName(compression));
-        Object body = serializer.deserialize(decompress, bodyType);
-        return convertBody(url, body, serializer);
+                simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
+        return serializer.deserialize(decompress, bodyType);
     }
-
-    private Object convertBody(URL url, Object body, Converter converter) {
-        if (body instanceof TransferableInvocation invocation) {
-            Virtue virtue = Virtue.get(url);
-            Callee<?> callee = virtue.configManager().remoteServiceManager().getServerCaller(url.protocol(), url.path());
-            if (callee == null) {
-                throw new ResourceException("Can't find  ProviderCaller[" + url.path() + "]");
-            }
-            invocation = new TransferableInvocation(url, callee, invocation.args());
-            Object[] args = converter.convert(invocation.args(), invocation.parameterTypes());
-            invocation.args(args);
-            body = invocation;
-        } else {
-            String id = url.getParam(Key.UNIQUE_ID);
-            RpcFuture future = RpcFuture.getFuture(id);
-            if (future != null) {
-                Type returnType = future.returnType();
-                body = converter.convert(body, returnType);
-            }
-        }
-        return body;
-    }
-
     @SuppressWarnings("unchecked")
     private void findDecodedConstructor() {
         try {

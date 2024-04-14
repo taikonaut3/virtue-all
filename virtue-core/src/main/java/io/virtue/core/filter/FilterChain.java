@@ -1,7 +1,7 @@
 package io.virtue.core.filter;
 
 import io.virtue.common.constant.Components;
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 import io.virtue.core.Invocation;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The filter chain is used to start the filter.
  */
-@ServiceInterface(Components.DEFAULT)
+@Extensible(Components.DEFAULT)
 public interface FilterChain {
 
     /**

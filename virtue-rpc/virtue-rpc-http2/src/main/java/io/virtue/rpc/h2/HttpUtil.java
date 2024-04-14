@@ -1,0 +1,139 @@
+package io.virtue.rpc.h2;
+
+import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.util.StringUtil;
+import io.virtue.core.Invocation;
+import io.virtue.core.Invoker;
+import io.virtue.rpc.h2.config.Body;
+import io.virtue.serialization.Serializer;
+import io.virtue.transport.http.HttpHeaderNames;
+
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static io.virtue.common.constant.Components.Serialization.JSON;
+
+/**
+ * Http Util.
+ */
+public final class HttpUtil {
+
+    private static final Map<CharSequence, CharSequence> CONTENT_TYPE_MAPPING = Map.of("application/json", JSON);
+
+    /**
+     * Parse path.
+     *
+     * @param pathAndParams
+     * @return
+     */
+    public static String parsePath(String pathAndParams) {
+        if (pathAndParams.contains("?")) {
+            return pathAndParams.substring(0, pathAndParams.indexOf("?"));
+        }
+        return pathAndParams;
+    }
+
+    /**
+     * Parse params.
+     *
+     * @param pathAndParams
+     * @return
+     */
+    public static Map<CharSequence, CharSequence> parseParams(String pathAndParams) {
+        if (pathAndParams.contains("?")) {
+            return getStringMap(pathAndParams.substring(pathAndParams.indexOf("?") + 1).split("&"), "=");
+        }
+        return null;
+    }
+
+    /**
+     * Find request body.
+     *
+     * @param invocation
+     * @return
+     */
+    public static Object findBody(Invocation invocation) {
+        Parameter[] parameters = invocation.invoker().method().getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            Parameter parameter = parameters[i];
+            if (parameter.isAnnotationPresent(Body.class)) {
+                return invocation.args()[i];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find request body parameter.
+     *
+     * @param invoker
+     * @return
+     */
+    public static Parameter findBodyParameter(Invoker<?> invoker) {
+        Parameter[] parameters = invoker.method().getParameters();
+        for (Parameter parameter : parameters) {
+            if (parameter.isAnnotationPresent(Body.class)) {
+                return parameter;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Build a common client request header.
+     *
+     * @return
+     */
+    public static Map<CharSequence, CharSequence> commonClientHeaders() {
+        Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
+        headers.put(HttpHeaderNames.ACCEPT_ENCODING, "gzip, deflate");
+        headers.put(HttpHeaderNames.USER_AGENT, "virtue-rpc");
+        return headers;
+    }
+
+    /**
+     * Parse headers.
+     *
+     * @param headers
+     * @return
+     */
+    public static Map<CharSequence, CharSequence> parseHeaders(String[] headers) {
+        return getStringMap(headers, ":");
+    }
+
+    /**
+     * Serialize body.
+     *
+     * @param contentType
+     * @param body
+     * @return
+     */
+    public static byte[] serialize(CharSequence contentType, Object body) {
+        if (body == null) {
+            return new byte[0];
+        }
+        return getSerializer(contentType).serialize(body);
+    }
+
+    private static Map<CharSequence, CharSequence> getStringMap(String[] params, String separator) {
+        if (params == null || params.length == 0) {
+            return new HashMap<>();
+        }
+        return Arrays.stream(params)
+                .map(pair -> pair.split(separator))
+                .filter(keyValue -> keyValue.length == 2)
+                .collect(Collectors.toMap(keyValue -> keyValue[0].trim(), keyValue -> keyValue[1].trim()));
+    }
+
+    public static Serializer getSerializer(CharSequence contentType) {
+        CharSequence serializerName = CONTENT_TYPE_MAPPING.get(contentType);
+        if (StringUtil.isBlank(serializerName)) {
+            throw new UnsupportedOperationException("Unsupported content type: " + contentType + "'s serialization");
+        }
+        return ExtensionLoader.loadExtension(Serializer.class, serializerName.toString());
+    }
+}

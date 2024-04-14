@@ -1,13 +1,11 @@
 package io.virtue.core;
 
-import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.extension.Accessor;
-import io.virtue.common.extension.Attribute;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.ClientConfig;
@@ -23,13 +21,15 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import static io.virtue.common.constant.Components.DEFAULT;
+
 /**
  * Manage all entry configurations.
  */
-@ServiceInterface(Components.DEFAULT)
+@Extensible(DEFAULT)
 public interface Virtue extends Accessor, Lifecycle {
 
-    AttributeKey<Virtue> ATTRIBUTE_KEY = AttributeKey.get(Key.VIRTUE);
+    AttributeKey<Virtue> ATTRIBUTE_KEY = AttributeKey.of(Key.VIRTUE);
 
     /**
      * Get virtue instance from url.
@@ -38,15 +38,14 @@ public interface Virtue extends Accessor, Lifecycle {
      * @return Virtue instance
      */
     static Virtue get(URL url) {
-        Attribute<Virtue> attribute = url.attribute(ATTRIBUTE_KEY);
-        Virtue virtue = attribute.get();
+        Virtue virtue = url.get(ATTRIBUTE_KEY);
         if (virtue == null) {
-            virtue = RpcContext.currentContext().attribute(ATTRIBUTE_KEY).get();
+            virtue = RpcContext.currentContext().get(ATTRIBUTE_KEY);
             if (virtue == null) {
-                virtue = ExtensionLoader.loadService(Virtue.class, url.getParam(Key.VIRTUE));
+                virtue = ExtensionLoader.loadExtension(Virtue.class, url.getParam(Key.VIRTUE, DEFAULT));
             }
             if (virtue != null) {
-                attribute.set(virtue);
+                url.set(ATTRIBUTE_KEY, virtue);
             }
         }
         return virtue;
@@ -59,7 +58,7 @@ public interface Virtue extends Accessor, Lifecycle {
      * @see io.virtue.rpc.support.DefaultVirtue
      */
     static Virtue getDefault() {
-        return ExtensionLoader.loadService(Virtue.class);
+        return ExtensionLoader.loadExtension(Virtue.class);
     }
 
     /**

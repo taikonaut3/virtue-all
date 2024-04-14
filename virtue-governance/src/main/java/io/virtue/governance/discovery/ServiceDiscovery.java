@@ -1,6 +1,6 @@
 package io.virtue.governance.discovery;
 
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 
@@ -11,7 +11,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
 /**
  * ServiceDiscovery for discover available services from the registry.
  */
-@ServiceInterface(DEFAULT)
+@Extensible(DEFAULT)
 public interface ServiceDiscovery {
 
     /**

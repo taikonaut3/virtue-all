@@ -1,10 +1,11 @@
 package io.virtue.rpc.virtue.config;
 
-import io.virtue.common.constant.Components;
 import io.virtue.core.annotation.InvokerFactory;
 import io.virtue.core.annotation.RemoteService;
 
 import java.lang.annotation.*;
+
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
 /**
  * Use Virtue protocol to make RPC call.
@@ -12,7 +13,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@InvokerFactory(Components.Protocol.VIRTUE)
+@InvokerFactory(VIRTUE)
 public @interface VirtueCall {
 
     /**

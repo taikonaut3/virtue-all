@@ -1,7 +1,7 @@
 package io.virtue.proxy.jdk;
 
 import io.virtue.common.constant.Components;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.proxy.AbstractProxyFactory;
 import io.virtue.proxy.InvocationHandler;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Proxy;
 /**
  * Create Proxy By JDK.
  */
-@ServiceProvider(Components.ProxyFactory.JDK)
+@Extension(Components.ProxyFactory.JDK)
 public class JDKProxyFactory extends AbstractProxyFactory {
 
     @Override

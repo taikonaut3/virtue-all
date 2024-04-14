@@ -3,10 +3,7 @@ package io.virtue.common.util;
 import io.virtue.common.constant.SystemKey;
 import io.virtue.common.exception.CommonException;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
@@ -68,7 +65,22 @@ public final class NetUtil {
      * @return
      */
     public static String getAddress(InetSocketAddress address) {
-        return address.getHostString() + ":" + address.getPort();
+        return (isLoopbackAddress(address.getHostString()) ? getLocalHost() : address.getHostString()) + ":" + address.getPort();
+    }
+
+    /**
+     * If it is a loopback address.
+     *
+     * @param host
+     * @return
+     */
+    public static boolean isLoopbackAddress(String host) {
+        try {
+            InetAddress address = InetAddress.getByName(host);
+            return address.isLoopbackAddress();
+        } catch (UnknownHostException e) {
+            return false; // 可能的处理逻辑，根据实际情况返回
+        }
     }
 
     /**

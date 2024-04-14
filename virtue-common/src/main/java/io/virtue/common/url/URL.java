@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Accessors(fluent = true)
 public class URL extends AbstractAccessor {
 
-    public static final AttributeKey<URL> ATTRIBUTE_KEY = AttributeKey.get(Key.URL);
+    public static final AttributeKey<URL> ATTRIBUTE_KEY = AttributeKey.of(Key.URL);
 
     private static final Logger logger = LoggerFactory.getLogger(URL.class);
 
@@ -41,11 +41,11 @@ public class URL extends AbstractAccessor {
     @Setter
     protected String protocol;
     protected String address;
-    private Map<String, String> parameters;
+    private Map<String, String> params;
 
     public URL() {
         this.paths = new LinkedList<>();
-        this.parameters = new HashMap<>();
+        this.params = new HashMap<>();
     }
 
     public URL(String protocol, InetSocketAddress address) {
@@ -57,17 +57,17 @@ public class URL extends AbstractAccessor {
         this.address = NetUtil.getAddress(host, port);
     }
 
-    public URL(String protocol, InetSocketAddress address, Map<String, String> parameters) {
+    public URL(String protocol, InetSocketAddress address, Map<String, String> params) {
         this(protocol, address);
-        addParams(parameters);
+        addParams(params);
     }
 
     public URL(String protocol, String ip, int port) {
         this(protocol, new InetSocketAddress(ip, port));
     }
 
-    public URL(String protocol, String ip, int port, Map<String, String> parameters) {
-        this(protocol, new InetSocketAddress(ip, port), parameters);
+    public URL(String protocol, String ip, int port, Map<String, String> params) {
+        this(protocol, new InetSocketAddress(ip, port), params);
     }
 
     public URL(String protocol, String address) {
@@ -77,9 +77,9 @@ public class URL extends AbstractAccessor {
         address(address);
     }
 
-    public URL(String protocol, String address, Map<String, String> parameters) {
+    public URL(String protocol, String address, Map<String, String> params) {
         this(protocol, address);
-        addParams(parameters);
+        addParams(params);
 
     }
 
@@ -116,11 +116,11 @@ public class URL extends AbstractAccessor {
     /**
      * Map convert to URL params.
      *
-     * @param parameters
+     * @param params
      * @return
      */
-    public static String toUrlParams(Map<String, String> parameters) {
-        return parameters.entrySet().stream()
+    public static String toUrlParams(Map<String, String> params) {
+        return params.entrySet().stream()
                 .map(entry -> encodeParam(entry.getKey()) + "=" + encodeParam(entry.getValue()))
                 .collect(Collectors.joining("&"));
     }
@@ -272,26 +272,26 @@ public class URL extends AbstractAccessor {
      * @param value
      */
     public void addParam(String key, String value) {
-        parameters.put(key, value);
+        params.put(key, value);
     }
 
     /**
      * Add params.
      *
-     * @param parameters
+     * @param params
      */
-    public void addParams(Map<String, String> parameters) {
-        if (parameters != null) this.parameters.putAll(parameters);
+    public void addParams(Map<String, String> params) {
+        if (params != null) this.params.putAll(params);
     }
 
     /**
      * Replace all params.
      *
-     * @param parameters
+     * @param params
      */
-    public void replaceParams(Map<String, String> parameters) {
-        if (parameters != null && !parameters.isEmpty()) {
-            this.parameters = parameters;
+    public void replaceParams(Map<String, String> params) {
+        if (params != null && !params.isEmpty()) {
+            this.params = params;
         }
     }
 
@@ -302,7 +302,7 @@ public class URL extends AbstractAccessor {
      * @return
      */
     public String getParam(String key) {
-        return parameters.get(key);
+        return params.get(key);
     }
 
     /**
@@ -313,7 +313,7 @@ public class URL extends AbstractAccessor {
      * @return
      */
     public String getParam(String key, String defaultValue) {
-        return parameters.getOrDefault(key, defaultValue);
+        return params.getOrDefault(key, defaultValue);
     }
 
     /**
@@ -388,7 +388,7 @@ public class URL extends AbstractAccessor {
      * @param key
      */
     public void removeParam(String key) {
-        parameters.remove(key);
+        params.remove(key);
     }
 
     /**
@@ -437,8 +437,8 @@ public class URL extends AbstractAccessor {
      * @return
      */
     public String pathAndParams() {
-        String params = toUrlParams(parameters);
-        return path() + (StringUtil.isBlank(params) ? "" : "?" + params);
+        String paramsStr = toUrlParams(params);
+        return path() + "?" + StringUtil.isBlankOrDefault(paramsStr, "");
     }
 
     /**
@@ -447,7 +447,7 @@ public class URL extends AbstractAccessor {
      * @return
      */
     public URL deepCopy() {
-        URL url = new URL(protocol, address(), parameters);
+        URL url = new URL(protocol, address(), params);
         url.replacePaths(paths);
         url.accessor.putAll(this.accessor);
         return url;

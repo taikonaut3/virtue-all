@@ -1,6 +1,6 @@
 package io.virtue.rpc.support;
 
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.core.Invocation;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.filter.FilterChain;
@@ -13,7 +13,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
 /**
  * Default FilterChain impl.
  */
-@ServiceProvider(DEFAULT)
+@Extension(DEFAULT)
 public class DefaultFilterChain implements FilterChain {
 
     @Override

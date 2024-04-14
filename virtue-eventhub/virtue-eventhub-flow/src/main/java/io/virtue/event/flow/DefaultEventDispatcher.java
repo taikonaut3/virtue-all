@@ -1,7 +1,7 @@
 package io.virtue.event.flow;
 
 import io.virtue.common.constant.Components;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.event.AbstractEventDispatcher;
 import io.virtue.event.Event;
 import io.virtue.event.EventDispatcher;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Flow;
 
-@ServiceProvider(Components.EventDispatcher.FLOW)
+@Extension(Components.EventDispatcher.FLOW)
 public class DefaultEventDispatcher extends AbstractEventDispatcher implements EventDispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultEventDispatcher.class);

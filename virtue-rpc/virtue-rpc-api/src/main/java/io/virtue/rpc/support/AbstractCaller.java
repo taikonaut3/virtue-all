@@ -7,10 +7,7 @@ import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.CollectionUtil;
-import io.virtue.common.util.NetUtil;
-import io.virtue.common.util.ReflectionUtil;
-import io.virtue.common.util.StringUtil;
+import io.virtue.common.util.*;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.core.RemoteCaller;
@@ -28,8 +25,8 @@ import io.virtue.governance.loadbalance.LoadBalancer;
 import io.virtue.governance.router.Router;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
-import io.virtue.rpc.RpcFuture;
-import io.virtue.transport.Request;
+import io.virtue.rpc.event.SendMessageEvent;
+import io.virtue.transport.RpcFuture;
 import io.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +38,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -144,19 +142,12 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
                 logger.warn("Can't find RegistryConfig(s)");
             } else {
                 for (URL registryUrl : registryConfigUrls) {
-                    RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol());
+                    RegistryFactory registryFactory = ExtensionLoader.loadExtension(RegistryFactory.class, registryUrl.protocol());
                     RegistryService registryService = registryFactory.get(registryUrl);
                     registryService.discover(url);
                 }
             }
         }
-    }
-
-    private Options options() {
-        if (method.isAnnotationPresent(Options.class)) {
-            return method.getAnnotation(Options.class);
-        }
-        return ReflectionUtil.getDefaultInstance(Options.class);
     }
 
     @Override
@@ -176,7 +167,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
                                 && config.port() == registryConfig.port(),
                 config -> {
                     URL configUrl = config.toUrl();
-                    configUrl.attribute(Virtue.ATTRIBUTE_KEY).set(virtue);
+                    configUrl.set(Virtue.ATTRIBUTE_KEY, virtue);
                     configUrl.addParam(Key.VIRTUE, virtue.name());
                     registryConfigUrls.add(configUrl);
                 }, configs);
@@ -187,7 +178,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
     public Object invoke(Invocation invocation) throws RpcException {
         try {
             String faultToleranceName = invocation.url().getParam(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
-            FaultTolerance faultTolerance = ExtensionLoader.loadService(FaultTolerance.class, faultToleranceName);
+            FaultTolerance faultTolerance = ExtensionLoader.loadExtension(FaultTolerance.class, faultToleranceName);
             List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
             invocation.revise(() -> {
                 invocation.revise(() -> doRpcCall(invocation));
@@ -195,7 +186,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             });
             return faultTolerance.operation(invocation);
         } catch (Exception e) {
-            RpcContext.currentContext().attribute(Key.CALL_EXCEPTION).set(e);
+            RpcContext.currentContext().set(Key.CALL_EXCEPTION, e);
             if (remoteCaller().fallBacker() != null) {
                 return remoteCaller().invokeFallBack(invocation);
             }
@@ -204,15 +195,6 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         } finally {
             RpcContext.clear();
         }
-    }
-
-    protected Object call(Invocation invocation) throws RpcException {
-        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-        invocation.revise(() -> {
-            RpcFuture future = send(invocation);
-            return async() ? future : future.get();
-        });
-        return filterChain.filter(invocation, postFilters);
     }
 
     @Override
@@ -239,9 +221,9 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         }
         URL url = new URL(protocol, address);
         url.replacePaths(pathList());
-        url.addParams(clientUrl.parameters());
+        url.addParams(clientUrl.params());
         url.addParams(parameterization());
-        url.attribute(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY).set(new AtomicInteger(-1));
+        url.set(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY, new AtomicInteger(-1));
         return url;
     }
 
@@ -251,40 +233,54 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         if (StringUtil.isBlank(caller.directUrl())) {
             // ServiceDiscovery
             String serviceDiscoveryName = url.getParam(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
-            ServiceDiscovery serviceDiscovery = ExtensionLoader.loadService(ServiceDiscovery.class, serviceDiscoveryName);
+            ServiceDiscovery serviceDiscovery = ExtensionLoader.loadExtension(ServiceDiscovery.class, serviceDiscoveryName);
             URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls()).stream()
                     .flatMap(Collection::stream)
                     .toArray(URL[]::new);
             List<URL> availableServiceUrls = serviceDiscovery.discover(invocation, registryConfigUrls);
             // Router
-            Router router = virtue.attribute(Router.ATTRIBUTE_KEY).get();
+            Router router = virtue.get(Router.ATTRIBUTE_KEY);
             if (router == null) {
                 String routerName = virtue.configManager().applicationConfig().router();
                 routerName = StringUtil.isBlankOrDefault(routerName, Constant.DEFAULT_ROUTER);
-                router = ExtensionLoader.loadService(Router.class, routerName);
+                router = ExtensionLoader.loadExtension(Router.class, routerName);
             }
             List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
             // LoadBalance
             String loadBalancerName = url.getParam(Key.LOAD_BALANCE, Constant.DEFAULT_LOAD_BALANCE);
-            LoadBalancer loadBalancer = ExtensionLoader.loadService(LoadBalancer.class, loadBalancerName);
+            LoadBalancer loadBalancer = ExtensionLoader.loadExtension(LoadBalancer.class, loadBalancerName);
             URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
-            url.address(selectedServiceUrl.address()).addParams(selectedServiceUrl.parameters());
+            url.address(selectedServiceUrl.address()).addParams(selectedServiceUrl.params());
         }
         return call(invocation);
     }
 
-    protected RpcFuture send(Invocation invocation) {
-        URL url = invocation.url();
-        Client client = getClient(url.address());
-        Object message = protocolInstance.createRequest(invocation);
-        Request request = new Request(url, message);
-        RpcFuture future = new RpcFuture(url, invocation);
-        future.client(client);
-        String requestContextStr = RpcContext.requestContext().toString();
-        url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
-        // request
-        client.send(request);
-        return future;
+    protected Object call(Invocation invocation) throws RpcException {
+        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
+        invocation.revise(() -> {
+            URL url = invocation.url();
+            String requestContextStr = RpcContext.requestContext().toString();
+            RpcFuture future = new RpcFuture(invocation);
+            String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
+            url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
+            url.addParam(Key.TIMESTAMP, timestamp);
+            url.addParam(Key.ENVELOPE, Key.REQUEST);
+            url.addParam(Key.UNIQUE_ID, String.valueOf(future.id()));
+            Client client = getClient(url.address());
+            future.client(client);
+            virtue.eventDispatcher().dispatchEvent(new SendMessageEvent(() -> send(client, invocation, future)));
+            return async() ? future : future.get();
+        });
+        return filterChain.filter(invocation, postFilters);
+    }
+
+    protected abstract void send(Client client, Invocation invocation, RpcFuture future);
+
+    private Options options() {
+        if (method.isAnnotationPresent(Options.class)) {
+            return method.getAnnotation(Options.class);
+        }
+        return ReflectionUtil.getDefaultInstance(Options.class);
     }
 
     private Client getClient(String address) {
@@ -295,6 +291,8 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             clientConfig = clientConfigManager.get(protocol);
         }
         clientUrl.addParams(clientConfig.parameterization());
+        clientUrl.set(Virtue.ATTRIBUTE_KEY, virtue);
+        clientUrl.addParam(Key.VIRTUE, virtue.name());
         clientUrl.addParam(Key.MULTIPLEX, String.valueOf(multiplex));
         return protocolInstance.openClient(clientUrl);
     }

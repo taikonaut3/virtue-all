@@ -39,7 +39,7 @@ public class ClientPool {
         boolean isMultiplex = url.getBooleanParam(Key.MULTIPLEX, true);
         try {
             if (isMultiplex) {
-                RpcContext.currentContext().attribute(URL.ATTRIBUTE_KEY).set(url);
+                RpcContext.currentContext().set(URL.ATTRIBUTE_KEY, url);
                 return clientPool.borrowObject();
             }
             return getCustom(url);

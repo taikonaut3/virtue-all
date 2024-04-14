@@ -3,7 +3,7 @@ package io.virtue.transport;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.extension.AttributeKey;
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.Client;
@@ -15,10 +15,10 @@ import static io.virtue.common.constant.Components.Transport.NETTY;
 /**
  * Transporter to Bind Server/Connect Client.
  */
-@ServiceInterface(NETTY)
+@Extensible(NETTY)
 public interface Transporter {
 
-    AttributeKey<Transporter> ATTRIBUTE_KEY = AttributeKey.get(Key.TRANSPORTER);
+    AttributeKey<Transporter> ATTRIBUTE_KEY = AttributeKey.of(Key.TRANSPORTER);
 
     /**
      * Binds a Server to the URL with the given handler and the given codec.

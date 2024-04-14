@@ -32,6 +32,13 @@
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-transport-api</artifactId>
         </dependency>
+
+        <!--  extension  -->
+        <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-eventhub-disruptor</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

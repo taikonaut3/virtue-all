@@ -1,5 +1,6 @@
 package io.virtue.core.manager;
 
+import io.virtue.common.url.URL;
 import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
 import io.virtue.core.Virtue;
@@ -36,9 +37,9 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
         register(remoteService.name(), remoteService);
     }
 
-    public Callee<?> getServerCaller(String protocol, String path) {
+    public Callee<?> getCallee(URL url) {
         for (RemoteService<?> remoteService : remoteServices()) {
-            Callee<?> callee = remoteService.getCallee(protocol, path);
+            Callee<?> callee = remoteService.getCallee(url.protocol(), url.path());
             if (callee != null) {
                 return callee;
             }

@@ -2,7 +2,7 @@ package io.virtue.governance.discovery;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.spi.ExtensionLoader;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.core.Invocation;
@@ -18,7 +18,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
  * Default ServiceDiscovery.
  * <p>Deduplication based on address.</p>
  */
-@ServiceProvider(DEFAULT)
+@Extension(DEFAULT)
 public class DefaultServiceDiscovery implements ServiceDiscovery {
 
     @Override
@@ -26,7 +26,7 @@ public class DefaultServiceDiscovery implements ServiceDiscovery {
         List<URL> availableServiceUrls = new ArrayList<>();
         URL url = invocation.url();
         for (URL registryUrl : registryConfigs) {
-            var registryService = ExtensionLoader.loadService(RegistryFactory.class, registryUrl.protocol()).get(registryUrl);
+            var registryService = ExtensionLoader.loadExtension(RegistryFactory.class, registryUrl.protocol()).get(registryUrl);
             List<URL> discoverUrls = registryService.discover(url);
             if (CollectionUtil.isNotEmpty(discoverUrls)) {
                 for (URL discoverUrl : discoverUrls) {
@@ -38,7 +38,7 @@ public class DefaultServiceDiscovery implements ServiceDiscovery {
             }
         }
         if (availableServiceUrls.isEmpty()) {
-            throw new RpcException("Not found available service!,Path:" + url.path());
+            throw new RpcException(String.format("Not found available service!,Protocol:%s, Path:%s", url.protocol(), url.path()));
         }
         return availableServiceUrls;
     }

@@ -2,11 +2,10 @@ package io.virtue.serialization.protobuf;
 
 import com.google.protobuf.MessageLite;
 import io.virtue.common.exception.ConversionException;
-import io.virtue.common.exception.SerializationException;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.core.Invocation;
 import io.virtue.core.support.TransferableInvocation;
-import io.virtue.serialization.Serializer;
+import io.virtue.serialization.AbstractSerializer;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -15,41 +14,36 @@ import static io.virtue.common.constant.Components.Serialization.PROTOBUF;
 
 /**
  * Protobuf Serializer.
+ * <p>If there are multiple parameters,
+ * only the first one will be serialized as {@link com.google.protobuf.MessageLite},
+ * and the same is true for deserialization</p>
  */
-@ServiceProvider(PROTOBUF)
-public class ProtobufSerializer implements Serializer {
+@Extension(PROTOBUF)
+public class ProtobufSerializer extends AbstractSerializer {
 
     @Override
-    public byte[] serialize(Object input) throws SerializationException {
-        try {
-            if (input instanceof MessageLite message) {
-                return message.toByteArray();
-            } else if (input instanceof Invocation invocation) {
-                for (Object arg : invocation.args()) {
-                    if (arg instanceof MessageLite messageLite) {
-                        return serialize(messageLite);
-                    }
+    protected byte[] doSerialize(Object input) throws Exception {
+        if (input instanceof MessageLite message) {
+            return message.toByteArray();
+        } else if (input instanceof Invocation invocation) {
+            for (Object arg : invocation.args()) {
+                if (arg instanceof MessageLite messageLite) {
+                    return serialize(messageLite);
                 }
             }
-            throw new UnsupportedOperationException("Only Support [com.google.protobuf.MessageLite] Type");
-        } catch (Exception e) {
-            throw new SerializationException(e);
         }
+        throw new UnsupportedOperationException("Only Support [com.google.protobuf.MessageLite] Type");
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
-        try {
-            if (Invocation.class.isAssignableFrom(type)) {
-                TransferableInvocation invocation = new TransferableInvocation();
-                invocation.setArgs(new Object[]{bytes});
-                return (T) invocation;
-            }
-            return (T) bytes;
-        } catch (Exception e) {
-            throw new SerializationException(e);
+    @Override
+    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
+        if (Invocation.class.isAssignableFrom(type)) {
+            TransferableInvocation invocation = new TransferableInvocation();
+            invocation.setArgs(new Object[]{bytes});
+            return (T) invocation;
         }
+        return (T) bytes;
     }
 
     @Override
@@ -65,13 +59,13 @@ public class ProtobufSerializer implements Serializer {
                 if (MessageLite.class.isAssignableFrom(typeClass)) {
                     Method parseForm = typeClass.getDeclaredMethod("parseFrom", byte[].class);
                     parseForm.setAccessible(true);
-                    return parseForm.invoke(null, (Object) bytes);
+                    return parseForm.invoke(null, new Object[]{bytes});
                 }
                 throw new UnsupportedOperationException("Only Support [com.google.protobuf.MessageLite] Type");
             } catch (Exception e) {
                 throw new ConversionException(e);
             }
         }
-        return Serializer.super.convert(arg, type);
+        return arg;
     }
 }

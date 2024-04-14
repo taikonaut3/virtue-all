@@ -1,6 +1,6 @@
 package io.virtue.core.annotation;
 
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 
 import java.lang.annotation.*;
 
@@ -14,9 +14,9 @@ import java.lang.annotation.*;
 public @interface InvokerFactory {
 
     /**
-     * {@link io.virtue.core.InvokerFactory}‘s {@link ServiceProvider#value()}.
+     * {@link io.virtue.core.InvokerFactory}‘s {@link Extension#value()}.
      *
-     * @return {@link ServiceProvider#value()}
+     * @return {@link Extension#value()}
      */
     String value();
 

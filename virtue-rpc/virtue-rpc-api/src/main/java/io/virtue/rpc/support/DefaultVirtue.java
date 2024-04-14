@@ -2,8 +2,8 @@ package io.virtue.rpc.support;
 
 import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.RpcContext;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.spi.ExtensionLoader;
-import io.virtue.common.spi.ServiceProvider;
 import io.virtue.core.*;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.EventDispatcherConfig;
@@ -24,7 +24,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
  */
 @Getter
 @Accessors(fluent = true)
-@ServiceProvider(DEFAULT)
+@Extension(DEFAULT)
 public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     private final ConfigManager configManager;
@@ -38,8 +38,8 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
         name = DEFAULT;
         configManager = new ConfigManager(this);
         monitorManager = new MonitorManager();
-        configurations = ExtensionLoader.loadServices(VirtueConfiguration.class);
-        scheduler = ExtensionLoader.loadService(Scheduler.class);
+        configurations = ExtensionLoader.loadExtensions(VirtueConfiguration.class);
+        scheduler = ExtensionLoader.loadExtension(Scheduler.class);
         init();
     }
 
@@ -69,7 +69,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public void init() {
-        RpcContext.currentContext().attribute(ATTRIBUTE_KEY).set(this);
+        RpcContext.currentContext().set(ATTRIBUTE_KEY, this);
         for (VirtueConfiguration configuration : configurations) {
             configuration.initBefore(this);
         }
@@ -82,18 +82,16 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
     private void initApplicationComponents() {
         ApplicationConfig applicationConfig = configManager.applicationConfig();
         EventDispatcherConfig eventDispatcherConfig = applicationConfig.eventDispatcherConfig();
-        eventDispatcher = ExtensionLoader.load(EventDispatcher.class)
-                .conditionOnConstructor(eventDispatcherConfig.toUrl())
-                .getService(eventDispatcherConfig.type());
-        Router router = ExtensionLoader.loadService(Router.class, applicationConfig.router());
-        Transporter transporter = ExtensionLoader.loadService(Transporter.class, applicationConfig.transport());
-        attribute(Router.ATTRIBUTE_KEY).set(router);
-        attribute(Transporter.ATTRIBUTE_KEY).set(transporter);
+        eventDispatcher = ExtensionLoader.loadExtension(EventDispatcher.class, eventDispatcherConfig.type());
+        Router router = ExtensionLoader.loadExtension(Router.class, applicationConfig.router());
+        Transporter transporter = ExtensionLoader.loadExtension(Transporter.class, applicationConfig.transport());
+        set(Router.ATTRIBUTE_KEY, router);
+        set(Transporter.ATTRIBUTE_KEY, transporter);
     }
 
     @Override
     public synchronized void start() {
-        RpcContext.currentContext().attribute(ATTRIBUTE_KEY).set(this);
+        RpcContext.currentContext().set(ATTRIBUTE_KEY, this);
         for (VirtueConfiguration configuration : configurations) {
             configuration.startBefore(this);
         }
@@ -112,7 +110,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public void stop() {
-        RpcContext.currentContext().attribute(ATTRIBUTE_KEY).set(this);
+        RpcContext.currentContext().set(ATTRIBUTE_KEY, this);
         for (VirtueConfiguration configuration : configurations) {
             configuration.stopBefore(this);
         }

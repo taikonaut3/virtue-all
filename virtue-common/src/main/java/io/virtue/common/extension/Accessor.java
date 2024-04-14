@@ -8,20 +8,34 @@ package io.virtue.common.extension;
 public interface Accessor {
 
     /**
-     * Get attribute by attributeKey.
+     * Get attribute value by attributeKey.
      *
      * @param key
      * @param <T>
-     * @return attribute
+     * @return
      */
-    <T> Attribute<T> attribute(AttributeKey<T> key);
+    <T> T get(AttributeKey<T> key);
 
     /**
-     * Remove attribute by attributeKey's name.
+     * Set attribute value by attributeKey.
      *
      * @param key
-     * @return current instance
+     * @param value
+     * @param <T>
      */
-    Accessor remove(String key);
+    <T> void set(AttributeKey<T> key, T value);
+
+    /**
+     * Remove attribute by attributeKey.
+     *
+     * @param key
+     * @return
+     */
+    Accessor remove(AttributeKey<?> key);
+
+    /**
+     * Remove all attributes.
+     */
+    void clear();
 
 }

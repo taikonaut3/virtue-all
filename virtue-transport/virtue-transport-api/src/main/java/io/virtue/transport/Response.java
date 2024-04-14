@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Response implements Envelope {
 
-    public static final AttributeKey<Response> ATTRIBUTE_KEY = AttributeKey.get(Key.RESPONSE);
+    public static final AttributeKey<Response> ATTRIBUTE_KEY = AttributeKey.of(Key.RESPONSE);
 
     public static final byte SUCCESS = 0, ERROR = -1, TIMEOUT = 3;
 

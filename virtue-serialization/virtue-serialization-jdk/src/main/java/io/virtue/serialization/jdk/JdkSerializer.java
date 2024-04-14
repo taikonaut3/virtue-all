@@ -1,8 +1,7 @@
 package io.virtue.serialization.jdk;
 
-import io.virtue.common.exception.SerializationException;
-import io.virtue.common.spi.ServiceProvider;
-import io.virtue.serialization.Serializer;
+import io.virtue.common.spi.Extension;
+import io.virtue.serialization.AbstractSerializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,28 +13,24 @@ import static io.virtue.common.constant.Components.Serialization.JDK;
 /**
  * JDK serializer.
  */
-@ServiceProvider(value = JDK)
-public class JdkSerializer implements Serializer {
+@Extension(JDK)
+public class JdkSerializer extends AbstractSerializer {
 
     @Override
-    public byte[] serialize(Object input) throws SerializationException {
+    protected byte[] doSerialize(Object input) throws Exception {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
             objectOutputStream.writeObject(input);
             return outputStream.toByteArray();
-        } catch (Throwable e) {
-            throw new SerializationException(e);
         }
     }
 
     @Override
-    public <T> T deserialize(byte[] input, Class<T> type) throws SerializationException {
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(input);
+    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
              ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
             Object object = objectInputStream.readObject();
             return type.cast(object);
-        } catch (Throwable e) {
-            throw new SerializationException(e);
         }
     }
 

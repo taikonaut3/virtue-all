@@ -10,11 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class AttributeKey<T> {
 
-    private static final Map<String, AttributeKey<?>> KEY_POOL = new ConcurrentHashMap<>();
+    private static final Map<CharSequence, AttributeKey<?>> KEY_POOL = new ConcurrentHashMap<>();
 
-    private final String name;
+    private final CharSequence name;
 
-    private AttributeKey(String name) {
+    private AttributeKey(CharSequence name) {
         this.name = name;
     }
 
@@ -26,7 +26,7 @@ public final class AttributeKey<T> {
      * @return attributeKey instance
      */
     @SuppressWarnings("unchecked")
-    public static <T> AttributeKey<T> get(String name) {
+    public static <T> AttributeKey<T> of(CharSequence name) {
         AttributeKey<?> key = KEY_POOL.get(name);
         if (key == null) {
             key = new AttributeKey<T>(name);
@@ -36,11 +36,25 @@ public final class AttributeKey<T> {
     }
 
     /**
+     * Get attribute by accessor.
+     *
+     * @param accessor
+     * @return
+     */
+    public T get(Accessor accessor) {
+        return accessor.get(this);
+    }
+
+    public void set(Accessor accessor, T value) {
+        accessor.set(this, value);
+    }
+
+    /**
      * key name.
      *
      * @return
      */
-    public String name() {
+    public CharSequence name() {
         return name;
     }
 

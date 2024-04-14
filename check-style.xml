@@ -7,7 +7,7 @@
     <!-- 配置不需要检查的模块 -->
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern"
-                  value=".*[\\/]((virtue-demo)|(virtue-test)|(virtue-eventhub-flow)|(virtue-rpc-http))[\\/].*"/>
+                  value=".*[\\/]((virtue-demo)|(virtue-test)|(virtue-eventhub-flow)|(virtue-rpc-http1))[\\/].*"/>
     </module>
 
     <!-- 文件长度不超过1500行 -->
@@ -35,6 +35,8 @@
             <property name="format" value="System\.out\.println"/>
             <property name="illegalPattern" value="true"/>
         </module>
+        <!-- 检查修饰符顺序 -->
+        <module name="ModifierOrder"/>
         <!-- 检查是否导入了多余的包 -->
         <module name="RedundantImport"/>
         <!-- 没用的import检查，比如：1.没有被用到2.重复的3.import java.lang的4.import 与该类在同一个package的 -->

@@ -59,20 +59,13 @@ public class RpcContext {
      * Current Context.
      */
     public static class CurrentContext extends AbstractAccessor {
-        /**
-         * @param key
-         * @return
-         */
-        public CurrentContext remove(String key) {
-            super.remove(key);
-            return this;
-        }
 
         /**
          * Clear context.
          */
+        @Override
         public void clear() {
-            accessor.clear();
+            super.clear();
             CURRENT_CONTEXT.remove();
         }
     }

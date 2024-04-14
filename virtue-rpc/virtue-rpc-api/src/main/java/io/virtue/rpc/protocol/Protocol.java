@@ -1,9 +1,8 @@
 package io.virtue.rpc.protocol;
 
-import io.virtue.common.spi.ServiceInterface;
+import io.virtue.common.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
-import io.virtue.core.Virtue;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.transport.Response;
@@ -17,10 +16,10 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
  * Communication protocol used to exchange data between client and server.
  *
  * @param <Req> Request type
- * @param <Res> Response type
+ * @param <Resp> Response type
  */
-@ServiceInterface(value = VIRTUE, constructor = {Virtue.class})
-public interface Protocol<Req, Res> {
+@Extensible(value = VIRTUE)
+public interface Protocol<Req, Resp> {
 
     /**
      * This protocol.
@@ -42,7 +41,7 @@ public interface Protocol<Req, Res> {
      * @param payload the message payload of the response
      * @return {@link Response}
      */
-    Res createResponse(URL url, Object payload);
+    Resp createResponse(URL url, Object payload);
 
     /**
      * Opening a client may reuse the existing one.

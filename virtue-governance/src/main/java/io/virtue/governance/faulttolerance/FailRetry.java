@@ -3,7 +3,7 @@ package io.virtue.governance.faulttolerance;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import static io.virtue.common.constant.Components.FaultTolerance.FAIL_RETRY;
 /**
  * FailRetry when an exception occurs in the RPC call.
  */
-@ServiceProvider(FAIL_RETRY)
+@Extension(FAIL_RETRY)
 public class FailRetry extends AbstractFaultTolerance {
 
     private static final Logger logger = LoggerFactory.getLogger(FailRetry.class);

@@ -18,11 +18,11 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
 
     @Override
     public void onEvent(ServerHandlerExceptionEvent event) {
-        URL url = event.channel().attribute(URL.ATTRIBUTE_KEY).get();
+        URL url = event.channel().get(URL.ATTRIBUTE_KEY);
         Throwable cause = event.source();
         logger.error("Server: {} Exception: {}", event.channel(), cause.getMessage());
         if (url != null) {
-            Protocol<?, ?> protocol = ExtensionLoader.loadService(Protocol.class, url.protocol());
+            Protocol<?, ?> protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
             Object message = protocol.createResponse(url, cause.getMessage());
             Response response = Response.error(url, message);
             event.channel().send(response);

@@ -1,7 +1,7 @@
 package io.virtue.governance.loadbalance;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 
@@ -16,13 +16,13 @@ import static io.virtue.common.constant.Components.LoadBalance.ROUND_ROBIN;
  * Each request is assigned in the order of the server list, and starts again at the end of the list,
  * This strategy applies to cases where the server performance is equivalent.
  */
-@ServiceProvider(ROUND_ROBIN)
+@Extension(ROUND_ROBIN)
 public class RoundRobinLoadBalancer extends AbstractLoadBalancer {
 
     @Override
     protected URL doChoose(Invocation invocation, List<URL> urls) {
         URL url = invocation.invoker().url();
-        AtomicInteger lastIndex = url.attribute(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY).get();
+        AtomicInteger lastIndex = url.get(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY);
         int current;
         do {
             current = (lastIndex.get() + 1) % urls.size();

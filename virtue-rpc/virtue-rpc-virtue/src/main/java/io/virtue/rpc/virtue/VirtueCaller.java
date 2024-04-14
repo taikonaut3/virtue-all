@@ -2,9 +2,13 @@ package io.virtue.rpc.virtue;
 
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.StringUtil;
+import io.virtue.core.Invocation;
 import io.virtue.core.RemoteCaller;
+import io.virtue.transport.RpcFuture;
 import io.virtue.rpc.support.AbstractCaller;
 import io.virtue.rpc.virtue.config.VirtueCall;
+import io.virtue.transport.Request;
+import io.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
@@ -41,5 +45,13 @@ public class VirtueCaller extends AbstractCaller<VirtueCall> {
     @Override
     public List<String> pathList() {
         return List.of(remoteServiceName, callMethod);
+    }
+
+    @Override
+    protected void send(Client client, Invocation invocation, RpcFuture future) {
+        Object message = protocolInstance.createRequest(invocation);
+        Request request = new Request(invocation.url(), message);
+        // request
+        client.send(request);
     }
 }

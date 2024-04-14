@@ -1,6 +1,6 @@
 package io.virtue.proxy.bytebuddy;
 
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.proxy.AbstractProxyFactory;
 import io.virtue.proxy.InvocationHandler;
 import net.bytebuddy.ByteBuddy;
@@ -13,7 +13,7 @@ import static io.virtue.common.constant.Components.ProxyFactory.BYTEBUDDY;
 /**
  * Create Proxy performance is not good.
  */
-@ServiceProvider(BYTEBUDDY)
+@Extension(BYTEBUDDY)
 public class ByteBuddyProxyFactory extends AbstractProxyFactory {
 
     @Override

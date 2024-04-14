@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-serialization-api</artifactId>
+            <artifactId>virtue-serialization-json</artifactId>
         </dependency>
         <dependency>
             <groupId>org.msgpack</groupId>

@@ -2,15 +2,15 @@ package io.virtue.transport.netty.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.netty.NettyChannel;
 
+import static io.netty.channel.ChannelHandler.Sharable;
+
 /**
- * Base channel handler for netty server.
+ * Base channelHandler for netty server.
  */
-@io.netty.channel.ChannelHandler.Sharable
+@Sharable
 public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapter {
 
     private final ChannelHandler channelHandler;
@@ -42,16 +42,6 @@ public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapte
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         channelHandler.caught(nettyChannel, cause);
         //NettyChannel.removeChannel(ctx.channel());
-    }
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
-        if (evt instanceof IdleStateEvent event) {
-            if ((event.state() == IdleState.ALL_IDLE) || (event.state() == IdleState.READER_IDLE)) {
-                channelHandler.heartBeat(nettyChannel, evt);
-            }
-        }
     }
 
 }

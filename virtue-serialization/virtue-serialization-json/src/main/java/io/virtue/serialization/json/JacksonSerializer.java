@@ -1,16 +1,11 @@
 package io.virtue.serialization.json;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.virtue.common.exception.ConversionException;
-import io.virtue.common.exception.SerializationException;
-import io.virtue.common.spi.ServiceProvider;
-import io.virtue.serialization.Serializer;
+import io.virtue.common.spi.Extension;
+import io.virtue.serialization.AbstractSerializer;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 import static io.virtue.common.constant.Components.Serialization.JSON;
@@ -18,50 +13,37 @@ import static io.virtue.common.constant.Components.Serialization.JSON;
 /**
  * Jackson JSON Serializer.
  */
-@ServiceProvider(JSON)
-public class JacksonSerializer implements Serializer {
+@Extension(JSON)
+public class JacksonSerializer extends AbstractSerializer {
 
-    private final ObjectMapper objectMapper;
+    protected JsonMapper jsonMapper;
 
     public JacksonSerializer() {
-        this.objectMapper = JsonMapper.builder().configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true).build();
+        this.jsonMapper = JsonMapper.builder()
+                .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
+                .build();
     }
 
     @Override
-    public byte[] serialize(Object input) throws SerializationException {
-        if (input == null) {
-            return new byte[0];
-        }
-        try {
-            return objectMapper.writeValueAsBytes(input);
-        } catch (Throwable e) {
-            throw new SerializationException(e);
-        }
+    protected byte[] doSerialize(Object input) throws Exception {
+        return jsonMapper.writeValueAsBytes(input);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
-        if (type == String.class) {
+    @Override
+    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
+        if (type == String.class || type == Object.class) {
             return (T) new String(bytes);
         }
-        try {
-            return objectMapper.readValue(bytes, type);
-        } catch (IOException e) {
-            throw new SerializationException(e);
-        }
+        return jsonMapper.readValue(bytes, type);
     }
 
     @Override
     public Object[] convert(Object[] args, Type[] types) throws ConversionException {
         Object[] objects = new Object[types.length];
         try {
-            // 遍历 Object[] 数组并匹配相应类型
             for (int i = 0; i < args.length; i++) {
-                Object deserializeObj = args[i];
-                Type objectType = types[i];
-                // 将反序列化的对象转换为指定类型
-                Object typedObject = objectMapper.convertValue(deserializeObj, objectMapper.constructType(objectType));
+                Object typedObject = convert(args[i], types[i]);
                 objects[i] = typedObject;
             }
         } catch (Exception e) {
@@ -73,15 +55,13 @@ public class JacksonSerializer implements Serializer {
     @Override
     public Object convert(Object arg, Type type) throws ConversionException {
         try {
-            if (arg.getClass() == String.class) {
+            if (arg instanceof String strArg) {
                 if (type == String.class) {
-                    return arg;
+                    return strArg;
                 }
-                TypeFactory typeFactory = objectMapper.getTypeFactory();
-                JavaType javaType = typeFactory.constructType(type);
-                return objectMapper.readValue((String) arg, javaType);
+                return jsonMapper.readValue(strArg, jsonMapper.constructType(type));
             }
-            return objectMapper.convertValue(arg, objectMapper.constructType(type));
+            return jsonMapper.convertValue(arg, jsonMapper.constructType(type));
         } catch (Exception e) {
             throw new ConversionException(e);
         }

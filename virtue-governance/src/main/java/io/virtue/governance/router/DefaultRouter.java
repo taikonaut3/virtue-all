@@ -1,7 +1,7 @@
 package io.virtue.governance.router;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Invocation;
@@ -20,7 +20,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
 /**
  * Default Router.
  */
-@ServiceProvider(DEFAULT)
+@Extension(DEFAULT)
 public class DefaultRouter implements Router {
 
     @Override

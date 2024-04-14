@@ -1,6 +1,6 @@
 package io.virtue.transport.netty;
 
-import io.virtue.common.spi.ServiceProvider;
+import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.transport.Transporter;
 import io.virtue.transport.channel.ChannelHandler;
@@ -15,7 +15,7 @@ import static io.virtue.common.constant.Components.Transport.NETTY;
 /**
  * Base on netty's transporter.
  */
-@ServiceProvider(NETTY)
+@Extension(NETTY)
 public final class NettyTransporter implements Transporter {
 
     @Override

@@ -1,9 +1,10 @@
 package io.virtue.rpc.virtue.config;
 
-import io.virtue.common.constant.Components;
 import io.virtue.core.annotation.InvokerFactory;
 
 import java.lang.annotation.*;
+
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
 /**
  * Support be Virtue protocol call.
@@ -12,7 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@InvokerFactory(Components.Protocol.VIRTUE)
+@InvokerFactory(VIRTUE)
 public @interface VirtueCallable {
 
     /**

@@ -56,7 +56,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
         // parse ClientCaller
         parseClientCaller();
         // create proxy
-        ProxyFactory proxyFactory = ExtensionLoader.loadService(ProxyFactory.class, proxy);
+        ProxyFactory proxyFactory = ExtensionLoader.loadExtension(ProxyFactory.class, proxy);
         proxyInstance = proxyFactory.createProxy(targetInterface, new ClientInvocationHandler(this));
     }
 
@@ -111,7 +111,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
         for (Method method : targetInterface.getDeclaredMethods()) {
             InvokerFactory factoryProvider = ReflectionUtil.findAnnotation(method, InvokerFactory.class);
             if (factoryProvider != null) {
-                var invokerFactory = ExtensionLoader.loadService(io.virtue.core.InvokerFactory.class, factoryProvider.value());
+                var invokerFactory = ExtensionLoader.loadExtension(io.virtue.core.InvokerFactory.class, factoryProvider.value());
                 Caller<?> caller = invokerFactory.createCaller(method, this);
                 if (caller != null) {
                     invokers.put(method, caller);
