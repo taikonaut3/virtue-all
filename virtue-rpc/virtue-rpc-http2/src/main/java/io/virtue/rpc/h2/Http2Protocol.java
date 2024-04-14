@@ -1,12 +1,13 @@
 package io.virtue.rpc.h2;
 
-import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.spi.Extension;
+import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.rpc.h2.envelope.Http2Request;
 import io.virtue.rpc.h2.envelope.Http2Response;
 import io.virtue.rpc.protocol.AbstractProtocol;
+import io.virtue.transport.Transporter;
 import io.virtue.transport.http.HttpHeaderNames;
 import io.virtue.transport.http.h2.Http2Transporter;
 
@@ -18,11 +19,8 @@ import static io.virtue.common.constant.Components.Protocol.*;
 @Extension({HTTP2, H2, H2C})
 public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response> {
 
-    private final Http2Transporter http2Transporter;
-
     public Http2Protocol() {
         super(HTTP2, null, null, new Http2ProtocolParser());
-        transporter = http2Transporter = ExtensionLoader.loadExtension(Http2Transporter.class, transport);
     }
 
     @Override
@@ -35,6 +33,11 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
         return new Http2Response(url, payload);
     }
 
+    @Override
+    protected Transporter loadTransporter(String transport) {
+        return ExtensionLoader.loadExtension(Http2Transporter.class, transport);
+    }
+
     /**
      * Convert Http 2 Request at the application layer to Http 2 Request at the transport layer..
      *
@@ -44,7 +47,7 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
     public io.virtue.transport.http.h2.Http2Request convertToTransportRequest(Http2Request request) {
         URL url = request.url();
         byte[] data = HttpUtil.serialize(request.getHeader(HttpHeaderNames.CONTENT_TYPE), request.body());
-        return http2Transporter.newRequest(url, request.headers(), data);
+        return http2Transporter().newRequest(url, request.headers(), data);
     }
 
     /**
@@ -56,7 +59,7 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
     public io.virtue.transport.http.h2.Http2Response convertToTransportResponse(Http2Response response) {
         URL url = response.url();
         byte[] data = HttpUtil.serialize(response.getHeader(HttpHeaderNames.CONTENT_TYPE), response.body());
-        return http2Transporter.newResponse(response.statusCode(), url, response.headers(), data);
+        return http2Transporter().newResponse(response.statusCode(), url, response.headers(), data);
     }
 
     /**
@@ -64,7 +67,7 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
      *
      * @return
      */
-    public Http2Transporter transporter() {
-        return http2Transporter;
+    public Http2Transporter http2Transporter() {
+        return (Http2Transporter) transporter;
     }
 }

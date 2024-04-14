@@ -1,7 +1,6 @@
 package io.virtue.rpc.protocol;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.Virtue;
@@ -23,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <Resp> response type
  */
 public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp> {
+
+    private Virtue virtue;
 
     protected String protocol;
 
@@ -57,12 +58,17 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp>
         this.clientHandler = clientHandler;
         this.serverHandler = serverHandler;
         this.protocolParser = protocolParser;
-        Virtue virtue = RpcContext.currentContext().get(Virtue.ATTRIBUTE_KEY);
-        transport = virtue.configManager().applicationConfig().transport();
-        transporter = virtue.get(Transporter.ATTRIBUTE_KEY);
-        if (transporter == null) {
-            transporter = ExtensionLoader.loadExtension(Transporter.class, transport);
-        }
+    }
+
+    /**
+     * Set virtue by {@link io.virtue.common.spi.LoadedListener}.
+     *
+     * @param virtue
+     */
+    public void virtue(Virtue virtue) {
+        this.virtue = virtue;
+        String transportName = virtue.configManager().applicationConfig().transport();
+        transporter = loadTransporter(transportName);
     }
 
     @Override
@@ -102,6 +108,10 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp>
     @Override
     public String protocol() {
         return protocol;
+    }
+
+    protected Transporter loadTransporter(String transport) {
+        return ExtensionLoader.loadExtension(Transporter.class, transport);
     }
 
     private Client getClient(URL url, String key, Map<String, Client> clients) {

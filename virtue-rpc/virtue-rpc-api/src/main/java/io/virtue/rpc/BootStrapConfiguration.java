@@ -15,6 +15,7 @@ import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
 import io.virtue.rpc.event.*;
 import io.virtue.rpc.listener.*;
+import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.server.Server;
 import io.virtue.transport.supprot.IdeEvent;
@@ -40,6 +41,11 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             if (extension instanceof DisruptorEventDispatcher eventDispatcher) {
                 URL url = virtue.configManager().applicationConfig().eventDispatcherConfig().toUrl();
                 eventDispatcher.url(url);
+            }
+        });
+        ExtensionLoader.addListener(Protocol.class, extension -> {
+            if (extension instanceof AbstractProtocol<?, ?> abstractProtocol) {
+                abstractProtocol.virtue(virtue);
             }
         });
     }
