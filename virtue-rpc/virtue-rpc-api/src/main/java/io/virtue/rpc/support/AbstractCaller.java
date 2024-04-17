@@ -26,6 +26,7 @@ import io.virtue.governance.router.Router;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
 import io.virtue.rpc.event.SendMessageEvent;
+import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.RpcFuture;
 import io.virtue.transport.client.Client;
 import lombok.Getter;
@@ -51,7 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Setter
 @Getter
 @Accessors(fluent = true, chain = true)
-public abstract class AbstractCaller<T extends Annotation> extends AbstractInvoker<T> implements Caller<T> {
+public abstract class AbstractCaller<T extends Annotation, P extends Protocol<?, ?>> extends AbstractInvoker<T, P> implements Caller<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractCaller.class);
 
@@ -161,15 +162,15 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             }
         }
         CollectionUtil.addToList(this.registryConfigs,
-                (registryConfig, config) ->
-                        Objects.equals(config.type(), registryConfig.type())
-                                && config.host().equals(registryConfig.host())
-                                && config.port() == registryConfig.port(),
-                config -> {
-                    URL configUrl = config.toUrl();
-                    configUrl.set(Virtue.ATTRIBUTE_KEY, virtue);
-                    configUrl.addParam(Key.VIRTUE, virtue.name());
-                    registryConfigUrls.add(configUrl);
+                (oldConfig, newConfig) ->
+                        Objects.equals(oldConfig.type(), newConfig.type())
+                                && oldConfig.host().equals(newConfig.host())
+                                && oldConfig.port() == newConfig.port(),
+                registryConfig -> {
+                    URL registryUrl = registryConfig.toUrl();
+                    registryUrl.set(Virtue.LOCAL_VIRTUE, virtue);
+                    registryUrl.addParam(Key.LOCAL_VIRTUE, virtue.name());
+                    registryConfigUrls.add(registryUrl);
                 }, configs);
 
     }
@@ -260,21 +261,26 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         invocation.revise(() -> {
             URL url = invocation.url();
             String requestContextStr = RpcContext.requestContext().toString();
-            RpcFuture future = new RpcFuture(invocation);
-            String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
             url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
-            url.addParam(Key.TIMESTAMP, timestamp);
             url.addParam(Key.ENVELOPE, Key.REQUEST);
-            url.addParam(Key.UNIQUE_ID, String.valueOf(future.id()));
             Client client = getClient(url.address());
-            future.client(client);
-            virtue.eventDispatcher().dispatchEvent(new SendMessageEvent(() -> send(client, invocation, future)));
+            RpcFuture future = new RpcFuture(invocation, client);
+            sendMessageEvent(future);
             return async() ? future : future.get();
         });
         return filterChain.filter(invocation, postFilters);
     }
 
-    protected abstract void send(Client client, Invocation invocation, RpcFuture future);
+    protected void sendMessageEvent(RpcFuture future) {
+        SendMessageEvent event = new SendMessageEvent(() -> {
+            String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
+            future.invocation().url().addParam(Key.TIMESTAMP, timestamp);
+            send(future);
+        });
+        virtue.eventDispatcher().dispatch(event);
+    }
+
+    protected abstract void send(RpcFuture future);
 
     private Options options() {
         if (method.isAnnotationPresent(Options.class)) {
@@ -291,8 +297,8 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             clientConfig = clientConfigManager.get(protocol);
         }
         clientUrl.addParams(clientConfig.parameterization());
-        clientUrl.set(Virtue.ATTRIBUTE_KEY, virtue);
-        clientUrl.addParam(Key.VIRTUE, virtue.name());
+        clientUrl.set(Virtue.CLIENT_VIRTUE, virtue);
+        clientUrl.addParam(Key.CLIENT_VIRTUE, virtue.name());
         clientUrl.addParam(Key.MULTIPLEX, String.valueOf(multiplex));
         return protocolInstance.openClient(clientUrl);
     }

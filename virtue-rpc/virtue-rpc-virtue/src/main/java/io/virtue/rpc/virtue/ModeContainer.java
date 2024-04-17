@@ -67,7 +67,7 @@ public class ModeContainer {
         values.add(modeBean);
     }
 
-    public static Map<String, List<ModeBean>> getContainer() {
+    public static Map<String, List<ModeBean>> modeMap() {
         return modeMap;
     }
 

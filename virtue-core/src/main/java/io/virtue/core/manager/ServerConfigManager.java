@@ -52,8 +52,8 @@ public class ServerConfigManager extends AbstractManager<ServerConfig> {
             ServerConfig serverConfig = get(neededOpenProtocol);
             if (serverConfig != null) {
                 URL url = serverConfig.toUrl();
-                url.set(Virtue.ATTRIBUTE_KEY, virtue);
-                url.addParam(Key.VIRTUE, virtue.name());
+                url.set(Virtue.SERVER_VIRTUE, virtue);
+                url.addParam(Key.SERVER_VIRTUE, virtue.name());
                 String applicationName = virtue.applicationName();
                 if (!StringUtil.isBlank(applicationName)) {
                     url.addParam(Key.APPLICATION, applicationName);

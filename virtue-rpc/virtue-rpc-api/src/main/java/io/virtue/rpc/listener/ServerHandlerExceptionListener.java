@@ -23,7 +23,7 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
         logger.error("Server: {} Exception: {}", event.channel(), cause.getMessage());
         if (url != null) {
             Protocol<?, ?> protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
-            Object message = protocol.createResponse(url, cause.getMessage());
+            Object message = protocol.createResponse(url, cause);
             Response response = Response.error(url, message);
             event.channel().send(response);
         }

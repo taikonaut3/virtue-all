@@ -33,12 +33,12 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     @Override
-    public <E extends Event<?>> void dispatchEvent(E event) {
+    public <E extends Event<?>> void dispatch(E event) {
         if (event != null && !event.isPropagationStopped()) {
-            doDispatchEvent(event);
+            dodispatch(event);
         }
     }
 
-    protected abstract <E extends Event<?>> void doDispatchEvent(E event);
+    protected abstract <E extends Event<?>> void dodispatch(E event);
 
 }

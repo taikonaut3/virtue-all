@@ -20,21 +20,30 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
  */
 public abstract class AbstractProtocolParser<Req, Resp> implements ProtocolParser {
 
+    protected Protocol<Req, Resp> protocol;
+
+    public void protocol(Protocol<Req, Resp> protocol) {
+        this.protocol = protocol;
+    }
+
+
     @SuppressWarnings("unchecked")
     @Override
     public Invocation parseRequestBody(Request request) {
         URL url = request.url();
-        Virtue virtue = Virtue.get(url);
+        Virtue virtue = Virtue.ofServer(url);
         Callee<?> callee = virtue.configManager().remoteServiceManager().getCallee(url);
         if (callee == null) {
             throw new ResourceException("Can't find  ProviderCaller[" + url.path() + "]");
         }
+        Req message;
         try {
-            Req message = (Req) request.message();
-            return parseToInvocation(request, message, callee);
+            message = (Req) request.message();
         } catch (Exception e) {
-            throw new UnsupportedOperationException("unsupported parse request message type: " + simpleClassName(request.message()));
+            throw new UnsupportedOperationException(simpleClassName(this) + " unsupported parse request message type: " + simpleClassName(request.message()));
         }
+        Object[] args = parseToInvokeArgs(request, message, callee);
+        return protocol.invokerFactory().createInvocation(request.url(), callee, args);
     }
 
     @SuppressWarnings("unchecked")
@@ -44,17 +53,18 @@ public abstract class AbstractProtocolParser<Req, Resp> implements ProtocolParse
         RpcFuture future = RpcFuture.getFuture(id);
         if (future != null) {
             Caller<?> caller = (Caller<?>) future.invocation().invoker();
+            Resp message;
             try {
-                Resp message = (Resp) response.message();
-                return parseToReturnObject(response, message, caller);
+                message = (Resp) response.message();
             } catch (Exception e) {
                 throw new UnsupportedOperationException("unsupported parse response message type: " + simpleClassName(response.message()));
             }
+            return parseToReturnValue(response, message, caller);
         }
         return null;
     }
 
-    protected abstract Invocation parseToInvocation(Request request, Req message, Callee<?> callee);
+    protected abstract Object[] parseToInvokeArgs(Request request, Req message, Callee<?> callee);
 
-    protected abstract Object parseToReturnObject(Response response, Resp message, Caller<?> caller);
+    protected abstract Object parseToReturnValue(Response response, Resp message, Caller<?> caller);
 }

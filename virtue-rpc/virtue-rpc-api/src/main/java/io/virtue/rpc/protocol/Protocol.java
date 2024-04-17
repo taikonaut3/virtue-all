@@ -3,6 +3,7 @@ package io.virtue.rpc.protocol;
 import io.virtue.common.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
+import io.virtue.core.InvokerFactory;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.transport.Response;
@@ -23,8 +24,17 @@ public interface Protocol<Req, Resp> {
 
     /**
      * This protocol.
+     *
+     * @return
      */
     String protocol();
+
+    /**
+     * Invoker factory.
+     *
+     * @return
+     */
+    InvokerFactory invokerFactory();
 
     /**
      * Create a new request for the given URL and message body.
@@ -37,11 +47,19 @@ public interface Protocol<Req, Resp> {
     /**
      * Create a new response for the given URL and message body.
      *
-     * @param url     {@link URL}
-     * @param payload the message payload of the response
+     * @param invocation
+     * @param result     the invoke result
      * @return {@link Response}
      */
-    Resp createResponse(URL url, Object payload);
+    Resp createResponse(Invocation invocation, Object result);
+
+    /**
+     * Create a new response for exception.
+     *
+     * @param e
+     * @return
+     */
+    Resp createResponse(URL url, Throwable e);
 
     /**
      * Opening a client may reuse the existing one.

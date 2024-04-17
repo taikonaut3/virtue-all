@@ -7,9 +7,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http2.*;
 import io.netty.handler.ssl.*;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.netty.NettyIdeStateHandler;
+
+import static io.virtue.transport.util.TransportUtil.sslEnabled;
 
 /**
  * Initializes the channel of Netty for HTTP2 Codec.
@@ -41,7 +42,7 @@ public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChan
     }
 
     private SslContext getSslContext() throws Exception {
-        boolean ssl = url.getBooleanParam(Key.SSL, true);
+        boolean ssl = sslEnabled(url);
         SslContext sslContext = null;
         if (ssl) {
             final SslProvider provider =

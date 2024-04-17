@@ -20,7 +20,8 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
         super(VIRTUE,
                 new VirtueCodec(VirtueResponse.class, VirtueRequest.class),
                 new VirtueCodec(VirtueRequest.class, VirtueResponse.class),
-                new VirtueProtocolParser());
+                new VirtueProtocolParser(),
+                new VirtueInvokerFactory());
     }
 
     @Override
@@ -31,8 +32,15 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     }
 
     @Override
-    public VirtueResponse createResponse(URL url, Object payload) {
+    public VirtueResponse createResponse(Invocation invocation, Object payload) {
+        URL url = invocation.url();
         url.addParam(Key.BODY_TYPE, payload.getClass().getName());
         return new VirtueResponse(url, payload);
+    }
+
+    @Override
+    public VirtueResponse createResponse(URL url, Throwable e) {
+        url.addParam(Key.BODY_TYPE, String.class.getName());
+        return new VirtueResponse(url, e.getMessage());
     }
 }

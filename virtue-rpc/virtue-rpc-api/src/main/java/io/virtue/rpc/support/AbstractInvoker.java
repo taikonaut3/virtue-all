@@ -9,6 +9,7 @@ import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Invoker;
 import io.virtue.core.InvokerContainer;
+import io.virtue.core.InvokerFactory;
 import io.virtue.core.Virtue;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.filter.Filter;
@@ -33,7 +34,7 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
  */
 @Getter
 @Accessors(fluent = true, chain = true)
-public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T> {
+public abstract class AbstractInvoker<T extends Annotation, P extends Protocol<?, ?>> implements Invoker<T> {
 
     protected final Virtue virtue;
 
@@ -43,7 +44,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
 
     protected volatile List<Filter> filters;
 
-    protected Protocol<?, ?> protocolInstance;
+    protected P protocolInstance;
 
     protected FilterChain filterChain;
 
@@ -53,7 +54,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
 
     protected volatile boolean isStart = false;
 
-    @Parameter(Key.VIRTUE)
+    @Parameter(Key.LOCAL_VIRTUE)
     protected String virtueName;
 
     @Setter
@@ -69,6 +70,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     @Parameter(Key.COMPRESSION)
     protected String compression;
 
+    @SuppressWarnings("unchecked")
     protected AbstractInvoker(Method method, InvokerContainer container, String protocol, Class<T> annoType) {
         AssertUtil.notNull(method, container, protocol, annoType);
         this.parsedAnnotation = parseAnnotation(method, annoType);
@@ -78,11 +80,11 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
         this.container = container;
         this.remoteApplication = container.remoteApplication();
         this.protocol = protocol;
-        this.protocolInstance = ExtensionLoader.loadExtension(Protocol.class, protocol);
+        this.protocolInstance = (P) ExtensionLoader.loadExtension(Protocol.class, protocol);
         parseConfig(config());
         init();
         if (url != null) {
-            url.set(Virtue.ATTRIBUTE_KEY, virtue);
+            url.set(Virtue.LOCAL_VIRTUE, virtue);
         }
     }
 
@@ -106,6 +108,11 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     @Override
     public Class<?> returnClass() {
         return method.getReturnType();
+    }
+
+    @Override
+    public InvokerFactory invokerFactory() {
+        return protocolInstance.invokerFactory();
     }
 
     @Override

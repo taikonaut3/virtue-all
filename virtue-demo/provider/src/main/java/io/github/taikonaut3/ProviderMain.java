@@ -1,7 +1,6 @@
 package io.github.taikonaut3;
 
 import io.virtue.boot.EnableVirtue;
-import io.virtue.common.constant.Key;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
@@ -27,7 +26,7 @@ public class ProviderMain {
     public static void simpleTest() {
         Virtue virtue = Virtue.getDefault();
         virtue.application(new ApplicationConfig("provider"))
-                .register(new ServerConfig(Key.VIRTUE, 2888))
+                .register(new ServerConfig(VIRTUE, 2888))
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
                 .register(new RegistryConfig("nacos://127.0.0.1:8848"))
                 .wrap(new Provider())
@@ -49,7 +48,12 @@ public class ProviderMain {
 
     @Bean
     public ServerConfig h2ServerConfig() {
-        return new ServerConfig("h2", 8082).ssl(true);
+        return new ServerConfig("h2", 8082);
+    }
+
+    @Bean
+    public ServerConfig h2cServerConfig() {
+        return new ServerConfig("h2c", 8083);
     }
 
     @Bean

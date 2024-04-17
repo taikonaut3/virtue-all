@@ -68,7 +68,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public void init() {
-        RpcContext.currentContext().set(ATTRIBUTE_KEY, this);
+        RpcContext.currentContext().set(LOCAL_VIRTUE, this);
         for (VirtueConfiguration configuration : configurations) {
             configuration.initBefore(this);
         }
@@ -88,7 +88,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public synchronized void start() {
-        RpcContext.currentContext().set(ATTRIBUTE_KEY, this);
+        RpcContext.currentContext().set(LOCAL_VIRTUE, this);
         for (VirtueConfiguration configuration : configurations) {
             configuration.startBefore(this);
         }
@@ -107,7 +107,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public void stop() {
-        RpcContext.currentContext().set(ATTRIBUTE_KEY, this);
+        RpcContext.currentContext().set(LOCAL_VIRTUE, this);
         for (VirtueConfiguration configuration : configurations) {
             configuration.stopBefore(this);
         }

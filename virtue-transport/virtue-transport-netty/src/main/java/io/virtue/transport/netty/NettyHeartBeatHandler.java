@@ -6,7 +6,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.virtue.common.url.URL;
 import io.virtue.core.Virtue;
-import io.virtue.transport.supprot.IdeEvent;
+import io.virtue.transport.supprot.IdleEvent;
 
 import static io.netty.channel.ChannelHandler.Sharable;
 import static io.virtue.transport.util.TransportUtil.publishRefreshHeartbeatCountEvent;
@@ -26,7 +26,7 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
     public NettyHeartBeatHandler(URL url, boolean isServer) {
         this.url = url;
         this.isServer = isServer;
-        this.virtue = Virtue.get(url);
+        this.virtue = isServer ? Virtue.ofServer(url) : Virtue.ofClient(url);
     }
 
     @Override
@@ -56,11 +56,11 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
         if (evt instanceof IdleStateEvent event) {
             if (isServer) {
                 if ((event.state() == IdleState.ALL_IDLE) || (event.state() == IdleState.READER_IDLE)) {
-                    virtue.eventDispatcher().dispatchEvent(new IdeEvent(nettyChannel));
+                    virtue.eventDispatcher().dispatch(new IdleEvent(nettyChannel));
                 }
             } else {
                 if ((event.state() == IdleState.ALL_IDLE) || (event.state() == IdleState.WRITER_IDLE)) {
-                    virtue.eventDispatcher().dispatchEvent(new IdeEvent(nettyChannel));
+                    virtue.eventDispatcher().dispatch(new IdleEvent(nettyChannel));
                 }
             }
         }

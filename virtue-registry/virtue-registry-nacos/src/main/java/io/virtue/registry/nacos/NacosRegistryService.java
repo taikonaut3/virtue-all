@@ -59,7 +59,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             logger.error("DeregisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
             throw RpcException.unwrap(e);
         }
-        Virtue.get(url).scheduler().addPeriodic(() -> {
+        Virtue.ofLocal(url).scheduler().addPeriodic(() -> {
             Instance instance = new Instance();
             instance.setInstanceId(instanceId(url));
             instance.setIp(url.host());

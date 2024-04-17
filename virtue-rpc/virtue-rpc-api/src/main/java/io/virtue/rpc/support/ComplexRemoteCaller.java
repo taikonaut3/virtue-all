@@ -6,8 +6,7 @@ import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.*;
-import io.virtue.core.annotation.InvokerFactory;
-import io.virtue.core.support.TransferableInvocation;
+import io.virtue.core.annotation.Protocol;
 import io.virtue.proxy.InvocationHandler;
 import io.virtue.proxy.ProxyFactory;
 import io.virtue.proxy.SuperInvoker;
@@ -109,10 +108,10 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
     private void parseClientCaller() {
         for (Method method : targetInterface.getDeclaredMethods()) {
-            InvokerFactory factoryProvider = ReflectionUtil.findAnnotation(method, InvokerFactory.class);
-            if (factoryProvider != null) {
-                var invokerFactory = ExtensionLoader.loadExtension(io.virtue.core.InvokerFactory.class, factoryProvider.value());
-                Caller<?> caller = invokerFactory.createCaller(method, this);
+            Protocol protocol = ReflectionUtil.findAnnotation(method, Protocol.class);
+            if (protocol != null) {
+                var protocolInstance = ExtensionLoader.loadExtension(io.virtue.rpc.protocol.Protocol.class, protocol.value());
+                Caller<?> caller = protocolInstance.invokerFactory().createCaller(method, this);
                 if (caller != null) {
                     invokers.put(method, caller);
                 }
@@ -135,7 +134,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
         public Object invoke(Object proxy, Method method, Object[] args, SuperInvoker<?> superInvoker) throws Throwable {
             Invoker<?> invoker = remoteCaller.getInvoker(method);
             if (invoker != null) {
-                var invocation = new TransferableInvocation((Caller<?>) invoker, args);
+                var invocation = invoker.invokerFactory().createInvocation((Caller<?>) invoker, args);
                 return invoker.invoke(invocation);
             }
             return null;

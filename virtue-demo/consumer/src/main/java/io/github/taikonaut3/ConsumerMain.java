@@ -66,6 +66,7 @@ public class ConsumerMain {
 
         Protocol protocol = ExtensionLoader.loadExtension(Protocol.class, "h2");
 
+        List<ParentObject> httplist = consumer.http2Test(ParentObject.getObjList("client list"));
         Message message = new Message();
         message.setDate(new Date());
         message.setName("client" + message.getDate().toString());

@@ -1,6 +1,6 @@
 package io.virtue.rpc.h2.config;
 
-import io.virtue.core.annotation.InvokerFactory;
+import io.virtue.core.annotation.Protocol;
 import io.virtue.transport.http.HttpMethod;
 
 import java.lang.annotation.*;
@@ -13,7 +13,7 @@ import static io.virtue.common.constant.Components.Protocol.HTTP2;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@InvokerFactory(HTTP2)
+@Protocol(HTTP2)
 public @interface Http2Callable {
 
     /**

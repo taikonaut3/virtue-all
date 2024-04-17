@@ -129,6 +129,8 @@ public interface Key {
 
     String URL = "url";
 
+    String VIRTUE_URL = "virtue_url";
+
     String HTTP_REQUEST_WRAPPER = "httpRequestWrapper";
 
     String ENVELOPE = "envelope";
@@ -151,9 +153,14 @@ public interface Key {
     String DESCRIPTION = "description";
 
     String CLIENT = "client";
+    String FUTURE_FACTORY = "futureFactory";
     String HTTP_METHOD = "httpMethod";
 
-    String VIRTUE = "virtue";
+    String LOCAL_VIRTUE = "localVirtue";
+
+    String CLIENT_VIRTUE = "clientVirtue";
+
+    String SERVER_VIRTUE = "serverVirtue";
     AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(ALL_IDLE_TIMES);
     AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(WRITE_IDLE_TIMES);
     AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(READER_IDLE_TIMES);

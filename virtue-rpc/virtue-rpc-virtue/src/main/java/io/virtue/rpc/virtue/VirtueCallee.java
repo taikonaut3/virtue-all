@@ -1,6 +1,5 @@
 package io.virtue.rpc.virtue;
 
-import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.RpcContext;
@@ -22,12 +21,14 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static io.virtue.common.constant.Components.Protocol.VIRTUE;
+
 /**
  * Virtue protocol Callee.
  */
 @Getter
 @Accessors(fluent = true)
-public class VirtueCallee extends AbstractCallee<VirtueCallable> {
+public class VirtueCallee extends AbstractCallee<VirtueCallable, VirtueProtocol> {
 
     private static final Logger logger = LoggerFactory.getLogger(VirtueCallee.class);
 
@@ -36,7 +37,7 @@ public class VirtueCallee extends AbstractCallee<VirtueCallable> {
     private String callMethod;
 
     public VirtueCallee(Method method, RemoteService<?> remoteService) {
-        super(method, remoteService, Components.Protocol.VIRTUE, VirtueCallable.class);
+        super(method, remoteService, VIRTUE, VirtueCallable.class);
     }
 
     @Override

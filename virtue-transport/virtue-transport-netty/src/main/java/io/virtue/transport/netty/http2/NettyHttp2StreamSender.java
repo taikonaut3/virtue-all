@@ -10,7 +10,6 @@ import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.transport.RpcFuture;
 import io.virtue.transport.channel.Channel;
-import io.virtue.transport.client.Client;
 import io.virtue.transport.http.h2.Http2Request;
 import io.virtue.transport.http.h2.Http2Response;
 import io.virtue.transport.http.h2.Http2StreamSender;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import static io.virtue.common.constant.Components.Transport.NETTY;
 import static io.virtue.transport.util.TransportUtil.getHttpMethod;
+import static io.virtue.transport.util.TransportUtil.getScheme;
 
 /**
  * Http2StreamSender based on netty.
@@ -32,16 +32,16 @@ import static io.virtue.transport.util.TransportUtil.getHttpMethod;
 public class NettyHttp2StreamSender implements Http2StreamSender {
 
     @Override
-    public void send(Client client, Http2Request request, RpcFuture future) {
-        Http2Client http2Client = (Http2Client) client;
+    public void send(RpcFuture future, Http2Request request) {
+        Http2Client http2Client = (Http2Client) future.client();
         List<Http2Frame> list = new ArrayList<>();
         if (request instanceof NettyHttp2Request http2Request) {
             URL url = http2Request.url();
             Http2Headers headers = ((NettyHttp2Headers) http2Request.headers()).headers();
-            boolean ssl = request.url().getBooleanParam(Key.SSL, true);
-            headers.scheme(ssl ? "https" : "http");
+            headers.scheme(getScheme(url));
             headers.method(getHttpMethod(url).name());
-            headers.path(url.path());
+            headers.path(url.pathAndParams());
+            headers.add(Key.VIRTUE_URL, future.invocation().url().toString());
             ByteBuf data = Unpooled.wrappedBuffer(http2Request.data());
             if (data.isReadable()) {
                 headers.add(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(data.readableBytes()));

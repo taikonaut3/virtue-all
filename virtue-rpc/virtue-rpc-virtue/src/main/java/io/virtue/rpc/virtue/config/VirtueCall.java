@@ -1,6 +1,6 @@
 package io.virtue.rpc.virtue.config;
 
-import io.virtue.core.annotation.InvokerFactory;
+import io.virtue.core.annotation.Protocol;
 import io.virtue.core.annotation.RemoteService;
 
 import java.lang.annotation.*;
@@ -13,7 +13,7 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@InvokerFactory(VIRTUE)
+@Protocol(VIRTUE)
 public @interface VirtueCall {
 
     /**

@@ -44,4 +44,9 @@ public class Attribute<T> {
         }
         return get();
     }
+
+    @Override
+    public String toString() {
+        return attribute.toString();
+    }
 }

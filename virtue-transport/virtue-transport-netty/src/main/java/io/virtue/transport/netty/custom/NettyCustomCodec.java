@@ -8,7 +8,6 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
-import io.virtue.core.Virtue;
 import io.virtue.transport.codec.Codec;
 import lombok.Getter;
 
@@ -25,14 +24,8 @@ public final class NettyCustomCodec {
 
     private final Codec codec;
 
-    private final boolean isServer;
-
-    private final Virtue virtue;
-
     public NettyCustomCodec(URL url, Codec codec, boolean isServer) {
         this.codec = codec;
-        this.isServer = isServer;
-        this.virtue = Virtue.get(url);
         String maxMessageKey = isServer ? Key.MAX_RECEIVE_SIZE : Key.CLIENT_MAX_RECEIVE_SIZE;
         int maxReceiveSize = url.getIntParam(maxMessageKey, Constant.DEFAULT_MAX_MESSAGE_SIZE);
         encoder = new NettyEncoder();

@@ -23,7 +23,7 @@ public final class FileUtil {
      * @param content    The content to write to the file.
      * @param targetFile The file to write the content to.
      */
-    public static void writeLineFile(String content, File targetFile) {
+    public static void writeLineFile(CharSequence content, File targetFile) {
         try {
             if (content.isEmpty()) {
                 return;

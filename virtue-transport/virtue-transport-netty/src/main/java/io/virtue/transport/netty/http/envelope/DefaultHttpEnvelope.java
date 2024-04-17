@@ -12,13 +12,9 @@ import io.virtue.transport.http.h1.HttpHeaders;
 public class DefaultHttpEnvelope implements HttpEnvelope {
 
     protected final HttpVersion version;
-
     protected final HttpMethod method;
-
     protected final URL url;
-
     protected final HttpHeaders headers;
-
     protected final byte[] data;
 
     public DefaultHttpEnvelope(HttpVersion version, HttpMethod method, URL url, HttpHeaders headers, byte[] data) {

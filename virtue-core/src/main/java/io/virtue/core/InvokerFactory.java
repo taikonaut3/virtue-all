@@ -1,28 +1,23 @@
 package io.virtue.core;
 
-import io.virtue.common.spi.Extensible;
-
 import java.lang.reflect.Method;
-
-import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
 /**
  * InvokerFactory is used to create different caller for different protocols.
  */
-@Extensible(VIRTUE)
-public interface InvokerFactory {
+public interface InvokerFactory extends InvocationFactory{
 
     /**
-     * Create serverCaller.
+     * Create server Callee.
      *
      * @param method
      * @param remoteService
-     * @return serverCaller instance
+     * @return serverCallee instance
      */
     Callee<?> createCallee(Method method, RemoteService<?> remoteService);
 
     /**
-     * Create clientCaller.
+     * Create client Caller.
      *
      * @param method
      * @param remoteCaller

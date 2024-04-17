@@ -5,11 +5,10 @@ import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.h2.config.Http2Call;
-import io.virtue.rpc.h2.envelope.Http2Request;
 import io.virtue.rpc.support.AbstractCaller;
 import io.virtue.transport.RpcFuture;
-import io.virtue.transport.client.Client;
 import io.virtue.transport.http.HttpMethod;
+import io.virtue.transport.http.h2.Http2Request;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -23,9 +22,9 @@ import static io.virtue.common.constant.Components.Protocol.HTTP2;
  */
 @Getter
 @Accessors(fluent = true)
-public class Http2Caller extends AbstractCaller<Http2Call> {
+public class Http2Caller extends AbstractCaller<Http2Call, Http2Protocol> {
 
-    private Http2Invoker invoker;
+    private Http2Wrapper wrapper;
 
     public Http2Caller(Method method, RemoteCaller<?> remoteCaller) {
         super(method, remoteCaller, HTTP2, Http2Call.class);
@@ -33,13 +32,14 @@ public class Http2Caller extends AbstractCaller<Http2Call> {
 
     @Override
     protected void doInit() {
-        invoker = new Http2Invoker(parsedAnnotation, this);
+        wrapper = new Http2Wrapper(parsedAnnotation, this);
     }
 
     @Override
     protected URL createUrl(URL serverUrl) {
         URL url = super.createUrl(serverUrl);
-        url.addParams(invoker.parameterization());
+        url.addParams(wrapper.parameterization());
+        url.set(HttpMethod.ATTRIBUTE_KEY, wrapper.httpMethod());
         return url;
     }
 
@@ -47,21 +47,18 @@ public class Http2Caller extends AbstractCaller<Http2Call> {
     public Object invoke(Invocation invocation) throws RpcException {
         // parse dynamic url
         URL url = invocation.url();
-        url.set(HttpMethod.ATTRIBUTE_KEY, invoker.httpMethod());
-        Http2Request request = ((Http2Protocol) protocolInstance).createRequest(invocation);
-        url.set(Http2Request.ATTRIBUTE_KEY, request);
         return super.invoke(invocation);
     }
 
     @Override
-    public List<String> pathList() {
-        return URL.pathToList(invoker.path());
+    protected void send(RpcFuture future) {
+        Invocation invocation = future.invocation();
+        Http2Request request = protocolInstance.createRequest(invocation);
+        wrapper.sender().send(future, request);
     }
 
     @Override
-    protected void send(Client client, Invocation invocation, RpcFuture future) {
-        Http2Request request = invocation.url().get(Http2Request.ATTRIBUTE_KEY);
-        var transportRequest = ((Http2Protocol) protocolInstance).convertToTransportRequest(request);
-        invoker.sender().send(client, transportRequest, future);
+    public List<String> pathList() {
+        return URL.pathToList(wrapper.path());
     }
 }

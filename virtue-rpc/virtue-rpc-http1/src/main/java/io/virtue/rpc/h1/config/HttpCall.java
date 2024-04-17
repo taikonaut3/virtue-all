@@ -1,7 +1,7 @@
 package io.virtue.rpc.h1.config;
 
 import io.virtue.common.constant.Components;
-import io.virtue.core.annotation.InvokerFactory;
+import io.virtue.core.annotation.Protocol;
 import io.virtue.transport.http.HttpMethod;
 
 import java.lang.annotation.*;
@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@InvokerFactory(Components.Protocol.HTTP)
+@Protocol(Components.Protocol.HTTP)
 public @interface HttpCall {
 
     /**

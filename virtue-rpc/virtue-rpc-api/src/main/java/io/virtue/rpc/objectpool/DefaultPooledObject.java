@@ -22,7 +22,7 @@ public class DefaultPooledObject<T> extends AbstractPooledObject<T> {
     @Override
     public void state(PooledObjectState state) {
         this.state = state;
-        virtue.eventDispatcher().dispatchEvent(state.getEvent(this));
+        virtue.eventDispatcher().dispatch(state.getEvent(this));
     }
 
     /**

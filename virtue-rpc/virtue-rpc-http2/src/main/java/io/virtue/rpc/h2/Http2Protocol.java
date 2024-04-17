@@ -4,11 +4,11 @@ import io.virtue.common.spi.Extension;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
-import io.virtue.rpc.h2.envelope.Http2Request;
-import io.virtue.rpc.h2.envelope.Http2Response;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.transport.Transporter;
 import io.virtue.transport.http.HttpHeaderNames;
+import io.virtue.transport.http.h2.Http2Request;
+import io.virtue.transport.http.h2.Http2Response;
 import io.virtue.transport.http.h2.Http2Transporter;
 
 import static io.virtue.common.constant.Components.Protocol.*;
@@ -20,46 +20,38 @@ import static io.virtue.common.constant.Components.Protocol.*;
 public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response> {
 
     public Http2Protocol() {
-        super(HTTP2, null, null, new Http2ProtocolParser());
+        super(HTTP2, new Http2ProtocolParser(), new Http2InvokerFactory());
     }
 
     @Override
     public Http2Request createRequest(Invocation invocation) {
-        return new Http2Request(invocation);
+        Http2Invocation http2Invocation = (Http2Invocation) invocation;
+        byte[] data = HttpUtil.serialize(http2Invocation.getHeader(HttpHeaderNames.CONTENT_TYPE), http2Invocation.body());
+        URL requestUrl = http2Invocation.url().replicate();
+        requestUrl.params().clear();
+        http2Invocation.params().forEach((k, v) -> requestUrl.addParam(k.toString(), v.toString()));
+        return http2Transporter().newRequest(requestUrl, http2Invocation.headers(), data);
     }
 
     @Override
-    public Http2Response createResponse(URL url, Object payload) {
-        return new Http2Response(url, payload);
+    public Http2Response createResponse(Invocation invocation, Object result) {
+        Http2Invocation http2Invocation = (Http2Invocation) invocation;
+        Http2Wrapper wrapper = ((Http2Callee) invocation.invoker()).wrapper();
+        byte[] data = HttpUtil.serialize(wrapper.headers().get(HttpHeaderNames.CONTENT_TYPE), http2Invocation.body());
+        URL requestUrl = http2Invocation.url().replicate();
+        requestUrl.params().clear();
+        http2Invocation.params().forEach((k, v) -> requestUrl.addParam(k.toString(), v.toString()));
+        return http2Transporter().newResponse(200, requestUrl, wrapper.headers(), data);
+    }
+
+    @Override
+    public Http2Response createResponse(URL url, Throwable e) {
+        return null;
     }
 
     @Override
     protected Transporter loadTransporter(String transport) {
         return ExtensionLoader.loadExtension(Http2Transporter.class, transport);
-    }
-
-    /**
-     * Convert Http 2 Request at the application layer to Http 2 Request at the transport layer..
-     *
-     * @param request
-     * @return
-     */
-    public io.virtue.transport.http.h2.Http2Request convertToTransportRequest(Http2Request request) {
-        URL url = request.url();
-        byte[] data = HttpUtil.serialize(request.getHeader(HttpHeaderNames.CONTENT_TYPE), request.body());
-        return http2Transporter().newRequest(url, request.headers(), data);
-    }
-
-    /**
-     * Convert Http 2 Response at the transport layer to Http 2 Response at the application layer.
-     *
-     * @param response
-     * @return
-     */
-    public io.virtue.transport.http.h2.Http2Response convertToTransportResponse(Http2Response response) {
-        URL url = response.url();
-        byte[] data = HttpUtil.serialize(response.getHeader(HttpHeaderNames.CONTENT_TYPE), response.body());
-        return http2Transporter().newResponse(response.statusCode(), url, response.headers(), data);
     }
 
     /**

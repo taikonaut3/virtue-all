@@ -7,7 +7,7 @@
     <!-- 配置不需要检查的模块 -->
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern"
-                  value=".*[\\/]((virtue-demo)|(virtue-test)|(virtue-eventhub-flow)|(virtue-rpc-http1))[\\/].*"/>
+                  value=".*[\\/]((virtue-demo)|(virtue-test)|(virtue-eventhub-flow)|(virtue-rpc-http1))[\\/].*|ExtensionAnnotationProcessor\.java"/>
     </module>
 
     <!-- 文件长度不超过1500行 -->

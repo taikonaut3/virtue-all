@@ -9,13 +9,11 @@ import io.virtue.serialization.Serializer;
 import io.virtue.transport.http.HttpHeaderNames;
 
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static io.virtue.common.constant.Components.Serialization.JSON;
+import static io.virtue.transport.util.TransportUtil.getStringMap;
 
 /**
  * Http Util.
@@ -24,31 +22,6 @@ public final class HttpUtil {
 
     private static final Map<CharSequence, CharSequence> CONTENT_TYPE_MAPPING = Map.of("application/json", JSON);
 
-    /**
-     * Parse path.
-     *
-     * @param pathAndParams
-     * @return
-     */
-    public static String parsePath(String pathAndParams) {
-        if (pathAndParams.contains("?")) {
-            return pathAndParams.substring(0, pathAndParams.indexOf("?"));
-        }
-        return pathAndParams;
-    }
-
-    /**
-     * Parse params.
-     *
-     * @param pathAndParams
-     * @return
-     */
-    public static Map<CharSequence, CharSequence> parseParams(String pathAndParams) {
-        if (pathAndParams.contains("?")) {
-            return getStringMap(pathAndParams.substring(pathAndParams.indexOf("?") + 1).split("&"), "=");
-        }
-        return null;
-    }
 
     /**
      * Find request body.
@@ -117,16 +90,6 @@ public final class HttpUtil {
             return new byte[0];
         }
         return getSerializer(contentType).serialize(body);
-    }
-
-    private static Map<CharSequence, CharSequence> getStringMap(String[] params, String separator) {
-        if (params == null || params.length == 0) {
-            return new HashMap<>();
-        }
-        return Arrays.stream(params)
-                .map(pair -> pair.split(separator))
-                .filter(keyValue -> keyValue.length == 2)
-                .collect(Collectors.toMap(keyValue -> keyValue[0].trim(), keyValue -> keyValue[1].trim()));
     }
 
     public static Serializer getSerializer(CharSequence contentType) {

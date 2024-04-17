@@ -58,4 +58,8 @@ public final class AttributeKey<T> {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return name.toString();
+    }
 }

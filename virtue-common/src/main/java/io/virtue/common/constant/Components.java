@@ -117,20 +117,6 @@ public interface Components {
     }
 
     /**
-     * ByteReader type.
-     */
-    interface ByteReader {
-        String NIO_HEAP = "heap";
-    }
-
-    /**
-     * ByteWriter type.
-     */
-    interface ByteWriter {
-        String NIO_HEAP = "heap";
-    }
-
-    /**
      * Envelope type.
      */
     interface Envelope {

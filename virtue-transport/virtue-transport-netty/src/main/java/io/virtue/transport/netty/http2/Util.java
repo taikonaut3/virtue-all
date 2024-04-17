@@ -1,7 +1,6 @@
 package io.virtue.transport.netty.http2;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http2.Http2Exception;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
@@ -15,8 +14,7 @@ import java.net.InetSocketAddress;
  */
 public class Util {
 
-    public static StreamEnvelope getStreamEnvelope(ChannelHandlerContext ctx, int streamId, URL endpointUrl, boolean isServer)
-            throws Http2Exception {
+    public static StreamEnvelope getStreamEnvelope(ChannelHandlerContext ctx, int streamId, URL endpointUrl, boolean isServer) {
         String id = String.valueOf(streamId);
         AttributeKey<StreamEnvelope> streamKey = AttributeKey.valueOf(id);
         Attribute<StreamEnvelope> streamMessageAttribute = ctx.channel().attr(streamKey);
@@ -24,7 +22,6 @@ public class Util {
         if (streamEnvelope == null) {
             InetSocketAddress address = (InetSocketAddress) (isServer ? ctx.channel().localAddress() : ctx.channel().remoteAddress());
             URL url = new URL(endpointUrl.protocol(), address);
-            url.addParams(endpointUrl.params());
             url.addParam(Key.ONEWAY, Boolean.FALSE.toString());
             url.addParam(Key.UNIQUE_ID, id);
             streamEnvelope = new StreamEnvelope(url, streamId);

@@ -4,6 +4,7 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ResourceException;
 import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.AttributeKey;
+import io.virtue.common.extension.Replicable;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.StringUtil;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Accessors(fluent = true)
-public class URL extends AbstractAccessor {
+public class URL extends AbstractAccessor implements Replicable<URL> {
 
     public static final AttributeKey<URL> ATTRIBUTE_KEY = AttributeKey.of(Key.URL);
 
@@ -208,13 +209,14 @@ public class URL extends AbstractAccessor {
      *
      * @param path
      */
-    public void addPath(String path) {
+    public URL addPath(String path) {
         if (StringUtil.isBlank(path)) {
             logger.warn("Add empty path, will skip");
         } else {
             path = StringUtil.normalizePath(path);
             paths.add(path);
         }
+        return this;
     }
 
     /**
@@ -223,13 +225,14 @@ public class URL extends AbstractAccessor {
      * @param index
      * @param path
      */
-    public void addPath(int index, String path) {
+    public URL addPath(int index, String path) {
         if (StringUtil.isBlank(path)) {
             logger.warn("Add empty path, will skip");
         } else {
             path = StringUtil.normalizePath(path);
             paths.add(index, path);
         }
+        return this;
     }
 
     /**
@@ -237,8 +240,9 @@ public class URL extends AbstractAccessor {
      *
      * @param paths
      */
-    public void addPaths(List<String> paths) {
+    public URL addPaths(List<String> paths) {
         paths.forEach(this::addPath);
+        return this;
     }
 
     /**
@@ -246,10 +250,11 @@ public class URL extends AbstractAccessor {
      *
      * @param index
      */
-    public void removePath(int index) {
+    public URL removePath(int index) {
         if (paths.size() > index) {
             paths.remove(index);
         }
+        return this;
     }
 
     /**
@@ -271,8 +276,9 @@ public class URL extends AbstractAccessor {
      * @param key
      * @param value
      */
-    public void addParam(String key, String value) {
+    public URL addParam(String key, String value) {
         params.put(key, value);
+        return this;
     }
 
     /**
@@ -280,8 +286,9 @@ public class URL extends AbstractAccessor {
      *
      * @param params
      */
-    public void addParams(Map<String, String> params) {
+    public URL addParams(Map<String, String> params) {
         if (params != null) this.params.putAll(params);
+        return this;
     }
 
     /**
@@ -289,10 +296,11 @@ public class URL extends AbstractAccessor {
      *
      * @param params
      */
-    public void replaceParams(Map<String, String> params) {
+    public URL replaceParams(Map<String, String> params) {
         if (params != null && !params.isEmpty()) {
             this.params = params;
         }
+        return this;
     }
 
     /**
@@ -387,8 +395,9 @@ public class URL extends AbstractAccessor {
      *
      * @param key
      */
-    public void removeParam(String key) {
+    public URL removeParam(String key) {
         params.remove(key);
+        return this;
     }
 
     /**
@@ -414,11 +423,12 @@ public class URL extends AbstractAccessor {
      *
      * @param paths
      */
-    public void replacePaths(List<String> paths) {
+    public URL replacePaths(List<String> paths) {
         if (paths != null && !paths.isEmpty()) {
             this.paths.clear();
             addPaths(paths);
         }
+        return this;
     }
 
     /**
@@ -438,19 +448,7 @@ public class URL extends AbstractAccessor {
      */
     public String pathAndParams() {
         String paramsStr = toUrlParams(params);
-        return path() + "?" + StringUtil.isBlankOrDefault(paramsStr, "");
-    }
-
-    /**
-     * Deep copy,without {@link io.virtue.common.extension.Accessor}.
-     *
-     * @return
-     */
-    public URL deepCopy() {
-        URL url = new URL(protocol, address(), params);
-        url.replacePaths(paths);
-        url.accessor.putAll(this.accessor);
-        return url;
+        return path() + (StringUtil.isBlank(paramsStr) ? "" : ("?" + paramsStr));
     }
 
     @Override
@@ -458,4 +456,11 @@ public class URL extends AbstractAccessor {
         return authority() + pathAndParams();
     }
 
+    @Override
+    public URL replicate() {
+        URL url = new URL(protocol, address(), params);
+        url.replacePaths(paths);
+        url.accessor.putAll(this.accessor);
+        return url;
+    }
 }

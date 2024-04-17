@@ -11,6 +11,7 @@ import io.virtue.core.config.ServerConfig;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.filter.FilterScope;
 import io.virtue.rpc.event.SendMessageEvent;
+import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.channel.Channel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -30,7 +31,7 @@ import java.util.List;
  */
 @Getter
 @Accessors(fluent = true)
-public abstract class AbstractCallee<T extends Annotation> extends AbstractInvoker<T> implements Callee<T> {
+public abstract class AbstractCallee<T extends Annotation, P extends Protocol<?, ?>> extends AbstractInvoker<T, P> implements Callee<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractCallee.class);
 
@@ -99,17 +100,20 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
         List<Filter> postFilters = FilterScope.POST.filterScope(filters);
         URL url = invocation.url();
         invocation.revise(() -> {
-            Object result = null;
+            Object result;
+            Object response = null;
             try {
                 result = remoteService().invokeMethod(method, invocation.args());
+                response = protocolInstance.createResponse(invocation, result);
                 return result;
             } catch (Exception e) {
-                result = e;
                 logger.error("Invoke " + url.path() + " fail", e);
+                response = protocolInstance.createResponse(invocation.url(), e);
                 throw RpcException.unwrap(e);
             } finally {
-                Object response = protocolInstance.createResponse(url, result);
-                url.set(Key.SERVICE_RESPONSE, response);
+                if (response != null) {
+                    url.set(Key.SERVICE_RESPONSE, response);
+                }
                 invocation.revise(null);
                 filterChain.filter(invocation, postFilters);
             }
@@ -121,14 +125,14 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
         URL url = invocation.url();
         Channel channel = url.get(Channel.ATTRIBUTE_KEY);
         url.addParams(this.url.params());
-        virtue.eventDispatcher().dispatchEvent(new SendMessageEvent(() -> sendSuccess(invocation, channel, result)));
+        virtue.eventDispatcher().dispatch(new SendMessageEvent(() -> sendSuccess(invocation, channel, result)));
     }
 
     protected void sendErrorMessageEvent(Invocation invocation, Throwable cause) {
         URL url = invocation.url();
         Channel channel = url.get(Channel.ATTRIBUTE_KEY);
         url.addParams(this.url.params());
-        virtue.eventDispatcher().dispatchEvent(new SendMessageEvent(() -> sendError(invocation, channel, cause)));
+        virtue.eventDispatcher().dispatch(new SendMessageEvent(() -> sendError(invocation, channel, cause)));
     }
 
     protected abstract void sendSuccess(Invocation invocation, Channel channel, Object result) throws RpcException;

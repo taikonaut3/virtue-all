@@ -3,6 +3,7 @@ package io.virtue.rpc.protocol;
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
+import io.virtue.core.InvokerFactory;
 import io.virtue.core.Virtue;
 import io.virtue.rpc.handler.BaseClientChannelHandlerChain;
 import io.virtue.rpc.handler.BaseServerChannelHandlerChain;
@@ -11,6 +12,8 @@ import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.Client;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.server.Server;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <Req>  request type
  * @param <Resp> response type
  */
+@Accessors(fluent = true)
 public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp> {
 
     private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
@@ -28,26 +32,43 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp>
     protected String protocol;
     protected Codec serverCodec;
     protected Codec clientCodec;
+    @Getter
     protected ChannelHandler clientHandler;
+    @Getter
     protected ChannelHandler serverHandler;
     protected ProtocolParser protocolParser;
+    protected InvokerFactory invokerFactory;
     protected Transporter transporter;
     protected String transport;
     protected Virtue virtue;
 
-    protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec, ProtocolParser protocolParser) {
-        this(protocol, serverCodec, clientCodec, new BaseClientChannelHandlerChain(), new BaseServerChannelHandlerChain(), protocolParser);
+    protected AbstractProtocol(String protocol, ProtocolParser protocolParser, InvokerFactory invokerFactory) {
+        this(protocol, null, null, protocolParser, invokerFactory);
     }
 
     protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec,
+                               ProtocolParser protocolParser, InvokerFactory invokerFactory) {
+        this(protocol, serverCodec, clientCodec,
+                new BaseClientChannelHandlerChain(),
+                new BaseServerChannelHandlerChain(),
+                protocolParser,
+                invokerFactory);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec,
                                ChannelHandler clientHandler, ChannelHandler serverHandler,
-                               ProtocolParser protocolParser) {
+                               ProtocolParser protocolParser, InvokerFactory invokerFactory) {
         this.protocol = protocol;
         this.serverCodec = serverCodec;
         this.clientCodec = clientCodec;
         this.clientHandler = clientHandler;
         this.serverHandler = serverHandler;
         this.protocolParser = protocolParser;
+        if (protocolParser instanceof AbstractProtocolParser abstractProtocolParser) {
+            abstractProtocolParser.protocol(this);
+        }
+        this.invokerFactory = invokerFactory;
     }
 
     /**
@@ -93,6 +114,11 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol<Req, Resp>
     @Override
     public ProtocolParser parser() {
         return protocolParser;
+    }
+
+    @Override
+    public InvokerFactory invokerFactory() {
+        return invokerFactory;
     }
 
     @Override

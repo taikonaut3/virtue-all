@@ -32,7 +32,7 @@ public class DefaultRouter implements Router {
             urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.GROUP), group)).collect(Collectors.toList());
         }
         // filter by router rule
-        Virtue virtue = Virtue.get(url);
+        Virtue virtue = Virtue.ofClient(url);
         Collection<RouterConfig> routerConfigs = virtue.configManager().routerConfigManager().getManagerMap().values();
         LinkedList<URL> result = new LinkedList<>();
         boolean hadConfig = false;

@@ -14,12 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Close idle connections according to core {@link ClientConfig#spareCloseTimes} to reduce resource waste.
  */
-public class IdeEventListener implements EventListener<IdeEvent> {
+public class IdleEventListener implements EventListener<IdleEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(IdeEventListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(IdleEventListener.class);
 
     @Override
-    public void onEvent(IdeEvent event) {
+    public void onEvent(IdleEvent event) {
         Channel channel = event.source();
         URL url = channel.get(URL.ATTRIBUTE_KEY);
         AtomicInteger readIdleRecord = channel.get(Key.READER_IDLE_TIMES_ATTRIBUTE_KEY);

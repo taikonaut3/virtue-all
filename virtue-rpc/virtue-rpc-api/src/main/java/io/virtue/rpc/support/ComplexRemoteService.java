@@ -8,7 +8,7 @@ import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
 import io.virtue.core.Virtue;
-import io.virtue.core.annotation.InvokerFactory;
+import io.virtue.core.annotation.Protocol;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
@@ -102,10 +102,10 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
 
     private void parseServerCaller() {
         for (Method method : remoteServiceClass.getDeclaredMethods()) {
-            InvokerFactory factoryProvider = ReflectionUtil.findAnnotation(method, InvokerFactory.class);
-            if (factoryProvider != null) {
-                var invokerFactory = ExtensionLoader.loadExtension(io.virtue.core.InvokerFactory.class, factoryProvider.value());
-                Callee<?> callee = invokerFactory.createCallee(method, this);
+            Protocol protocol = ReflectionUtil.findAnnotation(method, Protocol.class);
+            if (protocol != null) {
+                var protocolInstance = ExtensionLoader.loadExtension(io.virtue.rpc.protocol.Protocol.class, protocol.value());
+                Callee<?> callee = protocolInstance.invokerFactory().createCallee(method, this);
                 if (callee != null) {
                     invokers.put(method, callee);
                     addInvokerMapping(callee.protocol(), callee.path(), callee);

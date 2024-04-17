@@ -34,7 +34,7 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
 
     Http2ServerHandler(URL url, ChannelHandler handler) {
         this.url = url;
-        this.virtue = Virtue.get(url);
+        this.virtue = Virtue.ofServer(url);
         this.handler = handler;
     }
 
@@ -111,7 +111,6 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
 
     private void fireChannelRead(ChannelHandlerContext ctx, StreamEnvelope message) {
         URL url = message.url();
-        url.addParams(Http2ServerHandler.this.url.params());
         NettyHttp2Request http2Request = new NettyHttp2Request(message);
         Request request = new Request(url, http2Request);
         ctx.fireChannelRead(request);

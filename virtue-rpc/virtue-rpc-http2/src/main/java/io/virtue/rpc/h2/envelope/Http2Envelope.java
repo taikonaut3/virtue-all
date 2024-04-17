@@ -20,7 +20,8 @@ public class Http2Envelope {
 
     protected final HttpMethod method;
 
-    protected final Map<CharSequence, CharSequence> headers;
+    protected Map<CharSequence, CharSequence> headers;
+    protected  Map<CharSequence, CharSequence> params;
 
     protected Object body;
 

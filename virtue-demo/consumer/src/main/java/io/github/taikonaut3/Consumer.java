@@ -59,7 +59,7 @@ public interface Consumer {
     List<ParentObject> list(List<ParentObject> list1, List<ParentObject> list2);
 
     @Options(timeout = 600000)
-    @Http2Call(path = "http2Test")
+    @Http2Call(path = "/http2Test?aaa=123&bbb=321")
     List<ParentObject> http2Test(@Body List<ParentObject> list);
 
 }

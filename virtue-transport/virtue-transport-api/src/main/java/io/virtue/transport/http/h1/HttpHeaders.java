@@ -28,6 +28,13 @@ public interface HttpHeaders extends Iterable<Map.Entry<CharSequence, CharSequen
      *
      * @param headers
      */
+    void add(Map<CharSequence, CharSequence> headers);
+
+    /**
+     * Add headers.
+     *
+     * @param headers
+     */
     void add(HttpHeaders headers);
 
 }

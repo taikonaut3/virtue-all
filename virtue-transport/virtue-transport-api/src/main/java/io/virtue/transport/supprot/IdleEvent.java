@@ -6,9 +6,9 @@ import io.virtue.transport.channel.Channel;
 /**
  * HeartBeatEvent.
  */
-public class IdeEvent extends AbstractEvent<Channel> {
+public class IdleEvent extends AbstractEvent<Channel> {
 
-    public IdeEvent(Channel channel) {
+    public IdleEvent(Channel channel) {
         super(channel);
     }
 

@@ -26,7 +26,12 @@ public class HttpProtocol implements Protocol<HttpRequest, Object> {
     }
 
     @Override
-    public Object createResponse(URL url, Object payload) {
+    public Object createResponse(Invocation invocation, Object payload) {
+        return null;
+    }
+
+    @Override
+    public Object createResponse(URL url, Throwable e) {
         return null;
     }
 

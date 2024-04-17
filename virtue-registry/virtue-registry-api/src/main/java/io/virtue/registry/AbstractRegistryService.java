@@ -53,7 +53,7 @@ public abstract class AbstractRegistryService implements RegistryService {
     }
 
     protected Map<String, String> metaInfo(URL url) {
-        Virtue virtue = Virtue.get(url);
+        Virtue virtue = Virtue.ofLocal(url);
         ApplicationConfig applicationConfig = virtue.configManager().applicationConfig();
         Map<String, String> systemInfo = new SystemInfo(virtue).toMap();
         HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
@@ -69,9 +69,11 @@ public abstract class AbstractRegistryService implements RegistryService {
     }
 
     protected String serviceName(URL url) {
-        String applicationName = Virtue.get(url).applicationName();
-        applicationName = StringUtil.isBlankOrDefault(applicationName, this.getClass().getModule().getName());
-        return url.getParam(Key.APPLICATION, applicationName);
+        String applicationName = url.getParam(Key.APPLICATION);
+        if (StringUtil.isBlank(applicationName)) {
+            throw new IllegalArgumentException("application name is null");
+        }
+        return applicationName;
     }
 
     protected abstract void subscribeService(URL url);

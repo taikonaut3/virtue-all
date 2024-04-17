@@ -84,12 +84,12 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <E extends Event<?>> void doDispatchEvent(E event) {
+    protected <E extends Event<?>> void dodispatch(E event) {
         ringBuffer().publishEvent((eventHolder, sequence) -> {
             EventHolder<E> holder = (EventHolder<E>) eventHolder;
             holder.event(event);
         });
-        logger.trace("DispatchEvent ({})", simpleClassName(event));
+        logger.trace("dispatch ({})", simpleClassName(event));
     }
 
     private RingBuffer<EventHolder<?>> ringBuffer() {

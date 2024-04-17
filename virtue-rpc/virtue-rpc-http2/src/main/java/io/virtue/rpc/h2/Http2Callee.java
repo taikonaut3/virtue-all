@@ -6,10 +6,10 @@ import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.core.RemoteService;
 import io.virtue.rpc.h2.config.Http2Callable;
-import io.virtue.rpc.h2.envelope.Http2Response;
 import io.virtue.rpc.support.AbstractCallee;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.http.HttpMethod;
+import io.virtue.transport.http.h2.Http2Response;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -23,9 +23,9 @@ import static io.virtue.common.constant.Components.Protocol.HTTP2;
  */
 @Getter
 @Accessors(fluent = true)
-public class Http2Callee extends AbstractCallee<Http2Callable> {
+public class Http2Callee extends AbstractCallee<Http2Callable, Http2Protocol> {
 
-    private Http2Invoker invoker;
+    private Http2Wrapper wrapper;
 
     public Http2Callee(Method method, RemoteService<?> remoteService) {
         super(method, remoteService, HTTP2, Http2Callable.class);
@@ -33,20 +33,21 @@ public class Http2Callee extends AbstractCallee<Http2Callable> {
 
     @Override
     protected void doInit() {
-        invoker = new Http2Invoker(parsedAnnotation, this);
+        wrapper = new Http2Wrapper(parsedAnnotation, this);
     }
 
     @Override
     protected URL createUrl(URL serverUrl) {
         URL url = super.createUrl(serverUrl);
-        url.addParams(invoker.parameterization());
+        url.addParams(wrapper.parameterization());
+        url.set(HttpMethod.ATTRIBUTE_KEY, wrapper.httpMethod());
         return url;
     }
 
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
         URL url = invocation.url();
-        url.set(HttpMethod.ATTRIBUTE_KEY, invoker.httpMethod());
+        url.set(HttpMethod.ATTRIBUTE_KEY, wrapper.httpMethod());
         Object result = null;
         try {
             result = doInvoke(invocation);
@@ -60,21 +61,19 @@ public class Http2Callee extends AbstractCallee<Http2Callable> {
     @Override
     protected void sendSuccess(Invocation invocation, Channel channel, Object result) throws RpcException {
         URL url = invocation.url();
-        url.addParams(this.url.params());
         Http2Response response = (Http2Response) url.get(Key.SERVICE_RESPONSE);
-        response.addHeaders(invoker.headers());
-        response.statusCode(200);
-        var transportResponse = ((Http2Protocol) protocolInstance).convertToTransportResponse(response);
-        invoker.sender().send(channel, transportResponse);
+        wrapper.sender().send(channel, response);
     }
 
     @Override
     protected void sendError(Invocation invocation, Channel channel, Throwable cause) throws RpcException {
-
+        URL url = invocation.url();
+        Http2Response response = (Http2Response) url.get(Key.SERVICE_RESPONSE);
+        wrapper.sender().send(channel, response);
     }
 
     @Override
     public List<String> pathList() {
-        return URL.pathToList(invoker.path());
+        return URL.pathToList(wrapper.path());
     }
 }

@@ -29,23 +29,49 @@ import static io.virtue.common.constant.Components.DEFAULT;
 @Extensible(DEFAULT)
 public interface Virtue extends Accessor, Lifecycle {
 
-    AttributeKey<Virtue> ATTRIBUTE_KEY = AttributeKey.of(Key.VIRTUE);
+    AttributeKey<Virtue> LOCAL_VIRTUE = AttributeKey.of(Key.LOCAL_VIRTUE);
+    AttributeKey<Virtue> CLIENT_VIRTUE = AttributeKey.of(Key.CLIENT_VIRTUE);
+    AttributeKey<Virtue> SERVER_VIRTUE = AttributeKey.of(Key.SERVER_VIRTUE);
 
     /**
-     * Get virtue instance from url.
+     * Get local virtue instance.
      *
      * @param url
-     * @return Virtue instance
+     * @return
      */
-    static Virtue get(URL url) {
-        Virtue virtue = url.get(ATTRIBUTE_KEY);
+    static Virtue ofLocal(URL url) {
+        return getVirtue(LOCAL_VIRTUE, url);
+    }
+
+    /**
+     * Get client virtue instance.
+     *
+     * @param url
+     * @return
+     */
+    static Virtue ofClient(URL url) {
+        return getVirtue(CLIENT_VIRTUE, url);
+    }
+
+    /**
+     * Get server virtue instance.
+     *
+     * @param url
+     * @return
+     */
+    static Virtue ofServer(URL url) {
+        return getVirtue(SERVER_VIRTUE, url);
+    }
+
+    private static Virtue getVirtue(AttributeKey<Virtue> key, URL url) {
+        Virtue virtue = url.get(key);
         if (virtue == null) {
-            virtue = RpcContext.currentContext().get(ATTRIBUTE_KEY);
+            virtue = RpcContext.currentContext().get(key);
             if (virtue == null) {
-                virtue = ExtensionLoader.loadExtension(Virtue.class, url.getParam(Key.VIRTUE, DEFAULT));
+                virtue = ExtensionLoader.loadExtension(Virtue.class, url.getParam(key.name().toString(), DEFAULT));
             }
             if (virtue != null) {
-                url.set(ATTRIBUTE_KEY, virtue);
+                url.set(key, virtue);
             }
         }
         return virtue;

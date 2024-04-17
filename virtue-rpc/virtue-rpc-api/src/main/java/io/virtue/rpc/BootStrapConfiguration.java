@@ -18,8 +18,8 @@ import io.virtue.rpc.listener.*;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.server.Server;
-import io.virtue.transport.supprot.IdeEvent;
-import io.virtue.transport.supprot.IdeEventListener;
+import io.virtue.transport.supprot.IdleEvent;
+import io.virtue.transport.supprot.IdleEventListener;
 import io.virtue.transport.supprot.RefreshHeartBeatCountEvent;
 import io.virtue.transport.supprot.RefreshHeartBeatCountEventListener;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
         eventDispatcher.addListener(ClientHandlerExceptionEvent.class, new ClientHandlerExceptionListener());
         eventDispatcher.addListener(ServerHandlerExceptionEvent.class, new ServerHandlerExceptionListener());
         eventDispatcher.addListener(RefreshHeartBeatCountEvent.class, new RefreshHeartBeatCountEventListener());
-        eventDispatcher.addListener(IdeEvent.class, new IdeEventListener());
+        eventDispatcher.addListener(IdleEvent.class, new IdleEventListener());
         eventDispatcher.addListener(SendMessageEvent.class, new SendMessageEventListener());
     }
 
@@ -73,8 +73,8 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             } else {
                 for (RegistryConfig registryConfig : registryConfigs) {
                     URL registryConfigUrl = registryConfig.toUrl();
-                    registryConfigUrl.set(Virtue.ATTRIBUTE_KEY, virtue);
-                    registryConfigUrl.addParam(Key.VIRTUE, virtue.name());
+                    registryConfigUrl.set(Virtue.LOCAL_VIRTUE, virtue);
+                    registryConfigUrl.addParam(Key.LOCAL_VIRTUE, virtue.name());
                     RegistryFactory registryFactory = ExtensionLoader.loadExtension(RegistryFactory.class, registryConfigUrl.protocol());
                     RegistryService registryService = registryFactory.get(registryConfigUrl);
                     registryService.register(serverUrl);

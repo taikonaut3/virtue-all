@@ -37,6 +37,6 @@ public interface EventDispatcher {
      * @param event the event to dispatch
      * @param <E>   the type of the event
      */
-    <E extends Event<?>> void dispatchEvent(E event);
+    <E extends Event<?>> void dispatch(E event);
 
 }

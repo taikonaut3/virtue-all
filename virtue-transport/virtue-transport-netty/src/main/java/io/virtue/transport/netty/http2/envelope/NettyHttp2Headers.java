@@ -21,7 +21,7 @@ public class NettyHttp2Headers implements HttpHeaders {
 
     public NettyHttp2Headers(Map<CharSequence, CharSequence> headers) {
         this();
-        headers.forEach(this::add);
+        add(headers);
     }
 
     public NettyHttp2Headers(Http2Headers headers) {
@@ -36,6 +36,11 @@ public class NettyHttp2Headers implements HttpHeaders {
     @Override
     public void add(CharSequence name, CharSequence value) {
         headers.add(name, value);
+    }
+
+    @Override
+    public void add(Map<CharSequence, CharSequence> headers) {
+        headers.forEach(this::add);
     }
 
     @Override

@@ -7,14 +7,14 @@ import java.lang.annotation.*;
 /**
  * Create the Invoker implementation of the extension protocol.
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface InvokerFactory {
+public @interface Protocol {
 
     /**
-     * {@link io.virtue.core.InvokerFactory}‘s {@link Extension#value()}.
+     * {@link io.virtue.rpc.protocol.Protocol}‘s {@link io.virtue.common.spi.Extensible#value()}.
      *
      * @return {@link Extension#value()}
      */

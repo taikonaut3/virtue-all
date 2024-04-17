@@ -39,7 +39,7 @@ public class TransferableInvocation implements Invocation {
 
     public TransferableInvocation(Caller<?> caller, Object[] args) {
         basic(caller, args);
-        this.url = caller.url().deepCopy();
+        this.url = caller.url().replicate();
     }
 
     public TransferableInvocation(URL url, Callee<?> callee, Object[] args) {

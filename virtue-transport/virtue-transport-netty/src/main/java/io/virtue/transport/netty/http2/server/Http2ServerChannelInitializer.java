@@ -19,6 +19,8 @@ import io.virtue.transport.netty.http.server.HttpServerMessageConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.virtue.transport.util.TransportUtil.sslEnabled;
+
 /**
  * Initializes the channel of Netty for HTTP2 Codec.
  */
@@ -38,6 +40,8 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
             if (AsciiString.contentEquals(Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME, protocol)) {
                 return new Http2ServerUpgradeCodec(
                         Http2FrameCodecBuilder.forServer().build(),
+                        idleStateHandler,
+                        idleStateHandler.handler(),
                         new Http2MultiplexHandler(new Http2ServerHandler(url, handler))
                 );
             } else {
@@ -76,14 +80,12 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
         final HttpServerCodec sourceCodec = new HttpServerCodec();
         ch.pipeline()
                 .addLast(sourceCodec)
-                .addLast(idleStateHandler)
-                .addLast(idleStateHandler.handler())
                 .addLast(new HttpServerUpgradeHandler(sourceCodec, upgradeCodecFactory))
                 .addLast(new Http2ToHttpHandler());
     }
 
     private SslContext getSslContext() throws Exception {
-        boolean ssl = url.getBooleanParam(Key.SSL, true);
+        boolean ssl = sslEnabled(url);
         SslContext sslContext = null;
         if (ssl) {
             SslProvider provider = SslProvider.isAlpnSupported(SslProvider.OPENSSL) ? SslProvider.OPENSSL : SslProvider.JDK;

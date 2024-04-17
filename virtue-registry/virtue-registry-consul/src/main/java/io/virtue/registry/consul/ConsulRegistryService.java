@@ -59,7 +59,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
                     .setPort(url.port())
                     .setTimeout(url.getIntParam(Key.CONNECT_TIMEOUT));
             AttributeKey<Vertx> vertxKey = AttributeKey.of(Key.VERTX);
-            Virtue virtue = Virtue.get(url);
+            Virtue virtue = Virtue.ofLocal(url);
             vertx = virtue.get(vertxKey);
             if (vertx == null) {
                 vertx = Vertx.vertx();
@@ -76,7 +76,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
     public void register(URL url) {
         String serviceName = serviceName(url);
         consulClient.deregisterService(serviceName);
-        Virtue.get(url).scheduler().addPeriodic(() -> {
+        Virtue.ofLocal(url).scheduler().addPeriodic(() -> {
             ServiceOptions opts = new ServiceOptions()
                     .setName(serviceName)
                     .setId(instanceId(url))
