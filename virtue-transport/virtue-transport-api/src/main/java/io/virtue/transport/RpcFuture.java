@@ -35,13 +35,13 @@ public class RpcFuture extends CompletableFuture<Object> {
     @Setter
     private Response response;
 
+    @Setter
     private Client client;
 
-    public RpcFuture(Invocation invocation, Client client) {
+    public RpcFuture(Invocation invocation) {
         this.url = invocation.url();
         this.invocation = invocation;
         this.id = INCREASE.getAndIncrement();
-        this.client = client;
         invocation.url().addParam(Key.UNIQUE_ID, String.valueOf(id));
         addFuture(id(), this);
         whenComplete((resp, ex) -> removeFuture(id()));

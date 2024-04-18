@@ -23,7 +23,7 @@ public class ResponseEvent extends AbstractEvent<Response> {
         URL url = response.url();
         var protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
-        this.body = protocolParser.parseResponseBody(response);
+        this.body = protocolParser.parseOfResponse(response);
     }
 
 }

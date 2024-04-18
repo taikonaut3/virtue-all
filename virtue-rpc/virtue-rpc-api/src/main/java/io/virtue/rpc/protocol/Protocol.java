@@ -6,7 +6,8 @@ import io.virtue.core.Invocation;
 import io.virtue.core.InvokerFactory;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.ServerConfig;
-import io.virtue.transport.Response;
+import io.virtue.transport.RpcFuture;
+import io.virtue.transport.channel.Channel;
 import io.virtue.transport.client.Client;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.server.Server;
@@ -20,7 +21,7 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
  * @param <Resp> Response type
  */
 @Extensible(value = VIRTUE)
-public interface Protocol<Req, Resp> {
+public interface Protocol {
 
     /**
      * This protocol.
@@ -36,30 +37,17 @@ public interface Protocol<Req, Resp> {
      */
     InvokerFactory invokerFactory();
 
-    /**
-     * Create a new request for the given URL and message body.
-     *
-     * @param invocation
-     * @return
-     */
-    Req createRequest(Invocation invocation);
+    default RpcFuture sendRequest(Invocation invocation) {
+        return null;
+    }
 
-    /**
-     * Create a new response for the given URL and message body.
-     *
-     * @param invocation
-     * @param result     the invoke result
-     * @return {@link Response}
-     */
-    Resp createResponse(Invocation invocation, Object result);
+    default void sendResponse(Channel channel, Invocation invocation, Object result) {
 
-    /**
-     * Create a new response for exception.
-     *
-     * @param e
-     * @return
-     */
-    Resp createResponse(URL url, Throwable e);
+    }
+
+    default void sendResponse(Channel channel, URL url, Throwable cause) {
+
+    }
 
     /**
      * Opening a client may reuse the existing one.

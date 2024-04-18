@@ -1,15 +1,12 @@
 package io.virtue.rpc.h2;
 
-import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.core.RemoteService;
 import io.virtue.rpc.h2.config.Http2Callable;
 import io.virtue.rpc.support.AbstractCallee;
-import io.virtue.transport.channel.Channel;
 import io.virtue.transport.http.HttpMethod;
-import io.virtue.transport.http.h2.Http2Response;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -23,7 +20,7 @@ import static io.virtue.common.constant.Components.Protocol.HTTP2;
  */
 @Getter
 @Accessors(fluent = true)
-public class Http2Callee extends AbstractCallee<Http2Callable, Http2Protocol> {
+public class Http2Callee extends AbstractCallee<Http2Callable> {
 
     private Http2Wrapper wrapper;
 
@@ -46,30 +43,12 @@ public class Http2Callee extends AbstractCallee<Http2Callable, Http2Protocol> {
 
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
-        URL url = invocation.url();
-        url.set(HttpMethod.ATTRIBUTE_KEY, wrapper.httpMethod());
-        Object result = null;
-        try {
-            result = doInvoke(invocation);
-            sendSuccessMessageEvent(invocation, result);
-        } catch (RpcException e) {
-            sendErrorMessageEvent(invocation, e);
+        Object result = doInvoke(invocation);
+        sendResponse(invocation, result);
+        if (result instanceof Exception e) {
+            throw RpcException.unwrap(e);
         }
         return result;
-    }
-
-    @Override
-    protected void sendSuccess(Invocation invocation, Channel channel, Object result) throws RpcException {
-        URL url = invocation.url();
-        Http2Response response = (Http2Response) url.get(Key.SERVICE_RESPONSE);
-        wrapper.sender().send(channel, response);
-    }
-
-    @Override
-    protected void sendError(Invocation invocation, Channel channel, Throwable cause) throws RpcException {
-        URL url = invocation.url();
-        Http2Response response = (Http2Response) url.get(Key.SERVICE_RESPONSE);
-        wrapper.sender().send(channel, response);
     }
 
     @Override

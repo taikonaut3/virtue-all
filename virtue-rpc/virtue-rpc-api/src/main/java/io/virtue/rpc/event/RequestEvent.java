@@ -29,7 +29,7 @@ public class RequestEvent extends AbstractEvent<Request> {
         URL url = request.url();
         var protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
         ProtocolParser protocolParser = protocol.parser();
-        this.invocation = protocolParser.parseRequestBody(request);
+        this.invocation = protocolParser.parseOfRequest(request);
         invocation.url().set(Channel.ATTRIBUTE_KEY, channel);
     }
 

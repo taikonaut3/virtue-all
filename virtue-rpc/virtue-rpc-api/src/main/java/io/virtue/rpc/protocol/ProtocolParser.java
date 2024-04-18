@@ -10,19 +10,19 @@ import io.virtue.transport.Response;
 public interface ProtocolParser {
 
     /**
-     * Parse request body to Invocation.
+     * Parse request to Invocation.
      *
      * @param request
      * @return
      */
-    Invocation parseRequestBody(Request request);
+    Invocation parseOfRequest(Request request);
 
     /**
-     * Parse response body to Object.
+     * Parse response to return value.
      *
      * @param response
      * @return
      */
-    Object parseResponseBody(Response response);
+    Object parseOfResponse(Response response);
 
 }

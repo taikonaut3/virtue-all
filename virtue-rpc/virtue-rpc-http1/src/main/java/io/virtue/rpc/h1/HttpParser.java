@@ -19,16 +19,6 @@ import java.util.stream.Collectors;
 @Accessors(fluent = true)
 public class HttpParser implements ProtocolParser {
 
-    @Override
-    public Invocation parseRequestBody(Request request) {
-        return null;
-    }
-
-    @Override
-    public Object parseResponseBody(Response response) {
-        return null;
-    }
-
     public Map<String, String> parseHeaders(String[] headers) {
         return getStringMap(headers);
     }
@@ -50,4 +40,13 @@ public class HttpParser implements ProtocolParser {
                 ));
     }
 
+    @Override
+    public Invocation parseOfRequest(Request request) {
+        return null;
+    }
+
+    @Override
+    public Object parseOfResponse(Response response) {
+        return null;
+    }
 }

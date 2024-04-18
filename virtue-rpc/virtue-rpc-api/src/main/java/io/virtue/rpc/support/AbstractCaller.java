@@ -7,7 +7,10 @@ import io.virtue.common.extension.RpcContext;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.*;
+import io.virtue.common.util.CollectionUtil;
+import io.virtue.common.util.NetUtil;
+import io.virtue.common.util.ReflectionUtil;
+import io.virtue.common.util.StringUtil;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.core.RemoteCaller;
@@ -25,10 +28,7 @@ import io.virtue.governance.loadbalance.LoadBalancer;
 import io.virtue.governance.router.Router;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
-import io.virtue.rpc.event.SendMessageEvent;
-import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.RpcFuture;
-import io.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -39,7 +39,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,7 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Setter
 @Getter
 @Accessors(fluent = true, chain = true)
-public abstract class AbstractCaller<T extends Annotation, P extends Protocol<?, ?>> extends AbstractInvoker<T, P> implements Caller<T> {
+public abstract class AbstractCaller<T extends Annotation> extends AbstractInvoker<T> implements Caller<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractCaller.class);
 
@@ -263,44 +262,17 @@ public abstract class AbstractCaller<T extends Annotation, P extends Protocol<?,
             String requestContextStr = RpcContext.requestContext().toString();
             url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
             url.addParam(Key.ENVELOPE, Key.REQUEST);
-            Client client = getClient(url.address());
-            RpcFuture future = new RpcFuture(invocation, client);
-            sendMessageEvent(future);
+            RpcFuture future = protocolInstance.sendRequest(invocation);
             return async() ? future : future.get();
         });
         return filterChain.filter(invocation, postFilters);
     }
-
-    protected void sendMessageEvent(RpcFuture future) {
-        SendMessageEvent event = new SendMessageEvent(() -> {
-            String timestamp = DateUtil.format(LocalDateTime.now(), DateUtil.COMPACT_FORMAT);
-            future.invocation().url().addParam(Key.TIMESTAMP, timestamp);
-            send(future);
-        });
-        virtue.eventDispatcher().dispatch(event);
-    }
-
-    protected abstract void send(RpcFuture future);
 
     private Options options() {
         if (method.isAnnotationPresent(Options.class)) {
             return method.getAnnotation(Options.class);
         }
         return ReflectionUtil.getDefaultInstance(Options.class);
-    }
-
-    private Client getClient(String address) {
-        ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
-        ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
-        URL clientUrl = new URL(protocol, address);
-        if (clientConfig == null) {
-            clientConfig = clientConfigManager.get(protocol);
-        }
-        clientUrl.addParams(clientConfig.parameterization());
-        clientUrl.set(Virtue.CLIENT_VIRTUE, virtue);
-        clientUrl.addParam(Key.CLIENT_VIRTUE, virtue.name());
-        clientUrl.addParam(Key.MULTIPLEX, String.valueOf(multiplex));
-        return protocolInstance.openClient(clientUrl);
     }
 
     private void checkAsyncReturnType(Method method) {

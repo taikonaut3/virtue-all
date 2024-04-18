@@ -20,6 +20,9 @@ public class EventDispatcherConfig extends UrlTypeConfig {
     @Parameter(Key.BUFFER_SIZE)
     private int bufferSize = Constant.DEFAULT_BUFFER_SIZE;
 
+    @Parameter(Key.SUBSCRIBES)
+    private int subscribes = Constant.DEFAULT_SUBSCRIBES;
+
     public EventDispatcherConfig() {
         type(Constant.DEFAULT_EVENT_DISPATCHER);
     }

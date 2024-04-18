@@ -10,8 +10,6 @@ import io.virtue.core.RemoteService;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.filter.FilterScope;
-import io.virtue.rpc.event.SendMessageEvent;
-import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.channel.Channel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -31,7 +29,7 @@ import java.util.List;
  */
 @Getter
 @Accessors(fluent = true)
-public abstract class AbstractCallee<T extends Annotation, P extends Protocol<?, ?>> extends AbstractInvoker<T, P> implements Callee<T> {
+public abstract class AbstractCallee<T extends Annotation> extends AbstractInvoker<T> implements Callee<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractCallee.class);
 
@@ -60,24 +58,20 @@ public abstract class AbstractCallee<T extends Annotation, P extends Protocol<?,
         String timestamp = url.getParam(Key.TIMESTAMP);
         LocalDateTime localDateTime = DateUtil.parse(timestamp, DateUtil.COMPACT_FORMAT);
         Object result = null;
-        try {
-            if (oneway) {
+        if (oneway) {
+            result = doInvoke(invocation);
+        } else {
+            long margin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
+            if (margin < timeout) {
                 result = doInvoke(invocation);
-            } else {
-                long margin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
-                if (margin < timeout) {
-                    result = doInvoke(invocation);
-                    long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
-                    if (invokeAfterMargin < timeout) {
-                        sendSuccessMessageEvent(invocation, result);
-                    }
+                long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
+                if (invokeAfterMargin < timeout) {
+                    sendResponse(invocation, result);
                 }
             }
-        } catch (RpcException e) {
-            long invokeAfterMargin = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
-            if (!oneway && invokeAfterMargin < timeout) {
-                sendErrorMessageEvent(invocation, e);
-            }
+        }
+        if (result instanceof Exception e) {
+            throw RpcException.unwrap(e);
         }
         return result;
     }
@@ -95,48 +89,31 @@ public abstract class AbstractCallee<T extends Annotation, P extends Protocol<?,
         return serverUrl;
     }
 
-    protected Object doInvoke(Invocation invocation) throws RpcException {
+    protected Object doInvoke(Invocation invocation) {
         List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
-        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
         URL url = invocation.url();
         invocation.revise(() -> {
             Object result;
-            Object response = null;
             try {
                 result = remoteService().invokeMethod(method, invocation.args());
-                response = protocolInstance.createResponse(invocation, result);
-                return result;
             } catch (Exception e) {
                 logger.error("Invoke " + url.path() + " fail", e);
-                response = protocolInstance.createResponse(invocation.url(), e);
-                throw RpcException.unwrap(e);
-            } finally {
-                if (response != null) {
-                    url.set(Key.SERVICE_RESPONSE, response);
-                }
-                invocation.revise(null);
-                filterChain.filter(invocation, postFilters);
+                result = e;
             }
+            return result;
         });
         return filterChain.filter(invocation, preFilters);
     }
 
-    protected void sendSuccessMessageEvent(Invocation invocation, Object result) {
+    protected void sendResponse(Invocation invocation, Object result) {
         URL url = invocation.url();
         Channel channel = url.get(Channel.ATTRIBUTE_KEY);
         url.addParams(this.url.params());
-        virtue.eventDispatcher().dispatch(new SendMessageEvent(() -> sendSuccess(invocation, channel, result)));
+        List<Filter> postFilters = FilterScope.POST.filterScope(filters);
+        invocation.revise(() -> {
+            protocolInstance.sendResponse(channel, invocation, result);
+            return null;
+        });
+        filterChain.filter(invocation, postFilters);
     }
-
-    protected void sendErrorMessageEvent(Invocation invocation, Throwable cause) {
-        URL url = invocation.url();
-        Channel channel = url.get(Channel.ATTRIBUTE_KEY);
-        url.addParams(this.url.params());
-        virtue.eventDispatcher().dispatch(new SendMessageEvent(() -> sendError(invocation, channel, cause)));
-    }
-
-    protected abstract void sendSuccess(Invocation invocation, Channel channel, Object result) throws RpcException;
-
-    protected abstract void sendError(Invocation invocation, Channel channel, Throwable cause) throws RpcException;
-
 }

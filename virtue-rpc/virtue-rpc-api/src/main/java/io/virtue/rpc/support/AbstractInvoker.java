@@ -34,7 +34,7 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
  */
 @Getter
 @Accessors(fluent = true, chain = true)
-public abstract class AbstractInvoker<T extends Annotation, P extends Protocol<?, ?>> implements Invoker<T> {
+public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T> {
 
     protected final Virtue virtue;
 
@@ -44,7 +44,7 @@ public abstract class AbstractInvoker<T extends Annotation, P extends Protocol<?
 
     protected volatile List<Filter> filters;
 
-    protected P protocolInstance;
+    protected Protocol protocolInstance;
 
     protected FilterChain filterChain;
 
@@ -80,7 +80,7 @@ public abstract class AbstractInvoker<T extends Annotation, P extends Protocol<?
         this.container = container;
         this.remoteApplication = container.remoteApplication();
         this.protocol = protocol;
-        this.protocolInstance = (P) ExtensionLoader.loadExtension(Protocol.class, protocol);
+        this.protocolInstance = ExtensionLoader.loadExtension(Protocol.class, protocol);
         parseConfig(config());
         init();
         if (url != null) {

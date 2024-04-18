@@ -168,4 +168,5 @@ public interface Key {
     AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.of("callException");
     AttributeKey<Object> SERVICE_RESPONSE = AttributeKey.of("serviceResponse");
     String VERTX = "vertx";
+    String SUBSCRIBES = "subscribes";
 }

@@ -40,7 +40,9 @@ public class NettyHttp2Headers implements HttpHeaders {
 
     @Override
     public void add(Map<CharSequence, CharSequence> headers) {
-        headers.forEach(this::add);
+        if (headers != null) {
+            headers.forEach(this::add);
+        }
     }
 
     @Override

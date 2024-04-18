@@ -7,6 +7,10 @@ import io.virtue.core.Invocation;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
+import io.virtue.transport.Request;
+import io.virtue.transport.Response;
+import io.virtue.transport.RpcFuture;
+import io.virtue.transport.channel.Channel;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
@@ -25,22 +29,42 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     }
 
     @Override
-    public VirtueRequest createRequest(Invocation invocation) {
+    protected void doSendRequest(RpcFuture future, VirtueRequest virtueRequest) {
+        Request request = new Request(future.invocation().url(), virtueRequest);
+        future.client().send(request);
+    }
+
+    @Override
+    protected void doSendResponse(Channel channel, VirtueResponse virtueResponse) {
+        Response response = virtueResponse.hasException()
+                ? Response.error(virtueResponse.url(), virtueResponse)
+                : Response.success(virtueResponse.url(), virtueResponse);
+        channel.send(response);
+    }
+
+    @Override
+    protected VirtueRequest createRequest(Invocation invocation) {
         URL url = invocation.url();
         url.addParam(Key.BODY_TYPE, invocation.getClass().getName());
         return new VirtueRequest(url, invocation);
     }
 
     @Override
-    public VirtueResponse createResponse(Invocation invocation, Object payload) {
+    protected VirtueResponse createResponse(Invocation invocation, Object result) {
+        boolean hasException = false;
+        if (result instanceof Exception e) {
+            result = "Server invoke Exception:" + e.getMessage();
+            hasException = true;
+        }
         URL url = invocation.url();
-        url.addParam(Key.BODY_TYPE, payload.getClass().getName());
-        return new VirtueResponse(url, payload);
+        url.addParam(Key.BODY_TYPE, result.getClass().getName());
+        return new VirtueResponse(url, result, hasException);
     }
 
     @Override
-    public VirtueResponse createResponse(URL url, Throwable e) {
+    protected VirtueResponse createResponse(URL url, Throwable e) {
         url.addParam(Key.BODY_TYPE, String.class.getName());
-        return new VirtueResponse(url, e.getMessage());
+        return new VirtueResponse(url, e.getMessage(), true);
     }
+
 }

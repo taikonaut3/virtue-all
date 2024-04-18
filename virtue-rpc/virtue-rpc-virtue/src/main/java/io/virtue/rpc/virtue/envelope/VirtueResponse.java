@@ -9,12 +9,23 @@ import lombok.ToString;
 @ToString
 public class VirtueResponse extends VirtueEnvelope {
 
+    private boolean hasException;
+
     public VirtueResponse() {
 
     }
 
-    public VirtueResponse(URL url, Object payload) {
+    public VirtueResponse(URL url, Object payload, boolean hasException) {
         super(url, payload);
+        this.hasException = hasException;
+    }
+
+    public boolean hasException() {
+        return hasException;
+    }
+
+    public void hasException(boolean hasException) {
+        this.hasException = hasException;
     }
 
 }

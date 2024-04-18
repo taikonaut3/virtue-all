@@ -20,16 +20,16 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
  */
 public abstract class AbstractProtocolParser<Req, Resp> implements ProtocolParser {
 
-    protected Protocol<Req, Resp> protocol;
+    protected Protocol protocol;
 
-    public void protocol(Protocol<Req, Resp> protocol) {
+    public void protocol(Protocol protocol) {
         this.protocol = protocol;
     }
 
 
     @SuppressWarnings("unchecked")
     @Override
-    public Invocation parseRequestBody(Request request) {
+    public Invocation parseOfRequest(Request request) {
         URL url = request.url();
         Virtue virtue = Virtue.ofServer(url);
         Callee<?> callee = virtue.configManager().remoteServiceManager().getCallee(url);
@@ -48,7 +48,7 @@ public abstract class AbstractProtocolParser<Req, Resp> implements ProtocolParse
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object parseResponseBody(Response response) {
+    public Object parseOfResponse(Response response) {
         long id = response.id();
         RpcFuture future = RpcFuture.getFuture(id);
         if (future != null) {

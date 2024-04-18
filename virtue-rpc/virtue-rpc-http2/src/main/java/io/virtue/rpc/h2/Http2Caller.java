@@ -6,9 +6,7 @@ import io.virtue.core.Invocation;
 import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.h2.config.Http2Call;
 import io.virtue.rpc.support.AbstractCaller;
-import io.virtue.transport.RpcFuture;
 import io.virtue.transport.http.HttpMethod;
-import io.virtue.transport.http.h2.Http2Request;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -22,7 +20,7 @@ import static io.virtue.common.constant.Components.Protocol.HTTP2;
  */
 @Getter
 @Accessors(fluent = true)
-public class Http2Caller extends AbstractCaller<Http2Call, Http2Protocol> {
+public class Http2Caller extends AbstractCaller<Http2Call> {
 
     private Http2Wrapper wrapper;
 
@@ -48,13 +46,6 @@ public class Http2Caller extends AbstractCaller<Http2Call, Http2Protocol> {
         // parse dynamic url
         URL url = invocation.url();
         return super.invoke(invocation);
-    }
-
-    @Override
-    protected void send(RpcFuture future) {
-        Invocation invocation = future.invocation();
-        Http2Request request = protocolInstance.createRequest(invocation);
-        wrapper.sender().send(future, request);
     }
 
     @Override

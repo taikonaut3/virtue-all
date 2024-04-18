@@ -5,7 +5,6 @@ import io.virtue.common.url.URL;
 import io.virtue.event.EventListener;
 import io.virtue.rpc.event.ServerHandlerExceptionEvent;
 import io.virtue.rpc.protocol.Protocol;
-import io.virtue.transport.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +21,8 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
         Throwable cause = event.source();
         logger.error("Server: {} Exception: {}", event.channel(), cause.getMessage());
         if (url != null) {
-            Protocol<?, ?> protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
-            Object message = protocol.createResponse(url, cause);
-            Response response = Response.error(url, message);
-            event.channel().send(response);
+            Protocol protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
+            protocol.sendResponse(event.channel(), url, cause);
         }
     }
 

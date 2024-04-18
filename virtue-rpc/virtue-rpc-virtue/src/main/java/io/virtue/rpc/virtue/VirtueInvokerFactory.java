@@ -2,7 +2,6 @@ package io.virtue.rpc.virtue;
 
 import io.virtue.common.url.URL;
 import io.virtue.core.*;
-import io.virtue.core.support.TransferableInvocation;
 
 import java.lang.reflect.Method;
 
@@ -23,11 +22,11 @@ public class VirtueInvokerFactory implements InvokerFactory {
 
     @Override
     public Invocation createInvocation(Caller<?> caller, Object[] args) {
-        return new TransferableInvocation(caller, args);
+        return new VirtueInvocation(caller, args);
     }
 
     @Override
     public Invocation createInvocation(URL url, Callee<?> callee, Object[] args) {
-        return new TransferableInvocation(url, callee, args);
+        return new VirtueInvocation(url, callee, args);
     }
 }

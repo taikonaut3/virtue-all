@@ -1,8 +1,6 @@
 package io.virtue.rpc.h2;
 
-import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.Parameterization;
 import io.virtue.common.util.StringUtil;
@@ -10,7 +8,6 @@ import io.virtue.rpc.h2.config.Http2Call;
 import io.virtue.rpc.h2.config.Http2Callable;
 import io.virtue.transport.http.HttpHeaderNames;
 import io.virtue.transport.http.HttpMethod;
-import io.virtue.transport.http.h2.Http2StreamSender;
 import io.virtue.transport.util.TransportUtil;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -33,7 +30,6 @@ public class Http2Wrapper implements Parameterization {
     private final HttpMethod httpMethod;
     @Parameter(Key.SSL)
     private final boolean ssl;
-    private final Http2StreamSender sender;
     private final Map<CharSequence, CharSequence> params;
     private final Map<CharSequence, CharSequence> headers;
 
@@ -48,9 +44,6 @@ public class Http2Wrapper implements Parameterization {
         addHeaders(HttpUtil.parseHeaders(call.headers()));
         addHeader(HttpHeaderNames.CONTENT_TYPE, call.contentType());
         params = TransportUtil.parseParams(pathAndParams);
-        String transport = caller.remoteCaller().virtue().configManager().applicationConfig().transport();
-        transport = StringUtil.isBlankOrDefault(transport, Constant.DEFAULT_TRANSPORTER);
-        sender = ExtensionLoader.loadExtension(Http2StreamSender.class, transport);
     }
 
     public Http2Wrapper(Http2Callable callable, Http2Callee callee) {
@@ -64,9 +57,6 @@ public class Http2Wrapper implements Parameterization {
         addHeaders(HttpUtil.parseHeaders(callable.headers()));
         addHeader(HttpHeaderNames.CONTENT_TYPE, callable.contentType());
         params = TransportUtil.parseParams(pathAndParams);
-        String transport = callee.remoteService().virtue().configManager().applicationConfig().transport();
-        transport = StringUtil.isBlankOrDefault(transport, Constant.DEFAULT_TRANSPORTER);
-        sender = ExtensionLoader.loadExtension(Http2StreamSender.class, transport);
     }
 
     private void addHeaders(Map<CharSequence, CharSequence> headers) {

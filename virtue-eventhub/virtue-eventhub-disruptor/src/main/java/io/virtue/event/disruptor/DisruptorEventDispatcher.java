@@ -1,5 +1,6 @@
 package io.virtue.event.disruptor;
 
+import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.ExceptionHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
@@ -42,34 +43,6 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         this.url = url;
     }
 
-    private RingBuffer<EventHolder<?>> createRingBuffer() {
-        int bufferSize = Constant.DEFAULT_BUFFER_SIZE;
-        if (url != null) {
-            bufferSize = url.getIntParam(Key.BUFFER_SIZE, Constant.DEFAULT_BUFFER_SIZE);
-        }
-        Disruptor<EventHolder<?>> disruptor = new Disruptor<>(EventHolder::new, bufferSize, new RpcThreadFactory("EventDisruptorHandler"));
-        RingBuffer<EventHolder<?>> ringBuffer = disruptor.getRingBuffer();
-        disruptor.handleEventsWith(this::handleEvent);
-        disruptor.setDefaultExceptionHandler(new ExceptionHandler<>() {
-            @Override
-            public void handleEventException(Throwable ex, long sequence, EventHolder<?> event) {
-                logger.error(simpleClassName(this) + " Handle Event Error", ex);
-            }
-
-            @Override
-            public void handleOnStartException(Throwable ex) {
-                logger.error(simpleClassName(this) + " Start Error", ex);
-            }
-
-            @Override
-            public void handleOnShutdownException(Throwable ex) {
-                logger.error(simpleClassName(this) + " Shutdown Error", ex);
-            }
-        });
-        disruptor.start();
-        return ringBuffer;
-    }
-
     @Override
     public <E extends Event<?>> void addListener(Class<E> eventType, EventListener<E> listener) {
         super.addListener(eventType, listener);
@@ -92,6 +65,25 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         logger.trace("dispatch ({})", simpleClassName(event));
     }
 
+    private RingBuffer<EventHolder<?>> createRingBuffer() {
+        int bufferSize = Constant.DEFAULT_BUFFER_SIZE;
+        int subscribes = Constant.DEFAULT_SUBSCRIBES;
+        if (url != null) {
+            bufferSize = url.getIntParam(Key.BUFFER_SIZE, Constant.DEFAULT_BUFFER_SIZE);
+            subscribes = url.getIntParam(Key.SUBSCRIBES, Constant.DEFAULT_SUBSCRIBES);
+        }
+        Disruptor<EventHolder<?>> disruptor = new Disruptor<>(EventHolder::new, bufferSize, new RpcThreadFactory("EventDisruptorHandler"));
+        RingBuffer<EventHolder<?>> ringBuffer = disruptor.getRingBuffer();
+        DisruptorEventHandler<?>[] handlers = new DisruptorEventHandler<?>[subscribes];
+        for (int i = 0; i < subscribes; i++) {
+            handlers[i] = new DisruptorEventHandler<>();
+        }
+        disruptor.handleEventsWith(handlers);
+        disruptor.setDefaultExceptionHandler(new DisruptorExceptionHandler());
+        disruptor.start();
+        return ringBuffer;
+    }
+
     private RingBuffer<EventHolder<?>> ringBuffer() {
         if (ringBuffer == null) {
             synchronized (this) {
@@ -103,29 +95,57 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         return ringBuffer;
     }
 
-    @SuppressWarnings("unchecked")
-    private <E extends Event<?>> void handleEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) {
-        E event = holder.event();
-        listenerMap.entrySet().stream()
-                .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
-                .forEach(entry -> entry.getValue().forEach(item -> {
-                    EventListener<E> listener = (EventListener<E>) item;
-                    if (listener.check(event)) {
-                        try {
-                            listener.onEvent(event);
-                            logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
-                        } catch (Exception e) {
-                            logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
-                            throw RpcException.unwrap(e);
+    class DisruptorEventHandler<E extends Event<?>> implements EventHandler<EventHolder<E>> {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) throws Exception {
+            E event = holder.event();
+            listenerMap.entrySet().stream()
+                    .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
+                    .forEach(entry -> entry.getValue().forEach(item -> {
+                        EventListener<E> listener = (EventListener<E>) item;
+                        if (listener.check(event)) {
+                            synchronized (holder) {
+                                if (listener.check(event)) {
+                                    try {
+                                        listener.onEvent(event);
+                                        logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
+                                    } catch (Exception e) {
+                                        logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
+                                        throw RpcException.unwrap(e);
+                                    } finally {
+                                        event.stopPropagation();
+                                    }
+                                }
+                            }
                         }
-                    }
-                }));
+                    }));
+        }
+    }
+
+    static final class DisruptorExceptionHandler implements ExceptionHandler<EventHolder<?>> {
+
+        @Override
+        public void handleEventException(Throwable ex, long sequence, EventHolder<?> event) {
+            logger.error(simpleClassName(this) + " Handle Event Error", ex);
+        }
+
+        @Override
+        public void handleOnStartException(Throwable ex) {
+            logger.error(simpleClassName(this) + " Start Error", ex);
+        }
+
+        @Override
+        public void handleOnShutdownException(Throwable ex) {
+            logger.error(simpleClassName(this) + " Shutdown Error", ex);
+        }
     }
 
     @Getter
     @Setter
     @Accessors(fluent = true)
-    private static final class EventHolder<E extends Event<?>> {
+    static final class EventHolder<E extends Event<?>> {
         private E event;
     }
 
