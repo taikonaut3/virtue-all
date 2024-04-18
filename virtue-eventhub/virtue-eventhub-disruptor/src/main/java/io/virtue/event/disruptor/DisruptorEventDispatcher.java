@@ -101,26 +101,28 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         @Override
         public void onEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) throws Exception {
             E event = holder.event();
-            listenerMap.entrySet().stream()
-                    .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
-                    .forEach(entry -> entry.getValue().forEach(item -> {
-                        EventListener<E> listener = (EventListener<E>) item;
-                        if (listener.check(event)) {
-                            synchronized (holder) {
-                                if (listener.check(event)) {
-                                    try {
-                                        listener.onEvent(event);
-                                        logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
-                                    } catch (Exception e) {
-                                        logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
-                                        throw RpcException.unwrap(e);
-                                    } finally {
-                                        event.stopPropagation();
+            if (!event.isPropagationStopped()) {
+                synchronized (event) {
+                    if (!event.isPropagationStopped()) {
+                        listenerMap.entrySet().stream()
+                                .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
+                                .forEach(entry -> entry.getValue().forEach(item -> {
+                                    EventListener<E> listener = (EventListener<E>) item;
+                                    if (listener.check(event)) {
+                                        try {
+                                            listener.onEvent(event);
+                                            logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
+                                        } catch (Exception e) {
+                                            logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
+                                            throw RpcException.unwrap(e);
+                                        } finally {
+                                            event.stopPropagation();
+                                        }
                                     }
-                                }
-                            }
-                        }
-                    }));
+                                }));
+                    }
+                }
+            }
         }
     }
 
