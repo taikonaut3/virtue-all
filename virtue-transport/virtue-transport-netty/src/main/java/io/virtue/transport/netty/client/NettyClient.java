@@ -47,7 +47,7 @@ public class NettyClient extends AbstractClient {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .handler(ProtocolInitializer.getForClient(url, nettyHandler, codec));
+                .handler(ProtocolInitializer.forClient(url, nettyHandler, codec));
     }
 
     @Override

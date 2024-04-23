@@ -5,8 +5,13 @@ import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.StringUtil;
 import io.virtue.transport.netty.http2.envelope.StreamEnvelope;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 
 /**
@@ -34,5 +39,39 @@ public class Util {
         AttributeKey<StreamEnvelope> streamKey = AttributeKey.valueOf(String.valueOf(streamId));
         Attribute<StreamEnvelope> streamMessageAttribute = ctx.channel().attr(streamKey);
         streamMessageAttribute.set(null);
+    }
+
+    public static byte[] getSslBytes(String systemDir, String defaultPath) throws Exception {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        String caPath = System.getProperty(systemDir);
+        InputStream caStream = null;
+        try {
+            if (StringUtil.isBlank(caPath)) {
+                caStream = classLoader.getResourceAsStream(defaultPath);
+            } else {
+                caStream = new FileInputStream(caPath);
+            }
+            if (caStream != null) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = caStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, length);
+                }
+                return outputStream.toByteArray();
+            }
+            return null;
+        } finally {
+            if (caStream != null) {
+                caStream.close();
+            }
+        }
+    }
+
+    public static InputStream readBytes(byte[] bytes) {
+        if (bytes == null) {
+            throw new IllegalArgumentException("bytes can't null");
+        }
+        return new ByteArrayInputStream(bytes);
     }
 }

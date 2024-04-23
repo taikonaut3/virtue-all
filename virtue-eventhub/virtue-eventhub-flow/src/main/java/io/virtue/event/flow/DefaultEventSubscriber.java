@@ -23,9 +23,7 @@ public class DefaultEventSubscriber<E extends Event<?>> implements Flow.Subscrib
 
     @Override
     public void onNext(E event) {
-        if (listener.check(event)) {
-            listener.onEvent(event);
-        }
+        listener.onEvent(event);
         subscription.request(Long.MAX_VALUE);
     }
 

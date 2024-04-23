@@ -20,10 +20,19 @@ public class VirtueResponse extends VirtueEnvelope {
         this.hasException = hasException;
     }
 
+    /**
+     * If it has exception.
+     *
+     * @return
+     */
     public boolean hasException() {
         return hasException;
     }
 
+    /**
+     * Set has exception.
+     * @param hasException
+     */
     public void hasException(boolean hasException) {
         this.hasException = hasException;
     }

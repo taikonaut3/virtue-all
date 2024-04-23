@@ -43,11 +43,11 @@ public class NettyServer extends AbstractServer {
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, soBacklog)
-                .option(ChannelOption.TCP_FASTOPEN_CONNECT, true)
+                //.option(ChannelOption.TCP_FASTOPEN_CONNECT, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childHandler(ProtocolInitializer.getForServer(url, handler, codec));
+                .childHandler(ProtocolInitializer.forServer(url, handler, codec));
     }
 
     @Override

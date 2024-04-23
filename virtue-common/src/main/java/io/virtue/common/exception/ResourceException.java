@@ -9,4 +9,7 @@ public class ResourceException extends RpcException {
         super(msg);
     }
 
+    public ResourceException(String msg, Throwable e) {
+        super(msg, e);
+    }
 }

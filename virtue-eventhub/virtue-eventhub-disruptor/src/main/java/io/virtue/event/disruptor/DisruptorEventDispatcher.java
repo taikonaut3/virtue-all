@@ -57,14 +57,13 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <E extends Event<?>> void dodispatch(E event) {
+    protected <E extends Event<?>> void doDispatch(E event) {
         ringBuffer().publishEvent((eventHolder, sequence) -> {
             EventHolder<E> holder = (EventHolder<E>) eventHolder;
             holder.event(event);
         });
         logger.trace("dispatch ({})", simpleClassName(event));
     }
-
     private RingBuffer<EventHolder<?>> createRingBuffer() {
         int bufferSize = Constant.DEFAULT_BUFFER_SIZE;
         int subscribes = Constant.DEFAULT_SUBSCRIBES;
@@ -95,21 +94,36 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         return ringBuffer;
     }
 
+    static final class DisruptorExceptionHandler implements ExceptionHandler<EventHolder<?>> {
+
+        @Override
+        public void handleEventException(Throwable ex, long sequence, EventHolder<?> event) {
+            logger.error(simpleClassName(this) + " Handle Event(" + simpleClassName(event.event) + ") Exception", ex);
+        }
+
+        @Override
+        public void handleOnStartException(Throwable ex) {
+            logger.error(simpleClassName(this) + " Start Exception", ex);
+        }
+
+        @Override
+        public void handleOnShutdownException(Throwable ex) {
+            logger.error(simpleClassName(this) + " Shutdown Exception", ex);
+        }
+    }
+
     class DisruptorEventHandler<E extends Event<?>> implements EventHandler<EventHolder<E>> {
 
         @SuppressWarnings("unchecked")
         @Override
         public void onEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) throws Exception {
             E event = holder.event();
-            if (!event.isPropagationStopped()) {
-                synchronized (event) {
-                    if (!event.isPropagationStopped()) {
+            if (event.stopPropagation()) {
                         listenerMap.entrySet().stream()
                                 .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
                                 .forEach(entry -> entry.getValue().forEach(item -> {
                                     EventListener<E> listener = (EventListener<E>) item;
-                                    if (listener.check(event)) {
-                                        try {
+                                    try {
                                             listener.onEvent(event);
                                             logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
                                         } catch (Exception e) {
@@ -118,29 +132,8 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
                                         } finally {
                                             event.stopPropagation();
                                         }
-                                    }
                                 }));
-                    }
-                }
             }
-        }
-    }
-
-    static final class DisruptorExceptionHandler implements ExceptionHandler<EventHolder<?>> {
-
-        @Override
-        public void handleEventException(Throwable ex, long sequence, EventHolder<?> event) {
-            logger.error(simpleClassName(this) + " Handle Event Error", ex);
-        }
-
-        @Override
-        public void handleOnStartException(Throwable ex) {
-            logger.error(simpleClassName(this) + " Start Error", ex);
-        }
-
-        @Override
-        public void handleOnShutdownException(Throwable ex) {
-            logger.error(simpleClassName(this) + " Shutdown Error", ex);
         }
     }
 

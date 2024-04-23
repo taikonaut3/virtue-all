@@ -105,7 +105,7 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
             Protocol protocol = ReflectionUtil.findAnnotation(method, Protocol.class);
             if (protocol != null) {
                 var protocolInstance = ExtensionLoader.loadExtension(io.virtue.rpc.protocol.Protocol.class, protocol.value());
-                Callee<?> callee = protocolInstance.invokerFactory().createCallee(method, this);
+                Callee<?> callee = protocolInstance.createCallee(method, this);
                 if (callee != null) {
                     invokers.put(method, callee);
                     addInvokerMapping(callee.protocol(), callee.path(), callee);

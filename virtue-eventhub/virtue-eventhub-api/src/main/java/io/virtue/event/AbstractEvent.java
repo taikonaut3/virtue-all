@@ -2,6 +2,8 @@ package io.virtue.event;
 
 import io.virtue.common.extension.AbstractAccessor;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Abstract Event.
  *
@@ -11,7 +13,7 @@ public abstract class AbstractEvent<S> extends AbstractAccessor implements Event
 
     protected S data;
 
-    protected volatile boolean propagation = false;
+    protected AtomicBoolean propagation = new AtomicBoolean(true);
 
     protected AbstractEvent() {
 
@@ -32,19 +34,13 @@ public abstract class AbstractEvent<S> extends AbstractAccessor implements Event
     }
 
     @Override
-    public void stopPropagation() {
-        if (!propagation) {
-            synchronized (this) {
-                if (!propagation) {
-                    this.propagation = true;
-                }
-            }
-        }
+    public boolean stopPropagation() {
+        return propagation.compareAndSet(true, false);
     }
 
     @Override
-    public boolean isPropagationStopped() {
-        return propagation;
+    public boolean allowPropagation() {
+        return propagation.get();
     }
 
 }

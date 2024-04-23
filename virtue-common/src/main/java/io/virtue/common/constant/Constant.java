@@ -83,9 +83,9 @@ public interface Constant {
 
     String LOCAL_CONSUL_ADDRESS = "127.0.0.1:8500";
 
-    String SERVICES_DIR = "/virtue/services";
-
     String SPI_FIX_PATH = "META-INF/services/";
+
+    String INTERNAL_CERTS_PATH = "META-INF/virtue/internal/certs/";
 
     String MONITOR_APPLICATION_NAME = "inner-monitor";
 

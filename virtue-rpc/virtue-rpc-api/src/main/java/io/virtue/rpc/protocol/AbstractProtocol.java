@@ -1,18 +1,21 @@
 package io.virtue.rpc.protocol;
 
 import io.virtue.common.constant.Key;
+import io.virtue.common.exception.ResourceException;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.DateUtil;
+import io.virtue.core.Callee;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
-import io.virtue.core.InvokerFactory;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.manager.ClientConfigManager;
 import io.virtue.rpc.event.SendMessageEvent;
 import io.virtue.rpc.handler.BaseClientChannelHandlerChain;
 import io.virtue.rpc.handler.BaseServerChannelHandlerChain;
+import io.virtue.transport.Request;
+import io.virtue.transport.Response;
 import io.virtue.transport.RpcFuture;
 import io.virtue.transport.Transporter;
 import io.virtue.transport.channel.Channel;
@@ -27,6 +30,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static io.virtue.common.util.StringUtil.simpleClassName;
+
 /**
  * Abstract Protocol.
  *
@@ -38,6 +43,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
 
     private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
     private final Map<String, Client> customClients = new ConcurrentHashMap<>();
+
     protected String protocol;
     protected Codec serverCodec;
     protected Codec clientCodec;
@@ -45,38 +51,24 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
     protected ChannelHandler clientHandler;
     @Getter
     protected ChannelHandler serverHandler;
-    protected ProtocolParser protocolParser;
-    protected InvokerFactory invokerFactory;
     protected Transporter transporter;
-    protected String transport;
     protected Virtue virtue;
 
-    protected AbstractProtocol(String protocol, ProtocolParser protocolParser, InvokerFactory invokerFactory) {
-        this(protocol, null, null, protocolParser, invokerFactory);
+    protected AbstractProtocol(String protocol) {
+        this(protocol, null, null);
+    }
+
+    protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec) {
+        this(protocol, serverCodec, clientCodec, new BaseClientChannelHandlerChain(), new BaseServerChannelHandlerChain());
     }
 
     protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec,
-                               ProtocolParser protocolParser, InvokerFactory invokerFactory) {
-        this(protocol, serverCodec, clientCodec,
-                new BaseClientChannelHandlerChain(),
-                new BaseServerChannelHandlerChain(),
-                protocolParser,
-                invokerFactory);
-    }
-
-    protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec,
-                               ChannelHandler clientHandler, ChannelHandler serverHandler,
-                               ProtocolParser protocolParser, InvokerFactory invokerFactory) {
+                               ChannelHandler clientHandler, ChannelHandler serverHandler) {
         this.protocol = protocol;
         this.serverCodec = serverCodec;
         this.clientCodec = clientCodec;
         this.clientHandler = clientHandler;
         this.serverHandler = serverHandler;
-        this.protocolParser = protocolParser;
-        if (protocolParser instanceof AbstractProtocolParser abstractProtocolParser) {
-            abstractProtocolParser.protocol(this);
-        }
-        this.invokerFactory = invokerFactory;
     }
 
     /**
@@ -154,23 +146,56 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
     }
 
     @Override
-    public ProtocolParser parser() {
-        return protocolParser;
-    }
-
-    @Override
-    public InvokerFactory invokerFactory() {
-        return invokerFactory;
-    }
-
-    @Override
     public String protocol() {
         return protocol;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Invocation parseOfRequest(Request request) {
+        URL url = request.url();
+        Virtue virtue = Virtue.ofServer(url);
+        Callee<?> callee = virtue.configManager().remoteServiceManager().getCallee(url);
+        if (callee == null) {
+            throw new ResourceException("Can't find ProviderCaller[" + url.path() + "]");
+        }
+        Req message;
+        try {
+            message = (Req) request.message();
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(
+                    simpleClassName(this) + " unsupported parse request message type: " + simpleClassName(request.message())
+            );
+        }
+        Object[] args = parseToInvokeArgs(request, message, callee);
+        return createInvocation(request.url(), callee, args);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object parseOfResponse(Response response) {
+        long id = response.id();
+        RpcFuture future = RpcFuture.getFuture(id);
+        if (future != null) {
+            Caller<?> caller = (Caller<?>) future.invocation().invoker();
+            Resp message;
+            try {
+                message = (Resp) response.message();
+            } catch (Exception e) {
+                throw new UnsupportedOperationException("unsupported parse response message type: " + simpleClassName(response.message()));
+            }
+            return parseToReturnValue(response, message, caller);
+        }
+        return null;
     }
 
     protected Transporter loadTransporter(String transport) {
         return ExtensionLoader.loadExtension(Transporter.class, transport);
     }
+
+    protected abstract Object[] parseToInvokeArgs(Request request, Req message, Callee<?> callee);
+
+    protected abstract Object parseToReturnValue(Response response, Resp message, Caller<?> caller);
 
     protected abstract void doSendRequest(RpcFuture future, Req request);
 

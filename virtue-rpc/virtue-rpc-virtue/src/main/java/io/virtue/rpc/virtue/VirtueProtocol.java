@@ -2,15 +2,20 @@ package io.virtue.rpc.virtue;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.spi.Extension;
+import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
-import io.virtue.core.Invocation;
+import io.virtue.core.*;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
+import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
 import io.virtue.transport.RpcFuture;
 import io.virtue.transport.channel.Channel;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
@@ -23,9 +28,48 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     public VirtueProtocol() {
         super(VIRTUE,
                 new VirtueCodec(VirtueResponse.class, VirtueRequest.class),
-                new VirtueCodec(VirtueRequest.class, VirtueResponse.class),
-                new VirtueProtocolParser(),
-                new VirtueInvokerFactory());
+                new VirtueCodec(VirtueRequest.class, VirtueResponse.class));
+    }
+
+    @Override
+    public Callee<?> createCallee(Method method, RemoteService<?> remoteService) {
+        return new VirtueCallee(method, remoteService);
+    }
+
+    @Override
+    public Caller<?> createCaller(Method method, RemoteCaller<?> remoteCaller) {
+        return new VirtueCaller(method, remoteCaller);
+    }
+
+    @Override
+    public Invocation createInvocation(Caller<?> caller, Object[] args) {
+        return new VirtueInvocation(caller, args);
+    }
+
+    @Override
+    public Invocation createInvocation(URL url, Callee<?> callee, Object[] args) {
+        return new VirtueInvocation(url, callee, args);
+    }
+
+    @Override
+    protected Object[] parseToInvokeArgs(Request request, VirtueRequest virtueRequest, Callee<?> callee) {
+        URL url = request.url();
+        VirtueInvocation invocation = (VirtueInvocation) virtueRequest.body();
+        String serializationName = url.getParam(Key.SERIALIZATION);
+        Serializer serializer = ExtensionLoader.loadExtension(Serializer.class, serializationName);
+        return serializer.convert(invocation.args(), callee.method().getGenericParameterTypes());
+    }
+
+    @Override
+    protected Object parseToReturnValue(Response response, VirtueResponse virtueResponse, Caller<?> caller) {
+        URL url = response.url();
+        String serializationName = url.getParam(Key.SERIALIZATION);
+        Serializer serializer = ExtensionLoader.loadExtension(Serializer.class, serializationName);
+        Type returnType = caller.returnType();
+        Object body = virtueResponse.body();
+        body = serializer.convert(body, returnType);
+        virtueResponse.body(body);
+        return body;
     }
 
     @Override
@@ -64,7 +108,7 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     @Override
     protected VirtueResponse createResponse(URL url, Throwable e) {
         url.addParam(Key.BODY_TYPE, String.class.getName());
-        return new VirtueResponse(url, e.getMessage(), true);
+        return new VirtueResponse(url, "Server Exception" + e.getMessage(), true);
     }
 
 }

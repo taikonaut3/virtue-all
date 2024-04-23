@@ -48,9 +48,9 @@ public class Http2OrHttpNegotiationHandler extends ApplicationProtocolNegotiatio
     protected void configurePipeline(ChannelHandlerContext ctx, String protocol) throws Exception {
         if (ApplicationProtocolNames.HTTP_2.equals(protocol)) {
             ctx.pipeline()
-                    .addLast(Http2FrameCodecBuilder.forServer().build())
                     .addLast(idleStateHandler)
                     .addLast(idleStateHandler.handler())
+                    .addLast(Http2FrameCodecBuilder.forServer().build())
                     .addLast(new Http2MultiplexHandler(new Http2ServerHandler(url, handler)));
         } else if (ApplicationProtocolNames.HTTP_1_1.equals(protocol)) {
             int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);

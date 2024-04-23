@@ -169,4 +169,14 @@ public interface Key {
     AttributeKey<Object> SERVICE_RESPONSE = AttributeKey.of("serviceResponse");
     String VERTX = "vertx";
     String SUBSCRIBES = "subscribes";
+
+    String CA_PATH = "virtue.http2.ca.path";
+
+    String CLIENT_CERT_PATH = "virtue.http.client.cert.path";
+
+    String CLIENT_KEY_PATH = "virtue.http.client.key.path";
+
+    String SERVER_CERT_PATH = "virtue.http.server.cert.path";
+
+    String SERVER_KEY_PATH = "virtue.http.server.key.path";
 }

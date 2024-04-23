@@ -29,6 +29,7 @@ public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapte
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         channelHandler.disconnected(nettyChannel);
+        NettyChannel.removeChannel(ctx.channel());
     }
 
     @Override

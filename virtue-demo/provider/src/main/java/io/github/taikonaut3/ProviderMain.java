@@ -1,14 +1,18 @@
 package io.github.taikonaut3;
 
+import io.netty.channel.Channel;
 import io.virtue.boot.EnableVirtue;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
+import io.virtue.transport.netty.NettyChannel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import java.util.concurrent.ConcurrentMap;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.virtue.common.constant.Components.Registry.CONSUL;
@@ -16,8 +20,11 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 @SpringBootApplication
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")
 public class ProviderMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(ProviderMain.class, args);
+
+        Thread.sleep(6000);
+        ConcurrentMap<Channel, NettyChannel> channelMap = NettyChannel.CHANNEL_MAP;
         Virtue virtue = context.getBean(Virtue.class);
 
         //simpleTest();
@@ -48,12 +55,12 @@ public class ProviderMain {
 
     @Bean
     public ServerConfig h2ServerConfig() {
-        return new ServerConfig("h2", 8082);
+        return new ServerConfig("h2c", 8082);
     }
 
     @Bean
     public ServerConfig h2cServerConfig() {
-        return new ServerConfig("h2c", 8083);
+        return new ServerConfig("h2", 8083);
     }
 
     @Bean

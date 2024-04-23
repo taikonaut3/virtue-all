@@ -3,7 +3,6 @@ package io.github.taikonaut3;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
-import io.virtue.rpc.virtue.config.VirtueCallable;
 import io.virtue.serialization.Serializer;
 import org.example.model1.ParentObject;
 
@@ -24,12 +23,12 @@ public class Provider {
     }
 
     @Config(filters = {"filter2", "filter1"}, serialization = JSON)
-    @VirtueCallable(name = "hello")
+    //@VirtueCallable(name = "hello")
     public String hello(String world) {
         return "hello" + world;
     }
 
-    @VirtueCallable
+    //@VirtueCallable
     public String world(String world) {
         return "hello" + world;
     }

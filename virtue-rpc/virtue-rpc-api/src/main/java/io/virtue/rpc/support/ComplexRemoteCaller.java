@@ -5,7 +5,10 @@ import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectionUtil;
-import io.virtue.core.*;
+import io.virtue.core.Caller;
+import io.virtue.core.Invocation;
+import io.virtue.core.RemoteCaller;
+import io.virtue.core.Virtue;
 import io.virtue.core.annotation.Protocol;
 import io.virtue.proxy.InvocationHandler;
 import io.virtue.proxy.ProxyFactory;
@@ -111,7 +114,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
             Protocol protocol = ReflectionUtil.findAnnotation(method, Protocol.class);
             if (protocol != null) {
                 var protocolInstance = ExtensionLoader.loadExtension(io.virtue.rpc.protocol.Protocol.class, protocol.value());
-                Caller<?> caller = protocolInstance.invokerFactory().createCaller(method, this);
+                Caller<?> caller = protocolInstance.createCaller(method, this);
                 if (caller != null) {
                     invokers.put(method, caller);
                 }
@@ -132,10 +135,11 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args, SuperInvoker<?> superInvoker) throws Throwable {
-            Invoker<?> invoker = remoteCaller.getInvoker(method);
-            if (invoker != null) {
-                var invocation = invoker.invokerFactory().createInvocation((Caller<?>) invoker, args);
-                return invoker.invoke(invocation);
+            Caller<?> caller = (Caller<?>) remoteCaller.getInvoker(method);
+            if (caller != null) {
+                var protocol = ExtensionLoader.loadExtension(io.virtue.rpc.protocol.Protocol.class, caller.protocol());
+                var invocation = protocol.createInvocation(caller, args);
+                return caller.invoke(invocation);
             }
             return null;
         }

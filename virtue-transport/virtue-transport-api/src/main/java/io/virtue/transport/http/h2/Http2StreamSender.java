@@ -15,7 +15,6 @@ public interface Http2StreamSender {
     /**
      * Sends http2 request.
      *
-     * @param client
      * @param request
      * @param future
      */

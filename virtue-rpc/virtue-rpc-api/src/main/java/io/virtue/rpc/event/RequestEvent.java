@@ -5,7 +5,6 @@ import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.event.AbstractEvent;
 import io.virtue.rpc.protocol.Protocol;
-import io.virtue.rpc.protocol.ProtocolParser;
 import io.virtue.transport.Request;
 import io.virtue.transport.channel.Channel;
 import lombok.Getter;
@@ -28,8 +27,7 @@ public class RequestEvent extends AbstractEvent<Request> {
         this.channel = channel;
         URL url = request.url();
         var protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
-        ProtocolParser protocolParser = protocol.parser();
-        this.invocation = protocolParser.parseOfRequest(request);
+        this.invocation = protocol.parseOfRequest(request);
         invocation.url().set(Channel.ATTRIBUTE_KEY, channel);
     }
 

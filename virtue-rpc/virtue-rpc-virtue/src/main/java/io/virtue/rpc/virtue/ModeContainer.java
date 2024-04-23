@@ -67,6 +67,11 @@ public class ModeContainer {
         values.add(modeBean);
     }
 
+    /**
+     * Get mode map.
+     *
+     * @return
+     */
     public static Map<String, List<ModeBean>> modeMap() {
         return modeMap;
     }

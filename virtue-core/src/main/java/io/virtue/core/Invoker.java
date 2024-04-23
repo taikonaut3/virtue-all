@@ -37,13 +37,6 @@ public interface Invoker<T extends Annotation> extends Config, Lifecycle {
     URL url();
 
     /**
-     * Invoker factory.
-     *
-     * @return
-     */
-    InvokerFactory invokerFactory();
-
-    /**
      * All proxy clients invoke the entry.
      *
      * @param invocation

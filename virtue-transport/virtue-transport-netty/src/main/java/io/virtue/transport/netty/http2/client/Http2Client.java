@@ -19,12 +19,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Http2Client extends NettyClient {
 
-    private final Http2StreamChannelBootstrap streamChannelBootstrap;
+    private Http2StreamChannelBootstrap streamChannelBootstrap;
 
     private final Map<Http2StreamChannel, RpcFuture> streamChannelFutureMap = new ConcurrentHashMap<>();
 
     public Http2Client(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
         super(url, channelHandler, codec);
+
+    }
+
+    @Override
+    protected void doConnect() throws ConnectException {
+        super.doConnect();
         streamChannelBootstrap = new Http2StreamChannelBootstrap(channel);
         Http2ClientHandler http2ClientHandler = new Http2ClientHandler(this, url, nettyHandler);
         streamChannelBootstrap.handler(http2ClientHandler);

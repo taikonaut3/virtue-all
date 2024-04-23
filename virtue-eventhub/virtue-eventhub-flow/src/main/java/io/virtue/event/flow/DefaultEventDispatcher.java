@@ -52,7 +52,7 @@ public class DefaultEventDispatcher extends AbstractEventDispatcher implements E
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <E extends Event<?>> void dodispatch(E event) {
+    protected <E extends Event<?>> void doDispatch(E event) {
         List<EventListener<?>> listeners = listenerMap.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
                 .flatMap(entry -> entry.getValue().stream())

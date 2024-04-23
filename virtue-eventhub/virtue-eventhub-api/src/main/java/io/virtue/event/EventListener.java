@@ -5,6 +5,7 @@ package io.virtue.event;
  *
  * @param <E> the type of the event
  */
+@FunctionalInterface
 public interface EventListener<E extends Event<?>> {
 
     /**
@@ -13,18 +14,6 @@ public interface EventListener<E extends Event<?>> {
      * @param event the event that occurred
      */
     void onEvent(E event);
-
-    /**
-     * This method is called to check whether the event propagation should continue.
-     * By default, it checks if the event's propagation has been stopped.
-     * Subclasses can override this method to provide custom logic for event propagation control.
-     *
-     * @param event the event being checked
-     * @return true if event propagation should continue, false otherwise
-     */
-    default boolean check(E event) {
-        return !event.isPropagationStopped();
-    }
 
 }
 

@@ -1,12 +1,12 @@
 package io.virtue.rpc.h2;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Invocation;
 import io.virtue.core.Invoker;
 import io.virtue.rpc.h2.config.Body;
 import io.virtue.serialization.Serializer;
-import io.virtue.transport.http.HttpHeaderNames;
 
 import java.lang.reflect.Parameter;
 import java.util.LinkedHashMap;
@@ -64,7 +64,19 @@ public final class HttpUtil {
     public static Map<CharSequence, CharSequence> commonClientHeaders() {
         Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
         headers.put(HttpHeaderNames.ACCEPT_ENCODING, "gzip, deflate");
-        headers.put(HttpHeaderNames.USER_AGENT, "virtue-rpc");
+        headers.put(HttpHeaderNames.USER_AGENT, "virtue-rpc/0.0.8");
+        headers.put(HttpHeaderNames.ACCEPT, "application/json");
+        return headers;
+    }
+
+    /**
+     * Build a common server request header.
+     *
+     * @return
+     */
+    public static Map<CharSequence, CharSequence> commonServerHeaders() {
+        Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
+        headers.put(HttpHeaderNames.SERVER, "virtue-rpc/0.0.8");
         return headers;
     }
 

@@ -3,7 +3,7 @@ package io.virtue.rpc.protocol;
 import io.virtue.common.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
-import io.virtue.core.InvokerFactory;
+import io.virtue.core.ProtocolAdapter;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.transport.RpcFuture;
@@ -17,11 +17,9 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 /**
  * Communication protocol used to exchange data between client and server.
  *
- * @param <Req>  Request type
- * @param <Resp> Response type
  */
 @Extensible(value = VIRTUE)
-public interface Protocol {
+public interface Protocol extends ProtocolParser, ProtocolAdapter {
 
     /**
      * This protocol.
@@ -31,23 +29,30 @@ public interface Protocol {
     String protocol();
 
     /**
-     * Invoker factory.
+     * Send request.
      *
+     * @param invocation
      * @return
      */
-    InvokerFactory invokerFactory();
+    RpcFuture sendRequest(Invocation invocation);
 
-    default RpcFuture sendRequest(Invocation invocation) {
-        return null;
-    }
+    /**
+     * Send response.
+     *
+     * @param channel
+     * @param invocation
+     * @param result
+     */
+    void sendResponse(Channel channel, Invocation invocation, Object result);
 
-    default void sendResponse(Channel channel, Invocation invocation, Object result) {
-
-    }
-
-    default void sendResponse(Channel channel, URL url, Throwable cause) {
-
-    }
+    /**
+     * A response is sent when an exception occurs in the Transport layer.
+     *
+     * @param channel
+     * @param url
+     * @param cause
+     */
+    void sendResponse(Channel channel, URL url, Throwable cause);
 
     /**
      * Opening a client may reuse the existing one.
@@ -78,12 +83,5 @@ public interface Protocol {
      * @return {@link Codec}
      */
     Codec clientCodec();
-
-    /**
-     * Get ProtocolParser.
-     *
-     * @return {@link ProtocolParser}
-     */
-    ProtocolParser parser();
 
 }

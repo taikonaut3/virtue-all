@@ -14,6 +14,7 @@ import io.virtue.core.config.ServerConfig;
 import io.virtue.rpc.protocol.Protocol;
 import org.example.Message;
 import org.example.model1.ParentObject;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -44,8 +45,8 @@ public class ConsumerMain {
 //            });
 //
 //        }
-
-        simpleTest();
+        SpringApplication.run(ConsumerMain.class, args);
+        //simpleTest();
     }
 
     public static void simpleTest() throws Exception {
@@ -82,7 +83,7 @@ public class ConsumerMain {
                 start = System.currentTimeMillis();
                 List<ParentObject> clientList = consumer.http2Test(ParentObject.getObjList("client list"));
                 end = System.currentTimeMillis();
-                System.out.println("http2 耗时:" + (end - start) + list);
+                System.out.println("http2 耗时:" + (end - start) + clientList);
             });
         }
         String hello = consumer.hello("world");

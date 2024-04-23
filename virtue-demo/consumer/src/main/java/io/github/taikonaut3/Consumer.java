@@ -9,6 +9,10 @@ import io.virtue.rpc.h2.config.Http2Call;
 import io.virtue.rpc.virtue.config.VirtueCall;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.transport.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import org.example.Message;
 import org.example.model1.ParentObject;
 import org.example.model1.TestGeneric;
@@ -59,6 +63,10 @@ public interface Consumer {
     List<ParentObject> list(List<ParentObject> list1, List<ParentObject> list2);
 
     @Options(timeout = 600000)
+    @GET
+    @Path("http2Test")
+    @Consumes
+    @Produces
     @Http2Call(path = "/http2Test?aaa=123&bbb=321")
     List<ParentObject> http2Test(@Body List<ParentObject> list);
 

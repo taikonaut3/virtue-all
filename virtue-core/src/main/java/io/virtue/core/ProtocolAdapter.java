@@ -1,11 +1,13 @@
 package io.virtue.core;
 
+import io.virtue.common.url.URL;
+
 import java.lang.reflect.Method;
 
 /**
  * InvokerFactory is used to create different caller for different protocols.
  */
-public interface InvokerFactory extends InvocationFactory{
+public interface ProtocolAdapter {
 
     /**
      * Create server Callee.
@@ -24,5 +26,24 @@ public interface InvokerFactory extends InvocationFactory{
      * @return clientCaller instance
      */
     Caller<?> createCaller(Method method, RemoteCaller<?> remoteCaller);
+
+    /**
+     * Created when rpc call start.
+     *
+     * @param caller
+     * @param args
+     * @return
+     */
+    Invocation createInvocation(Caller<?> caller, Object[] args);
+
+    /**
+     * Created after the server deserializes.
+     *
+     * @param url
+     * @param callee
+     * @param args
+     * @return
+     */
+    Invocation createInvocation(URL url, Callee<?> callee, Object[] args);
 
 }

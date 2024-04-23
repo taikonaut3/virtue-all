@@ -26,14 +26,16 @@ public interface Event<S> extends Accessor {
     /**
      * Stops the propagation of the event. Once the propagation is stopped,
      * subsequent listeners will not receive the event.
+     *
+     * @return
      */
-    void stopPropagation();
+    boolean stopPropagation();
 
     /**
-     * Checks if the propagation of the event is stopped.
+     * Checks if the propagation of the event is allowed.
      *
      * @return true if the propagation is stopped, false otherwise
      */
-    boolean isPropagationStopped();
+    boolean allowPropagation();
 
 }

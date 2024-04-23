@@ -28,7 +28,8 @@ public class Http2Invocation extends HttpEnvelope implements Invocation {
 
     public Http2Invocation(URL url, Callee<?> callee, Object[] args) {
         invocation = new TransferableInvocation(url, callee, args);
-        allArgsConstructor(url.path(), getHttpMethod(url), null, null, null);
+        Http2Wrapper wrapper = ((Http2Callee) callee).wrapper();
+        allArgsConstructor(url.path(), getHttpMethod(url), wrapper.headers(), null, null);
     }
 
     @Override

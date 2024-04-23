@@ -9,7 +9,6 @@ import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Invoker;
 import io.virtue.core.InvokerContainer;
-import io.virtue.core.InvokerFactory;
 import io.virtue.core.Virtue;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.filter.Filter;
@@ -108,11 +107,6 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     @Override
     public Class<?> returnClass() {
         return method.getReturnType();
-    }
-
-    @Override
-    public InvokerFactory invokerFactory() {
-        return protocolInstance.invokerFactory();
     }
 
     @Override

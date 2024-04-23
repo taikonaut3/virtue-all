@@ -18,7 +18,7 @@ import static io.virtue.common.constant.Components.Protocol.*;
  */
 public class ProtocolInitializer {
 
-    public static ChannelInitializer<SocketChannel> getForClient(URL url, ChannelHandler handler, Codec codec) {
+    public static ChannelInitializer<SocketChannel> forClient(URL url, ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
             case HTTP -> new HttpClientChannelInitializer(url, handler);
@@ -27,7 +27,7 @@ public class ProtocolInitializer {
         };
     }
 
-    public static ChannelInitializer<SocketChannel> getForServer(URL url, ChannelHandler handler, Codec codec) {
+    public static ChannelInitializer<SocketChannel> forServer(URL url, ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
             case HTTP -> new HttpServerChannelInitializer(url, handler);
