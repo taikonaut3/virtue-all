@@ -7,6 +7,8 @@ import static io.virtue.common.constant.Components.*;
  */
 public interface Constant {
 
+    String VERSION = "0.0.8-alpha";
+
     String EXTENSIBLE_NAME = "io.virtue.common.spi.Extensible";
 
     String EXTENSION_NAME = "io.virtue.common.spi.Extension";

@@ -14,9 +14,6 @@ public final class DateUtil {
     // Compact datetime format
     public static final String COMPACT_FORMAT = "yyyyMMddHHmmss";
 
-    private DateUtil() {
-    }
-
     /**
      * Format the datetime string based on the given format string and datetime object.
      *
@@ -49,6 +46,9 @@ public final class DateUtil {
      */
     public static String format(LocalDateTime dateTime) {
         return format(dateTime, DATETIME_FORMAT);
+    }
+
+    private DateUtil() {
     }
 
 }

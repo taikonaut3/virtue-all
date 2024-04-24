@@ -1,8 +1,7 @@
 package io.virtue.transport.compress;
 
-import io.virtue.common.constant.Components;
-import io.virtue.common.exception.CompressionException;
 import io.virtue.common.spi.Extension;
+import io.virtue.common.util.FileUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,35 +9,27 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import static io.virtue.common.constant.Components.Compression.GZIP;
+
 /**
- * Based on the GZIP compression algorithm.
+ * Based on the gzip compression algorithm.
  */
-@Extension(Components.Compression.GZIP)
-public class GzipCompressor implements Compressor {
+@Extension(GZIP)
+public class GzipCompressor extends AbstractCompressor {
 
     @Override
-    public byte[] compress(byte[] data) throws CompressionException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (GZIPOutputStream gzipOutput = new GZIPOutputStream(baos)) {
+    protected byte[] doCompress(byte[] data) throws IOException {
+        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzipOutput = new GZIPOutputStream(byteOutput)) {
             gzipOutput.write(data);
-        } catch (IOException e) {
-            throw new CompressionException(e);
         }
-        return baos.toByteArray();
+        return byteOutput.toByteArray();
     }
 
     @Override
-    public byte[] decompress(byte[] compressedData) throws CompressionException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (GZIPInputStream gzipInput = new GZIPInputStream(new ByteArrayInputStream(compressedData))) {
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = gzipInput.read(buffer)) != -1) {
-                baos.write(buffer, 0, len);
-            }
-        } catch (IOException e) {
-            throw new CompressionException(e);
+    protected byte[] doDecompress(byte[] data) throws IOException {
+        try (GZIPInputStream gzipInput = new GZIPInputStream(new ByteArrayInputStream(data))) {
+            return FileUtil.inputStreamToByteArray(gzipInput);
         }
-        return baos.toByteArray();
     }
 }

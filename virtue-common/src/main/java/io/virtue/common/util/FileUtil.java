@@ -2,8 +2,7 @@ package io.virtue.common.util;
 
 import io.virtue.common.exception.CommonException;
 
-import java.io.File;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
@@ -13,9 +12,6 @@ import static java.lang.String.format;
  * Utility class for file operations.
  */
 public final class FileUtil {
-
-    private FileUtil() {
-    }
 
     /**
      * Write the content to the file.
@@ -69,6 +65,17 @@ public final class FileUtil {
         }
     }
 
+    public static byte[] inputStreamToByteArray(InputStream inputStream) throws IOException {
+        try (inputStream; ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[2048];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            return outputStream.toByteArray();
+        }
+    }
+
     /**
      * Create dir.
      *
@@ -81,6 +88,9 @@ public final class FileUtil {
                 throw new CommonException(format("Create dir: %s is not success", directory.getPath()));
             }
         }
+    }
+
+    private FileUtil() {
     }
 }
 

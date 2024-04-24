@@ -16,6 +16,20 @@
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-core</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.lz4/lz4-java -->
+        <dependency>
+            <groupId>org.lz4</groupId>
+            <artifactId>lz4-java</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.xerial.snappy/snappy-java -->
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

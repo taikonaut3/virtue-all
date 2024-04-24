@@ -10,6 +10,8 @@ import io.virtue.transport.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.virtue.common.util.StringUtil.simpleClassName;
+
 /**
  * Receive request event and invoke the service.
  */
@@ -23,7 +25,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
 
     @Override
     protected void handEnvelopeEvent(RequestEvent event) {
-        logger.debug("Received Event({})", event.getClass().getSimpleName());
+        logger.debug("Received Event({})", simpleClassName(event));
         Request request = event.source();
         URL url = request.url();
         RpcContext.currentContext().set(Request.ATTRIBUTE_KEY, request);

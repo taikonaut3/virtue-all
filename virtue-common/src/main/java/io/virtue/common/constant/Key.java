@@ -129,7 +129,7 @@ public interface Key {
 
     String URL = "url";
 
-    String VIRTUE_URL = "virtue_url";
+    String VIRTUE_URL = "virtue-url";
 
     String HTTP_REQUEST_WRAPPER = "httpRequestWrapper";
 

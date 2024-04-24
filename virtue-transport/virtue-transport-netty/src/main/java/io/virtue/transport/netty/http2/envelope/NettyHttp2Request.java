@@ -14,7 +14,6 @@ import static io.virtue.transport.util.TransportUtil.getHttpMethod;
  */
 public class NettyHttp2Request extends DefaultHttpEnvelope implements Http2Request {
 
-    private StreamEnvelope streamEnvelope;
 
     public NettyHttp2Request(URL url, Map<CharSequence, CharSequence> headers, byte[] body) {
         super(HttpVersion.HTTP_2_0, getHttpMethod(url), url, new NettyHttp2Headers(headers), body);
@@ -26,15 +25,6 @@ public class NettyHttp2Request extends DefaultHttpEnvelope implements Http2Reque
                 streamEnvelope.url(),
                 streamEnvelope.headers(),
                 streamEnvelope.data());
-        this.streamEnvelope = streamEnvelope;
     }
 
-    /**
-     * Get stream envelope.
-     *
-     * @return
-     */
-    public StreamEnvelope streamEnvelope() {
-        return streamEnvelope;
-    }
 }

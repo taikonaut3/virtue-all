@@ -7,10 +7,6 @@ import java.util.Objects;
  */
 public final class StringUtil {
 
-    private StringUtil() {
-
-    }
-
     /**
      * Determines whether the string is null, that is, null, 0 in length, or contains only whitespace characters.
      *
@@ -87,5 +83,7 @@ public final class StringUtil {
             }
         }
         return true;
+    }
+    private StringUtil() {
     }
 }

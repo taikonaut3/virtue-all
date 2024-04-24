@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
+import static io.virtue.common.util.StringUtil.simpleClassName;
+
 /**
  * Responsible for handling the response event.
  */
@@ -23,7 +25,7 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
 
     @Override
     protected void handEnvelopeEvent(ResponseEvent event) {
-        logger.debug("Received Event({})", event.getClass().getSimpleName());
+        logger.debug("Received Event({})", simpleClassName(event));
         long id = event.source().id();
         RpcFuture future = RpcFuture.getFuture(id);
         Response response = event.source();

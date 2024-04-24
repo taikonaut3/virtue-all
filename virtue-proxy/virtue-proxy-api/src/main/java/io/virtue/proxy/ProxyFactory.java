@@ -11,6 +11,8 @@ import static io.virtue.common.constant.Components.ProxyFactory.JDK;
 public interface ProxyFactory {
 
     /**
+     * Create a new proxy instance that implements the specified interface using the given invocation handler.
+     *
      * @param interfaceClass the interface to be implemented by the proxy object
      * @param handler        the invocation handler to dispatch method invocations to
      * @param <T>

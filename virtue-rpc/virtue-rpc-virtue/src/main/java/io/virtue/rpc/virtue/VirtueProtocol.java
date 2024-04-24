@@ -97,7 +97,7 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     protected VirtueResponse createResponse(Invocation invocation, Object result) {
         boolean hasException = false;
         if (result instanceof Exception e) {
-            result = "Server invoke Exception:" + e.getMessage();
+            result = SERVER_INVOKE_EXCEPTION + e.getMessage();
             hasException = true;
         }
         URL url = invocation.url();
@@ -108,7 +108,7 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
     @Override
     protected VirtueResponse createResponse(URL url, Throwable e) {
         url.addParam(Key.BODY_TYPE, String.class.getName());
-        return new VirtueResponse(url, "Server Exception" + e.getMessage(), true);
+        return new VirtueResponse(url, SERVER_EXCEPTION + e.getMessage(), true);
     }
 
 }

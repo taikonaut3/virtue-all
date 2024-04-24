@@ -1,6 +1,7 @@
 package io.virtue.rpc.h2;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.virtue.common.constant.Constant;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Invocation;
@@ -12,7 +13,7 @@ import java.lang.reflect.Parameter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static io.virtue.common.constant.Components.Serialization.JSON;
+import static io.virtue.common.constant.Components.Serialization.*;
 import static io.virtue.transport.util.TransportUtil.getStringMap;
 
 /**
@@ -20,8 +21,11 @@ import static io.virtue.transport.util.TransportUtil.getStringMap;
  */
 public final class HttpUtil {
 
-    private static final Map<CharSequence, CharSequence> CONTENT_TYPE_MAPPING = Map.of("application/json", JSON);
-
+    private static final Map<CharSequence, CharSequence> CONTENT_TYPE_MAPPING = Map.of(
+            "application/json", JSON,
+            "application/msgpack", MSGPACK,
+            "application/protobuf", PROTOBUF
+    );
 
     /**
      * Find request body.
@@ -64,7 +68,7 @@ public final class HttpUtil {
     public static Map<CharSequence, CharSequence> commonClientHeaders() {
         Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
         headers.put(HttpHeaderNames.ACCEPT_ENCODING, "gzip, deflate");
-        headers.put(HttpHeaderNames.USER_AGENT, "virtue-rpc/0.0.8");
+        headers.put(HttpHeaderNames.USER_AGENT, "virtue-rpc/" + Constant.VERSION);
         headers.put(HttpHeaderNames.ACCEPT, "application/json");
         return headers;
     }
@@ -76,7 +80,7 @@ public final class HttpUtil {
      */
     public static Map<CharSequence, CharSequence> commonServerHeaders() {
         Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
-        headers.put(HttpHeaderNames.SERVER, "virtue-rpc/0.0.8");
+        headers.put(HttpHeaderNames.SERVER, "virtue-rpc/" + Constant.VERSION);
         return headers;
     }
 

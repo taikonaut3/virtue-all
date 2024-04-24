@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http2.*;
-import io.virtue.common.constant.Key;
 import io.virtue.common.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.transport.RpcFuture;
@@ -18,7 +17,7 @@ import io.virtue.transport.netty.http2.envelope.NettyHttp2Headers;
 import io.virtue.transport.netty.http2.envelope.NettyHttp2Request;
 import io.virtue.transport.netty.http2.envelope.NettyHttp2Response;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.virtue.common.constant.Components.Transport.NETTY;
@@ -34,14 +33,13 @@ public class NettyHttp2StreamSender implements Http2StreamSender {
     @Override
     public void send(RpcFuture future, Http2Request request) {
         Http2Client http2Client = (Http2Client) future.client();
-        List<Http2Frame> list = new ArrayList<>();
+        List<Http2Frame> list = new LinkedList<>();
         if (request instanceof NettyHttp2Request http2Request) {
             URL url = http2Request.url();
             Http2Headers headers = ((NettyHttp2Headers) http2Request.headers()).headers();
             headers.scheme(getScheme(url));
             headers.method(getHttpMethod(url).name());
             headers.path(url.pathAndParams());
-            headers.add(Key.VIRTUE_URL, future.invocation().url().toString());
             ByteBuf data = Unpooled.wrappedBuffer(http2Request.data());
             if (data.isReadable()) {
                 headers.add(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(data.readableBytes()));

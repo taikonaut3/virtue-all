@@ -1,6 +1,8 @@
 package io.virtue.rpc.h2;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.virtue.common.exception.ResourceException;
 import io.virtue.common.spi.Extension;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
@@ -67,7 +69,8 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
     @Override
     public Http2Request createRequest(Invocation invocation) {
         Http2Invocation http2Invocation = (Http2Invocation) invocation;
-        http2Invocation.headers().put(HttpHeaderNames.HOST, invocation.url().address());
+        http2Invocation.headers().put(HttpHeaderNames.HOST, http2Invocation.url().address());
+        http2Invocation.headers().put(VirtueHttp2HeaderNames.VIRTUE_URL.getName(), http2Invocation.url().toString());
         byte[] data = HttpUtil.serialize(http2Invocation.getHeader(HttpHeaderNames.CONTENT_TYPE), http2Invocation.body());
         URL requestUrl = http2Invocation.url().replicate();
         requestUrl.params().clear();
@@ -77,18 +80,24 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
 
     @Override
     public Http2Response createResponse(Invocation invocation, Object result) {
+        int statusCode = HttpResponseStatus.OK.code();
+        if (result instanceof Exception e) {
+            result = SERVER_INVOKE_EXCEPTION + e.getMessage();
+            statusCode = HttpResponseStatus.INTERNAL_SERVER_ERROR.code();
+        }
         Http2Invocation http2Invocation = (Http2Invocation) invocation;
         byte[] data = HttpUtil.serialize(http2Invocation.headers().get(HttpHeaderNames.CONTENT_TYPE), result);
         URL requestUrl = http2Invocation.url().replicate();
         requestUrl.params().clear();
         http2Invocation.params().forEach((k, v) -> requestUrl.addParam(k.toString(), v.toString()));
-        return http2Transporter().newResponse(200, requestUrl, http2Invocation.headers(), data);
+        return http2Transporter().newResponse(statusCode, requestUrl, http2Invocation.headers(), data);
     }
 
     @Override
     public Http2Response createResponse(URL url, Throwable e) {
-        String errorMessage = "Server exception: " + e.getMessage();
-        return http2Transporter().newResponse(500, url, null, errorMessage.getBytes());
+        HttpException httpException = (HttpException) e;
+        String errorMessage = SERVER_EXCEPTION + e.getMessage();
+        return http2Transporter().newResponse(httpException.statusCode(), url, null, errorMessage.getBytes());
     }
 
     @Override
@@ -104,6 +113,15 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
             args = new Object[]{body};
         }
         return args;
+    }
+
+    @Override
+    public Invocation parseOfRequest(Request request) {
+        try {
+            return super.parseOfRequest(request);
+        } catch (ResourceException e) {
+            throw new HttpException(HttpResponseStatus.NOT_FOUND.code(), e.getMessage());
+        }
     }
 
     @Override

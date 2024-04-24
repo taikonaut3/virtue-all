@@ -23,7 +23,6 @@ import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.Client;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.server.Server;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -41,15 +40,17 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 @Accessors(fluent = true)
 public abstract class AbstractProtocol<Req, Resp> implements Protocol {
 
+    protected static final String SERVER_INVOKE_EXCEPTION = "Server invoke exception: ";
+
+    protected static final String SERVER_EXCEPTION = "Server exception: ";
+
     private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
     private final Map<String, Client> customClients = new ConcurrentHashMap<>();
 
     protected String protocol;
     protected Codec serverCodec;
     protected Codec clientCodec;
-    @Getter
     protected ChannelHandler clientHandler;
-    @Getter
     protected ChannelHandler serverHandler;
     protected Transporter transporter;
     protected Virtue virtue;
@@ -163,9 +164,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
         try {
             message = (Req) request.message();
         } catch (Exception e) {
-            throw new UnsupportedOperationException(
-                    simpleClassName(this) + " unsupported parse request message type: " + simpleClassName(request.message())
-            );
+            throw new UnsupportedOperationException(simpleClassName(this) + " unsupported parse request message type: " + simpleClassName(request.message()));
         }
         Object[] args = parseToInvokeArgs(request, message, callee);
         return createInvocation(request.url(), callee, args);
@@ -182,7 +181,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
             try {
                 message = (Resp) response.message();
             } catch (Exception e) {
-                throw new UnsupportedOperationException("unsupported parse response message type: " + simpleClassName(response.message()));
+                throw new UnsupportedOperationException(simpleClassName(this) + "unsupported parse response message type: " + simpleClassName(response.message()));
             }
             return parseToReturnValue(response, message, caller);
         }
