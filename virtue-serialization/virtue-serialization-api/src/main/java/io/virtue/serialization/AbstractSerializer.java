@@ -2,6 +2,8 @@ package io.virtue.serialization;
 
 import io.virtue.common.exception.SerializationException;
 
+import java.lang.reflect.Type;
+
 /**
  * Abstract Serializer.
  */
@@ -18,12 +20,13 @@ public abstract class AbstractSerializer implements Serializer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException {
+    public <T> T deserialize(byte[] bytes, Type type) throws SerializationException {
         if (bytes == null || bytes.length == 0)
             return null;
         try {
-            return doDeserialize(bytes, type);
+            return (T) doDeserialize(bytes, type);
         } catch (Exception e) {
             throw new SerializationException("Failed to deserialize bytes to " + type, e);
         }
@@ -31,6 +34,6 @@ public abstract class AbstractSerializer implements Serializer {
 
     protected abstract byte[] doSerialize(Object input) throws Exception;
 
-    protected abstract <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception;
+    protected abstract Object doDeserialize(byte[] bytes, Type type) throws Exception;
 
 }

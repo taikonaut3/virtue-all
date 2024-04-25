@@ -6,6 +6,8 @@ import com.esotericsoftware.kryo.io.Output;
 import io.virtue.common.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
+import java.lang.reflect.Type;
+
 import static io.virtue.common.constant.Components.Serialization.KRYO;
 
 /**
@@ -36,10 +38,14 @@ public class KryoSerializer extends AbstractSerializer {
     }
 
     @Override
-    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
+    protected Object doDeserialize(byte[] bytes, Type type) throws Exception {
         try (Input input = new Input(bytes)) {
             Kryo kryo = kryoThreadLocal.get();
-            return kryo.readObject(input, type);
+            if (type instanceof Class<?> classType) {
+                return kryo.readObject(input, classType);
+            } else {
+                return kryo.readClassAndObject(input);
+            }
         }
     }
 

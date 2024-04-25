@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.virtue.common.util.StringUtil.getStringMap;
+
 /**
  * Basic for:
  * 1、Rpc Request.
@@ -166,6 +168,32 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
             builder.append(path);
         }
         return builder.toString();
+    }
+
+    /**
+     * Parse path.
+     *
+     * @param pathAndParams
+     * @return
+     */
+    public static String parsePath(String pathAndParams) {
+        if (pathAndParams.contains("?")) {
+            return pathAndParams.substring(0, pathAndParams.indexOf("?"));
+        }
+        return pathAndParams;
+    }
+
+    /**
+     * Parse params.
+     *
+     * @param pathAndParams
+     * @return
+     */
+    public static Map<CharSequence, CharSequence> parseParams(String pathAndParams) {
+        if (pathAndParams.contains("?")) {
+            return getStringMap(pathAndParams.substring(pathAndParams.indexOf("?") + 1).split("&"), "=");
+        }
+        return null;
     }
 
     /**

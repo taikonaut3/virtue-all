@@ -14,14 +14,9 @@
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-rpc-api</artifactId>
+            <artifactId>virtue-rpc-http1</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api -->
-        <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>

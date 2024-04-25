@@ -6,12 +6,11 @@ import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.core.Invoker;
 import io.virtue.core.support.TransferableInvocation;
-import io.virtue.rpc.h2.envelope.HttpEnvelope;
+import io.virtue.rpc.h1.HttpUtil;
+import io.virtue.rpc.h1.envelope.HttpEnvelope;
 
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
-
-import static io.virtue.transport.util.TransportUtil.getHttpMethod;
 
 /**
  * Http2 Invocation.
@@ -22,14 +21,26 @@ public class Http2Invocation extends HttpEnvelope implements Invocation {
 
     public Http2Invocation(Caller<?> caller, Object[] args) {
         invocation = new TransferableInvocation(caller, args);
-        Http2Wrapper wrapper = ((Http2Caller) caller).wrapper();
-        allArgsConstructor(wrapper.path(), wrapper.httpMethod(), wrapper.headers(), wrapper.params(), HttpUtil.findBody(invocation));
+        Http2Caller http2Caller = (Http2Caller) caller;
+        allArgsConstructor(
+                http2Caller.path(),
+                http2Caller.httpMethod(),
+                http2Caller.requestHeaders(),
+                http2Caller.queryParams(),
+                HttpUtil.findBody(invocation)
+        );
+        http2Caller.restInvocationParser().parse(this);
     }
 
     public Http2Invocation(URL url, Callee<?> callee, Object[] args) {
         invocation = new TransferableInvocation(url, callee, args);
-        Http2Wrapper wrapper = ((Http2Callee) callee).wrapper();
-        allArgsConstructor(url.path(), getHttpMethod(url), wrapper.headers(), null, null);
+        Http2Callee http2Callee = (Http2Callee) callee;
+        allArgsConstructor(
+                url.path(),
+                http2Callee.httpMethod(),
+                http2Callee.responseHeaders(),
+                null,
+                null);
     }
 
     @Override

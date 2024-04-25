@@ -1,6 +1,10 @@
 package io.virtue.common.util;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for string operations.
@@ -27,8 +31,6 @@ public final class StringUtil {
     public static String isBlankOrDefault(String target, String defaultValue) {
         return isBlank(target) ? defaultValue : target;
     }
-
-    // 获取对象简单类名，如果对象为null，返回"null_object"；否则返回对象类名的简称
 
     /**
      * Normalize the path to remove the beginning '/', the end '/', and the redundant '/'.
@@ -69,6 +71,28 @@ public final class StringUtil {
         return type.getSimpleName();
     }
 
+    public static Map<CharSequence, CharSequence> getStringMap(String[] params, String separator) {
+        if (params == null || params.length == 0) {
+            return new HashMap<>();
+        }
+        return Arrays.stream(params)
+                .map(pair -> pair.split(separator))
+                .filter(keyValue -> keyValue.length == 2)
+                .collect(Collectors.toMap(keyValue -> keyValue[0].trim(), keyValue -> keyValue[1].trim()));
+    }
+
+    /**
+     * Replaces the placeholder in the path with the specified value.
+     *
+     * @param path
+     * @param placeholder
+     * @param value
+     * @return
+     */
+    public static String replacePlaceholder(String path, String placeholder, String value) {
+        return path.replace("{" + placeholder + "}", value);
+    }
+
     /**
      * Determines whether the string contains only whitespace characters.
      *
@@ -84,6 +108,7 @@ public final class StringUtil {
         }
         return true;
     }
+
     private StringUtil() {
     }
 }

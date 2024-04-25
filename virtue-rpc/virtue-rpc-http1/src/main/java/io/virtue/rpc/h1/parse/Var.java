@@ -1,4 +1,4 @@
-package io.virtue.rpc.h2.config;
+package io.virtue.rpc.h1.parse;
 
 import java.lang.annotation.*;
 

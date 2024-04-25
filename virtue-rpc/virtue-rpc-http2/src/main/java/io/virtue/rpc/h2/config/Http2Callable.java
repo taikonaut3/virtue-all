@@ -32,16 +32,12 @@ public @interface Http2Callable {
     String[] headers() default {};
 
     /**
-     * The content type of the HTTP request.
-     *
-     * @return
+     * The content type of the HTTP.
      */
     String contentType() default "application/json";
 
     /**
      * Whether to use SSL.
-     *
-     * @return
      */
     boolean ssl() default true;
 }

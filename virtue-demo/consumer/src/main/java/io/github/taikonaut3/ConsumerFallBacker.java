@@ -3,6 +3,7 @@ package io.github.taikonaut3;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.transport.Response;
 import org.example.Message;
+import org.example.MyBean;
 import org.example.model1.ParentObject;
 import org.example.model1.TestGeneric;
 import org.springframework.stereotype.Component;
@@ -66,7 +67,8 @@ public class ConsumerFallBacker implements Consumer {
     }
 
     @Override
-    public List<ParentObject> http2Test(List<ParentObject> list) {
+    public List<ParentObject> http2Test(String id, String token, String ccc, MyBean myBean, List<ParentObject> list) {
         return null;
     }
+
 }

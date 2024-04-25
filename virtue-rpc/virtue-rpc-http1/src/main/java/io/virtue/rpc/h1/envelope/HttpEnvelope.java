@@ -1,4 +1,4 @@
-package io.virtue.rpc.h2.envelope;
+package io.virtue.rpc.h1.envelope;
 
 import io.virtue.common.util.AssertUtil;
 import io.virtue.transport.http.HttpMethod;
@@ -55,6 +55,15 @@ public class HttpEnvelope {
             this.params.putAll(params);
         }
         this.body = body;
+    }
+
+    /**
+     * Set path.
+     *
+     * @param path
+     */
+    public void path(String path) {
+        this.path = path;
     }
 
     /**

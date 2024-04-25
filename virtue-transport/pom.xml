@@ -11,6 +11,7 @@
 
     <artifactId>virtue-transport</artifactId>
     <packaging>pom</packaging>
+    <description>Only support netty,and this module is also used to adapt to the subsequent major versions of netty</description>
 
     <modules>
         <module>virtue-transport-api</module>

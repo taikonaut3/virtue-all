@@ -5,6 +5,7 @@ import io.virtue.common.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,18 +31,17 @@ public class ProtobufSerializer extends AbstractSerializer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
-        if (MessageLite.class.isAssignableFrom(type)) {
-            MessageLite messageLite = messageMap.get(type);
-            T result;
+    protected Object doDeserialize(byte[] bytes, Type type) throws Exception {
+        if (type instanceof Class<?> classType && MessageLite.class.isAssignableFrom(classType)) {
+            MessageLite messageLite = messageMap.get(classType);
+            Object result;
             if (messageLite != null) {
-                result = (T) messageLite.getParserForType().parseFrom(bytes);
+                result = messageLite.getParserForType().parseFrom(bytes);
             } else {
-                Method parseForm = type.getDeclaredMethod("parseFrom", byte[].class);
+                Method parseForm = classType.getDeclaredMethod("parseFrom", byte[].class);
                 parseForm.setAccessible(true);
-                result = (T) parseForm.invoke(null, new Object[]{bytes});
+                result = parseForm.invoke(null, new Object[]{bytes});
             }
             return result;
         } else {

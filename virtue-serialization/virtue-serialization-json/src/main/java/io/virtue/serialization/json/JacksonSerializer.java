@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.virtue.common.exception.ConversionException;
 import io.virtue.common.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
+import lombok.Getter;
 
 import java.lang.reflect.Type;
 
@@ -13,6 +14,7 @@ import static io.virtue.common.constant.Components.Serialization.JSON;
 /**
  * Jackson JSON Serializer.
  */
+@Getter
 @Extension(JSON)
 public class JacksonSerializer extends AbstractSerializer {
 
@@ -29,13 +31,12 @@ public class JacksonSerializer extends AbstractSerializer {
         return jsonMapper.writeValueAsBytes(input);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
+    protected Object doDeserialize(byte[] bytes, Type type) throws Exception {
         if (type == String.class || type == Object.class) {
-            return (T) new String(bytes);
+            return new String(bytes);
         }
-        return jsonMapper.readValue(bytes, type);
+        return jsonMapper.readValue(bytes, jsonMapper.constructType(type));
     }
 
     @Override

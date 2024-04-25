@@ -1,28 +1,31 @@
 package io.virtue.rpc.h2;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
+import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.core.RemoteService;
+import io.virtue.rpc.h1.AbstractHttpCallee;
 import io.virtue.rpc.h2.config.Http2Callable;
-import io.virtue.rpc.support.AbstractCallee;
-import io.virtue.transport.http.HttpMethod;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
-import static io.virtue.common.constant.Components.Protocol.HTTP2;
+import static io.virtue.common.constant.Components.Protocol.*;
+import static io.virtue.rpc.h1.HttpUtil.parseHeaders;
 
 /**
  * Http2 protocol callee.
  */
 @Getter
 @Accessors(fluent = true)
-public class Http2Callee extends AbstractCallee<Http2Callable> {
+public class Http2Callee extends AbstractHttpCallee<Http2Callable> {
 
-    private Http2Wrapper wrapper;
+    @Parameter(Key.SSL)
+    private  boolean ssl;
 
     public Http2Callee(Method method, RemoteService<?> remoteService) {
         super(method, remoteService, HTTP2, Http2Callable.class);
@@ -30,16 +33,15 @@ public class Http2Callee extends AbstractCallee<Http2Callable> {
 
     @Override
     protected void doInit() {
-        wrapper = new Http2Wrapper(parsedAnnotation, this);
+        String pathAndParams = parsedAnnotation.path();
+        path = URL.parsePath(pathAndParams);
+        httpMethod = parsedAnnotation.method();
+        ssl = parsedAnnotation.ssl();
+        protocol(ssl ? H2 : H2C);
+        addResponseHeaders(parseHeaders(parsedAnnotation.headers()));
+        addResponseHeader(HttpHeaderNames.CONTENT_TYPE, parsedAnnotation.contentType());
     }
 
-    @Override
-    protected URL createUrl(URL serverUrl) {
-        URL url = super.createUrl(serverUrl);
-        url.addParams(wrapper.parameterization());
-        url.set(HttpMethod.ATTRIBUTE_KEY, wrapper.httpMethod());
-        return url;
-    }
 
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
@@ -49,10 +51,5 @@ public class Http2Callee extends AbstractCallee<Http2Callable> {
             throw RpcException.unwrap(e);
         }
         return result;
-    }
-
-    @Override
-    public List<String> pathList() {
-        return URL.pathToList(wrapper.path());
     }
 }

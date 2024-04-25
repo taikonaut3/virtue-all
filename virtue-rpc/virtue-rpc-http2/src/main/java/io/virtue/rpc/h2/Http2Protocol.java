@@ -1,12 +1,14 @@
 package io.virtue.rpc.h2;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.virtue.common.exception.ResourceException;
 import io.virtue.common.spi.Extension;
 import io.virtue.common.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.*;
+import io.virtue.rpc.h1.HttpUtil;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
@@ -20,7 +22,8 @@ import io.virtue.transport.http.h2.Http2StreamSender;
 import io.virtue.transport.http.h2.Http2Transporter;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static io.virtue.common.constant.Components.Protocol.*;
 
@@ -97,22 +100,10 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
     public Http2Response createResponse(URL url, Throwable e) {
         HttpException httpException = (HttpException) e;
         String errorMessage = SERVER_EXCEPTION + e.getMessage();
-        return http2Transporter().newResponse(httpException.statusCode(), url, null, errorMessage.getBytes());
-    }
-
-    @Override
-    protected Object[] parseToInvokeArgs(Request request, Http2Request http2Request, Callee<?> callee) {
-        String contentType = http2Request.headers().get(HttpHeaderNames.CONTENT_TYPE).toString();
-        Serializer serializer = HttpUtil.getSerializer(contentType);
-        Parameter parameter = HttpUtil.findBodyParameter(callee);
-        Object[] args = new Object[1];
-        byte[] data = http2Request.data();
-        if (parameter != null && data != null && data.length > 0) {
-            Object body = serializer.deserialize(data, parameter.getType());
-            body = serializer.convert(body, parameter.getParameterizedType());
-            args = new Object[]{body};
-        }
-        return args;
+        Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
+        headers.put(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON);
+        headers.putAll(HttpUtil.regularResponseHeaders());
+        return http2Transporter().newResponse(httpException.statusCode(), url, headers, errorMessage.getBytes());
     }
 
     @Override
@@ -125,14 +116,23 @@ public class Http2Protocol extends AbstractProtocol<Http2Request, Http2Response>
     }
 
     @Override
+    protected Object[] parseToInvokeArgs(Request request, Http2Request http2Request, Callee<?> callee) {
+        Http2Callee http2Callee = (Http2Callee) callee;
+        return http2Callee.restInvocationParser().parse(http2Request, callee);
+    }
+
+    @Override
     protected Object parseToReturnValue(Response response, Http2Response http2Response, Caller<?> caller) {
         byte[] data = http2Response.data();
         if (!(caller.returnClass() == Void.class)) {
             if (data != null && data.length > 0) {
-                String contentType = http2Response.headers().get(HttpHeaderNames.CONTENT_TYPE).toString();
-                Serializer serializer = HttpUtil.getSerializer(contentType);
-                Object body = serializer.deserialize(data, caller.returnClass());
-                return serializer.convert(body, caller.returnType());
+                if (http2Response.statusCode() == 200) {
+                    String contentType = http2Response.headers().get(HttpHeaderNames.CONTENT_TYPE).toString();
+                    Serializer serializer = HttpUtil.getSerializer(contentType);
+                    return serializer.deserialize(data, caller.returnType());
+                } else {
+                    return new String(data);
+                }
             }
         }
         return null;

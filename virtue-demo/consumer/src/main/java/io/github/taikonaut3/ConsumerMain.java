@@ -67,7 +67,7 @@ public class ConsumerMain {
 
         Protocol protocol = ExtensionLoader.loadExtension(Protocol.class, "h2");
 
-        List<ParentObject> httplist = consumer.http2Test(ParentObject.getObjList("client list"));
+        //List<ParentObject> httplist = consumer.http2Test(ParentObject.getObjList("client list"));
         Message message = new Message();
         message.setDate(new Date());
         message.setName("client" + message.getDate().toString());
@@ -81,9 +81,9 @@ public class ConsumerMain {
                 long end = System.currentTimeMillis();
                 System.out.println("virtue 耗时:" + (end - start) + list);
                 start = System.currentTimeMillis();
-                List<ParentObject> clientList = consumer.http2Test(ParentObject.getObjList("client list"));
+                //List<ParentObject> clientList = consumer.http2Test(ParentObject.getObjList("client list"));
                 end = System.currentTimeMillis();
-                System.out.println("http2 耗时:" + (end - start) + clientList);
+                //System.out.println("http2 耗时:" + (end - start) + clientList);
             });
         }
         String hello = consumer.hello("world");

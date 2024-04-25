@@ -3,6 +3,8 @@ package io.virtue.serialization;
 import io.virtue.common.exception.SerializationException;
 import io.virtue.common.spi.Extensible;
 
+import java.lang.reflect.Type;
+
 import static io.virtue.common.constant.Components.Serialization.KRYO;
 
 /**
@@ -29,6 +31,6 @@ public interface Serializer extends Converter {
      * @return The deserialize object.
      * @throws SerializationException if an error occurs during deserialization.
      */
-    <T> T deserialize(byte[] bytes, Class<T> type) throws SerializationException;
+    <T> T deserialize(byte[] bytes, Type type) throws SerializationException;
 }
 

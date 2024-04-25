@@ -8,13 +8,13 @@ import java.lang.annotation.*;
 import static io.virtue.common.constant.Components.Protocol.HTTP;
 
 /**
- * Annotation used to define an HTTP call.
+ * Support be http1.1 protocol call.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Protocol(HTTP)
-public @interface HttpCall {
+public @interface HttpCallable {
 
     /**
      * The path of the HTTP request.
@@ -35,6 +35,4 @@ public @interface HttpCall {
      * The content type of the HTTP.
      */
     String contentType() default "application/json";
-
 }
-

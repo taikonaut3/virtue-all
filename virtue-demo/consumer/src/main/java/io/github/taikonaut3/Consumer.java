@@ -4,16 +4,17 @@ import io.virtue.common.constant.Components;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.Options;
 import io.virtue.core.annotation.RemoteCaller;
-import io.virtue.rpc.h2.config.Body;
+import io.virtue.rpc.h1.parse.Body;
 import io.virtue.rpc.h2.config.Http2Call;
 import io.virtue.rpc.virtue.config.VirtueCall;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.transport.Response;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import org.example.Message;
+import org.example.MyBean;
 import org.example.model1.ParentObject;
 import org.example.model1.TestGeneric;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import static io.virtue.common.constant.Components.Serialization.JSON;
 import static io.virtue.common.constant.Components.Serialization.MSGPACK;
 
-@RemoteCaller(value = "provider", fallback = ConsumerFallBacker.class)
+@RemoteCaller(value = "provider")
 public interface Consumer {
 
     @VirtueCall(service = "345", callMethod = "hello")
@@ -58,16 +59,16 @@ public interface Consumer {
     @VirtueCall(service = "345", callMethod = "list")
     List<ParentObject> list(List<ParentObject> list);
 
-    @Config(filters = {"filter1", "filter2"}, serialization = MSGPACK)
+    //@Config(filters = {"filter1", "filter2"}, serialization = MSGPACK)
     @VirtueCall(service = "345", callMethod = "list2")
     List<ParentObject> list(List<ParentObject> list1, List<ParentObject> list2);
 
     @Options(timeout = 600000)
-    @GET
-    @Path("http2Test")
-    @Consumes
-    @Produces
-    @Http2Call(path = "/http2Test?aaa=123&bbb=321")
-    List<ParentObject> http2Test(@Body List<ParentObject> list);
+    @Http2Call(path = "/http2Test/{id}?aaa=123&bbb=321")
+    List<ParentObject> http2Test(@PathParam("id") String id,
+                                 @HeaderParam("token") String token,
+                                 @QueryParam("ccc") String ccc,
+                                 @BeanParam MyBean myBean,
+                                 @Body List<ParentObject> list);
 
 }

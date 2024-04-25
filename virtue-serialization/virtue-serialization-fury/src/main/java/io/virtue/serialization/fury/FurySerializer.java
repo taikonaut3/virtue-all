@@ -6,6 +6,8 @@ import io.fury.config.Language;
 import io.virtue.common.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
+import java.lang.reflect.Type;
+
 import static io.virtue.common.constant.Components.Serialization.FURY;
 
 /**
@@ -27,10 +29,9 @@ public class FurySerializer extends AbstractSerializer {
         return fury.serialize(input);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
-        return (T) fury.deserialize(bytes);
+    protected Object doDeserialize(byte[] bytes, Type type) throws Exception {
+        return fury.deserialize(bytes);
     }
 
 }

@@ -18,7 +18,7 @@ public class Provider {
         List<ParentObject> objList = ParentObject.getObjList();
         byte[] bytes = serializer.serialize(objList);
 
-        List deserialize = serializer.deserialize(bytes, List.class);
+        List<ParentObject> deserialize = serializer.deserialize(bytes, List.class);
         System.out.println(deserialize);
     }
 

@@ -40,6 +40,6 @@ public final class GenerateUtil {
      * @return
      */
     public static String generateCalleeMapping(String protocol, String path) {
-        return protocol + "[" + path + "]";
+        return protocol + ":" + path;
     }
 }

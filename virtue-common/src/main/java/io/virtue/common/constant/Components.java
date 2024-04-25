@@ -136,6 +136,20 @@ public interface Components {
      */
     interface Compression {
         String GZIP = "gzip";
+
+        String DEFLATE = "deflate";
+
+        String LZ4 = "lz4";
+
+        String SNAPPY = "snappy";
+    }
+
+    /**
+     * RestParser type.
+     */
+    interface RestParser {
+
+        String JAX_RS = "jax-rs";
     }
 
 }

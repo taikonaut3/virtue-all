@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Type;
 
 import static io.virtue.common.constant.Components.Serialization.JDK;
 
@@ -26,11 +27,10 @@ public class JdkSerializer extends AbstractSerializer {
     }
 
     @Override
-    protected <T> T doDeserialize(byte[] bytes, Class<T> type) throws Exception {
+    protected Object doDeserialize(byte[] bytes, Type type) throws Exception {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
              ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
-            Object object = objectInputStream.readObject();
-            return type.cast(object);
+            return objectInputStream.readObject();
         }
     }
 

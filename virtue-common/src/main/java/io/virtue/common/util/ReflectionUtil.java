@@ -211,6 +211,50 @@ public final class ReflectionUtil {
     }
 
     /**
+     * Convert value to targetType.
+     *
+     * @param targetType
+     * @param value
+     * @param <T>
+     * @return
+     */
+    public static <T> T convertValue(Class<T> targetType, Object value) {
+        if (value == null) {
+            return null;
+        }
+        // 如果目标类型和值的类型相同，直接返回值
+        if (targetType.isAssignableFrom(value.getClass())) {
+            return targetType.cast(value);
+        }
+        // 根据目标类型进行转换
+        if (targetType == String.class) {
+            return (T) value.toString();
+        } else if (targetType == Integer.class || targetType == int.class) {
+            return (T) Integer.valueOf(value.toString());
+        } else if (targetType == Double.class || targetType == double.class) {
+            return (T) Double.valueOf(value.toString());
+        } else if (targetType == Float.class || targetType == float.class) {
+            return (T) Float.valueOf(value.toString());
+        } else if (targetType == Long.class || targetType == long.class) {
+            return (T) Long.valueOf(value.toString());
+        } else if (targetType == Short.class || targetType == short.class) {
+            return (T) Short.valueOf(value.toString());
+        } else if (targetType == Byte.class || targetType == byte.class) {
+            return (T) Byte.valueOf(value.toString());
+        } else if (targetType == Boolean.class || targetType == boolean.class) {
+            return (T) Boolean.valueOf(value.toString());
+        } else if (targetType == Character.class || targetType == char.class) {
+            if (value.toString().length() == 1) {
+                return (T) Character.valueOf(value.toString().charAt(0));
+            } else {
+                throw new IllegalArgumentException("Cannot convert value to char: " + value);
+            }
+        } else {
+            throw new IllegalArgumentException("Unsupported target type: " + targetType);
+        }
+    }
+
+    /**
      * Find other annotation specified in the annotation.
      *
      * @param annotation     The annotation to find

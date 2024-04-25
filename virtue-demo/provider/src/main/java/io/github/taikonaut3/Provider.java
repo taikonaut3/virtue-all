@@ -3,10 +3,15 @@ package io.github.taikonaut3;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
-import io.virtue.rpc.h2.config.Body;
+import io.virtue.rpc.h1.parse.Body;
 import io.virtue.rpc.h2.config.Http2Callable;
 import io.virtue.rpc.virtue.config.VirtueCallable;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import org.example.Message;
+import org.example.MyBean;
 import org.example.model2.ParentObject;
 
 import java.util.Date;
@@ -64,8 +69,12 @@ public class Provider {
         return ParentObject.getObjList("list server2");
     }
 
-    @Http2Callable(path = "/http2Test")
-    public List<ParentObject> http2Test(@Body List<ParentObject> list) {
+    @Http2Callable(path = "/http2Test/{id}")
+    public List<ParentObject> http2Test(@Body List<ParentObject> list,
+                                        @PathParam("id") String id,
+                                        @HeaderParam("token") String token,
+                                        @QueryParam("ccc") String ccc,
+                                        @BeanParam MyBean myBean) {
         return ParentObject.getObjList("list server2");
     }
 

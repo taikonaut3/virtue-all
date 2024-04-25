@@ -14,6 +14,8 @@ import lombok.ToString;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Default RemoteService Impl.
@@ -79,6 +81,11 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     @Override
     public Callee<?> getCallee(String protocol, String path) {
         String mapping = GenerateUtil.generateCalleeMapping(protocol, path);
+        for (String key : mappingCallee.keySet()) {
+            if (match(mapping, key)) {
+                return mappingCallee.get(key);
+            }
+        }
         return mappingCallee.get(mapping);
     }
 
@@ -90,6 +97,16 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     @Override
     public String name() {
         return remoteServiceName;
+    }
+
+    private boolean match(String str, String pattern) {
+        // 将模式中的 {} 替换为正则表达式的匹配规则，其中 \\{([^{}]*)\\} 表示匹配 { 和 } 之间的任意内容
+        String regex = pattern.replaceAll("\\{([^{}]*)\\}", "([^/]+)")
+                .replaceAll("\\{([^{}]*)$", "\\\\$0")
+                .replaceAll("(?<!\\})\\}$", "\\\\$0");
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     private void parseRemoteService() {

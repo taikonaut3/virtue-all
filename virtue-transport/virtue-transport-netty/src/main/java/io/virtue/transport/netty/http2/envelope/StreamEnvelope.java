@@ -8,7 +8,6 @@ import io.virtue.transport.http.HttpMethod;
 import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.http.h1.HttpHeaders;
 import io.virtue.transport.http.h2.Http2Envelope;
-import io.virtue.transport.util.TransportUtil;
 
 import java.util.Map;
 
@@ -98,11 +97,11 @@ public class StreamEnvelope implements Http2Envelope {
         url.set(HttpMethod.ATTRIBUTE_KEY, method());
         if (pathAndParams != null) {
             String paramsString = pathAndParams.toString();
-            String path = TransportUtil.parsePath(paramsString);
+            String path = URL.parsePath(paramsString);
             if (headers.headers().path() != null) {
                 url.addPath(path);
             }
-            Map<CharSequence, CharSequence> params = TransportUtil.parseParams(paramsString);
+            Map<CharSequence, CharSequence> params = URL.parseParams(paramsString);
             if (params != null) {
                 params.forEach((k, v) -> url.addParam(k.toString(), v.toString()));
             }
