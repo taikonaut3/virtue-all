@@ -51,7 +51,7 @@ public final class ReflectionUtil {
     public static <T> T createInstance(Constructor<T> constructor, Object... args) {
         T instance;
         try {
-            instance = (args == null || args.length == 0) ? constructor.newInstance() : constructor.newInstance(args);
+            instance = CollectionUtil.isEmpty(args) ? constructor.newInstance() : constructor.newInstance(args);
         } catch (Exception e) {
             throw new CommonException("Create Instance is Failed by " + constructor.getName(), e);
         }
@@ -115,7 +115,7 @@ public final class ReflectionUtil {
      * @throws NoSuchMethodException If no matching constructor is found
      */
     public static Class<?>[] findMatchingConstructor(Class<?> type, Object... args) throws NoSuchMethodException {
-        if (args == null || args.length == 0) {
+        if (CollectionUtil.isEmpty(args)) {
             return null;
         }
         // Find all constructors

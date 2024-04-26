@@ -6,6 +6,7 @@ import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.AttributeKey;
 import io.virtue.common.extension.Replicable;
 import io.virtue.common.util.AssertUtil;
+import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.StringUtil;
 import lombok.Getter;
@@ -93,7 +94,7 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
      * @return
      */
     public static URL valueOf(String url) {
-        if (url == null || url.trim().isEmpty()) {
+        if (StringUtil.isBlank(url)) {
             throw new ResourceException("url is null");
         }
         String[] strings = url.split("\\?");
@@ -209,7 +210,7 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
         }
         String[] parts = path.split("/");
         for (String part : parts) {
-            if (!part.isEmpty()) {
+            if (!StringUtil.isBlank(part)) {
                 list.add(part);
             }
         }
@@ -325,7 +326,7 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
      * @param params
      */
     public URL replaceParams(Map<String, String> params) {
-        if (params != null && !params.isEmpty()) {
+        if (CollectionUtil.isNotEmpty(params)) {
             this.params = params;
         }
         return this;
@@ -452,7 +453,7 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
      * @param paths
      */
     public URL replacePaths(List<String> paths) {
-        if (paths != null && !paths.isEmpty()) {
+        if (CollectionUtil.isNotEmpty(paths)) {
             this.paths.clear();
             addPaths(paths);
         }

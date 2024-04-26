@@ -1,6 +1,7 @@
 package io.virtue.common.spi;
 
 import io.virtue.common.exception.RpcException;
+import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.ReflectionUtil;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -126,7 +127,7 @@ public final class ExtensionLoader<S> {
      */
     @SafeVarargs
     public static <S> void addListener(Class<S> interfaceType, LoadedListener<S>... loadedListeners) {
-        if (loadedListeners != null && loadedListeners.length > 0) {
+        if (CollectionUtil.isNotEmpty(loadedListeners)) {
             Set<LoadedListener<?>> loadedListenerSet = LISTENERMAP.computeIfAbsent(interfaceType, k -> new HashSet<>());
             Collections.addAll(loadedListenerSet, loadedListeners);
         }

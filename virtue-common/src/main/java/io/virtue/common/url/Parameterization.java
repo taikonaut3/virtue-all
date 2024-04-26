@@ -6,6 +6,7 @@ import io.virtue.common.util.StringUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public interface Parameterization {
      * @return map
      */
     default Map<String, String> parameterization() {
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new LinkedHashMap<>();
         List<Field> fields = ReflectionUtil.getAllFields(this.getClass());
         for (Field field : fields) {
             if (field.isAnnotationPresent(Parameter.class)) {

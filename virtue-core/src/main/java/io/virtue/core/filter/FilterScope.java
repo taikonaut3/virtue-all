@@ -1,5 +1,7 @@
 package io.virtue.core.filter;
 
+import io.virtue.common.util.CollectionUtil;
+
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public enum FilterScope {
      * @return The filtered list of filters.
      */
     public List<Filter> filterScope(List<Filter> filters) {
-        if (filters == null || filters.isEmpty()) {
+        if (CollectionUtil.isEmpty(filters)) {
             return filters;
         }
         return filters.stream().filter(filter -> filter.scope() == this).toList();

@@ -2,6 +2,7 @@ package io.virtue.registry;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.SystemInfo;
 import io.virtue.core.Virtue;
@@ -35,7 +36,7 @@ public abstract class AbstractRegistryService implements RegistryService {
         List<URL> urls;
         // 1、Determine whether a service is available in the cache
         List<String> serverUrls = discoverHealthServices.get(serviceName);
-        if (serverUrls == null || serverUrls.isEmpty()) {
+        if (CollectionUtil.isEmpty(serverUrls)) {
             boolean noSubscribe = serverUrls == null;
             // 2、Available services are found in the registry
             urls = doDiscover(url);

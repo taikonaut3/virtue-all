@@ -21,7 +21,7 @@ public final class FileUtil {
      */
     public static void writeLineFile(CharSequence content, File targetFile) {
         try {
-            if (content.isEmpty()) {
+            if (StringUtil.isBlank(content)) {
                 return;
             }
             if (!targetFile.exists()) {

@@ -69,6 +69,16 @@ public final class CollectionUtil {
     }
 
     /**
+     * Checks if an array is empty or null.
+     *
+     * @param value
+     * @return
+     */
+    public static boolean isEmpty(Object[] value) {
+        return value == null || value.length == 0;
+    }
+
+    /**
      * Checks if a collection is not empty and not null.
      *
      * @param value The collection to check.
@@ -85,6 +95,10 @@ public final class CollectionUtil {
      * @return True if the map is not null and not empty, false otherwise.
      */
     public static boolean isNotEmpty(Map<?, ?> value) {
+        return !isEmpty(value);
+    }
+
+    public static boolean isNotEmpty(Object[] value) {
         return !isEmpty(value);
     }
 

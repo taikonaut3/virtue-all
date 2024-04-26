@@ -72,7 +72,7 @@ public final class StringUtil {
     }
 
     public static Map<CharSequence, CharSequence> getStringMap(String[] params, String separator) {
-        if (params == null || params.length == 0) {
+        if (CollectionUtil.isEmpty(params)) {
             return new HashMap<>();
         }
         return Arrays.stream(params)

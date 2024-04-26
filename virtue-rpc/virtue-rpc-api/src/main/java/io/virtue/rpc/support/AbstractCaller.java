@@ -138,7 +138,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
     @Override
     public void start() {
         if (!remoteCaller().lazyDiscover()) {
-            if (registryConfigs == null || registryConfigs.isEmpty()) {
+            if (CollectionUtil.isEmpty(registryConfigs)) {
                 logger.warn("Can't find RegistryConfig(s)");
             } else {
                 for (URL registryUrl : registryConfigUrls) {

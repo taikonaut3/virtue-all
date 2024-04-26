@@ -1,6 +1,7 @@
 package io.virtue.rpc.h1.support;
 
 import io.virtue.common.url.URL;
+import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.h1.parse.JaxRsRestInvocationParser;
@@ -59,7 +60,7 @@ public abstract class AbstractHttpCaller<T extends Annotation> extends AbstractC
     }
 
     public void addQueryParams(Map<CharSequence, CharSequence> headers) {
-        if (headers != null && !headers.isEmpty()) {
+        if (CollectionUtil.isNotEmpty(headers)) {
             headers.forEach(this::addRequestHeader);
         }
     }
@@ -74,7 +75,7 @@ public abstract class AbstractHttpCaller<T extends Annotation> extends AbstractC
     }
 
     public void addRequestHeaders(Map<CharSequence, CharSequence> headers) {
-        if (headers != null && !headers.isEmpty()) {
+        if (CollectionUtil.isNotEmpty(headers)) {
             headers.forEach(this::addRequestHeader);
         }
     }
