@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 import static io.virtue.common.constant.Components.Protocol.HTTP2;
 
 /**
- * Use http2 protocol to make RPC call.
+ * Use h2 protocol to make RPC call.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

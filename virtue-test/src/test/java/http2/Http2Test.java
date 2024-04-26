@@ -15,8 +15,8 @@ import io.virtue.transport.http.HttpMethod;
 import io.virtue.transport.http.h2.Http2Request;
 import io.virtue.transport.http.h2.Http2Response;
 import io.virtue.transport.http.h2.Http2Transporter;
-import io.virtue.transport.netty.http2.NettyHttp2Transporter;
-import io.virtue.transport.netty.http2.client.Http2Client;
+import io.virtue.transport.netty.http.h2.NettyHttp2Transporter;
+import io.virtue.transport.netty.http.h2.client.Http2Client;
 import io.virtue.transport.server.Server;
 import org.junit.jupiter.api.Test;
 

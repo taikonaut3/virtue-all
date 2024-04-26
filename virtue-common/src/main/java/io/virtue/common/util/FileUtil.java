@@ -65,6 +65,13 @@ public final class FileUtil {
         }
     }
 
+    /**
+     * Convert input stream to byte array.
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
     public static byte[] inputStreamToByteArray(InputStream inputStream) throws IOException {
         try (inputStream; ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[2048];

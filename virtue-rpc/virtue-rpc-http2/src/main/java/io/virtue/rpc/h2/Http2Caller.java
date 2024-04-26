@@ -5,7 +5,7 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.core.RemoteCaller;
-import io.virtue.rpc.h1.AbstractHttpCaller;
+import io.virtue.rpc.h1.support.AbstractHttpCaller;
 import io.virtue.rpc.h2.config.Http2Call;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.lang.reflect.Method;
 
 import static io.virtue.common.constant.Components.Protocol.*;
-import static io.virtue.rpc.h1.HttpUtil.parseHeaders;
+import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
 
 /**
  * Http2 protocol caller.

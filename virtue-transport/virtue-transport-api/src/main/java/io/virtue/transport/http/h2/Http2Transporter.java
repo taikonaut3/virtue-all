@@ -9,13 +9,13 @@ import java.util.Map;
 import static io.virtue.common.constant.Components.Transport.NETTY;
 
 /**
- * Http2 Transporter.
+ * Http2 transporter.
  */
 @Extensible(NETTY)
 public interface Http2Transporter extends Transporter {
 
     /**
-     * Create a new Http2Request.
+     * Create a new http2 request.
      *
      * @param url
      * @param headers
@@ -25,7 +25,7 @@ public interface Http2Transporter extends Transporter {
     Http2Request newRequest(URL url, Map<CharSequence, CharSequence> headers, byte[] body);
 
     /**
-     * Create a new Http2Response.
+     * Create a new http2 response.
      *
      * @param statusCode
      * @param url

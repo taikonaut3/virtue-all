@@ -6,10 +6,12 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.virtue.common.url.URL;
 import io.virtue.core.Virtue;
+import io.virtue.event.Event;
+import io.virtue.transport.channel.Channel;
 import io.virtue.transport.supprot.IdleEvent;
+import io.virtue.transport.supprot.RefreshHeartBeatCountEvent;
 
 import static io.netty.channel.ChannelHandler.Sharable;
-import static io.virtue.transport.util.TransportUtil.publishRefreshHeartbeatCountEvent;
 
 /**
  * Netty HeartBeatHandler Adapter.
@@ -39,7 +41,7 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
-        publishRefreshHeartbeatCountEvent(nettyChannel, virtue, isServer);
+        publishRefreshHeartbeatCountEvent(nettyChannel);
         super.channelRead(ctx, msg);
     }
 
@@ -65,5 +67,12 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
             }
         }
         super.userEventTriggered(ctx, evt);
+    }
+
+    private void publishRefreshHeartbeatCountEvent(Channel channel) {
+        Event<?> event = isServer
+                ? RefreshHeartBeatCountEvent.buildForServer(channel)
+                : RefreshHeartBeatCountEvent.buildForClient(channel);
+        virtue.eventDispatcher().dispatch(event);
     }
 }

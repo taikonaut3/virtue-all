@@ -4,11 +4,12 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.virtue.common.url.URL;
 import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.h1.config.HttpCall;
+import io.virtue.rpc.h1.support.AbstractHttpCaller;
 
 import java.lang.reflect.Method;
 
 import static io.virtue.common.constant.Components.Protocol.HTTP;
-import static io.virtue.rpc.h1.HttpUtil.parseHeaders;
+import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
 
 /**
  * Http1.1 protocol caller.

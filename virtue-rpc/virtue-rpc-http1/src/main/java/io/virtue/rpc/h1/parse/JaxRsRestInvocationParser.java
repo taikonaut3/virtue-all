@@ -7,8 +7,8 @@ import io.virtue.common.url.URL;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Callee;
 import io.virtue.core.Invocation;
-import io.virtue.rpc.h1.HttpUtil;
-import io.virtue.rpc.h1.envelope.HttpEnvelope;
+import io.virtue.rpc.h1.support.HttpUtil;
+import io.virtue.rpc.h1.support.HttpStructure;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.http.h1.HttpRequest;
 import jakarta.ws.rs.BeanParam;
@@ -31,17 +31,17 @@ import static io.virtue.common.util.StringUtil.replacePlaceholder;
 public class JaxRsRestInvocationParser implements RestInvocationParser {
     @Override
     public void parse(Invocation invocation) throws RpcException {
-        if (invocation instanceof HttpEnvelope httpEnvelope) {
+        if (invocation instanceof HttpStructure httpStructure) {
             Object[] args = invocation.args();
             Parameter[] parameters = invocation.invoker().method().getParameters();
             for (int i = 0; i < parameters.length; i++) {
                 try {
-                    parseJaxAnnotation(parameters[i], args[i], httpEnvelope);
+                    parseJaxAnnotation(parameters[i], args[i], httpStructure);
                 } catch (Exception e) {
                     throw RpcException.unwrap(e);
                 }
             }
-            invocation.url().replacePaths(URL.pathToList(httpEnvelope.path()));
+            invocation.url().replacePaths(URL.pathToList(httpStructure.path()));
         }
     }
 
@@ -98,27 +98,31 @@ public class JaxRsRestInvocationParser implements RestInvocationParser {
         return null;
     }
 
-    private void parseJaxAnnotation(AnnotatedElement element, Object arg, HttpEnvelope httpEnvelope) throws Exception {
+    private void parseJaxAnnotation(AnnotatedElement element, Object arg, HttpStructure httpStructure) throws Exception {
+        if (element.isAnnotationPresent(Body.class)) {
+            httpStructure.body(arg);
+            return;
+        }
         if (element.isAnnotationPresent(PathParam.class)) {
             PathParam pathParam = element.getAnnotation(PathParam.class);
-            String path = httpEnvelope.path();
+            String path = httpStructure.path();
             path = replacePlaceholder(path, pathParam.value(), String.valueOf(arg));
-            httpEnvelope.path(path);
+            httpStructure.path(path);
         }
         if (element.isAnnotationPresent(QueryParam.class)) {
             QueryParam queryParam = element.getAnnotation(QueryParam.class);
-            httpEnvelope.addParam(queryParam.value(), String.valueOf(arg));
+            httpStructure.addParam(queryParam.value(), String.valueOf(arg));
         }
         if (element.isAnnotationPresent(HeaderParam.class)) {
             HeaderParam headerParam = element.getAnnotation(HeaderParam.class);
-            httpEnvelope.addHeader(headerParam.value(), String.valueOf(arg));
+            httpStructure.addHeader(headerParam.value(), String.valueOf(arg));
         }
         if (element.isAnnotationPresent(BeanParam.class)) {
             List<Field> fields = ReflectionUtil.getAllFields(arg.getClass());
             for (Field field : fields) {
                 field.setAccessible(true);
                 Object value = field.get(arg);
-                parseJaxAnnotation(field, value, httpEnvelope);
+                parseJaxAnnotation(field, value, httpStructure);
             }
         }
     }

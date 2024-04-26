@@ -1,12 +1,12 @@
 package io.virtue.transport.http.h1;
 
 /**
- * Http Response.
+ * Http response.
  */
 public interface HttpResponse extends HttpEnvelope {
 
     /**
-     * http status code.
+     * Http response status code.
      *
      * @return
      */

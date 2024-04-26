@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 import static io.virtue.common.constant.Components.Protocol.HTTP2;
 
 /**
- * Support be http2 protocol call.
+ * Support be h2 protocol call.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -5,7 +5,7 @@ import io.virtue.transport.http.HttpMethod;
 import io.virtue.transport.http.HttpVersion;
 
 /**
- * Http Envelope.
+ * Http envelope.
  */
 public interface HttpEnvelope {
 
@@ -38,7 +38,7 @@ public interface HttpEnvelope {
     HttpHeaders headers();
 
     /**
-     * Http Body data.
+     * Http body data.
      *
      * @return
      */

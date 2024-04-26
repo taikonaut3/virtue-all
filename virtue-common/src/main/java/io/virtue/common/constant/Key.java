@@ -170,7 +170,7 @@ public interface Key {
     String VERTX = "vertx";
     String SUBSCRIBES = "subscribes";
 
-    String CA_PATH = "virtue.http2.ca.path";
+    String CA_PATH = "virtue.h2.ca.path";
 
     String CLIENT_CERT_PATH = "virtue.http.client.cert.path";
 

@@ -4,10 +4,15 @@ import io.virtue.transport.http.h1.HttpEnvelope;
 import io.virtue.transport.http.h1.HttpHeaders;
 
 /**
- * Http2 Envelope.
+ * Http2 envelope,then it may not be complete.
  */
 public interface Http2Envelope extends HttpEnvelope {
 
+    /**
+     * Add headers.
+     *
+     * @param headers
+     */
     void addHeaders(HttpHeaders headers);
 
     /**

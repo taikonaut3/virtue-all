@@ -1,8 +1,11 @@
 package io.virtue.rpc.h2;
 
+import lombok.Getter;
+
 /**
  * Internal HTTP/2 header names.
  */
+@Getter
 public enum VirtueHttp2HeaderNames {
 
 
@@ -17,7 +20,4 @@ public enum VirtueHttp2HeaderNames {
         this.name = name;
     }
 
-    public CharSequence getName() {
-        return name;
-    }
 }

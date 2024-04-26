@@ -7,7 +7,8 @@ import io.virtue.transport.channel.Channel;
 import static io.virtue.common.constant.Components.Transport.NETTY;
 
 /**
- * Http2StreamSender.
+ * Http2 stream message sender.
+ * <p>HTTP 2 messages are sent in the form of frames,it can be multiple frames,then it needs to be sent more than once</p>
  */
 @Extensible(NETTY)
 public interface Http2StreamSender {
@@ -15,8 +16,8 @@ public interface Http2StreamSender {
     /**
      * Sends http2 request.
      *
+     * @param future associate http2 stream
      * @param request
-     * @param future
      */
     void send(RpcFuture future, Http2Request request);
 

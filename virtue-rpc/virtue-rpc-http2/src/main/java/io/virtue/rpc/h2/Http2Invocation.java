@@ -6,8 +6,7 @@ import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.core.Invoker;
 import io.virtue.core.support.TransferableInvocation;
-import io.virtue.rpc.h1.HttpUtil;
-import io.virtue.rpc.h1.envelope.HttpEnvelope;
+import io.virtue.rpc.h1.support.HttpStructure;
 
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
@@ -15,7 +14,7 @@ import java.util.function.Supplier;
 /**
  * Http2 Invocation.
  */
-public class Http2Invocation extends HttpEnvelope implements Invocation {
+public class Http2Invocation extends HttpStructure implements Invocation {
 
     private final TransferableInvocation invocation;
 
@@ -27,7 +26,7 @@ public class Http2Invocation extends HttpEnvelope implements Invocation {
                 http2Caller.httpMethod(),
                 http2Caller.requestHeaders(),
                 http2Caller.queryParams(),
-                HttpUtil.findBody(invocation)
+                null
         );
         http2Caller.restInvocationParser().parse(this);
     }

@@ -83,7 +83,7 @@ public class ConsumerMain {
                 start = System.currentTimeMillis();
                 //List<ParentObject> clientList = consumer.http2Test(ParentObject.getObjList("client list"));
                 end = System.currentTimeMillis();
-                //System.out.println("http2 耗时:" + (end - start) + clientList);
+                //System.out.println("h2 耗时:" + (end - start) + clientList);
             });
         }
         String hello = consumer.hello("world");
