@@ -2,8 +2,8 @@ package io.virtue.rpc.support;
 
 import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.RpcContext;
-import io.virtue.common.spi.Extension;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.Extension;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.core.*;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.EventDispatcherConfig;

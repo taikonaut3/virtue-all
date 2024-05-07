@@ -6,38 +6,43 @@ import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.transport.netty.http.h2.envelope.StreamEnvelope;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 
 /**
  * Http2 Util.
  */
 public class Util {
 
-    public static StreamEnvelope getStreamEnvelope(ChannelHandlerContext ctx, int streamId, URL endpointUrl, boolean isServer) {
+    /**
+     * Get current channel's http2 stream.
+     *
+     * @param ctx
+     * @param streamId
+     * @param endpointUrl
+     * @return
+     */
+    public static NettyHttp2Stream currentStream(ChannelHandlerContext ctx, int streamId, URL endpointUrl) {
         String id = String.valueOf(streamId);
-        AttributeKey<StreamEnvelope> streamKey = AttributeKey.valueOf(id);
-        Attribute<StreamEnvelope> streamMessageAttribute = ctx.channel().attr(streamKey);
-        StreamEnvelope streamEnvelope = streamMessageAttribute.get();
-        if (streamEnvelope == null) {
-            InetSocketAddress address = (InetSocketAddress) (isServer ? ctx.channel().localAddress() : ctx.channel().remoteAddress());
-            URL url = new URL(endpointUrl.protocol(), address);
+        AttributeKey<NettyHttp2Stream> streamKey = AttributeKey.valueOf(id);
+        Attribute<NettyHttp2Stream> streamMessageAttribute = ctx.channel().attr(streamKey);
+        NettyHttp2Stream nettyHttp2Stream = streamMessageAttribute.get();
+        if (nettyHttp2Stream == null) {
+            URL url = new URL(endpointUrl.protocol(), endpointUrl.address());
             url.addParam(Key.ONEWAY, Boolean.FALSE.toString());
             url.addParam(Key.UNIQUE_ID, id);
-            streamEnvelope = new StreamEnvelope(url, streamId);
-            streamMessageAttribute.set(streamEnvelope);
+            nettyHttp2Stream = new NettyHttp2Stream(url, streamId);
+            streamMessageAttribute.set(nettyHttp2Stream);
         }
-        return streamEnvelope;
+        return nettyHttp2Stream;
     }
 
-    public static void removeStreamEnvelope(ChannelHandlerContext ctx, int streamId) {
-        AttributeKey<StreamEnvelope> streamKey = AttributeKey.valueOf(String.valueOf(streamId));
-        Attribute<StreamEnvelope> streamMessageAttribute = ctx.channel().attr(streamKey);
+    public static void removeCurrentStream(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
+        AttributeKey<NettyHttp2Stream> streamKey = AttributeKey.valueOf(String.valueOf(stream.streamId()));
+        Attribute<NettyHttp2Stream> streamMessageAttribute = ctx.channel().attr(streamKey);
         streamMessageAttribute.set(null);
     }
 

@@ -98,6 +98,12 @@ public final class CollectionUtil {
         return !isEmpty(value);
     }
 
+    /**
+     * Checks if a array is not empty and not null.
+     *
+     * @param value
+     * @return
+     */
     public static boolean isNotEmpty(Object[] value) {
         return !isEmpty(value);
     }

@@ -1,6 +1,6 @@
 package io.virtue.rpc.event;
 
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.event.AbstractEvent;

@@ -1,22 +1,24 @@
 package io.virtue.proxy.cglib;
 
-import io.virtue.common.constant.Components;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.proxy.AbstractProxyFactory;
 import io.virtue.proxy.InvocationHandler;
 import org.springframework.cglib.proxy.Enhancer;
 
+import static io.virtue.common.constant.Components.ProxyFactory.CGLIB;
+import static io.virtue.common.util.ClassUtil.getClassLoader;
+
 /**
  * Create Proxy By CGLIB.
  */
-@Extension(Components.ProxyFactory.CGLIB)
+@Extension(CGLIB)
 public class CGLibProxyFactory extends AbstractProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
     protected <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler) throws Exception {
         Enhancer enhancer = new Enhancer();
-        enhancer.setClassLoader(interfaceClass.getClassLoader());
+        enhancer.setClassLoader(getClassLoader(interfaceClass));
         enhancer.setSuperclass(interfaceClass);
         enhancer.setCallback(new CGLibMethodInterceptor(interfaceClass, handler));
         return (T) enhancer.create();
@@ -26,10 +28,15 @@ public class CGLibProxyFactory extends AbstractProxyFactory {
     @SuppressWarnings("unchecked")
     protected <T> T doCreateProxy(T target, InvocationHandler handler) throws Exception {
         Enhancer enhancer = new Enhancer();
-        enhancer.setClassLoader(target.getClass().getClassLoader());
+        enhancer.setClassLoader(getClassLoader(target.getClass()));
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallback(new CGLibMethodInterceptor(target, handler));
         return (T) enhancer.create();
+    }
+
+    @Override
+    protected <T> io.virtue.proxy.Enhancer<T> createEnhancer(Class<T> type) {
+        throw new UnsupportedOperationException("Un support");
     }
 
 }

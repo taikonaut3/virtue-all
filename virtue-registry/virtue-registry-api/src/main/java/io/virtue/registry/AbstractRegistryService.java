@@ -7,6 +7,8 @@ import io.virtue.common.util.StringUtil;
 import io.virtue.core.SystemInfo;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
+import io.virtue.registry.support.RegisterServiceEvent;
+import io.virtue.registry.support.RegisterTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +27,18 @@ public abstract class AbstractRegistryService implements RegistryService {
     protected boolean enableHealthCheck;
 
     protected AbstractRegistryService(URL url) {
-        registryUrl = url;
-        enableHealthCheck = url.getBooleanParam(Key.ENABLE_HEALTH_CHECK, true);
+        this.registryUrl = url;
+        this.enableHealthCheck = url.getBooleanParam(Key.ENABLE_HEALTH_CHECK, true);
         connect(url);
+    }
+
+    @Override
+    public void register(URL url) {
+        RegisterTask registerTask = doRegister(url);
+        Virtue virtue = Virtue.ofLocal(url);
+        registerTask = new RegisterTask(registerTask.task(), true);
+        RegisterServiceEvent event = new RegisterServiceEvent(virtue, registerTask);
+        virtue.eventDispatcher().dispatch(event);
     }
 
     @Override
@@ -78,6 +89,8 @@ public abstract class AbstractRegistryService implements RegistryService {
     }
 
     protected abstract void subscribeService(URL url);
+
+    protected abstract RegisterTask doRegister(URL url);
 
     protected abstract List<URL> doDiscover(URL url);
 

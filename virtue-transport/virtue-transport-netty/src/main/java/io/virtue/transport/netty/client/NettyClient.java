@@ -16,7 +16,7 @@ import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.AbstractClient;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyChannel;
-import io.virtue.transport.netty.ProtocolInitializer;
+import io.virtue.transport.netty.ProtocolAdapter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +47,7 @@ public class NettyClient extends AbstractClient {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .handler(ProtocolInitializer.forClient(url, nettyHandler, codec));
+                .handler(ProtocolAdapter.forClientChannelInitializer(url, nettyHandler, codec));
     }
 
     @Override

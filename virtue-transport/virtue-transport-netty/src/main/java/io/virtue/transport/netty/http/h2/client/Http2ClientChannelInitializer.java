@@ -9,8 +9,11 @@ import io.netty.handler.ssl.*;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ResourceException;
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
-import io.virtue.transport.netty.NettyIdeStateHandler;
+import io.virtue.transport.netty.NettyIdleStateHandler;
+
+import javax.net.ssl.SSLException;
 
 import static io.virtue.transport.netty.http.h2.Util.getSslBytes;
 import static io.virtue.transport.netty.http.h2.Util.readBytes;
@@ -25,6 +28,8 @@ public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChan
     private static final byte[] CLIENT_CERT_BYTES;
     private static final byte[] CLIENT_KEY_BYTES;
     private final URL url;
+    private final NettyIdleStateHandler idleStateHandler;
+    private final SslContext sslContext;
 
     static {
         try {
@@ -38,13 +43,13 @@ public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChan
 
     public Http2ClientChannelInitializer(URL url) {
         this.url = url;
+        this.sslContext = sslContext();
+        this.idleStateHandler = NettyIdleStateHandler.createForClient(url);
     }
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        SslContext sslContext = getSslContext();
         ChannelPipeline pipeline = socketChannel.pipeline();
-        NettyIdeStateHandler idleStateHandler = NettyIdeStateHandler.createForClient(url);
         if (sslContext != null) {
             pipeline.addLast(sslContext.newHandler(socketChannel.alloc()));
         }
@@ -58,25 +63,29 @@ public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChan
                 .addLast(new Http2MultiplexHandler(new ChannelInboundHandlerAdapter()));
     }
 
-    private SslContext getSslContext() throws Exception {
+    private SslContext sslContext() {
         boolean ssl = sslEnabled(url);
         SslContext sslContext = null;
         if (ssl) {
             final SslProvider provider =
                     SslProvider.isAlpnSupported(SslProvider.OPENSSL) ? SslProvider.OPENSSL : SslProvider.JDK;
-            sslContext = SslContextBuilder.forClient()
-                    .sslProvider(provider)
-                    .ciphers(Http2SecurityUtil.CIPHERS, SupportedCipherSuiteFilter.INSTANCE)
-                    .keyManager(readBytes(CLIENT_CERT_BYTES), readBytes(CLIENT_KEY_BYTES))
-                    // you probably won't want to use this in production, but it is fine for this example:
-                    .trustManager(readBytes(CA_BYTES))
-                    .applicationProtocolConfig(new ApplicationProtocolConfig(
-                            ApplicationProtocolConfig.Protocol.ALPN,
-                            ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
-                            ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
-                            ApplicationProtocolNames.HTTP_2,
-                            ApplicationProtocolNames.HTTP_1_1))
-                    .build();
+            try {
+                sslContext = SslContextBuilder.forClient()
+                        .sslProvider(provider)
+                        .ciphers(Http2SecurityUtil.CIPHERS, SupportedCipherSuiteFilter.INSTANCE)
+                        .keyManager(readBytes(CLIENT_CERT_BYTES), readBytes(CLIENT_KEY_BYTES))
+                        // you probably won't want to use this in production, but it is fine for this example:
+                        .trustManager(readBytes(CA_BYTES))
+                        .applicationProtocolConfig(new ApplicationProtocolConfig(
+                                ApplicationProtocolConfig.Protocol.ALPN,
+                                ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+                                ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
+                                ApplicationProtocolNames.HTTP_2,
+                                ApplicationProtocolNames.HTTP_1_1))
+                        .build();
+            } catch (SSLException e) {
+                throw RpcException.unwrap(e);
+            }
         }
         return sslContext;
     }

@@ -2,7 +2,7 @@ package io.virtue.governance.router;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.extension.AttributeKey;
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 

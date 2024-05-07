@@ -1,7 +1,7 @@
 package io.virtue.core.support;
 
 import io.virtue.common.constant.Constant;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.core.Scheduler;
 
 import java.util.concurrent.Executors;

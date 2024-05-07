@@ -9,6 +9,7 @@ import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.codec.Codec;
+import io.virtue.transport.netty.ByteBufUtil;
 import lombok.Getter;
 
 /**
@@ -54,8 +55,7 @@ public final class NettyCustomCodec {
         protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
             ByteBuf byteBuf = (ByteBuf) super.decode(ctx, in);
             if (byteBuf != null) {
-                byte[] bytes = new byte[byteBuf.readableBytes()];
-                byteBuf.readBytes(bytes);
+                byte[] bytes = ByteBufUtil.getBytes(byteBuf);
                 return codec.decode(bytes);
 
             }

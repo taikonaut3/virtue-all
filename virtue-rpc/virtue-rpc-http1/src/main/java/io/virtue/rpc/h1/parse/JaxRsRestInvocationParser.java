@@ -1,15 +1,15 @@
 package io.virtue.rpc.h1.parse;
 
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.virtue.common.exception.RpcException;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Callee;
 import io.virtue.core.Invocation;
-import io.virtue.rpc.h1.support.HttpUtil;
 import io.virtue.rpc.h1.support.HttpStructure;
+import io.virtue.rpc.h1.support.HttpUtil;
 import io.virtue.serialization.Serializer;
+import io.virtue.transport.http.HttpHeaderNames;
 import io.virtue.transport.http.h1.HttpRequest;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.HeaderParam;

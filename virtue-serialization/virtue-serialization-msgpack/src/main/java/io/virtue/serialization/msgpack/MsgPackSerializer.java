@@ -2,7 +2,7 @@ package io.virtue.serialization.msgpack;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.serialization.json.JacksonSerializer;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
 

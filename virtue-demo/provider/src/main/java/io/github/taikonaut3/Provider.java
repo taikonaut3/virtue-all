@@ -3,6 +3,7 @@ package io.github.taikonaut3;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
+import io.virtue.rpc.h1.config.HttpCallable;
 import io.virtue.rpc.h1.parse.Body;
 import io.virtue.rpc.h2.config.Http2Callable;
 import io.virtue.rpc.virtue.config.VirtueCallable;
@@ -66,7 +67,7 @@ public class Provider {
 
     @Http2Callable(path = "/http2Test", ssl = false)
     public List<ParentObject> http2cTest(@Body List<ParentObject> list) {
-        return ParentObject.getObjList("list server2");
+        return ParentObject.getObjList("list http2 server");
     }
 
     @Http2Callable(path = "/http2Test/{id}")
@@ -76,6 +77,11 @@ public class Provider {
                                         @QueryParam("ccc") String ccc,
                                         @BeanParam MyBean myBean) {
         return ParentObject.getObjList("list server2");
+    }
+
+    @HttpCallable(path = "/httpTest")
+    public List<ParentObject> httpTest(@Body List<ParentObject> list) {
+        return ParentObject.getObjList("list http server");
     }
 
 }

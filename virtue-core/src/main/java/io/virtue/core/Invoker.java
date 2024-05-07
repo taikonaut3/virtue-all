@@ -37,7 +37,7 @@ public interface Invoker<T extends Annotation> extends Config, Lifecycle {
     URL url();
 
     /**
-     * All proxy clients invoke the entry.
+     * All proxy clients reflect the entry.
      *
      * @param invocation
      * @return
@@ -46,7 +46,7 @@ public interface Invoker<T extends Annotation> extends Config, Lifecycle {
     Object invoke(Invocation invocation) throws RpcException;
 
     /**
-     * The client interface invoke method.
+     * The client interface reflect method.
      *
      * @return
      */

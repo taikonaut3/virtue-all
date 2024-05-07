@@ -1,7 +1,7 @@
 package io.virtue.proxy;
 
 /**
- * Used invoke the original method.
+ * Used reflect the original method.
  *
  * @param <R> The return type of the method.
  */

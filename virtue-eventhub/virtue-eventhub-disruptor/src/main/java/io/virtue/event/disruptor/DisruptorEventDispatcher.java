@@ -8,7 +8,8 @@ import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.executor.RpcThreadFactory;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
+import io.virtue.common.extension.spi.LoadedListener;
 import io.virtue.common.url.URL;
 import io.virtue.event.AbstractEventDispatcher;
 import io.virtue.event.Event;
@@ -23,7 +24,7 @@ import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
 import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
- * Disruptor based event dispatcher.
+ * Disruptor based support dispatcher.
  */
 @Extension(DISRUPTOR)
 public class DisruptorEventDispatcher extends AbstractEventDispatcher {
@@ -35,7 +36,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     private volatile RingBuffer<EventHolder<?>> ringBuffer;
 
     /**
-     * Inject the configuration by {@link io.virtue.common.spi.LoadedListener}.
+     * Inject the configuration by {@link LoadedListener}.
      *
      * @param url
      */
@@ -46,13 +47,17 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     @Override
     public <E extends Event<?>> void addListener(Class<E> eventType, EventListener<E> listener) {
         super.addListener(eventType, listener);
-        logger.debug("Register Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Register Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
+        }
     }
 
     @Override
     public <E extends Event<?>> void removeListener(Class<E> eventType, EventListener<E> listener) {
         super.removeListener(eventType, listener);
-        logger.debug("Remove Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Remove Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
+        }
     }
 
     @Override
@@ -62,8 +67,11 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
             EventHolder<E> holder = (EventHolder<E>) eventHolder;
             holder.event(event);
         });
-        logger.trace("dispatch ({})", simpleClassName(event));
+        if (logger.isTraceEnabled()) {
+            logger.trace("dispatch ({})", simpleClassName(event));
+        }
     }
+
     private RingBuffer<EventHolder<?>> createRingBuffer() {
         int bufferSize = Constant.DEFAULT_BUFFER_SIZE;
         int subscribes = Constant.DEFAULT_SUBSCRIBES;
@@ -119,20 +127,20 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         public void onEvent(EventHolder<E> holder, long sequence, boolean endOfBatch) throws Exception {
             E event = holder.event();
             if (event.stopPropagation()) {
-                        listenerMap.entrySet().stream()
-                                .filter(entry -> entry.getKey().isAssignableFrom(event.getClass()))
-                                .forEach(entry -> entry.getValue().forEach(item -> {
-                                    EventListener<E> listener = (EventListener<E>) item;
-                                    try {
-                                            listener.onEvent(event);
-                                            logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
-                                        } catch (Exception e) {
-                                            logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
-                                            throw RpcException.unwrap(e);
-                                        } finally {
-                                            event.stopPropagation();
-                                        }
-                                }));
+                listenerMap.entrySet().stream().filter(entry -> entry.getKey().isAssignableFrom(event.getClass())).forEach(entry -> entry.getValue().forEach(item -> {
+                    EventListener<E> listener = (EventListener<E>) item;
+                    try {
+                        listener.onEvent(event);
+                        if (logger.isTraceEnabled()) {
+                            logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
+                        }
+                    } catch (Exception e) {
+                        logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
+                        throw RpcException.unwrap(e);
+                    } finally {
+                        event.stopPropagation();
+                    }
+                }));
             }
         }
     }

@@ -59,6 +59,31 @@ public final class ReflectionUtil {
     }
 
     /**
+     * Invoke the method of the object.
+     *
+     * @param instance
+     * @param method
+     * @param args
+     * @return
+     * @throws Exception
+     */
+    public static Object invokeObjectMethod(Object instance, Method method, Object... args) throws Exception {
+        String methodName = method.getName();
+        return switch (methodName) {
+            case "getClass" -> instance.getClass();
+            case "hashCode" -> instance.hashCode();
+            case "toString" -> instance.toString();
+            case "equals" -> {
+                if (args.length == 1) {
+                    yield instance.equals(args[0]);
+                }
+                throw new IllegalArgumentException("Invoke method [" + methodName + "] argument number error.");
+            }
+            default -> method.invoke(instance, args);
+        };
+    }
+
+    /**
      * Get the real class of the target class.
      *
      * @param type
@@ -165,7 +190,7 @@ public final class ReflectionUtil {
         try {
             constructor = type.getConstructor(parameterTypes);
         } catch (NoSuchMethodException e) {
-            throw new CommonException("No matching constructor was found");
+            throw new CommonException(type + " can't find public constructor <" + Arrays.toString(parameterTypes) + ">");
         }
         return constructor;
     }

@@ -1,16 +1,25 @@
 package io.virtue.transport.netty.http.h1.client;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
+import io.virtue.transport.http.h1.HttpRequest;
+import io.virtue.transport.netty.ByteBufUtil;
+import io.virtue.transport.netty.http.NettyHttpResponse;
+import io.virtue.transport.netty.http.h1.NettyHttpHeaders;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+
+import static io.netty.handler.codec.http.DefaultHttpHeadersFactory.trailersFactory;
 
 /**
  * EnvelopeConverter.
@@ -28,14 +37,17 @@ public final class HttpClientMessageConverter {
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
             if (msg instanceof Request request) {
                 HttpRequest httpRequest = (HttpRequest) request.message();
-                httpRequest.headers()
-                        .add(HttpHeaderNames.HOST, request.url().address())
-                        .add(HttpHeaderNames.USER_AGENT, "Netty HttpClient")
-                        .add(Key.URL, request.url());
-                msg = httpRequest;
+                DefaultFullHttpRequest fullHttpRequest = new DefaultFullHttpRequest(
+                        HttpVersion.HTTP_1_1,
+                        HttpMethod.valueOf(httpRequest.method().name()),
+                        httpRequest.url().toString(),
+                        Unpooled.wrappedBuffer(httpRequest.data()),
+                        ((NettyHttpHeaders) httpRequest.headers()).httpHeaders(),
+                        trailersFactory().newHeaders()
+                );
                 ctx.channel().attr(urlKey).set(request.url());
+                ctx.write(fullHttpRequest, promise);
             }
-            ctx.write(msg, promise);
         }
     }
 
@@ -43,9 +55,19 @@ public final class HttpClientMessageConverter {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            if (msg instanceof FullHttpResponse httpResponse) {
+            if (msg instanceof FullHttpResponse fullHttpResponse) {
                 URL url = ctx.channel().attr(urlKey).get();
-                msg = Response.success(url, httpResponse);
+                ByteBuf byteBuf = fullHttpResponse.content();
+                byte[] data = ByteBufUtil.getBytes(byteBuf);
+                NettyHttpResponse httpResponse = new NettyHttpResponse(
+                        io.virtue.transport.http.HttpVersion.HTTP_1_1,
+                        url,
+                        fullHttpResponse.status(),
+                        new NettyHttpHeaders(fullHttpResponse.headers()),
+                        data);
+                msg = httpResponse.statusCode() == 200
+                        ? Response.success(httpResponse.url(), httpResponse)
+                        : Response.error(httpResponse.url(), httpResponse);
             }
             ctx.fireChannelRead(msg);
         }

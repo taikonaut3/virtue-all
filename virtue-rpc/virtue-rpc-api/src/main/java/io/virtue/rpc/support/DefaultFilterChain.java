@@ -1,6 +1,6 @@
 package io.virtue.rpc.support;
 
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.core.Invocation;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.filter.FilterChain;

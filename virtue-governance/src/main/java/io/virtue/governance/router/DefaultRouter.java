@@ -1,7 +1,7 @@
 package io.virtue.governance.router;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Invocation;
@@ -32,7 +32,7 @@ public class DefaultRouter implements Router {
             urls = urls.stream().filter(item -> Objects.equals(item.getParam(Key.GROUP), group)).collect(Collectors.toList());
         }
         // filter by router rule
-        Virtue virtue = Virtue.ofClient(url);
+        Virtue virtue = invocation.invoker().container().virtue();
         Collection<RouterConfig> routerConfigs = virtue.configManager().routerConfigManager().getManagerMap().values();
         LinkedList<URL> result = new LinkedList<>();
         boolean hadConfig = false;

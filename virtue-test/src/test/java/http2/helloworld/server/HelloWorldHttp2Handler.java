@@ -52,7 +52,7 @@ public final class HelloWorldHttp2Handler extends Http2ConnectionHandler impleme
     }
 
     /**
-     * Handles the cleartext HTTP upgrade event. If an upgrade occurred, sends a simple response via HTTP/2
+     * Handles the cleartext HTTP upgrade support. If an upgrade occurred, sends a simple response via HTTP/2
      * on stream 1 (the stream specifically reserved for cleartext HTTP upgrade).
      */
     @Override

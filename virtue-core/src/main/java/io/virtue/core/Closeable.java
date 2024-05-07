@@ -17,4 +17,5 @@ public interface Closeable {
      */
     boolean isActive();
 
+
 }

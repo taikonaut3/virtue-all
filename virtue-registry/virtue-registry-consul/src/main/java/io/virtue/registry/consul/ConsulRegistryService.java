@@ -10,6 +10,7 @@ import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Virtue;
 import io.virtue.registry.AbstractRegistryService;
+import io.virtue.registry.support.RegisterTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
- * Based on vertx-consul’s RegistryService.
+ * RegistryService based on vertx-consul.
+ * <a href = "https://github.com/vert-x3/vertx-consul-client">vertx-consul-client</a>
  */
 public class ConsulRegistryService extends AbstractRegistryService {
 
@@ -57,7 +59,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             ConsulClientOptions options = new ConsulClientOptions()
                     .setHost(url.host())
                     .setPort(url.port())
-                    .setTimeout(url.getIntParam(Key.CONNECT_TIMEOUT));
+                    .setTimeout(url.getIntParam(Key.CONNECT_TIMEOUT, Constant.DEFAULT_CONNECT_TIMEOUT));
             AttributeKey<Vertx> vertxKey = AttributeKey.of(Key.VERTX);
             Virtue virtue = Virtue.ofLocal(url);
             vertx = virtue.get(vertxKey);
@@ -73,10 +75,9 @@ public class ConsulRegistryService extends AbstractRegistryService {
     }
 
     @Override
-    public void register(URL url) {
+    public RegisterTask doRegister(URL url) {
         String serviceName = serviceName(url);
-        consulClient.deregisterService(serviceName);
-        Virtue.ofLocal(url).scheduler().addPeriodic(() -> {
+        Consumer<RegisterTask> task = registerTask -> {
             ServiceOptions opts = new ServiceOptions()
                     .setName(serviceName)
                     .setId(instanceId(url))
@@ -84,8 +85,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
                     .setPort(url.port())
                     .setMeta(metaInfo(url));
             if (enableHealthCheck) {
-                int healthCheckInterval = url.getIntParam(Key.HEALTH_CHECK_INTERVAL,
-                        Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
+                int healthCheckInterval = url.getIntParam(Key.HEALTH_CHECK_INTERVAL, Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
                 CheckOptions checkOpts = new CheckOptions()
                         .setTcp(url.address())
                         .setId(instanceId(url))
@@ -94,13 +94,28 @@ public class ConsulRegistryService extends AbstractRegistryService {
                 opts.setCheckOptions(checkOpts);
             }
             consulClient.registerService(opts, res -> {
-                if (res.succeeded()) {
-                    logger.trace("Register {}: {} success", serviceName, url.authority());
-                } else {
+                if (res.succeeded() && !registerTask.isUpdate()) {
+                    logger.info("Register {}: {} success", serviceName, url.authority());
+                } else if (!res.succeeded()) {
                     logger.error("Register " + serviceName + ": " + url.authority() + " failed", res.cause());
                 }
             });
-        }, 0, 5, TimeUnit.SECONDS);
+        };
+        RegisterTask registerTask = new RegisterTask(task, false);
+        registerTask.run();
+        return registerTask;
+    }
+
+    @Override
+    public void deregister(URL url) {
+        String serviceId = instanceId(url);
+        consulClient.deregisterService(serviceId, res -> {
+            if (res.succeeded()) {
+                logger.info("Deregister {}: {} success", serviceId, url.authority());
+            } else {
+                logger.error("Deregister " + serviceId + ": " + url.authority() + " failed", res.cause());
+            }
+        });
     }
 
     @Override
@@ -112,7 +127,9 @@ public class ConsulRegistryService extends AbstractRegistryService {
         consulClient.healthServiceNodes(serviceName, true).onComplete(res -> {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.result().getList();
-                logger.debug("Found {} services for URL: {},", url, serviceEntries.size());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Found {} services for <{}>", serviceEntries.size(), serviceName);
+                }
                 if (serviceEntries.isEmpty()) {
                     latch.countDown();
                 } else {

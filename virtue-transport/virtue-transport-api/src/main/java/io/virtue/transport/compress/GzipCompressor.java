@@ -1,6 +1,6 @@
 package io.virtue.transport.compress;
 
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.util.FileUtil;
 
 import java.io.ByteArrayInputStream;

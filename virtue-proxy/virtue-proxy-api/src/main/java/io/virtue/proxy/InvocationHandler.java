@@ -14,7 +14,7 @@ public interface InvocationHandler {
      * @param proxy        the proxy instance that the method was invoked on
      * @param method       the method being invoked
      * @param args         the arguments passed to the method
-     * @param superInvoker invoke the original method
+     * @param superInvoker reflect the original method
      * @return the result of the method invocation
      * @throws Throwable if an error occurs while processing the method invocation
      */

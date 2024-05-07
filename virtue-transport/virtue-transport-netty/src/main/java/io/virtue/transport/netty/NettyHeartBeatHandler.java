@@ -28,7 +28,7 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
     public NettyHeartBeatHandler(URL url, boolean isServer) {
         this.url = url;
         this.isServer = isServer;
-        this.virtue = isServer ? Virtue.ofServer(url) : Virtue.ofClient(url);
+        this.virtue = Virtue.ofLocal(url);
     }
 
     @Override

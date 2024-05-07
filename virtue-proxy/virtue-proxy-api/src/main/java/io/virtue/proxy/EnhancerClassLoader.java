@@ -1,0 +1,163 @@
+/**
+ * Copyright (c) 2008, Nathan Sweet
+ * All rights reserved.
+ * <p>
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ * <p>
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of Esoteric Software nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+ * <p>
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.virtue.proxy;
+
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
+import java.util.HashSet;
+import java.util.WeakHashMap;
+
+public class EnhancerClassLoader extends ClassLoader {
+    // Weak-references to class loaders, to avoid perm gen memory leaks, for example in app servers/web containters if the
+    // reflectasm library (including this class) is loaded outside the deployed applications (WAR/EAR) using ReflectASM/Kryo (exts,
+    // user classpath, etc).
+    // The key is the parent class loader and the value is the AccessClassLoader, both are weak-referenced in the hash table.
+    static private final WeakHashMap<ClassLoader, WeakReference<EnhancerClassLoader>> accessClassLoaders = new WeakHashMap<>();
+
+    // Fast-path for classes loaded in the same ClassLoader as this class.
+    static private final ClassLoader selfContextParentClassLoader = getParentClassLoader(EnhancerClassLoader.class);
+    static private volatile EnhancerClassLoader selfContextAccessClassLoader = new EnhancerClassLoader(selfContextParentClassLoader);
+
+    static private volatile Method defineClassMethod;
+
+    private final HashSet<String> localClassNames = new HashSet<>();
+
+    private EnhancerClassLoader(ClassLoader parent) {
+        super(parent);
+    }
+
+    // As per JLS, section 5.3,
+    // "The runtime package of a class or interface is determined by the package name and defining class loader of the class or
+    // interface."
+    static boolean areInSameRuntimeClassLoader(Class<?> type1, Class<?> type2) {
+        if (type1.getPackage() != type2.getPackage()) {
+            return false;
+        }
+        ClassLoader loader1 = type1.getClassLoader();
+        ClassLoader loader2 = type2.getClassLoader();
+        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+        if (loader1 == null) {
+            return (loader2 == null || loader2 == systemClassLoader);
+        }
+        if (loader2 == null) return loader1 == systemClassLoader;
+        return loader1 == loader2;
+    }
+
+    private static ClassLoader getParentClassLoader(Class<?> type) {
+        ClassLoader parent = type.getClassLoader();
+        if (parent == null) parent = ClassLoader.getSystemClassLoader();
+        return parent;
+    }
+
+    private static Method getDefineClassMethod() throws Exception {
+        if (defineClassMethod == null) {
+            synchronized (accessClassLoaders) {
+                if (defineClassMethod == null) {
+                    defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass",
+                            String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
+                    try {
+                        defineClassMethod.setAccessible(true);
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        }
+        return defineClassMethod;
+    }
+
+    public static EnhancerClassLoader get(Class<?> type) {
+        ClassLoader parent = getParentClassLoader(type);
+        // 1. fast-path:
+        if (selfContextParentClassLoader.equals(parent)) {
+            if (selfContextAccessClassLoader == null) {
+                synchronized (accessClassLoaders) { // DCL with volatile semantics
+                    if (selfContextAccessClassLoader == null)
+                        selfContextAccessClassLoader = new EnhancerClassLoader(selfContextParentClassLoader);
+                }
+            }
+            return selfContextAccessClassLoader;
+        }
+        // 2. normal search:
+        synchronized (accessClassLoaders) {
+            WeakReference<EnhancerClassLoader> ref = accessClassLoaders.get(parent);
+            if (ref != null) {
+                EnhancerClassLoader accessClassLoader = ref.get();
+                if (accessClassLoader != null)
+                    return accessClassLoader;
+                else
+                    accessClassLoaders.remove(parent); // the value has been GC-reclaimed, but still not the key (defensive sanity)
+            }
+            EnhancerClassLoader accessClassLoader = new EnhancerClassLoader(parent);
+            accessClassLoaders.put(parent, new WeakReference<>(accessClassLoader));
+            return accessClassLoader;
+        }
+    }
+
+    public static void remove(ClassLoader parent) {
+        // 1. fast-path:
+        if (selfContextParentClassLoader.equals(parent)) {
+            selfContextAccessClassLoader = null;
+        } else {
+            // 2. normal search:
+            synchronized (accessClassLoaders) {
+                accessClassLoaders.remove(parent);
+            }
+        }
+    }
+
+    public static int activeAccessClassLoaders() {
+        int sz = accessClassLoaders.size();
+        if (selfContextAccessClassLoader != null) sz++;
+        return sz;
+    }
+
+    /**
+     * Returns null if the access class has not yet been defined.
+     */
+    public Class<?> loadAccessClass(String name) {
+        // No need to check the parent class loader if the access class hasn't been defined yet.
+        if (localClassNames.contains(name)) {
+            try {
+                return loadClass(name, false);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex); // Should not happen, since we know the class has been defined.
+            }
+        }
+        return null;
+    }
+
+    public Class<?> defineAccessClass(String name, byte[] bytes) throws ClassFormatError {
+        localClassNames.add(name);
+        return defineClass(name, bytes);
+    }
+
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        // These classes come from the classloader that loaded AccessClassLoader.
+        if (name.equals(Enhancer.class.getName())) return Enhancer.class;
+        // All other classes come from the classloader that loaded the type we are accessing.
+        return super.loadClass(name, resolve);
+    }
+
+    public Class<?> defineClass(String name, byte[] bytes) throws ClassFormatError {
+        try {
+            // Attempt to load the access class in the same loader, which makes protected and default access members accessible.
+            return (Class<?>) getDefineClassMethod().invoke(getParent(),
+                    new Object[]{name, bytes, 0, bytes.length, getClass().getProtectionDomain()});
+        } catch (Exception ignored) {
+            // continue with the definition in the current loader (won't have access to protected and package-protected members)
+        }
+        return defineClass(name, bytes, 0, bytes.length, getClass().getProtectionDomain());
+    }
+}

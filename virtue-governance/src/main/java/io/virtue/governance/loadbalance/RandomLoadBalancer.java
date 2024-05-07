@@ -1,6 +1,6 @@
 package io.virtue.governance.loadbalance;
 
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
- * Receive request event and invoke the service.
+ * Receive request support and reflect the service.
  */
 public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
 

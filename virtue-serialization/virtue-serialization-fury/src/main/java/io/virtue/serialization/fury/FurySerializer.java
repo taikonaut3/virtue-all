@@ -3,7 +3,7 @@ package io.virtue.serialization.fury;
 import io.fury.Fury;
 import io.fury.ThreadSafeFury;
 import io.fury.config.Language;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
 import java.lang.reflect.Type;

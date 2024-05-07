@@ -4,6 +4,7 @@ import io.virtue.common.constant.Components;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.Options;
 import io.virtue.core.annotation.RemoteCaller;
+import io.virtue.rpc.h1.config.HttpCall;
 import io.virtue.rpc.h1.parse.Body;
 import io.virtue.rpc.h2.config.Http2Call;
 import io.virtue.rpc.virtue.config.VirtueCall;
@@ -70,5 +71,13 @@ public interface Consumer {
                                  @QueryParam("ccc") String ccc,
                                  @BeanParam MyBean myBean,
                                  @Body List<ParentObject> list);
+
+    @Options(timeout = 600000)
+    @Http2Call(path = "/http2Test", ssl = false)
+    List<ParentObject> http2Test(@Body List<ParentObject> list);
+
+    @HttpCall(path = "httpTest")
+    @Options(timeout = 600000,url = "127.0.0.1:8085")
+    List<ParentObject> httpTest(@Body List<ParentObject> list);
 
 }

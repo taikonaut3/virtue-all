@@ -2,7 +2,8 @@ package io.virtue.rpc.protocol;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ResourceException;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.LoadedListener;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.DateUtil;
 import io.virtue.core.Callee;
@@ -40,7 +41,7 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 @Accessors(fluent = true)
 public abstract class AbstractProtocol<Req, Resp> implements Protocol {
 
-    protected static final String SERVER_INVOKE_EXCEPTION = "Server invoke exception: ";
+    protected static final String SERVER_INVOKE_EXCEPTION = "Server reflect exception: ";
 
     protected static final String SERVER_EXCEPTION = "Server exception: ";
 
@@ -73,7 +74,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
     }
 
     /**
-     * Set virtue by {@link io.virtue.common.spi.LoadedListener}.
+     * Set virtue by {@link LoadedListener}.
      *
      * @param virtue
      */
@@ -158,7 +159,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
         Virtue virtue = Virtue.ofServer(url);
         Callee<?> callee = virtue.configManager().remoteServiceManager().getCallee(url);
         if (callee == null) {
-            throw new ResourceException("Can't find ProviderCaller[" + url.path() + "]");
+            throw new ResourceException("Can't find Callee[" + url.path() + "]");
         }
         Req message;
         try {

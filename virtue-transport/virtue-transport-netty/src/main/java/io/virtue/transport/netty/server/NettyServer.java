@@ -16,7 +16,7 @@ import io.virtue.common.url.URL;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyChannel;
-import io.virtue.transport.netty.ProtocolInitializer;
+import io.virtue.transport.netty.ProtocolAdapter;
 import io.virtue.transport.server.AbstractServer;
 
 /**
@@ -47,7 +47,7 @@ public class NettyServer extends AbstractServer {
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childHandler(ProtocolInitializer.forServer(url, handler, codec));
+                .childHandler(ProtocolAdapter.forServerChannelInitializer(url, handler, codec));
     }
 
     @Override

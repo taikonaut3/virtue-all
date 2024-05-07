@@ -1,6 +1,6 @@
 package io.virtue.serialization.jdk;
 
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
 import java.io.ByteArrayInputStream;

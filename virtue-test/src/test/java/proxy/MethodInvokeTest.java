@@ -1,7 +1,7 @@
 package proxy;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.proxy.ProxyFactory;
 import org.junit.jupiter.api.Test;
 
@@ -75,6 +75,7 @@ public class MethodInvokeTest {
         ProxyFactory cglib = ExtensionLoader.loadExtension(ProxyFactory.class, "cglib");
         Cat cat = byteBuddy.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
         Cat cat1 = cglib.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
+        cat.eat("aaaa");
         System.out.println(cat);
     }
 }

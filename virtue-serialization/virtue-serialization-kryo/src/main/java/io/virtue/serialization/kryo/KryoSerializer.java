@@ -3,7 +3,7 @@ package io.virtue.serialization.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
 import java.lang.reflect.Type;

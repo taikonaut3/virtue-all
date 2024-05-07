@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
- * Responsible for handling the response event.
+ * Responsible for handling the response support.
  */
 public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> {
 

@@ -1,6 +1,6 @@
 package io.github.taikonaut3;
 
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
 import io.virtue.serialization.Serializer;

@@ -12,10 +12,11 @@ import io.virtue.transport.Request;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.channel.ChannelHandlerAdapter;
 import io.virtue.transport.http.HttpMethod;
-import io.virtue.transport.http.h2.Http2Request;
-import io.virtue.transport.http.h2.Http2Response;
-import io.virtue.transport.http.h2.Http2Transporter;
-import io.virtue.transport.netty.http.h2.NettyHttp2Transporter;
+import io.virtue.transport.http.HttpTransporter;
+import io.virtue.transport.http.HttpVersion;
+import io.virtue.transport.http.h1.HttpRequest;
+import io.virtue.transport.http.h1.HttpResponse;
+import io.virtue.transport.netty.http.NettyHttpTransporter;
 import io.virtue.transport.netty.http.h2.client.Http2Client;
 import io.virtue.transport.server.Server;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class Http2Test {
 
     @Test
     public void startServer() throws IOException {
-        Http2Transporter transporter = new NettyHttp2Transporter();
+        HttpTransporter transporter = new NettyHttpTransporter();
 
         URL url = new ServerConfig("http2", 8082).toUrl();
         url.addParam(Key.SSL, "true");
@@ -44,14 +45,14 @@ public class Http2Test {
             @Override
             public void received(Channel channel, Object message) throws RpcException {
                 super.received(channel, message);
-                if (message instanceof Request request && request.message() instanceof Http2Request streamEnvelope) {
+                if (message instanceof Request request && request.message() instanceof HttpRequest streamEnvelope) {
                     ByteBuf data = unreleasableBuffer(copiedBuffer("Server Hello World ", CharsetUtil.UTF_8)).asReadOnly();
                     byte[] bytes = new byte[data.readableBytes()];
                     data.readBytes(bytes);
                     HashMap<CharSequence, CharSequence> headers = new HashMap<>();
                     headers.put("zzz", "123");
                     streamEnvelope.url().set(HttpMethod.ATTRIBUTE_KEY, streamEnvelope.method());
-                    Http2Response http2Response = transporter.newResponse(200, streamEnvelope.url(), headers, bytes);
+                    HttpResponse httpResponse = transporter.newResponse(HttpVersion.HTTP_2_0, streamEnvelope.url(), 200, headers, bytes);
                 }
             }
         };

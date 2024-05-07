@@ -1,16 +1,18 @@
 package io.virtue.proxy.jdk;
 
-import io.virtue.common.constant.Components;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.proxy.AbstractProxyFactory;
+import io.virtue.proxy.Enhancer;
 import io.virtue.proxy.InvocationHandler;
 
 import java.lang.reflect.Proxy;
 
+import static io.virtue.common.constant.Components.ProxyFactory.JDK;
+
 /**
  * Create Proxy By JDK.
  */
-@Extension(Components.ProxyFactory.JDK)
+@Extension(JDK)
 public class JDKProxyFactory extends AbstractProxyFactory {
 
     @Override
@@ -31,6 +33,11 @@ public class JDKProxyFactory extends AbstractProxyFactory {
                 target.getClass().getInterfaces(),
                 new JDKInvocationHandler(target, handler)
         );
+    }
+
+    @Override
+    protected <T> Enhancer<T> createEnhancer(Class<T> type) {
+        throw new UnsupportedOperationException("Un support");
     }
 
 }

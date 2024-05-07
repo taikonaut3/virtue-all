@@ -5,7 +5,7 @@ import io.virtue.common.constant.Constant;
 import java.lang.annotation.*;
 
 /**
- * Client invoke parameter configuration.
+ * Client reflect parameter configuration.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

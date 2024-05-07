@@ -4,7 +4,7 @@ import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.RpcContext;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;

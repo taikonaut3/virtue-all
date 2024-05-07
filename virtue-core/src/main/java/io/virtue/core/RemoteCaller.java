@@ -49,7 +49,7 @@ public interface RemoteCaller<T> extends InvokerContainer {
     T fallBacker();
 
     /**
-     * If Rpc call failed,then invoke fallBacker.
+     * If Rpc call failed,then reflect fallBacker.
      *
      * @param invocation
      * @return

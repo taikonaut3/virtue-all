@@ -26,6 +26,13 @@ public class ConsumerController {
 
     @GetMapping("http2list")
     public List<ParentObject> http2list() {
+        //List<ParentObject> list = consumer.http2Test(ParentObject.getObjList());
         return consumer.http2Test("12", "dasdasdasdsadas", "456", new MyBean(), ParentObject.getObjList());
+    }
+
+    @GetMapping("httplist")
+    public List<ParentObject> httplist() {
+        //List<ParentObject> list = consumer.http2Test(ParentObject.getObjList());
+        return consumer.httpTest(ParentObject.getObjList());
     }
 }

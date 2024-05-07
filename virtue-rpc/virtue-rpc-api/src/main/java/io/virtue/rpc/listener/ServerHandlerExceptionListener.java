@@ -1,6 +1,6 @@
 package io.virtue.rpc.listener;
 
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.event.EventListener;
 import io.virtue.rpc.event.ServerHandlerExceptionEvent;

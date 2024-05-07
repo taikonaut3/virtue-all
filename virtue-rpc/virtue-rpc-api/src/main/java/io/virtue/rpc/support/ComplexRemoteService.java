@@ -1,7 +1,7 @@
 package io.virtue.rpc.support;
 
-import com.esotericsoftware.reflectasm.MethodAccess;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.rpc.support.reflect.MethodAccess;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.ReflectionUtil;

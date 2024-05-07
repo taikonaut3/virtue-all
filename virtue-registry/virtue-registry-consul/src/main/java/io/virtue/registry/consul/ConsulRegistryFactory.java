@@ -1,15 +1,16 @@
 package io.virtue.registry.consul;
 
-import io.virtue.common.constant.Components;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.registry.AbstractRegistryFactory;
 import io.virtue.registry.RegistryService;
 
+import static io.virtue.common.constant.Components.Registry.CONSUL;
+
 /**
  * Consul RegistryFactory.
  */
-@Extension(Components.Registry.CONSUL)
+@Extension(CONSUL)
 public class ConsulRegistryFactory extends AbstractRegistryFactory {
 
     @Override

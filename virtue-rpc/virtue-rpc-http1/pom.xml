@@ -21,11 +21,6 @@
             <artifactId>jakarta.ws.rs-api</artifactId>
             <version>3.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http2</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 </project>

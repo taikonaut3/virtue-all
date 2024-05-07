@@ -1,6 +1,6 @@
 package io.virtue.rpc.protocol;
 
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
 import io.virtue.core.ProtocolAdapter;

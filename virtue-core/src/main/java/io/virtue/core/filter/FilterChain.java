@@ -1,7 +1,7 @@
 package io.virtue.core.filter;
 
 import io.virtue.common.constant.Components;
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 import io.virtue.core.Invocation;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface FilterChain {
      *
      * @param invocation
      * @param filters    The list of filters to be call
-     * @return invocation.invoke()
+     * @return invocation.reflect()
      */
     Object filter(Invocation invocation, List<Filter> filters);
 

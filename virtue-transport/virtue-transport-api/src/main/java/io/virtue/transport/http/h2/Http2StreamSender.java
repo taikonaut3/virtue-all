@@ -1,8 +1,10 @@
 package io.virtue.transport.http.h2;
 
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 import io.virtue.transport.RpcFuture;
 import io.virtue.transport.channel.Channel;
+import io.virtue.transport.http.h1.HttpRequest;
+import io.virtue.transport.http.h1.HttpResponse;
 
 import static io.virtue.common.constant.Components.Transport.NETTY;
 
@@ -19,7 +21,7 @@ public interface Http2StreamSender {
      * @param future associate http2 stream
      * @param request
      */
-    void send(RpcFuture future, Http2Request request);
+    void send(RpcFuture future, HttpRequest request);
 
     /**
      * Sends http2 response.
@@ -27,5 +29,5 @@ public interface Http2StreamSender {
      * @param channel
      * @param response
      */
-    void send(Channel channel, Http2Response response);
+    void send(Channel channel, HttpResponse response);
 }

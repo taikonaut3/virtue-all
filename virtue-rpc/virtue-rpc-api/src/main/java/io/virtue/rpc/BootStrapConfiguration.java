@@ -1,8 +1,8 @@
 package io.virtue.rpc;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.Extension;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.Extension;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
 import io.virtue.core.Virtue;
@@ -13,6 +13,8 @@ import io.virtue.event.EventDispatcher;
 import io.virtue.event.disruptor.DisruptorEventDispatcher;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
+import io.virtue.registry.support.RegisterServiceEvent;
+import io.virtue.registry.support.RegisterServiceEventListener;
 import io.virtue.rpc.event.*;
 import io.virtue.rpc.listener.*;
 import io.virtue.rpc.protocol.AbstractProtocol;
@@ -60,6 +62,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
         eventDispatcher.addListener(RefreshHeartBeatCountEvent.class, new RefreshHeartBeatCountEventListener());
         eventDispatcher.addListener(IdleEvent.class, new IdleEventListener());
         eventDispatcher.addListener(SendMessageEvent.class, new SendMessageEventListener());
+        eventDispatcher.addListener(RegisterServiceEvent.class, new RegisterServiceEventListener());
     }
 
     @Override

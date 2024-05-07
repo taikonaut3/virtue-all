@@ -1,13 +1,14 @@
 package io.virtue.registry;
 
-import io.virtue.common.constant.Components;
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.ServiceFactory;
+
+import static io.virtue.common.constant.Components.Registry.CONSUL;
 
 /**
  * Represents a registry factory for creating registry instances.
  */
-@Extensible(Components.Registry.CONSUL)
+@Extensible(CONSUL)
 public interface RegistryFactory extends ServiceFactory<RegistryService> {
 
 }

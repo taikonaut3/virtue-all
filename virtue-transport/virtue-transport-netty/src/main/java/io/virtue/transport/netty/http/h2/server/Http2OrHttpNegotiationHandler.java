@@ -25,7 +25,7 @@ import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
-import io.virtue.transport.netty.NettyIdeStateHandler;
+import io.virtue.transport.netty.NettyIdleStateHandler;
 
 /**
  * Negotiates with the browser if HTTP2 or HTTP is going to be used. Once decided, the Netty
@@ -34,10 +34,10 @@ import io.virtue.transport.netty.NettyIdeStateHandler;
 public class Http2OrHttpNegotiationHandler extends ApplicationProtocolNegotiationHandler {
 
     private final URL url;
-    private final NettyIdeStateHandler idleStateHandler;
+    private final NettyIdleStateHandler idleStateHandler;
     private final ChannelHandler handler;
 
-    protected Http2OrHttpNegotiationHandler(URL url, NettyIdeStateHandler idleStateHandler, ChannelHandler handler) {
+    protected Http2OrHttpNegotiationHandler(URL url, NettyIdleStateHandler idleStateHandler, ChannelHandler handler) {
         super(ApplicationProtocolNames.HTTP_1_1);
         this.url = url;
         this.idleStateHandler = idleStateHandler;
@@ -55,9 +55,10 @@ public class Http2OrHttpNegotiationHandler extends ApplicationProtocolNegotiatio
         } else if (ApplicationProtocolNames.HTTP_1_1.equals(protocol)) {
             int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);
             ctx.pipeline()
+                    .addLast(idleStateHandler)
+                    .addLast(idleStateHandler.handler())
                     .addLast(new HttpServerCodec())
                     .addLast(new HttpObjectAggregator(maxReceiveSize))
-                    .addLast(idleStateHandler)
                     .addLast(handler);
         } else {
             throw new IllegalStateException("unknown protocol: " + protocol);

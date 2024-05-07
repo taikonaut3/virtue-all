@@ -1,1 +1,1 @@
-io.virtue.common.spi.ExtensionAnnotationProcessor
+io.virtue.common.extension.spi.ExtensionAnnotationProcessor

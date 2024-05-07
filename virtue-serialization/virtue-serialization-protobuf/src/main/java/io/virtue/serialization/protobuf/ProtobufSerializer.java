@@ -1,7 +1,7 @@
 package io.virtue.serialization.protobuf;
 
 import com.google.protobuf.MessageLite;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 
 import java.lang.reflect.Method;

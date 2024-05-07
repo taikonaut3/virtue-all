@@ -1,6 +1,7 @@
 package io.virtue.core.annotation;
 
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extensible;
+import io.virtue.common.extension.spi.Extension;
 
 import java.lang.annotation.*;
 
@@ -14,7 +15,7 @@ import java.lang.annotation.*;
 public @interface Protocol {
 
     /**
-     * {@link io.virtue.rpc.protocol.Protocol}‘s {@link io.virtue.common.spi.Extensible#value()}.
+     * {@link io.virtue.rpc.protocol.Protocol}‘s {@link Extensible#value()}.
      *
      * @return {@link Extension#value()}
      */

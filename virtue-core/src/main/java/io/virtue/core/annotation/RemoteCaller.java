@@ -31,7 +31,7 @@ public @interface RemoteCaller {
     boolean lazyDiscover() default false;
 
     /**
-     * If Rpc call failed, then invoke fallBacker.
+     * If Rpc call failed, then reflect fallBacker.
      *
      * @return
      */

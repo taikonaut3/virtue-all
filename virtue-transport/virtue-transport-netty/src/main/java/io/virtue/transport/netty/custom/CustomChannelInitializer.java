@@ -5,7 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.virtue.common.url.URL;
 import io.virtue.transport.codec.Codec;
-import io.virtue.transport.netty.NettyIdeStateHandler;
+import io.virtue.transport.netty.NettyIdleStateHandler;
 
 /**
  * Initializes the channel of Netty for Custom Codec.
@@ -30,8 +30,8 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         NettyCustomCodec nettyCustomCodec = new NettyCustomCodec(url, codec, isServer);
-        NettyIdeStateHandler idleStateHandler = isServer ? NettyIdeStateHandler.createForServer(url)
-                : NettyIdeStateHandler.createForClient(url);
+        NettyIdleStateHandler idleStateHandler = isServer ? NettyIdleStateHandler.createForServer(url)
+                : NettyIdleStateHandler.createForClient(url);
         socketChannel.pipeline()
                 .addLast("decoder", nettyCustomCodec.getDecoder())
                 .addLast("encoder", nettyCustomCodec.getEncoder())

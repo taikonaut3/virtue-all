@@ -16,8 +16,9 @@ public final class ServerChannelHandler extends ChannelHandlerAdapter {
 
     @Override
     public void received(Channel channel, Object message) {
+        URL url = channel.get(URL.ATTRIBUTE_KEY);
         if (message instanceof Request request) {
-            Virtue.ofServer(request.url())
+            Virtue.ofLocal(url)
                     .eventDispatcher()
                     .dispatch(new RequestEvent(request, channel));
         }
@@ -27,7 +28,7 @@ public final class ServerChannelHandler extends ChannelHandlerAdapter {
     public void caught(Channel channel, Throwable cause) throws RpcException {
         URL url = channel.get(URL.ATTRIBUTE_KEY);
         if (url != null) {
-            Virtue.ofServer(url)
+            Virtue.ofLocal(url)
                     .eventDispatcher()
                     .dispatch(new ServerHandlerExceptionEvent(channel, cause));
         }

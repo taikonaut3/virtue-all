@@ -3,7 +3,7 @@ package io.virtue.serialization.json;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.virtue.common.exception.ConversionException;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.serialization.AbstractSerializer;
 import lombok.Getter;
 

@@ -13,11 +13,14 @@ import io.netty.util.ReferenceCountUtil;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ResourceException;
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
-import io.virtue.transport.netty.NettyIdeStateHandler;
+import io.virtue.transport.netty.NettyIdleStateHandler;
 import io.virtue.transport.netty.http.h1.server.HttpServerMessageConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.SSLException;
 
 import static io.virtue.transport.netty.http.h2.Util.getSslBytes;
 import static io.virtue.transport.netty.http.h2.Util.readBytes;
@@ -34,8 +37,9 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
     private static final byte[] SERVER_KEY_BYTES;
     private final URL url;
     private final ChannelHandler handler;
-    private final NettyIdeStateHandler idleStateHandler;
+    private final NettyIdleStateHandler idleStateHandler;
     private final HttpServerUpgradeHandler.UpgradeCodecFactory upgradeCodecFactory;
+    private final SslContext sslContext;
 
     static {
         try {
@@ -50,8 +54,9 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
     public Http2ServerChannelInitializer(URL url, ChannelHandler handler) {
         this.url = url;
         this.handler = handler;
-        idleStateHandler = NettyIdeStateHandler.createForServer(url);
-        upgradeCodecFactory = protocol -> {
+        this.idleStateHandler = NettyIdleStateHandler.createForServer(url);
+        this.sslContext = sslContext();
+        this.upgradeCodecFactory = protocol -> {
             if (AsciiString.contentEquals(Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME, protocol)) {
                 return new Http2ServerUpgradeCodec(
                         Http2FrameCodecBuilder.forServer().build(),
@@ -65,7 +70,6 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        SslContext sslContext = getSslContext();
         if (sslContext != null) {
             configureSsl(sslContext, socketChannel);
         } else {
@@ -81,7 +85,9 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
      * @param ch
      */
     private void configureSsl(SslContext sslCtx, SocketChannel ch) {
-        ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()), new Http2OrHttpNegotiationHandler(url, idleStateHandler, handler));
+        ch.pipeline()
+                .addLast(sslCtx.newHandler(ch.alloc()))
+                .addLast(new Http2OrHttpNegotiationHandler(url, idleStateHandler, handler));
     }
 
     /**
@@ -99,41 +105,55 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
                 .addLast(new Http2ToHttpHandler());
     }
 
-    private SslContext getSslContext() throws Exception {
+    private SslContext sslContext() {
         boolean ssl = sslEnabled(url);
         SslContext sslContext = null;
         if (ssl) {
             SslProvider provider = SslProvider.isAlpnSupported(SslProvider.OPENSSL) ? SslProvider.OPENSSL : SslProvider.JDK;
             //SelfSignedCertificate ssc = new SelfSignedCertificate();
-            sslContext = SslContextBuilder.forServer(readBytes(SERVER_CERT_BYTES), readBytes(SERVER_KEY_BYTES))
-                    .sslProvider(provider)
-                    /* NOTE: the cipher filter may not include all ciphers required by the HTTP/2 specification.
-                     * Please refer to the HTTP/2 specification for cipher requirements. */
-                    .ciphers(Http2SecurityUtil.CIPHERS, SupportedCipherSuiteFilter.INSTANCE)
-                    .trustManager(readBytes(CA_BYTES))
-                    .applicationProtocolConfig(
-                            new ApplicationProtocolConfig(
-                                    ApplicationProtocolConfig.Protocol.ALPN,
-                                    // NO_ADVERTISE is currently the only mode supported by both OpenSsl and JDK providers.
-                                    ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
-                                    // ACCEPT is currently the only mode supported by both OpenSsl and JDK providers.
-                                    ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
-                                    ApplicationProtocolNames.HTTP_2,
-                                    ApplicationProtocolNames.HTTP_1_1)
-                    ).build();
+            try {
+                sslContext = SslContextBuilder.forServer(readBytes(SERVER_CERT_BYTES), readBytes(SERVER_KEY_BYTES))
+                        .sslProvider(provider)
+                        /* NOTE: the cipher filter may not include all ciphers required by the HTTP/2 specification.
+                         * Please refer to the HTTP/2 specification for cipher requirements. */
+                        .ciphers(Http2SecurityUtil.CIPHERS, SupportedCipherSuiteFilter.INSTANCE)
+                        .trustManager(readBytes(CA_BYTES))
+                        .applicationProtocolConfig(
+                                new ApplicationProtocolConfig(
+                                        ApplicationProtocolConfig.Protocol.ALPN,
+                                        // NO_ADVERTISE is currently the only mode supported by both OpenSsl and JDK providers.
+                                        ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+                                        // ACCEPT is currently the only mode supported by both OpenSsl and JDK providers.
+                                        ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
+                                        ApplicationProtocolNames.HTTP_2,
+                                        ApplicationProtocolNames.HTTP_1_1)
+                        ).build();
+            } catch (SSLException e) {
+                throw RpcException.unwrap(e);
+            }
         }
         return sslContext;
     }
 
     class Http2ToHttpHandler extends SimpleChannelInboundHandler<HttpMessage> {
+
+        private final ChannelHandler requestHandler;
+        private final ChannelHandler httpObjectAggregator;
+
+         Http2ToHttpHandler() {
+            int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);
+            httpObjectAggregator = new HttpObjectAggregator(maxReceiveSize);
+            requestHandler = new HttpServerMessageConverter(url).requestConverter();
+        }
+
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, HttpMessage msg) throws Exception {
             // If this handler is hit then no upgrade has been attempted and the client is just talking HTTP.
             logger.error("Directly talking: " + msg.protocolVersion() + " (no upgrade was attempted)");
             ChannelPipeline pipeline = ctx.pipeline();
-            int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);
-            pipeline.addAfter(ctx.name(), null, new HttpServerMessageConverter().requestConverter());
-            pipeline.replace(this, null, new HttpObjectAggregator(maxReceiveSize));
+            pipeline.addAfter(ctx.name(), "requestConverter", requestHandler)
+                    .addAfter("requestConverter", "handler", handler);
+            pipeline.replace(this, null, httpObjectAggregator);
             ctx.fireChannelRead(ReferenceCountUtil.retain(msg));
         }
     }

@@ -3,7 +3,7 @@ package io.virtue.transport;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.extension.AttributeKey;
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.Client;

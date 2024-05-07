@@ -3,7 +3,7 @@ package io.virtue.rpc.virtue;
 import io.virtue.common.constant.Components;
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.CodecException;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.bytes.ByteReader;
 import io.virtue.common.util.bytes.ByteWriter;

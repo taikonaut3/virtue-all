@@ -1,7 +1,7 @@
 package io.virtue.transport.compress;
 
 import io.virtue.common.exception.CompressionException;
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 
 import static io.virtue.common.constant.Components.Compression.GZIP;
 

@@ -1,7 +1,7 @@
 package io.virtue.rpc.support;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.AssertUtil;

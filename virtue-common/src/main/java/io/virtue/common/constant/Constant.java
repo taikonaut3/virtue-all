@@ -7,11 +7,9 @@ import static io.virtue.common.constant.Components.*;
  */
 public interface Constant {
 
-    String VERSION = "0.0.8-alpha";
+    String EXTENSIBLE_NAME = "io.virtue.common.extension.spi.Extensible";
 
-    String EXTENSIBLE_NAME = "io.virtue.common.spi.Extensible";
-
-    String EXTENSION_NAME = "io.virtue.common.spi.Extension";
+    String EXTENSION_NAME = "io.virtue.common.extension.spi.Extension";
 
     int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
 
@@ -94,4 +92,5 @@ public interface Constant {
     String MULTIPLEX_PREFIX = "multiplex_";
 
     String DEFAULT_COMPRESSION = Compression.GZIP;
+
 }

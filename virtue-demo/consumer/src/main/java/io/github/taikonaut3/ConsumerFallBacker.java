@@ -71,4 +71,14 @@ public class ConsumerFallBacker implements Consumer {
         return null;
     }
 
+    @Override
+    public List<ParentObject> http2Test(List<ParentObject> list) {
+        return null;
+    }
+
+    @Override
+    public List<ParentObject> httpTest(List<ParentObject> list) {
+        return null;
+    }
+
 }

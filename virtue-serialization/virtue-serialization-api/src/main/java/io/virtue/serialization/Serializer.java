@@ -1,7 +1,7 @@
 package io.virtue.serialization;
 
 import io.virtue.common.exception.SerializationException;
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 
 import java.lang.reflect.Type;
 

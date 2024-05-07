@@ -1,18 +1,16 @@
 package io.github.taikonaut3;
 
-import io.netty.channel.Channel;
 import io.virtue.boot.EnableVirtue;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
-import io.virtue.transport.netty.NettyChannel;
+import io.virtue.proxy.ProxyFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-
-import java.util.concurrent.ConcurrentMap;
 
 import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 import static io.virtue.common.constant.Components.Registry.CONSUL;
@@ -20,13 +18,13 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 @SpringBootApplication
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")
 public class ProviderMain {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
+        ProxyFactory proxyFactory = ExtensionLoader.loadExtension(ProxyFactory.class, "byteBuddy");
+        Provider provider = proxyFactory.createProxy(new Provider(), (proxy, method, args1, superInvoker) -> superInvoker.invoke());
+        System.out.println(provider);
         ConfigurableApplicationContext context = SpringApplication.run(ProviderMain.class, args);
-
-        Thread.sleep(6000);
-        ConcurrentMap<Channel, NettyChannel> channelMap = NettyChannel.CHANNEL_MAP;
-        Virtue virtue = context.getBean(Virtue.class);
-
+        provider.hello("world");
+        System.in.read();
         //simpleTest();
     }
 
@@ -61,6 +59,11 @@ public class ProviderMain {
     @Bean
     public ServerConfig h2cServerConfig() {
         return new ServerConfig("h2", 8083);
+    }
+
+    @Bean
+    public ServerConfig httpServerConfig() {
+        return new ServerConfig("http", 8085);
     }
 
     @Bean

@@ -1,7 +1,7 @@
 package io.virtue.event.flow;
 
 import io.virtue.common.constant.Components;
-import io.virtue.common.spi.Extension;
+import io.virtue.common.extension.spi.Extension;
 import io.virtue.event.AbstractEventDispatcher;
 import io.virtue.event.Event;
 import io.virtue.event.EventDispatcher;

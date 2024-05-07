@@ -1,8 +1,8 @@
 package io.virtue.rpc.virtue;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.spi.Extension;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.Extension;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.*;
 import io.virtue.rpc.protocol.AbstractProtocol;

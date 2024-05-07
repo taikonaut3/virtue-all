@@ -1,7 +1,6 @@
 package io.virtue.rpc.support;
 
-import com.esotericsoftware.reflectasm.MethodAccess;
-import io.virtue.common.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.NetUtil;
 import io.virtue.common.util.ReflectionUtil;
@@ -13,6 +12,7 @@ import io.virtue.core.annotation.Protocol;
 import io.virtue.proxy.InvocationHandler;
 import io.virtue.proxy.ProxyFactory;
 import io.virtue.proxy.SuperInvoker;
+import io.virtue.rpc.support.reflect.MethodAccess;
 import lombok.ToString;
 
 import java.lang.reflect.Method;
@@ -37,7 +37,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
     private InetSocketAddress directAddress;
 
-    private FallBackerWrapper<T> fallBackerWrapper;
+    private FallBackerWrapper fallBackerWrapper;
 
     public ComplexRemoteCaller(Virtue virtue, Class<T> target) {
         super(virtue);
@@ -79,7 +79,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
     @Override
     public void fallBacker(T fallBacker) {
-        this.fallBackerWrapper = new FallBackerWrapper<>(fallBacker);
+        this.fallBackerWrapper = new FallBackerWrapper(fallBacker);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
     }
 
     /**
-     * Client InvocationHandler,Rpc caller invoke.
+     * Client InvocationHandler,Rpc caller reflect.
      */
     static class ClientInvocationHandler implements InvocationHandler {
 
@@ -146,7 +146,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
     }
 
-    static class FallBackerWrapper<T> {
+    class FallBackerWrapper {
         private final T fallBacker;
 
         private final MethodAccess methodAccess;
@@ -158,8 +158,7 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
         Object invoke(Invocation invocation) {
             Method method = invocation.invoker().method();
-            int index = methodAccess.getIndex(method.getName(), method.getParameterTypes());
-            return methodAccess.invoke(fallBacker, index, invocation.args());
+            return methodAccess.invoke(fallBacker, method.getName(), method.getParameterTypes(), invocation.args());
         }
     }
 }

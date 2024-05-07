@@ -1,6 +1,5 @@
 package io.virtue.rpc.h2;
 
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
@@ -14,6 +13,7 @@ import java.lang.reflect.Method;
 
 import static io.virtue.common.constant.Components.Protocol.*;
 import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
+import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 
 /**
  * Http2 protocol caller.
@@ -38,6 +38,6 @@ public class Http2Caller extends AbstractHttpCaller<Http2Call> {
         ssl = parsedAnnotation.ssl();
         protocol(ssl ? H2 : H2C);
         addRequestHeaders(parseHeaders(parsedAnnotation.headers()));
-        addRequestHeader(HttpHeaderNames.CONTENT_TYPE, parsedAnnotation.contentType());
+        addRequestHeader(CONTENT_TYPE, parsedAnnotation.contentType());
     }
 }

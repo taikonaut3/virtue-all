@@ -1,6 +1,6 @@
 package io.virtue.proxy;
 
-import io.virtue.common.spi.Extensible;
+import io.virtue.common.extension.spi.Extensible;
 
 import static io.virtue.common.constant.Components.ProxyFactory.JDK;
 
@@ -29,5 +29,9 @@ public interface ProxyFactory {
      * @return a new proxy object that wraps the specified target object
      */
     <T> T createProxy(T target, InvocationHandler handler);
+
+    default <T> Enhancer<T> getEnHancer(Class<T> type) {
+        return null;
+    }
 
 }

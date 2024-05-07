@@ -1,41 +1,35 @@
 package io.virtue.transport.netty.http.h2.server;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http2.Http2DataFrame;
 import io.netty.handler.codec.http2.Http2HeadersFrame;
-import io.netty.handler.codec.http2.Http2StreamChannel;
 import io.virtue.common.url.URL;
-import io.virtue.core.Virtue;
 import io.virtue.transport.Request;
+import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.netty.NettyChannel;
-import io.virtue.transport.netty.http.h2.envelope.NettyHttp2Headers;
-import io.virtue.transport.netty.http.h2.envelope.NettyHttp2Request;
-import io.virtue.transport.netty.http.h2.envelope.StreamEnvelope;
+import io.virtue.transport.netty.http.NettyHttpRequest;
+import io.virtue.transport.netty.http.h2.NettyHttp2Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.netty.channel.ChannelHandler.Sharable;
-import static io.virtue.transport.netty.http.h2.Util.getStreamEnvelope;
-import static io.virtue.transport.netty.http.h2.Util.removeStreamEnvelope;
+import static io.virtue.transport.netty.http.h2.Util.currentStream;
+import static io.virtue.transport.netty.http.h2.Util.removeCurrentStream;
 
 /**
- * Http5 Server Handler.
+ * Http2 Server Handler.
  */
 @Sharable
 public final class Http2ServerHandler extends ChannelDuplexHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(Http2ServerHandler.class);
     private final URL url;
-
-    private final Virtue virtue;
     private final ChannelHandler handler;
 
     Http2ServerHandler(URL url, ChannelHandler handler) {
         this.url = url;
-        this.virtue = Virtue.ofServer(url);
         this.handler = handler;
     }
 
@@ -46,8 +40,6 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        Http2StreamChannel streamChannel = (Http2StreamChannel) ctx.channel();
-        streamChannel.parent();
         if (msg instanceof Http2HeadersFrame) {
             onHeadersRead(ctx, (Http2HeadersFrame) msg);
         } else if (msg instanceof Http2DataFrame) {
@@ -73,16 +65,15 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
      * handle headers frame.
      *
      * @param ctx
-     * @param headers
+     * @param headersFrame
      * @throws Exception
      */
-    private void onHeadersRead(ChannelHandlerContext ctx, Http2HeadersFrame headers) throws Exception {
-        StreamEnvelope streamEnvelope = getStreamEnvelope(ctx, headers.stream().id(), url, true);
-        streamEnvelope.addHeaders(new NettyHttp2Headers(headers.headers()));
-        if (headers.isEndStream()) {
-            streamEnvelope.end();
-            removeStreamEnvelope(ctx, headers.stream().id());
-            fireChannelRead(ctx, streamEnvelope);
+    private void onHeadersRead(ChannelHandlerContext ctx, Http2HeadersFrame headersFrame) throws Exception {
+        var currentStream = currentStream(ctx, headersFrame.stream().id(), url);
+        currentStream.parseHeaderFrame(headersFrame);
+        if (currentStream.endStream()) {
+            removeCurrentStream(ctx, currentStream);
+            fireChannelRead(ctx, currentStream);
         }
     }
 
@@ -90,32 +81,25 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
      * Handle data frame.
      *
      * @param ctx
-     * @param data
+     * @param dataFrame
      * @throws Exception
      */
-    private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame data) throws Exception {
-        StreamEnvelope streamEnvelope = getStreamEnvelope(ctx, data.stream().id(), url, true);
+    private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame dataFrame) throws Exception {
+        var currentStream = currentStream(ctx, dataFrame.stream().id(), url);
         // todo There appears to be a copy of the data twice?
-        ByteBuf byteBuf = data.content();
-        byte[] bytes = new byte[byteBuf.readableBytes()];
-        byteBuf.readBytes(bytes);
-        streamEnvelope.writeData(bytes);
-        if (data.isEndStream()) {
-            streamEnvelope.end();
-            removeStreamEnvelope(ctx, data.stream().id());
-            fireChannelRead(ctx, streamEnvelope);
-        } else {
-            // We do not send back the response to the remote-peer, so we need to release it.
-            data.release();
+        currentStream.parseDataFrame(dataFrame);
+        if (currentStream.endStream()) {
+            removeCurrentStream(ctx, currentStream);
+            fireChannelRead(ctx, currentStream);
         }
     }
 
-    private void fireChannelRead(ChannelHandlerContext ctx, StreamEnvelope message) {
-        URL url = message.url();
+    private void fireChannelRead(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
+        URL url = stream.url();
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         nettyChannel.set(URL.ATTRIBUTE_KEY, url);
-        NettyHttp2Request http2Request = new NettyHttp2Request(message);
-        Request request = new Request(url, http2Request);
+        NettyHttpRequest httpRequest = new NettyHttpRequest(HttpVersion.HTTP_2_0, stream.url(), stream.headers(), stream.data());
+        Request request = new Request(url, httpRequest);
         ctx.fireChannelRead(request);
     }
 }

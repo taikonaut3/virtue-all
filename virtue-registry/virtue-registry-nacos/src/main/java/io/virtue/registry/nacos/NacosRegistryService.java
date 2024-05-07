@@ -9,17 +9,18 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.core.Virtue;
 import io.virtue.registry.AbstractRegistryService;
+import io.virtue.registry.support.RegisterTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
- * Based on nacos-client’s RegistryService.
+ * RegistryService based on nacos-client.
+ * <a href = "https://github.com/alibaba/nacos">nacos</a>
  */
 public class NacosRegistryService extends AbstractRegistryService {
 
@@ -42,6 +43,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             namingService = NamingFactory.createNamingService(url.address());
             String serviceName = serviceName(url);
             if (!StringUtil.isBlank(serviceName)) {
+                // nacos <project.name>
                 System.setProperty("project.name", serviceName);
             }
         } catch (NacosException e) {
@@ -51,15 +53,9 @@ public class NacosRegistryService extends AbstractRegistryService {
     }
 
     @Override
-    public void register(URL url) {
+    public RegisterTask doRegister(URL url) {
         String serviceName = serviceName(url);
-        try {
-            namingService.deregisterInstance(serviceName, url.host(), url.port());
-        } catch (NacosException e) {
-            logger.error("DeregisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
-            throw RpcException.unwrap(e);
-        }
-        Virtue.ofLocal(url).scheduler().addPeriodic(() -> {
+        Consumer<RegisterTask> task = registerTask -> {
             Instance instance = new Instance();
             instance.setInstanceId(instanceId(url));
             instance.setIp(url.host());
@@ -71,8 +67,21 @@ public class NacosRegistryService extends AbstractRegistryService {
                 logger.error("RegisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
                 throw RpcException.unwrap(e);
             }
-        }, 0, 5, TimeUnit.SECONDS);
+        };
+        RegisterTask registerTask = new RegisterTask(task, false);
+        registerTask.run();
+        return registerTask;
+    }
 
+    @Override
+    public void deregister(URL url) {
+        String serviceName = serviceName(url);
+        try {
+            namingService.deregisterInstance(serviceName, url.host(), url.port());
+        } catch (NacosException e) {
+            logger.error("DeregisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
+            throw RpcException.unwrap(e);
+        }
     }
 
     @Override

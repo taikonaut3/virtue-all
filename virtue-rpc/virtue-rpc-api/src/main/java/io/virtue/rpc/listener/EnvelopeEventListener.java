@@ -6,7 +6,7 @@ import io.virtue.event.EventListener;
 import java.util.concurrent.Executor;
 
 /**
- * Abstract envelope event listener.
+ * Abstract envelope support listener.
  *
  * @param <T>
  */
