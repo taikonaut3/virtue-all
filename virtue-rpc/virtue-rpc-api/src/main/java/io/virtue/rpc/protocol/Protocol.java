@@ -16,7 +16,6 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
 
 /**
  * Communication protocol used to exchange data between client and server.
- *
  */
 @Extensible(value = VIRTUE)
 public interface Protocol extends ProtocolParser, ProtocolAdapter {

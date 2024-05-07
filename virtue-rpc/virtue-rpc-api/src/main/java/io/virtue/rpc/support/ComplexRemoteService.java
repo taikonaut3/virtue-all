@@ -1,6 +1,5 @@
 package io.virtue.rpc.support;
 
-import io.virtue.rpc.support.reflect.MethodAccess;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.GenerateUtil;
@@ -9,6 +8,7 @@ import io.virtue.core.Callee;
 import io.virtue.core.RemoteService;
 import io.virtue.core.Virtue;
 import io.virtue.core.annotation.Protocol;
+import io.virtue.rpc.support.reflect.MethodAccess;
 import lombok.ToString;
 
 import java.lang.reflect.Method;

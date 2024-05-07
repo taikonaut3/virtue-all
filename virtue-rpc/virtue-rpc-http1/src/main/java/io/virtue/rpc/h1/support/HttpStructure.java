@@ -15,10 +15,10 @@ import java.util.Map;
 @Accessors(fluent = true)
 public class HttpStructure {
 
-    private String path;
-    private HttpMethod method;
     private final Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
     private final Map<CharSequence, CharSequence> params = new LinkedHashMap<>();
+    private String path;
+    private HttpMethod method;
     private Object body;
 
     public HttpStructure() {

@@ -23,7 +23,7 @@ import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 public class Http2Callee extends AbstractHttpCallee<Http2Callable> {
 
     @Parameter(Key.SSL)
-    private  boolean ssl;
+    private boolean ssl;
 
     public Http2Callee(Method method, RemoteService<?> remoteService) {
         super(method, remoteService, HTTP2, Http2Callable.class);
@@ -39,7 +39,5 @@ public class Http2Callee extends AbstractHttpCallee<Http2Callable> {
         addResponseHeaders(parseHeaders(parsedAnnotation.headers()));
         addResponseHeader(CONTENT_TYPE, parsedAnnotation.contentType());
     }
-
-
 
 }

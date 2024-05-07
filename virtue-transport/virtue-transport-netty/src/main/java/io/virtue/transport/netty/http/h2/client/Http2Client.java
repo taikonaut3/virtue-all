@@ -19,9 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Http2Client extends NettyClient {
 
-    private Http2StreamChannelBootstrap streamChannelBootstrap;
-
     private final Map<Http2StreamChannel, RpcFuture> streamChannelFutureMap = new ConcurrentHashMap<>();
+    private Http2StreamChannelBootstrap streamChannelBootstrap;
 
     public Http2Client(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
         super(url, channelHandler, codec);

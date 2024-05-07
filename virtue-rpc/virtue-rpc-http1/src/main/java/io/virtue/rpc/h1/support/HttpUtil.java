@@ -20,7 +20,7 @@ public final class HttpUtil extends TransportUtil {
 
     private static final String IDENTIFY = "virtue-rpc/" + version();
 
-    private static final String ACCEPT_TYPE = String.join(",",Arrays.stream(MediaType.values()).map(MediaType::getName).toList());
+    private static final String ACCEPT_TYPE = String.join(",", Arrays.stream(MediaType.values()).map(MediaType::getName).toList());
 
     /**
      * Build a common client request header.

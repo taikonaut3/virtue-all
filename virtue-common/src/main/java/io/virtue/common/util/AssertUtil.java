@@ -7,6 +7,9 @@ import java.util.Objects;
  */
 public final class AssertUtil {
 
+    private AssertUtil() {
+    }
+
     /**
      * Determine if a condition is valid, and throw a AssertionError exception when not.
      *
@@ -93,9 +96,6 @@ public final class AssertUtil {
         if (!Objects.equals(expected, actual)) {
             throw new AssertionError(message);
         }
-    }
-
-    private AssertUtil() {
     }
 
 }

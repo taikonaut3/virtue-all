@@ -27,9 +27,6 @@ public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChan
     private static final byte[] CA_BYTES;
     private static final byte[] CLIENT_CERT_BYTES;
     private static final byte[] CLIENT_KEY_BYTES;
-    private final URL url;
-    private final NettyIdleStateHandler idleStateHandler;
-    private final SslContext sslContext;
 
     static {
         try {
@@ -40,6 +37,10 @@ public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChan
             throw new ResourceException("Get ssl config exception", e);
         }
     }
+
+    private final URL url;
+    private final NettyIdleStateHandler idleStateHandler;
+    private final SslContext sslContext;
 
     public Http2ClientChannelInitializer(URL url) {
         this.url = url;

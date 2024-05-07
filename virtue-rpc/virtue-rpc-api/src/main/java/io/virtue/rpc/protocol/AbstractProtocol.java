@@ -2,8 +2,8 @@ package io.virtue.rpc.protocol;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ResourceException;
-import io.virtue.common.extension.spi.LoadedListener;
 import io.virtue.common.extension.spi.ExtensionLoader;
+import io.virtue.common.extension.spi.LoadedListener;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.DateUtil;
 import io.virtue.core.Callee;

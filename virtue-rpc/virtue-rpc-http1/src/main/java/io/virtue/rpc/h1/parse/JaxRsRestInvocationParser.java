@@ -80,7 +80,7 @@ public class JaxRsRestInvocationParser implements RestInvocationParser {
             HeaderParam headerParam = element.getAnnotation(HeaderParam.class);
             return String.valueOf(request.headers().get(headerParam.value()));
         } else if (element.isAnnotationPresent(BeanParam.class)) {
-            if (element instanceof Parameter parameter ) {
+            if (element instanceof Parameter parameter) {
                 Class<?> classType = parameter.getType();
                 Object instance = ReflectionUtil.createInstance(classType);
                 List<Field> fields = ReflectionUtil.getAllFields(classType);

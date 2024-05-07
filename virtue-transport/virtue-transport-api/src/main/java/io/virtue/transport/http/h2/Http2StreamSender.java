@@ -18,7 +18,7 @@ public interface Http2StreamSender {
     /**
      * Sends http2 request.
      *
-     * @param future associate http2 stream
+     * @param future  associate http2 stream
      * @param request
      */
     void send(RpcFuture future, HttpRequest request);

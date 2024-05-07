@@ -7,6 +7,7 @@ import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.proxy.ProxyFactory;
+import io.virtue.rpc.support.reflect.MethodAccess;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -22,6 +23,7 @@ public class ProviderMain {
         ProxyFactory proxyFactory = ExtensionLoader.loadExtension(ProxyFactory.class, "byteBuddy");
         Provider provider = proxyFactory.createProxy(new Provider(), (proxy, method, args1, superInvoker) -> superInvoker.invoke());
         System.out.println(provider);
+        MethodAccess methodAccess = MethodAccess.get(Provider.class);
         ConfigurableApplicationContext context = SpringApplication.run(ProviderMain.class, args);
         provider.hello("world");
         System.in.read();

@@ -35,11 +35,6 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
     private static final byte[] CA_BYTES;
     private static final byte[] SERVER_CERT_BYTES;
     private static final byte[] SERVER_KEY_BYTES;
-    private final URL url;
-    private final ChannelHandler handler;
-    private final NettyIdleStateHandler idleStateHandler;
-    private final HttpServerUpgradeHandler.UpgradeCodecFactory upgradeCodecFactory;
-    private final SslContext sslContext;
 
     static {
         try {
@@ -50,6 +45,12 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
             throw new ResourceException("Get ssl config exception", e);
         }
     }
+
+    private final URL url;
+    private final ChannelHandler handler;
+    private final NettyIdleStateHandler idleStateHandler;
+    private final HttpServerUpgradeHandler.UpgradeCodecFactory upgradeCodecFactory;
+    private final SslContext sslContext;
 
     public Http2ServerChannelInitializer(URL url, ChannelHandler handler) {
         this.url = url;
@@ -140,7 +141,7 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
         private final ChannelHandler requestHandler;
         private final ChannelHandler httpObjectAggregator;
 
-         Http2ToHttpHandler() {
+        Http2ToHttpHandler() {
             int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);
             httpObjectAggregator = new HttpObjectAggregator(maxReceiveSize);
             requestHandler = new HttpServerMessageConverter(url).requestConverter();

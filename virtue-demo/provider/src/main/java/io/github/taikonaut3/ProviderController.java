@@ -8,6 +8,8 @@ import java.util.List;
 @RestController
 public class ProviderController {
 
+    private String name;
+
     @GetMapping("hello")
     public String hello(@RequestParam("world") String world) {
         return "hello" + world;

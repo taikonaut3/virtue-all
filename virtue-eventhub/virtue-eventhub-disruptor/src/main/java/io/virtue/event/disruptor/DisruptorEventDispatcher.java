@@ -120,6 +120,13 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
         }
     }
 
+    @Getter
+    @Setter
+    @Accessors(fluent = true)
+    static final class EventHolder<E extends Event<?>> {
+        private E event;
+    }
+
     class DisruptorEventHandler<E extends Event<?>> implements EventHandler<EventHolder<E>> {
 
         @SuppressWarnings("unchecked")
@@ -143,13 +150,6 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
                 }));
             }
         }
-    }
-
-    @Getter
-    @Setter
-    @Accessors(fluent = true)
-    static final class EventHolder<E extends Event<?>> {
-        private E event;
     }
 
 }

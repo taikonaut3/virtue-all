@@ -64,6 +64,7 @@ public class NettyHttp2Stream implements Http2Envelope {
             end();
         }
     }
+
     @Override
     public void addHeaders(HttpHeaders headers) {
         this.headers.add(headers);

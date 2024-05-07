@@ -8,7 +8,6 @@ import io.virtue.event.AbstractEvent;
  */
 public class Event1 extends AbstractEvent<String> {
 
-
     public Event1(String data) {
         super(data);
     }

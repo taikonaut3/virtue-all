@@ -34,9 +34,4 @@ public class CGLibProxyFactory extends AbstractProxyFactory {
         return (T) enhancer.create();
     }
 
-    @Override
-    protected <T> io.virtue.proxy.Enhancer<T> createEnhancer(Class<T> type) {
-        throw new UnsupportedOperationException("Un support");
-    }
-
 }

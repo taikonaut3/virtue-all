@@ -30,8 +30,4 @@ public interface ProxyFactory {
      */
     <T> T createProxy(T target, InvocationHandler handler);
 
-    default <T> Enhancer<T> getEnHancer(Class<T> type) {
-        return null;
-    }
-
 }

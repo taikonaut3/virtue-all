@@ -77,7 +77,7 @@ public interface Consumer {
     List<ParentObject> http2Test(@Body List<ParentObject> list);
 
     @HttpCall(path = "httpTest")
-    @Options(timeout = 600000,url = "127.0.0.1:8085")
+    @Options(timeout = 600000, url = "127.0.0.1:8085")
     List<ParentObject> httpTest(@Body List<ParentObject> list);
 
 }

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 /**
  * Get current version.
+ *
  * @see maven-parent.revision
  */
 public final class Version {

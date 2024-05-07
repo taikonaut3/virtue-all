@@ -22,14 +22,6 @@ public enum MediaType {
         this.serialization = serialization;
     }
 
-    public CharSequence getName() {
-        return name;
-    }
-
-    public String getSerialization() {
-        return serialization;
-    }
-
     public static MediaType of(CharSequence name) {
         for (MediaType value : MediaType.values()) {
             if (Objects.equals(value.getName(), name)) {
@@ -37,5 +29,13 @@ public enum MediaType {
             }
         }
         return null;
+    }
+
+    public CharSequence getName() {
+        return name;
+    }
+
+    public String getSerialization() {
+        return serialization;
     }
 }

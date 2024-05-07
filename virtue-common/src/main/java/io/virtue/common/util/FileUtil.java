@@ -13,6 +13,9 @@ import static java.lang.String.format;
  */
 public final class FileUtil {
 
+    private FileUtil() {
+    }
+
     /**
      * Write the content to the file.
      *
@@ -95,9 +98,6 @@ public final class FileUtil {
                 throw new CommonException(format("Create dir: %s is not success", directory.getPath()));
             }
         }
-    }
-
-    private FileUtil() {
     }
 }
 

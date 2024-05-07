@@ -26,6 +26,7 @@ public interface RegistryService extends Closeable {
 
     /**
      * Deregister the specified URL with the registry.
+     *
      * @param url
      */
     void deregister(URL url);

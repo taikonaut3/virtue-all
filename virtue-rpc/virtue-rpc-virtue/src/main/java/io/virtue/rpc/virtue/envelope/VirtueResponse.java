@@ -31,6 +31,7 @@ public class VirtueResponse extends VirtueEnvelope {
 
     /**
      * Set has exception.
+     *
      * @param hasException
      */
     public void hasException(boolean hasException) {

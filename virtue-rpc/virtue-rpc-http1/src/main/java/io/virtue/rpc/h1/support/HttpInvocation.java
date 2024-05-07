@@ -19,7 +19,7 @@ public class HttpInvocation extends HttpStructure implements Invocation {
 
     public HttpInvocation(Caller<?> caller, Object[] args) {
         invocation = new TransferableInvocation(caller, args);
-        if(caller instanceof AbstractHttpCaller<?> httpCaller){
+        if (caller instanceof AbstractHttpCaller<?> httpCaller) {
             allArgsConstructor(
                     httpCaller.path(),
                     httpCaller.httpMethod(),
