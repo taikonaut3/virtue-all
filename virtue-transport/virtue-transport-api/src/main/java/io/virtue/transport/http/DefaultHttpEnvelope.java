@@ -22,7 +22,7 @@ public class DefaultHttpEnvelope implements HttpEnvelope {
         this.headers = headers;
         this.data = data;
         if (data != null && data.length > 0) {
-            headers.add("content-length", String.valueOf(data.length));
+            headers.add(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(data.length));
         }
     }
 

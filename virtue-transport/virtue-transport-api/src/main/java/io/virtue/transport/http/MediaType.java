@@ -1,5 +1,7 @@
 package io.virtue.transport.http;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
 import static io.virtue.common.constant.Components.Serialization.*;
@@ -7,6 +9,7 @@ import static io.virtue.common.constant.Components.Serialization.*;
 /**
  * Http media type.
  */
+@Getter
 public enum MediaType {
 
     APPLICATION_JSON("application/json", JSON),
@@ -31,11 +34,4 @@ public enum MediaType {
         return null;
     }
 
-    public CharSequence getName() {
-        return name;
-    }
-
-    public String getSerialization() {
-        return serialization;
-    }
 }
