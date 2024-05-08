@@ -128,7 +128,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.result().getList();
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Found {} services for <{}>", serviceEntries.size(), serviceName);
+                    logger.debug("{} Found {} services from <{}>", url.uri(), serviceEntries.size(), serviceName);
                 }
                 if (serviceEntries.isEmpty()) {
                     latch.countDown();

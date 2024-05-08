@@ -41,6 +41,9 @@ public abstract class AbstractInvokerContainer implements InvokerContainer {
 
     @Override
     public void stop() {
+        for (Invoker<?> invoker : invokers.values()) {
+            invoker.stop();
+        }
         invokers.clear();
     }
 

@@ -16,16 +16,6 @@ import java.lang.annotation.*;
 public @interface Config {
 
     /**
-     * The group.
-     */
-    String group() default Constant.DEFAULT_GROUP;
-
-    /**
-     * The version.
-     */
-    String version() default Constant.DEFAULT_VERSION;
-
-    /**
      * Serialization type.
      */
     String serialization() default Constant.DEFAULT_SERIALIZATION;

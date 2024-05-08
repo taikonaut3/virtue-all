@@ -17,9 +17,9 @@ public class FilterManager extends AbstractRuleManager<Filter> {
     }
 
     @Override
-    protected void doExecuteRules(Filter filter, List<Callee<?>> matchedCallees, List<Caller<?>> matchedCallers) {
-        matchedCallees.forEach(item -> item.addFilter(filter));
-        matchedCallers.forEach(item -> item.addFilter(filter));
+    protected void doExecuteRules(Filter filter, List<Callee<?>> matchedCallee, List<Caller<?>> matchedCaller) {
+        matchedCallee.forEach(item -> item.addFilter(filter));
+        matchedCaller.forEach(item -> item.addFilter(filter));
     }
 
 }

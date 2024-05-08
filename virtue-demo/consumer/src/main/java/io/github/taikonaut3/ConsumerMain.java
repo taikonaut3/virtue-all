@@ -6,7 +6,6 @@ import io.github.taikonaut3.filter.Filter2;
 import io.github.taikonaut3.filter.TestFilter;
 import io.virtue.boot.EnableVirtue;
 import io.virtue.common.extension.spi.ExtensionLoader;
-import io.virtue.core.MatchRule;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
@@ -54,10 +53,10 @@ public class ConsumerMain {
         virtue.wrap(new Provider());
         Consumer consumer = virtue.application(new ApplicationConfig("consumer"))
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
-                .register("filter1", new Filter1().addProtocolRule(virtue, MatchRule.Scope.client, ".*"))
+                .register("filter1", new Filter1())
                 .register("filter2", new Filter2())
                 .register("testFilter", new TestFilter())
-                .register("callerResultFilter", new CallerResultFilter())
+                .register("callerResultFilter", new CallerResultFilter(virtue))
                 .router("^virtue://.*/345/list", ":2333")
                 //.register(new RegistryConfig("nacos://127.0.0.1:8848"))
                 .proxy(Consumer.class)

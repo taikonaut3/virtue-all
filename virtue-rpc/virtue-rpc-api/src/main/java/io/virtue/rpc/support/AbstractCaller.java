@@ -137,7 +137,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     @Override
     public void start() {
-        if (!remoteCaller().lazyDiscover()) {
+        if (!remoteCaller().lazyDiscover() && !isDirectInvoke()) {
             if (CollectionUtil.isEmpty(registryConfigs)) {
                 logger.warn("Can't find RegistryConfig(s)");
             } else {
@@ -230,7 +230,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
     protected Object doRpcCall(Invocation invocation) {
         URL url = invocation.url();
         Caller<?> caller = (Caller<?>) invocation.invoker();
-        if (StringUtil.isBlank(caller.directUrl())) {
+        if (!isDirectInvoke()) {
             // ServiceDiscovery
             String serviceDiscoveryName = url.getParam(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
             ServiceDiscovery serviceDiscovery = ExtensionLoader.loadExtension(ServiceDiscovery.class, serviceDiscoveryName);

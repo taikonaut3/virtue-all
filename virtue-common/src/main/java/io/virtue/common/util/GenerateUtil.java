@@ -1,7 +1,6 @@
 package io.virtue.common.util;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 
 /**
  * Utility class for generate operations.
@@ -18,11 +17,16 @@ public final class GenerateUtil {
         StringBuilder builder = new StringBuilder();
         String name = method.getName();
         builder.append(name);
-        Type[] types = method.getGenericParameterTypes();
+        Class<?>[] types = method.getParameterTypes();
         if (types.length > 0) {
             builder.append("(");
             for (int i = 0; i < types.length; i++) {
-                builder.append(types[i].getTypeName());
+                Class<?> type = types[i];
+                String typeName = type.getName();
+                if (typeName.startsWith("java")) {
+                    typeName = type.getSimpleName();
+                }
+                builder.append(typeName);
                 if (i != types.length - 1) {
                     builder.append(",");
                 }

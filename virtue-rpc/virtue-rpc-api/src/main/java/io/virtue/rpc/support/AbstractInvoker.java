@@ -6,6 +6,7 @@ import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.AssertUtil;
 import io.virtue.common.util.CollectionUtil;
+import io.virtue.common.util.GenerateUtil;
 import io.virtue.common.util.ReflectionUtil;
 import io.virtue.core.Invoker;
 import io.virtue.core.InvokerContainer;
@@ -23,8 +24,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
-
-import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
  * Abstract Invoker.
@@ -69,7 +68,6 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     @Parameter(Key.COMPRESSION)
     protected String compression;
 
-    @SuppressWarnings("unchecked")
     protected AbstractInvoker(Method method, InvokerContainer container, String protocol, Class<T> annoType) {
         AssertUtil.notNull(method, container, protocol, annoType);
         this.parsedAnnotation = parseAnnotation(method, annoType);
@@ -92,7 +90,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
         if (this.filters == null) {
             synchronized (this) {
                 if (this.filters == null) {
-                    this.filters = new ArrayList<>();
+                    this.filters = new LinkedList<>();
                 }
             }
         }
@@ -111,7 +109,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
 
     @Override
     public String toString() {
-        return simpleClassName(this) + "[" + path() + "]." + method.toString();
+        return String.format("['%s'] -> %s", path(), GenerateUtil.generateKey(method));
     }
 
     protected abstract URL createUrl(URL url);
@@ -142,8 +140,7 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
                         Arrays.stream(names)
                                 .map(manager.filterManager()::get)
                                 .filter(Objects::nonNull)
-                                .forEach(this::addFilter)
-                );
+                                .forEach(this::addFilter));
     }
 
 }

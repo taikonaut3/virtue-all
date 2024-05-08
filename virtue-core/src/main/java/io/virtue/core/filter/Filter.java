@@ -1,14 +1,11 @@
 package io.virtue.core.filter;
 
 import io.virtue.core.Invocation;
-import io.virtue.core.MatchRule;
-import io.virtue.core.Virtue;
-import io.virtue.core.manager.FilterManager;
 
 /**
  * Filter can interceptor rpc call.
  */
-public interface Filter extends MatchRule<Filter> {
+public interface Filter {
 
     /**
      * Execute the filter logic.
@@ -31,18 +28,5 @@ public interface Filter extends MatchRule<Filter> {
         return FilterScope.PRE;
     }
 
-    @Override
-    default Filter addProtocolRule(Virtue virtue, Scope scope, String... regex) {
-        FilterManager manager = virtue.configManager().filterManager();
-        manager.addProtocolRule(this, scope, regex);
-        return this;
-    }
-
-    @Override
-    default Filter addPathRule(Virtue virtue, Scope scope, String... regex) {
-        FilterManager manager = virtue.configManager().filterManager();
-        manager.addPathRule(this, scope, regex);
-        return this;
-    }
 }
 

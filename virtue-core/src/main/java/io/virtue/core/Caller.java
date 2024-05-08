@@ -1,6 +1,7 @@
 package io.virtue.core;
 
 import io.virtue.common.url.URL;
+import io.virtue.common.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -26,5 +27,13 @@ public interface Caller<T extends Annotation> extends Invoker<T>, Options {
      */
     List<URL> registryConfigUrls();
 
+    /**
+     * Whether it is a direct connection call,{@link io.virtue.core.annotation.Options#url()}is the correct configuration.
+     *
+     * @return
+     */
+    default boolean isDirectInvoke() {
+        return !StringUtil.isBlank(directUrl());
+    }
 }
 

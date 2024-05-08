@@ -3,7 +3,6 @@ package io.virtue.rpc.protocol;
 import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
-import io.virtue.core.ProtocolAdapter;
 import io.virtue.core.config.ClientConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.transport.RpcFuture;

@@ -1,9 +1,6 @@
 package io.virtue.core.manager;
 
-import io.virtue.core.Callee;
-import io.virtue.core.Caller;
-import io.virtue.core.MatchRule;
-import io.virtue.core.Virtue;
+import io.virtue.core.*;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -29,15 +26,15 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
      * @param scope
      * @param rules
      */
-    public void addProtocolRule(T config, MatchRule.Scope scope, String... rules) {
-        RuleWrapper<T> ruleWrapper = ruleMap.computeIfAbsent(config, RuleWrapper<T>::new);
-        if (scope == MatchRule.Scope.all) {
-            ruleWrapper.addProtocolRulesForClient(rules);
-            ruleWrapper.addProtocolRulesForServer(rules);
-        } else if (scope == MatchRule.Scope.client) {
-            ruleWrapper.addProtocolRulesForClient(rules);
-        } else if (scope == MatchRule.Scope.server) {
-            ruleWrapper.addProtocolRulesForServer(rules);
+    public void addProtocolRule(T config, MatchScope scope, String... rules) {
+        RuleWrapper<T> wrapper = ruleMap.computeIfAbsent(config, RuleWrapper::new);
+        if (scope == MatchScope.INVOKER) {
+            wrapper.addProtocolRulesForCaller(rules);
+            wrapper.addProtocolRulesForCallee(rules);
+        } else if (scope == MatchScope.CALLER) {
+            wrapper.addProtocolRulesForCaller(rules);
+        } else if (scope == MatchScope.CALLEE) {
+            wrapper.addProtocolRulesForCallee(rules);
         }
     }
 
@@ -48,15 +45,15 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
      * @param scope
      * @param rules
      */
-    public void addPathRule(T config, MatchRule.Scope scope, String... rules) {
-        RuleWrapper<T> ruleWrapper = ruleMap.computeIfAbsent(config, RuleWrapper<T>::new);
-        if (scope == MatchRule.Scope.all) {
-            ruleWrapper.addPathRulesForClient(rules);
-            ruleWrapper.addPathRulesForServer(rules);
-        } else if (scope == MatchRule.Scope.client) {
-            ruleWrapper.addPathRulesForClient(rules);
-        } else if (scope == MatchRule.Scope.server) {
-            ruleWrapper.addPathRulesForServer(rules);
+    public void addPathRule(T config, MatchScope scope, String... rules) {
+        RuleWrapper<T> ruleWrapper = ruleMap.computeIfAbsent(config, RuleWrapper::new);
+        if (scope == MatchScope.INVOKER) {
+            ruleWrapper.addPathRulesForCaller(rules);
+            ruleWrapper.addPathRulesForCallee(rules);
+        } else if (scope == MatchScope.CALLER) {
+            ruleWrapper.addPathRulesForCaller(rules);
+        } else if (scope == MatchScope.CALLEE) {
+            ruleWrapper.addPathRulesForCallee(rules);
         }
     }
 
@@ -64,21 +61,21 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
      * Execute rules.
      */
     public void executeRules() {
-        List<Callee<?>> callees = virtue.configManager().remoteServiceManager().allCallee();
-        List<Caller<?>> callers = virtue.configManager().remoteCallerManager().allCaller();
+        List<Callee<?>> allCallee = virtue.configManager().remoteServiceManager().allCallee();
+        List<Caller<?>> allCaller = virtue.configManager().remoteCallerManager().allCaller();
         for (RuleWrapper<T> ruleWrapper : ruleMap.values()) {
-            List<Callee<?>> matchedCallees = matchedServerCallers(ruleWrapper.serverRegexWrapper(), callees);
-            List<Caller<?>> matchedCallers = matchedClientCallers(ruleWrapper.clientRegexWrapper(), callers);
-            doExecuteRules(ruleWrapper.config, matchedCallees, matchedCallers);
+            List<Callee<?>> matchedCallee = matchInvokers(ruleWrapper.calleeRegexWrapper(), allCallee);
+            List<Caller<?>> matchedCaller = matchInvokers(ruleWrapper.callerRegexWrapper(), allCaller);
+            doExecuteRules(ruleWrapper.config, matchedCallee, matchedCaller);
         }
     }
 
-    protected abstract void doExecuteRules(T config, List<Callee<?>> matchedCallees, List<Caller<?>> matchedCallers);
+    protected abstract void doExecuteRules(T config, List<Callee<?>> matchedCallee, List<Caller<?>> matchedCaller);
 
-    private List<Callee<?>> matchedServerCallers(RuleWrapper.RegexWrapper serverRegexWrapper, List<Callee<?>> callees) {
-        List<String> protocolRules = serverRegexWrapper.protocolRules;
-        List<String> pathRules = serverRegexWrapper.pathRules;
-        return callees.stream().filter(serverCaller -> {
+    protected <I extends Invoker<?>> List<I> matchInvokers(RuleWrapper.RegexWrapper wrapper, List<I> invokers) {
+        List<String> protocolRules = wrapper.protocolRules;
+        List<String> pathRules = wrapper.pathRules;
+        return invokers.stream().filter(serverCaller -> {
             for (String protocolRule : protocolRules) {
                 if (!isMatch(protocolRule, serverCaller.protocol())) {
                     return false;
@@ -92,25 +89,6 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
             return true;
         }).collect(Collectors.toList());
     }
-
-    private List<Caller<?>> matchedClientCallers(RuleWrapper.RegexWrapper clientRegexWrapper, List<Caller<?>> callers) {
-        List<String> protocolRules = clientRegexWrapper.protocolRules;
-        List<String> pathRules = clientRegexWrapper.pathRules;
-        return callers.stream().filter(serverCaller -> {
-            for (String protocolRule : protocolRules) {
-                if (!isMatch(protocolRule, serverCaller.protocol())) {
-                    return false;
-                }
-            }
-            for (String pathRule : pathRules) {
-                if (!isMatch(pathRule, serverCaller.path())) {
-                    return false;
-                }
-            }
-            return true;
-        }).collect(Collectors.toList());
-    }
-
     private boolean isMatch(String regex, String content) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(content).find();
@@ -120,73 +98,61 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
 
         private final T config;
 
-        private volatile RegexWrapper clientRegexWrapper;
+        private volatile RegexWrapper callerRegexWrapper;
 
-        private volatile RegexWrapper serverRegexWrapper;
+        private volatile RegexWrapper calleeRegexWrapper;
 
         public RuleWrapper(T config) {
             this.config = config;
         }
 
-        public void addProtocolRulesForClient(String... rules) {
-            RegexWrapper regexWrapper = clientRegexWrapper();
+        public void addProtocolRulesForCaller(String... rules) {
+            RegexWrapper regexWrapper = callerRegexWrapper();
             regexWrapper.addProtocolRules(rules);
         }
 
-        public void addPathRulesForClient(String... rules) {
-            RegexWrapper regexWrapper = clientRegexWrapper();
+        public void addPathRulesForCaller(String... rules) {
+            RegexWrapper regexWrapper = callerRegexWrapper();
             regexWrapper.addPathRules(rules);
         }
 
-        public void addProtocolRulesForServer(String... rules) {
-            RegexWrapper regexWrapper = serverRegexWrapper();
+        public void addProtocolRulesForCallee(String... rules) {
+            RegexWrapper regexWrapper = calleeRegexWrapper();
             regexWrapper.addProtocolRules(rules);
         }
 
-        public void addPathRulesForServer(String... rules) {
-            RegexWrapper regexWrapper = serverRegexWrapper();
+        public void addPathRulesForCallee(String... rules) {
+            RegexWrapper regexWrapper = calleeRegexWrapper();
             regexWrapper.addPathRules(rules);
         }
 
-        public List<String> clientProtocolRules() {
-            return clientRegexWrapper.protocolRules;
+        public T config() {
+            return config;
         }
 
-        public List<String> clientPathRules() {
-            return clientRegexWrapper.pathRules;
-        }
-
-        public List<String> serverProtocolRules() {
-            return serverRegexWrapper.protocolRules;
-        }
-
-        public List<String> serverPathRules() {
-            return serverRegexWrapper.pathRules;
-        }
-
-        private RegexWrapper clientRegexWrapper() {
-            if (clientRegexWrapper == null) {
+        public RegexWrapper callerRegexWrapper() {
+            if (callerRegexWrapper == null) {
                 synchronized (this) {
-                    if (clientRegexWrapper == null) {
-                        clientRegexWrapper = new RegexWrapper();
+                    if (callerRegexWrapper == null) {
+                        callerRegexWrapper = new RegexWrapper();
                     }
                 }
             }
-            return clientRegexWrapper;
+            return callerRegexWrapper;
         }
 
-        private RegexWrapper serverRegexWrapper() {
-            if (serverRegexWrapper == null) {
+        public RegexWrapper calleeRegexWrapper() {
+            if (calleeRegexWrapper == null) {
                 synchronized (this) {
-                    if (serverRegexWrapper == null) {
-                        serverRegexWrapper = new RegexWrapper();
+                    if (calleeRegexWrapper == null) {
+                        calleeRegexWrapper = new RegexWrapper();
                     }
                 }
             }
-            return serverRegexWrapper;
+            return calleeRegexWrapper;
         }
 
-        static class RegexWrapper {
+        protected static class RegexWrapper {
 
             final List<String> protocolRules = new LinkedList<>();
 

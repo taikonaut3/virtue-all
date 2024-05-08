@@ -7,7 +7,7 @@ import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
 /**
  * Event dispatcher that can register, remove,and dispatch support listeners for specific types of events.
  */
-@Extensible(value = DISRUPTOR)
+@Extensible(DISRUPTOR)
 public interface EventDispatcher {
 
     /**

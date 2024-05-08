@@ -9,7 +9,7 @@ package io.virtue.common.extension.spi;
 public interface LoadedListener<T> {
 
     /**
-     * When the extension is created, reflect this method.
+     * When the extension is created,invoke this method.
      *
      * @param service
      */

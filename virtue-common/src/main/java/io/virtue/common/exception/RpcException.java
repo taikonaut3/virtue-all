@@ -29,7 +29,6 @@ public class RpcException extends RuntimeException {
      */
     public static RpcException unwrap(Throwable wrapped) {
         Throwable unwrapped = wrapped;
-
         while (true) {
             switch (unwrapped) {
                 case InvocationTargetException e -> unwrapped = e.getTargetException();
@@ -44,5 +43,4 @@ public class RpcException extends RuntimeException {
             }
         }
     }
-
 }

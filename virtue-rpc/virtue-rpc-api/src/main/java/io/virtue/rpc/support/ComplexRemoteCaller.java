@@ -148,7 +148,6 @@ public class ComplexRemoteCaller<T> extends AbstractInvokerContainer implements 
 
     class FallBackerWrapper {
         private final T fallBacker;
-
         private final MethodAccess methodAccess;
 
         FallBackerWrapper(T fallBacker) {

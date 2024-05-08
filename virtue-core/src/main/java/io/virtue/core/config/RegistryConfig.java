@@ -4,9 +4,6 @@ import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
-import io.virtue.core.MatchRule;
-import io.virtue.core.Virtue;
-import io.virtue.core.manager.RegistryConfigManager;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,7 +14,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(fluent = true, chain = true)
-public class RegistryConfig extends UrlTypeConfig implements MatchRule<RegistryConfig> {
+public class RegistryConfig extends UrlTypeConfig {
 
     @Parameter(Key.GLOBAL)
     private boolean global = true;
@@ -64,19 +61,5 @@ public class RegistryConfig extends UrlTypeConfig implements MatchRule<RegistryC
     @Override
     public URL toUrl() {
         return new URL(type, host, port, parameterization());
-    }
-
-    @Override
-    public RegistryConfig addProtocolRule(Virtue virtue, Scope scope, String... regex) {
-        RegistryConfigManager manager = virtue.configManager().registryConfigManager();
-        manager.addProtocolRule(this, scope, regex);
-        return this;
-    }
-
-    @Override
-    public RegistryConfig addPathRule(Virtue virtue, Scope scope, String... regex) {
-        RegistryConfigManager manager = virtue.configManager().registryConfigManager();
-        manager.addPathRule(this, scope, regex);
-        return this;
     }
 }

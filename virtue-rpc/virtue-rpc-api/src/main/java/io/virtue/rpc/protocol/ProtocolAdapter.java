@@ -1,6 +1,7 @@
-package io.virtue.core;
+package io.virtue.rpc.protocol;
 
 import io.virtue.common.url.URL;
+import io.virtue.core.*;
 
 import java.lang.reflect.Method;
 
