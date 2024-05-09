@@ -37,7 +37,7 @@ public abstract class AbstractRegistryService implements RegistryService {
         RegisterTask registerTask = doRegister(url);
         Virtue virtue = Virtue.ofLocal(url);
         registerTask = new RegisterTask(registerTask.task(), true);
-        RegisterServiceEvent event = new RegisterServiceEvent(virtue, registerTask);
+        RegisterServiceEvent event = new RegisterServiceEvent(url, registerTask);
         virtue.eventDispatcher().dispatch(event);
     }
 

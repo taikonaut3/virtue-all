@@ -51,7 +51,7 @@ public interface Constant {
 
     int DEFAULT_MAX_HEADER_SIZE = 10000;
 
-    int DEFAULT_BUFFER_SIZE = 1024 * 1024;
+    int DEFAULT_BUFFER_SIZE = 512;
 
     int DEFAULT_SUBSCRIBES = DEFAULT_CPU_THREADS;
 

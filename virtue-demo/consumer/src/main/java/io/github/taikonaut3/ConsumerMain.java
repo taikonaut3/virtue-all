@@ -55,7 +55,7 @@ public class ConsumerMain {
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
                 .register("filter1", new Filter1())
                 .register("filter2", new Filter2())
-                .register("testFilter", new TestFilter())
+                .register("testFilter", new TestFilter(virtue))
                 .register("callerResultFilter", new CallerResultFilter(virtue))
                 .router("^virtue://.*/345/list", ":2333")
                 //.register(new RegistryConfig("nacos://127.0.0.1:8848"))

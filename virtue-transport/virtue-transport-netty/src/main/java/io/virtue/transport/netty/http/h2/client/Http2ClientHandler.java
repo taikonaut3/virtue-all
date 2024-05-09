@@ -47,7 +47,7 @@ public final class Http2ClientHandler extends SimpleChannelInboundHandler<Http2S
     private final URL url;
     private final ChannelHandler handler;
 
-    public Http2ClientHandler(Http2Client http2Client, URL url, ChannelHandler handler) {
+    Http2ClientHandler(Http2Client http2Client, URL url, ChannelHandler handler) {
         this.http2Client = http2Client;
         this.url = url;
         this.handler = handler;

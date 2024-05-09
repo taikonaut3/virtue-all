@@ -1,4 +1,4 @@
-package io.virtue.rpc.h1.support;
+package io.virtue.transport.http;
 
 import lombok.Getter;
 

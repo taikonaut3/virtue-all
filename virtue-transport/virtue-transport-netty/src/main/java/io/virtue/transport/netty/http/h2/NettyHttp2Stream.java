@@ -60,6 +60,7 @@ public class NettyHttp2Stream implements Http2Envelope {
         ByteBuf byteBuf = dataFrame.content();
         byte[] bytes = ByteBufUtil.getBytes(byteBuf);
         writeData(bytes);
+        dataFrame.release();
         if (dataFrame.isEndStream()) {
             end();
         }
@@ -151,14 +152,11 @@ public class NettyHttp2Stream implements Http2Envelope {
         if (pathAndParams != null) {
             String paramsString = pathAndParams.toString();
             String path = URL.parsePath(paramsString);
-            if (headers.headers().path() != null) {
-                url.addPath(path);
-            }
+            url.addPaths(URL.pathToList(path));
             Map<CharSequence, CharSequence> params = URL.parseParams(paramsString);
             if (params != null) {
                 params.forEach((k, v) -> url.addParam(k.toString(), v.toString()));
             }
-
         }
     }
 }

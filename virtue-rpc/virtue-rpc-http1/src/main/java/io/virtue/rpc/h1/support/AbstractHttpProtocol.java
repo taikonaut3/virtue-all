@@ -14,6 +14,7 @@ import io.virtue.transport.Transporter;
 import io.virtue.transport.http.HttpTransporter;
 import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.http.MediaType;
+import io.virtue.transport.http.VirtueHttpHeaderNames;
 import io.virtue.transport.http.h1.HttpRequest;
 import io.virtue.transport.http.h1.HttpResponse;
 

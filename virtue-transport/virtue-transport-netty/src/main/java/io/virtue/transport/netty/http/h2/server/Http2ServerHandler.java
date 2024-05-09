@@ -6,8 +6,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http2.Http2DataFrame;
 import io.netty.handler.codec.http2.Http2HeadersFrame;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.StringUtil;
 import io.virtue.transport.Request;
 import io.virtue.transport.http.HttpVersion;
+import io.virtue.transport.http.VirtueHttpHeaderNames;
 import io.virtue.transport.netty.NettyChannel;
 import io.virtue.transport.netty.http.NettyHttpRequest;
 import io.virtue.transport.netty.http.h2.NettyHttp2Stream;
@@ -95,10 +97,14 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
     }
 
     private void fireChannelRead(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
-        URL url = stream.url();
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
-        nettyChannel.set(URL.ATTRIBUTE_KEY, url);
+        nettyChannel.set(URL.ATTRIBUTE_KEY, this.url);
+        URL url = stream.url();
         NettyHttpRequest httpRequest = new NettyHttpRequest(HttpVersion.HTTP_2_0, stream.url(), stream.headers(), stream.data());
+        CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL.getName());
+        if (!StringUtil.isBlank(virtueUrlStr)) {
+            url = URL.valueOf(virtueUrlStr.toString());
+        }
         Request request = new Request(url, httpRequest);
         ctx.fireChannelRead(request);
     }
