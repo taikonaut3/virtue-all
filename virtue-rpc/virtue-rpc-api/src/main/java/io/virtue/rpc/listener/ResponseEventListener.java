@@ -20,7 +20,7 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
     private static final Logger logger = LoggerFactory.getLogger(ResponseEventListener.class);
 
     public ResponseEventListener() {
-        super(RpcThreadPool.defaultCPUExecutor("ResponseListener"));
+        super(RpcThreadPool.defaultCPUExecutor("response-handler"));
     }
 
     @Override

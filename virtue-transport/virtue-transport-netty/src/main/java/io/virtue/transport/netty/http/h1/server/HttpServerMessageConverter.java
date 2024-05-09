@@ -8,9 +8,11 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.StringUtil;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
 import io.virtue.transport.http.HttpVersion;
+import io.virtue.transport.http.VirtueHttpHeaderNames;
 import io.virtue.transport.http.h1.HttpResponse;
 import io.virtue.transport.netty.ByteBufUtil;
 import io.virtue.transport.netty.http.NettyHttpRequest;
@@ -48,9 +50,11 @@ public final class HttpServerMessageConverter {
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             if (msg instanceof FullHttpRequest fullHttpRequest) {
-                String uri = URL.parsePath(fullHttpRequest.uri());
-                URL requestUrl = URL.valueOf(uri);
-                Optional.ofNullable(URL.parseParams(fullHttpRequest.uri()))
+                String path = URL.parsePath(fullHttpRequest.uri());
+                var queryParams = URL.parseParams(fullHttpRequest.uri());
+                URL requestUrl = new URL(this.url.protocol(), this.url.address());
+                requestUrl.addPaths(URL.pathToList(path));
+                Optional.ofNullable(queryParams)
                         .ifPresent(params -> params.forEach((key, value) -> requestUrl.addParam(key.toString(), value.toString())));
                 requestUrl.addParam(Key.ONEWAY, Boolean.FALSE.toString());
                 NettyHttpRequest httpRequest = new NettyHttpRequest(
@@ -58,7 +62,13 @@ public final class HttpServerMessageConverter {
                         requestUrl,
                         new NettyHttpHeaders(fullHttpRequest.headers()),
                         ByteBufUtil.getBytes(fullHttpRequest.content()));
-                msg = new Request(requestUrl, httpRequest);
+                CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL.getName());
+                URL url = requestUrl;
+                if (!StringUtil.isBlank(virtueUrlStr)) {
+                    url = URL.valueOf(virtueUrlStr.toString());
+                }
+                msg = new Request(url, httpRequest);
+                fullHttpRequest.release();
             }
             ctx.fireChannelRead(msg);
         }

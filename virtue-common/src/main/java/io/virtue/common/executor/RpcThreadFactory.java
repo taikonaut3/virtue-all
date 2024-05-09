@@ -30,7 +30,7 @@ public class RpcThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable r) {
         Objects.requireNonNull(r);
-        Thread t = new Thread(r, "Virtue" + namePrefix + "-" + threadNumber.getAndIncrement());
+        Thread t = new Thread(r, namePrefix + "-" + threadNumber.getAndIncrement());
         t.setUncaughtExceptionHandler(threadExceptionHandler);
         t.setDaemon(isDaemon);
         return t;

@@ -40,7 +40,7 @@ public final class HttpClientMessageConverter {
                 DefaultFullHttpRequest fullHttpRequest = new DefaultFullHttpRequest(
                         HttpVersion.HTTP_1_1,
                         HttpMethod.valueOf(httpRequest.method().name()),
-                        httpRequest.url().toString(),
+                        httpRequest.url().pathAndParams(),
                         Unpooled.wrappedBuffer(httpRequest.data()),
                         ((NettyHttpHeaders) httpRequest.headers()).httpHeaders(),
                         trailersFactory().newHeaders()
@@ -68,6 +68,7 @@ public final class HttpClientMessageConverter {
                 msg = httpResponse.statusCode() == 200
                         ? Response.success(httpResponse.url(), httpResponse)
                         : Response.error(httpResponse.url(), httpResponse);
+                fullHttpResponse.release();
             }
             ctx.fireChannelRead(msg);
         }

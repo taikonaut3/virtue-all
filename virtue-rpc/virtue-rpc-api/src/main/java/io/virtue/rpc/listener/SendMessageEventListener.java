@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
  */
 public class SendMessageEventListener implements EventListener<SendMessageEvent> {
 
-    private final Executor executor = RpcThreadPool.defaultCPUExecutor("SendMessageListener");
+    private final Executor executor = RpcThreadPool.defaultCPUExecutor("message-sender");
 
     @Override
     public void onEvent(SendMessageEvent event) {

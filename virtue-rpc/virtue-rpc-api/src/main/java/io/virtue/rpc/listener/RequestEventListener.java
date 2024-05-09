@@ -20,7 +20,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
     private static final Logger logger = LoggerFactory.getLogger(RequestEventListener.class);
 
     public RequestEventListener() {
-        super(RpcThreadPool.defaultIOExecutor("RequestListener"));
+        super(RpcThreadPool.defaultIOExecutor("request-handler"));
     }
 
     @Override

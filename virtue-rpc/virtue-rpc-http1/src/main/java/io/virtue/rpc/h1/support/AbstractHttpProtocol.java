@@ -75,12 +75,15 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
 
     @Override
     public HttpResponse createResponse(URL url, Throwable e) {
-        HttpException httpException = (HttpException) e;
+        int statusCode = 500;
+        if (e instanceof HttpException httpException) {
+            statusCode = httpException.statusCode();
+        }
         String errorMessage = SERVER_EXCEPTION + e.getMessage();
         Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
         headers.put(CONTENT_TYPE, MediaType.APPLICATION_JSON.getName());
         headers.putAll(HttpUtil.regularResponseHeaders());
-        return httpTransporter().newResponse(version, url, httpException.statusCode(), headers, errorMessage.getBytes());
+        return httpTransporter().newResponse(version, url, statusCode, headers, errorMessage.getBytes());
     }
 
     @Override

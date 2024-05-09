@@ -94,6 +94,7 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
             removeCurrentStream(ctx, currentStream);
             fireChannelRead(ctx, currentStream);
         }
+        dataFrame.release();
     }
 
     private void fireChannelRead(ChannelHandlerContext ctx, NettyHttp2Stream stream) {

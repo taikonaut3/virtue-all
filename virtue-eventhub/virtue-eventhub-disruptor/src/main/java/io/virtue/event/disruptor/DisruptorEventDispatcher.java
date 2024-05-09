@@ -79,7 +79,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
             bufferSize = url.getIntParam(Key.BUFFER_SIZE, Constant.DEFAULT_BUFFER_SIZE);
             subscribes = url.getIntParam(Key.SUBSCRIBES, Constant.DEFAULT_SUBSCRIBES);
         }
-        Disruptor<EventHolder<?>> disruptor = new Disruptor<>(EventHolder::new, bufferSize, new RpcThreadFactory("EventDisruptorHandler"));
+        Disruptor<EventHolder<?>> disruptor = new Disruptor<>(EventHolder::new, bufferSize, new RpcThreadFactory("disruptor-event-handler"));
         RingBuffer<EventHolder<?>> ringBuffer = disruptor.getRingBuffer();
         DisruptorEventHandler<?>[] handlers = new DisruptorEventHandler<?>[subscribes];
         for (int i = 0; i < subscribes; i++) {

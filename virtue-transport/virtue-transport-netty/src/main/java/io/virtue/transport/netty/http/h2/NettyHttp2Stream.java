@@ -60,7 +60,6 @@ public class NettyHttp2Stream implements Http2Envelope {
         ByteBuf byteBuf = dataFrame.content();
         byte[] bytes = ByteBufUtil.getBytes(byteBuf);
         writeData(bytes);
-        dataFrame.release();
         if (dataFrame.isEndStream()) {
             end();
         }
