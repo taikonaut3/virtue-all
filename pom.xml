@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description>Virtue RPC Framework.</description>
+    <description>A high-performance and high-scalable RPC framework based on Netty.</description>
     <url>https://github.com/taikonaut3/virtue-all/tree/master</url>
 
     <scm>
