@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class NettyClient extends AbstractClient {
 
     private static final NioEventLoopGroup NIO_EVENT_LOOP_GROUP = new NioEventLoopGroup(
-            Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyClientWorker", true)
+            Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("netty-client-worker", true)
     );
 
     protected Bootstrap bootstrap;

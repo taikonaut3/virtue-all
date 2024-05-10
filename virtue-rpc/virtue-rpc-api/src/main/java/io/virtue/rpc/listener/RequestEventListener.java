@@ -25,7 +25,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
 
     @Override
     protected void handEnvelopeEvent(RequestEvent event) {
-        logger.debug("Received Event({})", simpleClassName(event));
+        logger.debug("Received <{}>", simpleClassName(event));
         Request request = event.source();
         URL url = request.url();
         RpcContext.currentContext().set(Request.ATTRIBUTE_KEY, request);

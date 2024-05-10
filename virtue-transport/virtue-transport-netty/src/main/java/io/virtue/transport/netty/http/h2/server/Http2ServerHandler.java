@@ -59,7 +59,7 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
-        logger.error("Http2ServerHandler exceptionCaught", cause);
+        logger.error("Http2ServerHandler exception", cause);
         ctx.close();
     }
 

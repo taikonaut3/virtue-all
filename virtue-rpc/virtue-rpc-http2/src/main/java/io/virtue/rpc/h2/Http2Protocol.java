@@ -22,13 +22,13 @@ import static io.virtue.common.constant.Components.Protocol.*;
 /**
  * Http2 Protocol.
  */
-@Extension({HTTP2, H2, H2C})
+@Extension({H2, H2C})
 public class Http2Protocol extends AbstractHttpProtocol {
 
     private Http2StreamSender streamSender;
 
     public Http2Protocol() {
-        super(HTTP2, HttpVersion.HTTP_2_0);
+        super(H2, HttpVersion.HTTP_2_0);
     }
 
     @Override

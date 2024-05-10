@@ -5,6 +5,8 @@ import io.virtue.core.Invocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.virtue.common.util.StringUtil.simpleClassName;
+
 /**
  * Abstract FaultTolerance.
  */
@@ -14,7 +16,7 @@ public abstract class AbstractFaultTolerance implements FaultTolerance {
 
     @Override
     public Object operation(Invocation invocation) throws RpcException {
-        logger.debug("Used FaultTolerance: {}", this.getClass().getSimpleName());
+        logger.debug("Used FaultTolerance<{}>", simpleClassName(this));
         // todo 限流、熔断
         return doOperation(invocation);
     }

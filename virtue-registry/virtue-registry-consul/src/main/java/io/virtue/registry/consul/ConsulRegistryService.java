@@ -69,7 +69,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             }
             consulClient = ConsulClient.create(vertx, options);
         } catch (Exception e) {
-            logger.error("Connect to Consul: {} Fail", url.address());
+            logger.error("Connect to consul: {} failed", url.address());
             throw RpcException.unwrap(e);
         }
     }
@@ -95,7 +95,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             }
             consulClient.registerService(opts, res -> {
                 if (res.succeeded() && !registerTask.isUpdate()) {
-                    logger.info("Register {}: {} success", serviceName, url.authority());
+                    logger.info("Registered {}: {}", serviceName, url.authority());
                 } else if (!res.succeeded()) {
                     logger.error("Register " + serviceName + ": " + url.authority() + " failed", res.cause());
                 }
@@ -111,7 +111,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
         String serviceId = instanceId(url);
         consulClient.deregisterService(serviceId, res -> {
             if (res.succeeded()) {
-                logger.info("Deregister {}: {} success", serviceId, url.authority());
+                logger.info("Deregistered {}: {}", serviceId, url.authority());
             } else {
                 logger.error("Deregister " + serviceId + ": " + url.authority() + " failed", res.cause());
             }
@@ -128,7 +128,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.result().getList();
                 if (logger.isDebugEnabled()) {
-                    logger.debug("{} Found {} services from <{}>", url.uri(), serviceEntries.size(), serviceName);
+                    logger.debug("{} found {} services from <{}>", url.uri(), serviceEntries.size(), serviceName);
                 }
                 if (serviceEntries.isEmpty()) {
                     latch.countDown();
@@ -143,7 +143,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
                     latch.countDown();
                 }
             } else {
-                logger.error("Found " + serviceName + " fail", res.cause());
+                logger.error("Found " + serviceName + " failed", res.cause());
             }
         });
         try {

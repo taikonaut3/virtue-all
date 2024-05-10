@@ -29,9 +29,9 @@ public class IdleEventListener implements EventListener<IdleEvent> {
         if (url != null) {
             spareCloseTimes = url.getIntParam(Key.SPARE_CLOSE_TIMES, Constant.DEFAULT_SPARE_CLOSE_TIMES);
         }
-        logger.debug("Received Event({})", event.getClass().getSimpleName());
-        logger.debug("channel:{},readIdleRecord:{},writeIdleRecord:{},allIdlerRecord:{}",
-                channel, readIdleRecord, writeIdleRecord, allIdlerRecord);
+//        logger.debug("Received Event({})", event.getClass().getSimpleName());
+//        logger.debug("channel:{},readIdleRecord:{},writeIdleRecord:{},allIdlerRecord:{}",
+//                channel, readIdleRecord, writeIdleRecord, allIdlerRecord);
         if (allIdlerRecord != null) {
             int allIdleTimes = allIdlerRecord.incrementAndGet();
             if (readIdleRecord != null) {

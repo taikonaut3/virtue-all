@@ -1,6 +1,8 @@
 package io.virtue.rpc.h1.support;
 
+import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
+import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.StringUtil;
@@ -30,13 +32,12 @@ public abstract class AbstractHttpCallee<T extends Annotation> extends AbstractC
     private static final Map<CharSequence, CharSequence> REGULAR_RESPONSE_HEADERS = regularResponseHeaders();
 
     protected String path;
-
     @Getter
     protected HttpMethod httpMethod;
-
+    @Parameter(Key.SSL)
+    protected boolean ssl;
     @Getter
     protected Map<CharSequence, CharSequence> responseHeaders;
-
     @Getter
     protected RestInvocationParser restInvocationParser;
 

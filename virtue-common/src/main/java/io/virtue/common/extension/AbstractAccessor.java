@@ -23,14 +23,8 @@ public abstract class AbstractAccessor implements Accessor {
 
     @Override
     public <T> void set(AttributeKey<T> key, T value) {
-        Attribute<T> attribute = (Attribute<T>) accessor.get(key);
-        if (attribute != null) {
-            attribute.set(value);
-        } else {
-            attribute = new Attribute<>(key);
-            attribute.set(value);
-            accessor.put(key, attribute);
-        }
+        Attribute<T> attribute = (Attribute<T>) accessor.computeIfAbsent(key, Attribute::new);
+        attribute.set(value);
     }
 
     @Override

@@ -85,7 +85,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.caught(channel, cause);
         }
-        logger.error("Channel has Error", cause);
+        logger.error("Channel occur error", cause);
     }
 
     @Override

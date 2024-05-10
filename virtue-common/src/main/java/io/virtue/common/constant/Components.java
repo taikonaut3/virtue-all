@@ -39,11 +39,9 @@ public interface Components {
         String VIRTUE = "virtue";
 
         String HTTP = "http";
-
-        String HTTP2 = "http2";
+        String HTTPS = "https";
         String H2 = "h2";
         String H2C = "h2c";
-        String HTTP1 = "http1.1";
 
     }
 

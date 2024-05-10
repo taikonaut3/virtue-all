@@ -48,7 +48,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     public <E extends Event<?>> void addListener(Class<E> eventType, EventListener<E> listener) {
         super.addListener(eventType, listener);
         if (logger.isDebugEnabled()) {
-            logger.debug("Register Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
+            logger.debug("Registered {}<{}>", simpleClassName(listener), simpleClassName(eventType));
         }
     }
 
@@ -56,7 +56,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
     public <E extends Event<?>> void removeListener(Class<E> eventType, EventListener<E> listener) {
         super.removeListener(eventType, listener);
         if (logger.isDebugEnabled()) {
-            logger.debug("Remove Listener[{}] listen Event[{}]", simpleClassName(listener), simpleClassName(eventType));
+            logger.debug("Remove {}<{}>", simpleClassName(listener), simpleClassName(eventType));
         }
     }
 
@@ -68,7 +68,7 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
             holder.event(event);
         });
         if (logger.isTraceEnabled()) {
-            logger.trace("dispatch ({})", simpleClassName(event));
+            logger.trace("Dispatch <{}>", simpleClassName(event));
         }
     }
 
@@ -106,17 +106,17 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
         @Override
         public void handleEventException(Throwable ex, long sequence, EventHolder<?> event) {
-            logger.error(simpleClassName(this) + " Handle Event(" + simpleClassName(event.event) + ") Exception", ex);
+            logger.error(simpleClassName(this) + " handle <" + simpleClassName(event.event) + "> failed", ex);
         }
 
         @Override
         public void handleOnStartException(Throwable ex) {
-            logger.error(simpleClassName(this) + " Start Exception", ex);
+            logger.error(simpleClassName(this) + " start started", ex);
         }
 
         @Override
         public void handleOnShutdownException(Throwable ex) {
-            logger.error(simpleClassName(this) + " Shutdown Exception", ex);
+            logger.error(simpleClassName(this) + " shutdown failed", ex);
         }
     }
 
@@ -139,10 +139,10 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
                     try {
                         listener.onEvent(event);
                         if (logger.isTraceEnabled()) {
-                            logger.trace("Listener[{}] handle Event ({})", simpleClassName(listener), simpleClassName(event));
+                            logger.trace("{} handle <{}>", simpleClassName(listener), simpleClassName(event));
                         }
                     } catch (Exception e) {
-                        logger.error("Handle Failed Event(" + simpleClassName(event) + ") current Listener ", e);
+                        logger.error(simpleClassName(event) + " handle <" + simpleClassName(event) + "> failed", e);
                         throw RpcException.unwrap(e);
                     } finally {
                         event.stopPropagation();

@@ -12,7 +12,7 @@ public class ThreadExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        logger.error(t.getName() + "-" + t.threadId() + " have a Error", e);
+        logger.error(t.getName() + " occur error", e);
     }
 
 }

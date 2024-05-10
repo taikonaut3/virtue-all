@@ -46,7 +46,7 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
         if (serverConfig != null) {
             url = createUrl(serverConfig.toUrl());
         } else {
-            logger.warn("Can't find [{}]protocol's ServerConfig", protocol);
+            logger.warn("Can't find <{}>ServerConfig", protocol);
         }
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
             try {
                 result = remoteService().invokeMethod(method, invocation.args());
             } catch (Exception e) {
-                logger.error("Invoke " + url.path() + " fail", e);
+                logger.error("Invoke " + url.path() + " failed", e);
                 result = e;
             }
             return result;

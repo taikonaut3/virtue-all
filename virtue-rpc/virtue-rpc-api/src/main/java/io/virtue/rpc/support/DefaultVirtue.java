@@ -1,5 +1,6 @@
 package io.virtue.rpc.support;
 
+import io.virtue.common.constant.Version;
 import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.extension.spi.Extension;
@@ -13,6 +14,8 @@ import io.virtue.event.EventDispatcher;
 import io.virtue.governance.router.Router;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -26,12 +29,14 @@ import static io.virtue.common.constant.Components.DEFAULT;
 @Extension(DEFAULT)
 public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
+    private static final Logger logger = LoggerFactory.getLogger(DefaultVirtue.class);
     private final ConfigManager configManager;
     private final MonitorManager monitorManager;
     private final List<VirtueConfiguration> configurations;
     private final Scheduler scheduler;
     private final String name;
     private EventDispatcher eventDispatcher;
+    private volatile boolean started = false;
 
     public DefaultVirtue() {
         name = DEFAULT;
@@ -88,31 +93,37 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public synchronized void start() {
-        RpcContext.currentContext().set(LOCAL_VIRTUE, this);
-        for (VirtueConfiguration configuration : configurations) {
-            configuration.startBefore(this);
-        }
-        configManager.filterManager().executeRules();
-        configManager.registryConfigManager().executeRules();
-        for (RemoteService<?> remoteService : configManager().remoteServiceManager().remoteServices()) {
-            remoteService.start();
-        }
-        for (RemoteCaller<?> remoteCaller : configManager().remoteCallerManager().remoteCallers()) {
-            remoteCaller.start();
-        }
-        for (VirtueConfiguration configuration : configurations) {
-            configuration.startAfter(this);
+        if (!started) {
+            RpcContext.currentContext().set(LOCAL_VIRTUE, this);
+            for (VirtueConfiguration configuration : configurations) {
+                configuration.startBefore(this);
+            }
+            configManager.filterManager().executeRules();
+            configManager.registryConfigManager().executeRules();
+            for (RemoteService<?> remoteService : configManager().remoteServiceManager().remoteServices()) {
+                remoteService.start();
+            }
+            for (RemoteCaller<?> remoteCaller : configManager().remoteCallerManager().remoteCallers()) {
+                remoteCaller.start();
+            }
+            for (VirtueConfiguration configuration : configurations) {
+                configuration.startAfter(this);
+            }
+            started = true;
+            logger.info("Virtue started v{}", Version.version());
         }
     }
 
     @Override
-    public void stop() {
-        RpcContext.currentContext().set(LOCAL_VIRTUE, this);
-        for (VirtueConfiguration configuration : configurations) {
-            configuration.stopBefore(this);
-        }
-        for (VirtueConfiguration configuration : configurations) {
-            configuration.stopAfter(this);
+    public synchronized void stop() {
+        if (started) {
+            RpcContext.currentContext().set(LOCAL_VIRTUE, this);
+            for (VirtueConfiguration configuration : configurations) {
+                configuration.stopBefore(this);
+            }
+            for (VirtueConfiguration configuration : configurations) {
+                configuration.stopAfter(this);
+            }
         }
     }
 

@@ -13,6 +13,8 @@ import io.virtue.transport.endpoint.EndpointAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.virtue.common.util.StringUtil.simpleClassName;
+
 /**
  * Abstract Client.
  */
@@ -40,10 +42,11 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
         this.connectTimeout = url.getIntParam(Key.CONNECT_TIMEOUT, Constant.DEFAULT_CONNECT_TIMEOUT);
         try {
             connect();
-            logger.debug("Create {} is Successful,Connect to remoteAddress: {} for Protocol({})",
-                    this.getClass().getSimpleName(), address(), url.protocol());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Create <{}>{} succeeded,connect to remoteAddress: {}", url.protocol(), simpleClassName(this), address());
+            }
         } catch (Throwable e) {
-            throw new ConnectException("Create Client is Failed,Connect to remoteAddress :" + address(), e);
+            throw new ConnectException(String.format("Create <%s>%s failed,connect to remoteAddress: %s", url.protocol(), simpleClassName(this), address()), e);
         }
     }
 

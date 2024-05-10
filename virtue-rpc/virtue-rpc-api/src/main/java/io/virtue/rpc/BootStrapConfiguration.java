@@ -4,7 +4,6 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.StringUtil;
 import io.virtue.core.Virtue;
 import io.virtue.core.VirtueConfiguration;
 import io.virtue.core.config.RegistryConfig;
@@ -28,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
+import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
  * Registry Global Default Listeners and Open Server.
@@ -86,9 +87,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             // Open Server
             var protocol = ExtensionLoader.loadExtension(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
-            logger.info(
-                    "Opened Server[{}] for Protocol[{}] and bind Port(s) {}",
-                    StringUtil.simpleClassName(server), serverUrl.protocol(), server.port());
+            logger.info("Opened <{}>{},bind port(s) {}", serverUrl.protocol(), simpleClassName(server), server.port());
         }
     }
 }

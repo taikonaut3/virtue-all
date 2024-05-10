@@ -41,8 +41,8 @@ public class ProtocolAdapter {
     public static ChannelInitializer<SocketChannel> forClientChannelInitializer(URL url, ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
-            case HTTP -> new HttpClientChannelInitializer(url, handler);
-            case HTTP2, H2, H2C -> new Http2ClientChannelInitializer(url);
+            case HTTP, HTTPS -> new HttpClientChannelInitializer(url, handler);
+            case H2, H2C -> new Http2ClientChannelInitializer(url);
             default -> new CustomChannelInitializer(url, handler, codec, false);
         };
     }
@@ -58,8 +58,8 @@ public class ProtocolAdapter {
     public static ChannelInitializer<SocketChannel> forServerChannelInitializer(URL url, ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
-            case HTTP -> new HttpServerChannelInitializer(url, handler);
-            case HTTP2, H2, H2C -> new Http2ServerChannelInitializer(url, handler);
+            case HTTP, HTTPS -> new HttpServerChannelInitializer(url, handler);
+            case H2, H2C -> new Http2ServerChannelInitializer(url, handler);
             default -> new CustomChannelInitializer(url, handler, codec, true);
         };
     }
@@ -90,7 +90,7 @@ public class ProtocolAdapter {
     public static Server bindServer(URL url, io.virtue.transport.channel.ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
-            case HTTP2, H2, H2C -> new Http2Server(url, handler, codec);
+            case H2, H2C -> new Http2Server(url, handler, codec);
             default -> new NettyServer(url, handler, codec);
         };
     }
@@ -106,7 +106,7 @@ public class ProtocolAdapter {
     public static Client connectClient(URL url, io.virtue.transport.channel.ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
-            case HTTP2, H2, H2C -> new Http2Client(url, handler, codec);
+            case H2, H2C -> new Http2Client(url, handler, codec);
             default -> new NettyClient(url, handler, codec);
         };
     }

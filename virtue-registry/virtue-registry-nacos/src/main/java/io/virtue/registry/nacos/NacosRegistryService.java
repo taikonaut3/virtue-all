@@ -47,7 +47,7 @@ public class NacosRegistryService extends AbstractRegistryService {
                 System.setProperty("project.name", serviceName);
             }
         } catch (NacosException e) {
-            logger.error("Connect to Nacos: {} Fail", url.address());
+            logger.error("Connect to nacos: {} failed", url.address());
             throw RpcException.unwrap(e);
         }
     }
@@ -64,7 +64,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             try {
                 namingService.registerInstance(serviceName, instance);
             } catch (NacosException e) {
-                logger.error("RegisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
+                logger.error("RegisterInstance is failed from nacos: service:{}-{}", serviceName, url.address());
                 throw RpcException.unwrap(e);
             }
         };
@@ -79,7 +79,7 @@ public class NacosRegistryService extends AbstractRegistryService {
         try {
             namingService.deregisterInstance(serviceName, url.host(), url.port());
         } catch (NacosException e) {
-            logger.error("DeregisterInstance is Failed from Nacos: service:{}-{}", serviceName, url.address());
+            logger.error("DeregisterInstance is failed from nacos: service:{}-{}", serviceName, url.address());
             throw RpcException.unwrap(e);
         }
     }
@@ -97,7 +97,7 @@ public class NacosRegistryService extends AbstractRegistryService {
                 }
             }
         } catch (NacosException e) {
-            logger.error("SelectInstances is Failed from Nacos for Url:{}", url);
+            logger.error("SelectInstances is failed from nacos for url:{}", url);
             throw RpcException.unwrap(e);
         }
         return urls;
@@ -118,7 +118,7 @@ public class NacosRegistryService extends AbstractRegistryService {
                 }
             });
         } catch (NacosException e) {
-            logger.error("Subscribe is Failed from Nacos for Service:{}", serviceName);
+            logger.error("Subscribe is failed from nacos for service:{}", serviceName);
             throw RpcException.unwrap(e);
         }
     }

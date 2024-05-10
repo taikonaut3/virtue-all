@@ -21,7 +21,7 @@ public interface Transporter {
     AttributeKey<Transporter> ATTRIBUTE_KEY = AttributeKey.of(Key.TRANSPORTER);
 
     /**
-     * Binds a Server to the URL with the given handler and the given codec.
+     * Bind a Server to the URL with the given handler and the given codec.
      *
      * @param url
      * @param handler
@@ -32,7 +32,7 @@ public interface Transporter {
     Server bind(URL url, ChannelHandler handler, Codec codec) throws NetWorkException;
 
     /**
-     * Connects to the server specified by the URL with the given handler and the given codec.
+     * Connect to the server specified by the URL with the given handler and the given codec.
      *
      * @param url
      * @param handler

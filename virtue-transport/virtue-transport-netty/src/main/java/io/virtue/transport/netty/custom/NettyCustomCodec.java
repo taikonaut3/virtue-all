@@ -56,7 +56,11 @@ public final class NettyCustomCodec {
             ByteBuf byteBuf = (ByteBuf) super.decode(ctx, in);
             if (byteBuf != null) {
                 byte[] bytes = ByteBufUtil.getBytes(byteBuf);
-                return codec.decode(bytes);
+                try {
+                    return codec.decode(bytes);
+                } finally {
+                    byteBuf.release();
+                }
 
             }
             return null;

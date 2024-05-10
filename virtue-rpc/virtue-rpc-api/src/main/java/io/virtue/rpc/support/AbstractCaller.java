@@ -190,7 +190,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             if (remoteCaller().fallBacker() != null) {
                 return remoteCaller().invokeFallBack(invocation);
             }
-            logger.error("Remote Call fail " + this, e);
+            logger.error("Remote call failed " + this, e);
             throw RpcException.unwrap(e);
         } finally {
             RpcContext.clear();

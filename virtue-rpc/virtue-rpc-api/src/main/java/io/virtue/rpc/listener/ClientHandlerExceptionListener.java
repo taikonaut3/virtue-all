@@ -19,7 +19,7 @@ public class ClientHandlerExceptionListener implements EventListener<ClientHandl
     public void onEvent(ClientHandlerExceptionEvent event) {
         URL url = event.channel().get(URL.ATTRIBUTE_KEY);
         Throwable cause = event.source();
-        logger.error("Client: {} Exception: {}", event.channel(), cause.getMessage());
+        logger.error("Client: {} exception: {}", event.channel(), cause.getMessage());
         if (url != null) {
             RpcFuture future = RpcFuture.getFuture(url.getLongParam(Key.UNIQUE_ID));
             // if timeout the future will is null

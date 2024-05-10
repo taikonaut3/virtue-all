@@ -15,7 +15,7 @@ import static io.virtue.common.constant.Components.Transport.NETTY;
 /**
  * HttpTransporter base on netty.
  */
-@Extension(NETTY)
+@Extension(value = NETTY, interfaces = HttpTransporter.class)
 public class NettyHttpTransporter extends NettyTransporter implements HttpTransporter {
 
     @Override

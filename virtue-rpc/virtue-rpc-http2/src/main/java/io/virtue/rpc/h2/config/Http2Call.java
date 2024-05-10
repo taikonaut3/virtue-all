@@ -5,7 +5,7 @@ import io.virtue.transport.http.HttpMethod;
 
 import java.lang.annotation.*;
 
-import static io.virtue.common.constant.Components.Protocol.HTTP2;
+import static io.virtue.common.constant.Components.Protocol.H2;
 
 /**
  * Use h2 protocol to make RPC call.
@@ -13,7 +13,7 @@ import static io.virtue.common.constant.Components.Protocol.HTTP2;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Protocol(HTTP2)
+@Protocol(H2)
 public @interface Http2Call {
 
     /**

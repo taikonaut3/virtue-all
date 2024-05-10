@@ -1,6 +1,7 @@
 package io.virtue.rpc.h1;
 
 import io.virtue.common.extension.spi.Extension;
+import io.virtue.common.url.URL;
 import io.virtue.core.Callee;
 import io.virtue.core.Caller;
 import io.virtue.core.RemoteCaller;
@@ -18,11 +19,12 @@ import io.virtue.transport.http.h1.HttpResponse;
 import java.lang.reflect.Method;
 
 import static io.virtue.common.constant.Components.Protocol.HTTP;
+import static io.virtue.common.constant.Components.Protocol.HTTPS;
 
 /**
  * Http protocol.
  */
-@Extension(HTTP)
+@Extension({HTTP, HTTPS})
 public class HttpProtocol extends AbstractHttpProtocol {
     public HttpProtocol() {
         super(HTTP, HttpVersion.HTTP_1_1);
@@ -36,6 +38,11 @@ public class HttpProtocol extends AbstractHttpProtocol {
     @Override
     public Caller<?> createCaller(Method method, RemoteCaller<?> remoteCaller) {
         return new HttpCaller(method, remoteCaller);
+    }
+
+    @Override
+    public Client openClient(URL url) {
+        return transporter.connect(url, clientHandler, clientCodec);
     }
 
     @Override

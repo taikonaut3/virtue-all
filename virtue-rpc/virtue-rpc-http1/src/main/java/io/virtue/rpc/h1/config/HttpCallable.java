@@ -35,4 +35,9 @@ public @interface HttpCallable {
      * The content type of the HTTP.
      */
     String contentType() default "application/json";
+
+    /**
+     * Whether to use SSL.
+     */
+    boolean ssl() default true;
 }

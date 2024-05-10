@@ -36,8 +36,8 @@ public class NettyServer extends AbstractServer {
     @Override
     protected void doInit() throws BindException {
         bootstrap = new ServerBootstrap();
-        bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("NettyServerBoss", true));
-        workerGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("NettyServerWorker", true));
+        bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("netty-server-boss", true));
+        workerGroup = new NioEventLoopGroup(Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("netty-server-worker", true));
         soBacklog = url.getIntParam(Key.SO_BACKLOG, Constant.DEFAULT_SO_BACKLOG);
         var handler = new NettyServerChannelHandler(channelHandler);
         bootstrap.group(bossGroup, workerGroup)

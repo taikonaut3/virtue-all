@@ -64,7 +64,7 @@ public final class NettyChannel extends AbstractChannel {
         if (isActive()) {
             channel.writeAndFlush(message);
         } else {
-            logger.warn("Current channel: {} is not Active", this);
+            logger.warn("Current channel: {} is closed", this);
         }
     }
 }

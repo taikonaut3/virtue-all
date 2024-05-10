@@ -26,6 +26,7 @@ public class ProviderMain {
                 .register(new ServerConfig("h2c", 8082))
                 .register(new ServerConfig("h2", 8083))
                 .register(new ServerConfig("http", 8085))
+                .register(new ServerConfig("https", 8086))
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
                 .wrap(new Provider())
                 .start();

@@ -7,7 +7,7 @@ import io.virtue.rpc.h1.support.AbstractHttpCaller;
 
 import java.lang.reflect.Method;
 
-import static io.virtue.common.constant.Components.Protocol.HTTP;
+import static io.virtue.common.constant.Components.Protocol.*;
 import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
 import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 
@@ -26,6 +26,8 @@ public class HttpCaller extends AbstractHttpCaller<HttpCall> {
         path = URL.parsePath(pathAndParams);
         queryParams = URL.parseParams(pathAndParams);
         httpMethod = parsedAnnotation.method();
+        ssl = parsedAnnotation.ssl();
+        if (ssl) protocol(HTTPS);
         addRequestHeaders(parseHeaders(parsedAnnotation.headers()));
         addRequestHeader(CONTENT_TYPE, parsedAnnotation.contentType());
     }

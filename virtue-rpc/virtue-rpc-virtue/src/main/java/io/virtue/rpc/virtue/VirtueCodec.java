@@ -83,8 +83,8 @@ public class VirtueCodec implements Codec {
                 return encodeResponse(response);
             }
         } catch (Exception e) {
-            logger.error("Encode message fail", e);
-            throw new CodecException("Encode message fail", e);
+            logger.error("Encode message failed", e);
+            throw new CodecException("Encode message failed", e);
         }
     }
 

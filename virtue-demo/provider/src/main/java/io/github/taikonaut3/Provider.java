@@ -65,7 +65,7 @@ public class Provider {
         return message;
     }
 
-    @Http2Callable(path = "/http2Test", ssl = false)
+    @Http2Callable(path = "/http2Test")
     public List<ParentObject> http2cTest(@Body List<ParentObject> list) {
         return ParentObject.getObjList("list http2 server");
     }

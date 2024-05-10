@@ -19,7 +19,7 @@ public class ServerHandlerExceptionListener implements EventListener<ServerHandl
     public void onEvent(ServerHandlerExceptionEvent event) {
         URL url = event.channel().get(URL.ATTRIBUTE_KEY);
         Throwable cause = event.source();
-        logger.error("Server: {} Exception: {}", event.channel(), cause.getMessage());
+        logger.error("Server: {} exception: {}", event.channel(), cause.getMessage());
         if (url != null) {
             Protocol protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
             protocol.sendResponse(event.channel(), url, cause);

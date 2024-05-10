@@ -25,7 +25,7 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
 
     @Override
     protected void handEnvelopeEvent(ResponseEvent event) {
-        logger.debug("Received Event({})", simpleClassName(event));
+        logger.debug("Received <{}>", simpleClassName(event));
         long id = event.source().id();
         RpcFuture future = RpcFuture.getFuture(id);
         Response response = event.source();
@@ -45,7 +45,7 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
                 }
             }
         } else {
-            logger.error("ResponseFuture({}) Can't exist", id);
+            logger.error("ResponseFuture({}) can't exist", id);
         }
     }
 

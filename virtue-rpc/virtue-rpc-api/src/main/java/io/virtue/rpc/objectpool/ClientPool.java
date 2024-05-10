@@ -44,8 +44,8 @@ public class ClientPool {
             }
             return getCustom(url);
         } catch (Exception e) {
-            logger.error("Get Client fail for: " + url, e);
-            throw new ResourceException("Get Client fail for: " + url);
+            logger.error("Get client failed for: " + url, e);
+            throw new ResourceException("Get client failed for: " + url);
         }
     }
 

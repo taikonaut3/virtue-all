@@ -1,6 +1,7 @@
 package io.virtue.core.manager;
 
 import io.virtue.core.*;
+import org.intellij.lang.annotations.Language;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -26,7 +27,7 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
      * @param scope
      * @param rules
      */
-    public void addProtocolRule(T config, MatchScope scope, String... rules) {
+    public void addProtocolRule(T config, MatchScope scope, @Language("RegExp") String... rules) {
         RuleWrapper<T> wrapper = ruleMap.computeIfAbsent(config, RuleWrapper::new);
         if (scope == MatchScope.INVOKER) {
             wrapper.addProtocolRulesForCaller(rules);
@@ -45,7 +46,7 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
      * @param scope
      * @param rules
      */
-    public void addPathRule(T config, MatchScope scope, String... rules) {
+    public void addPathRule(T config, MatchScope scope, @Language("RegExp") String... rules) {
         RuleWrapper<T> ruleWrapper = ruleMap.computeIfAbsent(config, RuleWrapper::new);
         if (scope == MatchScope.INVOKER) {
             ruleWrapper.addPathRulesForCaller(rules);
@@ -75,20 +76,23 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
     protected <I extends Invoker<?>> List<I> matchInvokers(RuleWrapper.RegexWrapper wrapper, List<I> invokers) {
         List<String> protocolRules = wrapper.protocolRules;
         List<String> pathRules = wrapper.pathRules;
-        return invokers.stream().filter(serverCaller -> {
+        return invokers.stream().filter(invoker -> {
+            boolean protocolResult = protocolRules.isEmpty();
+            boolean pathResult = pathRules.isEmpty();
             for (String protocolRule : protocolRules) {
-                if (!isMatch(protocolRule, serverCaller.protocol())) {
-                    return false;
+                if (isMatch(protocolRule, invoker.protocol())) {
+                    protocolResult = true;
                 }
             }
             for (String pathRule : pathRules) {
-                if (!isMatch(pathRule, serverCaller.path())) {
-                    return false;
+                if (isMatch(pathRule, invoker.path())) {
+                    pathResult = true;
                 }
             }
-            return true;
+            return protocolResult && pathResult;
         }).collect(Collectors.toList());
     }
+
     private boolean isMatch(String regex, String content) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(content).find();

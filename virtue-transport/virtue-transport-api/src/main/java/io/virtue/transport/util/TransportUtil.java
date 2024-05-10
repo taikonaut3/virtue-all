@@ -4,8 +4,7 @@ import io.virtue.common.url.URL;
 
 import java.util.List;
 
-import static io.virtue.common.constant.Components.Protocol.H2;
-import static io.virtue.common.constant.Components.Protocol.H2C;
+import static io.virtue.common.constant.Components.Protocol.*;
 
 /**
  * Transport Util.
@@ -29,7 +28,7 @@ public class TransportUtil {
      * @return
      */
     public static boolean sslEnabled(URL url) {
-        List<String> sslProtocols = List.of(H2);
+        List<String> sslProtocols = List.of(H2, HTTPS);
         return sslProtocols.contains(url.protocol());
     }
 

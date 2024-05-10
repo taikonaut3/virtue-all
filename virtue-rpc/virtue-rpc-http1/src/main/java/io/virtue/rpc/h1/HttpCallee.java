@@ -8,6 +8,7 @@ import io.virtue.rpc.h1.support.AbstractHttpCallee;
 import java.lang.reflect.Method;
 
 import static io.virtue.common.constant.Components.Protocol.HTTP;
+import static io.virtue.common.constant.Components.Protocol.HTTPS;
 import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
 import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 
@@ -25,6 +26,8 @@ public class HttpCallee extends AbstractHttpCallee<HttpCallable> {
         String pathAndParams = parsedAnnotation.path();
         path = URL.parsePath(pathAndParams);
         httpMethod = parsedAnnotation.method();
+        ssl = parsedAnnotation.ssl();
+        if (ssl) protocol(HTTPS);
         addResponseHeaders(parseHeaders(parsedAnnotation.headers()));
         addResponseHeader(CONTENT_TYPE, parsedAnnotation.contentType());
     }

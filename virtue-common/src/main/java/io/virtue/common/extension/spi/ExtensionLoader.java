@@ -175,7 +175,7 @@ public final class ExtensionLoader<S> {
                 }
             }
         } catch (Exception e) {
-            logger.error("Load " + type + " error", e);
+            logger.error("Load " + type + " failed", e);
             throw RpcException.unwrap(e);
         }
 

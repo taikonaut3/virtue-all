@@ -1,7 +1,5 @@
 package io.virtue.rpc.h2;
 
-import io.virtue.common.constant.Key;
-import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
 import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.h1.support.AbstractHttpCaller;
@@ -11,7 +9,8 @@ import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
 
-import static io.virtue.common.constant.Components.Protocol.*;
+import static io.virtue.common.constant.Components.Protocol.H2;
+import static io.virtue.common.constant.Components.Protocol.H2C;
 import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
 import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 
@@ -22,11 +21,8 @@ import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 @Accessors(fluent = true)
 public class Http2Caller extends AbstractHttpCaller<Http2Call> {
 
-    @Parameter(Key.SSL)
-    private boolean ssl;
-
     public Http2Caller(Method method, RemoteCaller<?> remoteCaller) {
-        super(method, remoteCaller, HTTP2, Http2Call.class);
+        super(method, remoteCaller, H2, Http2Call.class);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class Http2Caller extends AbstractHttpCaller<Http2Call> {
         queryParams = URL.parseParams(pathAndParams);
         httpMethod = parsedAnnotation.method();
         ssl = parsedAnnotation.ssl();
-        protocol(ssl ? H2 : H2C);
+        if (!ssl) protocol(H2C);
         addRequestHeaders(parseHeaders(parsedAnnotation.headers()));
         addRequestHeader(CONTENT_TYPE, parsedAnnotation.contentType());
     }
