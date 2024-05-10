@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-registry-nacos</artifactId>
+    <description>Service registry implemented with nacos.</description>
 
     <dependencies>
         <dependency>

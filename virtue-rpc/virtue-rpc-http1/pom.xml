@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-rpc-http1</artifactId>
+    <description>Protocol implemented with http1.1.</description>
 
     <dependencies>
         <dependency>
@@ -19,7 +20,7 @@
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

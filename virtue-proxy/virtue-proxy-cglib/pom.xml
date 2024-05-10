@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-proxy-cglib</artifactId>
+    <description>Proxy implemented with cglib.</description>
 
     <dependencies>
         <dependency>

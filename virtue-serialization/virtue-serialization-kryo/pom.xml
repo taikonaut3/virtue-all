@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-serialization-kryo</artifactId>
+    <description>Serialization implemented with kryo.</description>
 
     <dependencies>
         <dependency>

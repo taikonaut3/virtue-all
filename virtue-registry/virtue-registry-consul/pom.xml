@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-registry-consul</artifactId>
+    <description>Service registry implemented with consul.</description>
 
     <dependencies>
         <dependency>

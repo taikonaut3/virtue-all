@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>virtue-rpc-api</artifactId>
+    <description>Defining rpc api,including protocol specifications,
+        event registration and listening,
+        as well as default core implementation,etc.
+    </description>
 
     <dependencies>
         <dependency>

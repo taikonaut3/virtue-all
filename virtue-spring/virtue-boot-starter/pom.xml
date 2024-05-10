@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-boot-starter</artifactId>
+    <description>Integration with spring boot.</description>
 
     <dependencies>
         <dependency>

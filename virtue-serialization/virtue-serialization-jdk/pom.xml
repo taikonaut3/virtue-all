@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-serialization-jdk</artifactId>
+    <description>Serialization implemented with jdk.</description>
 
     <dependencies>
         <dependency>

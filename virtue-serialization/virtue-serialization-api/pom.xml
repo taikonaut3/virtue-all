@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-serialization-api</artifactId>
+    <description>Defining serialization api.</description>
 
     <dependencies>
         <dependency>

@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-proxy-jdk</artifactId>
+    <description>Proxy implemented with jdk.</description>
 
     <dependencies>
         <dependency>

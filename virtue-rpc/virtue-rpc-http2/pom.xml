@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-rpc-http2</artifactId>
+    <description>Protocol implemented with http2.</description>
 
     <dependencies>
         <dependency>

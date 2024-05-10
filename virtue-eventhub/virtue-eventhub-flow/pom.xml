@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-eventhub-flow</artifactId>
+    <description>Eventhub implemented with flow.</description>
 
     <dependencies>
         <dependency>

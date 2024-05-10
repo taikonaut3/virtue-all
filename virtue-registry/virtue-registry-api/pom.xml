@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-registry-api</artifactId>
+    <description>Defining service registry api.</description>
 
     <dependencies>
         <dependency>

@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-eventhub-api</artifactId>
+    <description>Defining eventhub api.</description>
 
     <dependencies>
         <dependency>

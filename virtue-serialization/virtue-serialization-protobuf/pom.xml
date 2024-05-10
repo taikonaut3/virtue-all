@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-serialization-protobuf</artifactId>
+    <description>Serialization implemented with protobuf.</description>
 
     <dependencies>
         <dependency>

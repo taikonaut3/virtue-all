@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-serialization-msgpack</artifactId>
+    <description>Serialization implemented with msgpack.</description>
 
     <dependencies>
         <dependency>

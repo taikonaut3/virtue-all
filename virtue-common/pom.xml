@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-common</artifactId>
+    <description>Provide some commonly used components, utility classes, and constants.</description>
 
     <dependencies>
         <dependency>

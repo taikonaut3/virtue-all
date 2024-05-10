@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-rpc-virtue</artifactId>
+    <description>Protocol implemented with custom virtue.</description>
 
     <dependencies>
         <dependency>

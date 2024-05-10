@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-serialization-json</artifactId>
+    <description>Serialization implemented with jackson.</description>
 
     <dependencies>
         <dependency>

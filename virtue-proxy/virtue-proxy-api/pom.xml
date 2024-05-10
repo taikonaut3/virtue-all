@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-proxy-api</artifactId>
+    <description>Defining proxy api.</description>
 
     <dependencies>
         <dependency>

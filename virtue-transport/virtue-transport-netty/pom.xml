@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-transport-netty</artifactId>
+    <description>Transport layer implemented with netty 4.</description>
 
     <dependencies>
         <dependency>
@@ -20,12 +21,6 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.70</version>
-        </dependency>
-
     </dependencies>
 
 </project>

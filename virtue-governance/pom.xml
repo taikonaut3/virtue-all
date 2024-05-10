@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-governance</artifactId>
+    <description>Service governance, routing, load balancing, fault tolerance, etc.</description>
 
     <dependencies>
         <dependency>
