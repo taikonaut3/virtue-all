@@ -156,7 +156,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
         Virtue virtue = Virtue.ofServer(url);
         Callee<?> callee = virtue.configManager().remoteServiceManager().getCallee(url);
         if (callee == null) {
-            throw new ResourceException("Can't find Callee[" + url.path() + "]");
+            throw new ResourceException("Can't find Callee['" + url.path() + "']");
         }
         Req message;
         try {
@@ -165,7 +165,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
             throw new UnsupportedOperationException(simpleClassName(this) + " unsupported parse request message type: " + simpleClassName(request.message()));
         }
         Object[] args = parseToInvokeArgs(request, message, callee);
-        return createInvocation(request.url(), callee, args);
+        return createInvocation(url, callee, args);
     }
 
     @SuppressWarnings("unchecked")

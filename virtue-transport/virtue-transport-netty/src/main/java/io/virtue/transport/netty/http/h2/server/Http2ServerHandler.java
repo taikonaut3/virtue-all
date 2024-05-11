@@ -102,7 +102,7 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
         nettyChannel.set(URL.ATTRIBUTE_KEY, this.url);
         URL url = stream.url();
         NettyHttpRequest httpRequest = new NettyHttpRequest(HttpVersion.HTTP_2_0, stream.url(), stream.headers(), stream.data());
-        CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL.getName());
+        CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL);
         if (!StringUtil.isBlank(virtueUrlStr)) {
             url = URL.valueOf(virtueUrlStr.toString());
         }

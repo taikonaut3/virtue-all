@@ -16,12 +16,6 @@
     <name>${project.artifactId}</name>
     <description>Management dependency versions.</description>
 
-    <scm>
-        <connection>scm:git:git://github.com/taikonaut3/virtue-all.git</connection>
-        <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git</developerConnection>
-        <url>${project.url}</url>
-    </scm>
-
     <properties>
         <junit.version>5.10.2</junit.version>
         <slf4j.version>2.0.9</slf4j.version>

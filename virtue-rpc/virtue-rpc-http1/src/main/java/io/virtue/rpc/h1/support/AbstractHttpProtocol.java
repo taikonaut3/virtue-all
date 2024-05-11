@@ -7,14 +7,12 @@ import io.virtue.core.Callee;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.rpc.protocol.AbstractProtocol;
-import io.virtue.serialization.Serializer;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
 import io.virtue.transport.Transporter;
 import io.virtue.transport.http.HttpTransporter;
 import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.http.MediaType;
-import io.virtue.transport.http.VirtueHttpHeaderNames;
 import io.virtue.transport.http.h1.HttpRequest;
 import io.virtue.transport.http.h1.HttpResponse;
 
@@ -23,6 +21,7 @@ import java.util.Map;
 
 import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 import static io.virtue.transport.http.HttpHeaderNames.HOST;
+import static io.virtue.transport.http.VirtueHttpHeaderNames.VIRTUE_URL;
 
 /**
  * Abstract HttpProtocol.
@@ -49,12 +48,11 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
     @Override
     public HttpRequest createRequest(Invocation invocation) {
         HttpInvocation httpInvocation = (HttpInvocation) invocation;
-        httpInvocation.headers().put(HOST, httpInvocation.url().address());
-        httpInvocation.headers().put(VirtueHttpHeaderNames.VIRTUE_URL.getName(), httpInvocation.url().toString());
-        byte[] data = HttpUtil.serialize(httpInvocation.getHeader(CONTENT_TYPE), httpInvocation.body());
-        URL requestUrl = httpInvocation.url().replicate();
-        requestUrl.params().clear();
-        httpInvocation.params().forEach((k, v) -> requestUrl.addParam(k.toString(), v.toString()));
+        URL url = httpInvocation.url();
+        httpInvocation.addHeader(HOST, url.address());
+        httpInvocation.addHeader(VIRTUE_URL, url.toString());
+        URL requestUrl = HttpUtil.createRequestURL(httpInvocation);
+        byte[] data = HttpUtil.encodeBody(httpInvocation.getHeader(CONTENT_TYPE), httpInvocation.body());
         return httpTransporter().newRequest(version, requestUrl, httpInvocation.headers(), data);
     }
 
@@ -66,10 +64,8 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
             statusCode = 500;
         }
         HttpInvocation httpInvocation = (HttpInvocation) invocation;
-        byte[] data = HttpUtil.serialize(httpInvocation.headers().get(CONTENT_TYPE), result);
-        URL requestUrl = httpInvocation.url().replicate();
-        requestUrl.params().clear();
-        httpInvocation.params().forEach((k, v) -> requestUrl.addParam(k.toString(), v.toString()));
+        URL requestUrl = HttpUtil.createRequestURL(httpInvocation);
+        byte[] data = HttpUtil.encodeBody(httpInvocation.headers().get(CONTENT_TYPE), result);
         return httpTransporter().newResponse(version, requestUrl, statusCode, httpInvocation.headers(), data);
     }
 
@@ -100,7 +96,7 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
         if (callee instanceof AbstractHttpCallee<?> httpCallee) {
             return httpCallee.restInvocationParser().parse(HttpRequest, callee);
         }
-        throw new UnsupportedOperationException("unSupport parse");
+        throw new UnsupportedOperationException("Unsupported parsed");
     }
 
     @Override
@@ -109,9 +105,7 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
         if (!(caller.returnClass() == Void.class)) {
             if (data != null && data.length > 0) {
                 if (httpResponse.statusCode() == 200) {
-                    String contentType = httpResponse.headers().get(CONTENT_TYPE).toString();
-                    Serializer serializer = HttpUtil.getSerializer(contentType);
-                    return serializer.deserialize(data, caller.returnType());
+                    return HttpUtil.decodeBody(httpResponse, caller.returnType());
                 } else {
                     return new String(data);
                 }

@@ -21,6 +21,6 @@ public class NettyHttpRequest extends DefaultHttpEnvelope implements HttpRequest
     }
 
     public NettyHttpRequest(HttpVersion version, URL url, Map<CharSequence, CharSequence> headers, byte[] data) {
-        super(version, getOf(url), url, buildHttpHeaders(version, headers), data);
+        this(version, url, buildHttpHeaders(version, headers), data);
     }
 }

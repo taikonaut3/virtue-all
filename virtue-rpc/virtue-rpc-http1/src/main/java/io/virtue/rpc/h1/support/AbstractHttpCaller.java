@@ -30,18 +30,14 @@ public abstract class AbstractHttpCaller<T extends Annotation> extends AbstractC
     private static final Map<CharSequence, CharSequence> REGULAR_REQUEST_HEADERS = regularRequestHeaders();
 
     protected String path;
-
     @Getter
     protected HttpMethod httpMethod;
     @Parameter(Key.SSL)
     protected boolean ssl;
-
     @Getter
     protected Map<CharSequence, CharSequence> queryParams;
-
     @Getter
     protected Map<CharSequence, CharSequence> requestHeaders;
-
     @Getter
     protected RestInvocationParser restInvocationParser;
 

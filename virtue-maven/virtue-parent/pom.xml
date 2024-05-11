@@ -15,12 +15,12 @@
 
     <name>${project.artifactId}</name>
     <description>Management of plugins and versions.</description>
-    <url>http://github.com/taikonaut3/virtue-all/tree/master/virtue-maven/${project.artifactId}</url>
+    <url>https://github.com/taikonaut3/virtue-all/tree/master/virtue-maven/${project.artifactId}</url>
 
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -31,9 +31,11 @@
         </developer>
     </developers>
 
-    <scm>
-        <connection>scm:git:git://github.com/taikonaut3/virtue-all.git</connection>
-        <developerConnection>scm:git:ssh://github.com/taikonaut3/virtue-all.git</developerConnection>
+    <scm child.scm.connection.inherit.append.path="false"
+         child.scm.developerConnection.inherit.append.path="false"
+         child.scm.url.inherit.append.path="false">
+        <connection>scm:git:https://github.com/taikonaut3/virtue-all.git</connection>
+        <developerConnection>scm:git:https://github.com/taikonaut3/virtue-all.git</developerConnection>
         <url>${project.url}</url>
     </scm>
 

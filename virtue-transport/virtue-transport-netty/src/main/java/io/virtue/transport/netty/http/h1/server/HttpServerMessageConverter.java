@@ -62,7 +62,7 @@ public final class HttpServerMessageConverter {
                         requestUrl,
                         new NettyHttpHeaders(fullHttpRequest.headers()),
                         ByteBufUtil.getBytes(fullHttpRequest.content()));
-                CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL.getName());
+                CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL);
                 URL url = requestUrl;
                 if (!StringUtil.isBlank(virtueUrlStr)) {
                     url = URL.valueOf(virtueUrlStr.toString());

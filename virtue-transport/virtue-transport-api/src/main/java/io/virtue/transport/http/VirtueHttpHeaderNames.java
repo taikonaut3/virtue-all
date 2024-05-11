@@ -5,16 +5,10 @@ import lombok.Getter;
 /**
  * Internal HTTP/2 header names.
  */
-@Getter
-public enum VirtueHttpHeaderNames {
+public class VirtueHttpHeaderNames {
 
-    VIRTUE_URL("virtue-url"),
-    VIRTUE_NAME("virtue-name");
+    public static final CharSequence VIRTUE_URL = "virtue-url";
 
-    private final CharSequence name;
-
-    VirtueHttpHeaderNames(CharSequence name) {
-        this.name = name;
-    }
+    public static final CharSequence VIRTUE_NAME = "virtue-name";
 
 }
