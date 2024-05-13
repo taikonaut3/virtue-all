@@ -22,6 +22,8 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     protected final Map<String, List<String>> discoverHealthServices = new ConcurrentHashMap<>();
 
+    protected final Map<String, URL> registeredUrls = new ConcurrentHashMap<>();
+
     protected URL registryUrl;
 
     protected boolean enableHealthCheck;
@@ -34,11 +36,14 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     @Override
     public void register(URL url) {
-        RegisterTask registerTask = doRegister(url);
         Virtue virtue = Virtue.ofLocal(url);
-        registerTask = new RegisterTask(registerTask.task(), true);
-        RegisterServiceEvent event = new RegisterServiceEvent(url, registerTask);
-        virtue.eventDispatcher().dispatch(event);
+        if (!registeredUrls.containsKey(url.authority())) {
+            RegisterTask registerTask = doRegister(url);
+            registerTask = new RegisterTask(registerTask.task(), true);
+            RegisterServiceEvent event = new RegisterServiceEvent(url, registerTask);
+            virtue.eventDispatcher().dispatch(event);
+            registeredUrls.put(url.authority(), url);
+        }
     }
 
     @Override
@@ -64,6 +69,13 @@ public abstract class AbstractRegistryService implements RegistryService {
         return urls;
     }
 
+    @Override
+    public void close() {
+        registeredUrls.values().forEach(this::deregister);
+        discoverHealthServices.clear();
+        registeredUrls.clear();
+    }
+
     protected Map<String, String> metaInfo(URL url) {
         Virtue virtue = Virtue.ofLocal(url);
         ApplicationConfig applicationConfig = virtue.configManager().applicationConfig();
@@ -76,8 +88,7 @@ public abstract class AbstractRegistryService implements RegistryService {
     }
 
     protected String instanceId(URL url) {
-        String application = url.getParam(Key.APPLICATION);
-        return application + "-" + url.protocol() + ":" + url.port();
+        return "<" + url.protocol() + ">" + url.address();
     }
 
     protected String serviceName(URL url) {

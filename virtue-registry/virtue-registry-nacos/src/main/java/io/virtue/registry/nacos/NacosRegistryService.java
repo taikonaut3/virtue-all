@@ -93,7 +93,7 @@ public class NacosRegistryService extends AbstractRegistryService {
             for (Instance instance : instances) {
                 String protocol = instance.getMetadata().get(Key.PROTOCOL);
                 if (!StringUtil.isBlank(protocol) && protocol.equalsIgnoreCase(url.protocol())) {
-                    urls.add(instanceToUrl(protocol, instance));
+                    urls.add(instanceToUrl(instance));
                 }
             }
         } catch (NacosException e) {
@@ -112,7 +112,7 @@ public class NacosRegistryService extends AbstractRegistryService {
                     List<Instance> instances = namingEvent.getInstances();
                     List<String> healthServerUrls = instances.stream()
                             .filter(instance -> instance.isHealthy() && instance.getMetadata().containsKey(Key.PROTOCOL))
-                            .map(instance -> instanceToUrl(instance.getMetadata().get(Key.PROTOCOL), instance).toString())
+                            .map(instance -> instanceToUrl(instance).toString())
                             .toList();
                     discoverHealthServices.put(serviceName, healthServerUrls);
                 }
@@ -125,6 +125,7 @@ public class NacosRegistryService extends AbstractRegistryService {
 
     @Override
     public void close() {
+        super.close();
         try {
             namingService.shutDown();
         } catch (NacosException e) {
@@ -132,7 +133,8 @@ public class NacosRegistryService extends AbstractRegistryService {
         }
     }
 
-    private URL instanceToUrl(String protocol, Instance instance) {
+    private URL instanceToUrl(Instance instance) {
+        String protocol = instance.getMetadata().get(Key.PROTOCOL).toLowerCase();
         URL url = new URL(protocol, instance.getIp(), instance.getPort());
         url.addParams(instance.getMetadata());
         return url;

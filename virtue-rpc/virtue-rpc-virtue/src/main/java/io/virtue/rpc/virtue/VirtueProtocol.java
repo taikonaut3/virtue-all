@@ -6,6 +6,7 @@ import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.core.*;
 import io.virtue.rpc.protocol.AbstractProtocol;
+import io.virtue.rpc.protocol.MultiplexEndpoints;
 import io.virtue.rpc.virtue.envelope.VirtueRequest;
 import io.virtue.rpc.virtue.envelope.VirtueResponse;
 import io.virtue.serialization.Serializer;
@@ -27,6 +28,7 @@ public final class VirtueProtocol extends AbstractProtocol<VirtueRequest, Virtue
 
     public VirtueProtocol() {
         super(VIRTUE,
+                new MultiplexEndpoints(),
                 new VirtueCodec(VirtueResponse.class, VirtueRequest.class),
                 new VirtueCodec(VirtueRequest.class, VirtueResponse.class));
     }

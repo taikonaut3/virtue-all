@@ -20,7 +20,7 @@ public class RegisterServiceEventListener implements EventListener<RegisterServi
         // todo custom config?
         virtue.scheduler().addPeriodic(event.source(), 5, 5, TimeUnit.SECONDS);
         String protocol = event.url().protocol();
-        int port = event.url().port();
-        logger.info("The [{}:{}] service register is executed every 5s", protocol, port);
+        String address = event.url().address();
+        logger.info("The <{}>{} service register is executed every 5s", protocol, address);
     }
 }

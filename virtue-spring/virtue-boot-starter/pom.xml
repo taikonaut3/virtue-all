@@ -34,6 +34,10 @@
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-rpc-http2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-transport-netty</artifactId>
         </dependency>
         <dependency>
@@ -47,6 +51,10 @@
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-serialization-kryo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.taikonaut3</groupId>
+            <artifactId>virtue-serialization-msgpack</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>

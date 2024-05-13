@@ -4,6 +4,7 @@ import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.serialization.Serializer;
 import io.virtue.transport.http.HttpHeaderNames;
+import io.virtue.transport.http.HttpMethod;
 import io.virtue.transport.http.MediaType;
 import io.virtue.transport.http.h1.HttpResponse;
 import io.virtue.transport.util.TransportUtil;
@@ -107,6 +108,7 @@ public final class HttpUtil extends TransportUtil {
         URL requestURL = new URL(url.protocol(), url.address());
         requestURL.addPaths(url.paths());
         invocation.params().forEach((k, v) -> requestURL.addParam(k.toString(), v.toString()));
+        requestURL.set(HttpMethod.ATTRIBUTE_KEY, invocation.method());
         return requestURL;
     }
 }

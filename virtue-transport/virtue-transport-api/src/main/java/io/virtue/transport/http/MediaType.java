@@ -1,8 +1,7 @@
 package io.virtue.transport.http;
 
+import io.virtue.common.util.StringUtil;
 import lombok.Getter;
-
-import java.util.Objects;
 
 import static io.virtue.common.constant.Components.Serialization.*;
 
@@ -27,7 +26,7 @@ public enum MediaType {
 
     public static MediaType of(CharSequence name) {
         for (MediaType value : MediaType.values()) {
-            if (Objects.equals(value.getName(), name)) {
+            if (StringUtil.equals(name, value.getName())) {
                 return value;
             }
         }

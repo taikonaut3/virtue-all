@@ -82,4 +82,11 @@ public interface Protocol extends ProtocolParser, ProtocolAdapter {
      */
     Codec clientCodec();
 
+    /**
+     * Get endpoints.
+     *
+     * @return
+     */
+    Endpoints endpoints();
+
 }

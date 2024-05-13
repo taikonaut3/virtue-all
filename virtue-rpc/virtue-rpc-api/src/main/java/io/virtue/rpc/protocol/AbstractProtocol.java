@@ -27,8 +27,6 @@ import io.virtue.transport.server.Server;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static io.virtue.common.util.StringUtil.simpleClassName;
 
@@ -43,8 +41,7 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
 
     protected static final String SERVER_INVOKE_EXCEPTION = "Server reflect exception: ";
     protected static final String SERVER_EXCEPTION = "Server exception: ";
-    private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
-    private final Map<String, Client> customClients = new ConcurrentHashMap<>();
+    protected Endpoints endpoints;
     protected String protocol;
     protected Codec serverCodec;
     protected Codec clientCodec;
@@ -54,16 +51,21 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
     protected Virtue virtue;
 
     protected AbstractProtocol(String protocol) {
-        this(protocol, null, null);
+        this(protocol, new MultiplexEndpoints());
     }
 
-    protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec) {
-        this(protocol, serverCodec, clientCodec, new BaseClientChannelHandlerChain(), new BaseServerChannelHandlerChain());
+    protected AbstractProtocol(String protocol, Endpoints endpoints) {
+        this(protocol, endpoints, null, null);
     }
 
-    protected AbstractProtocol(String protocol, Codec serverCodec, Codec clientCodec,
+    protected AbstractProtocol(String protocol, Endpoints endpoints, Codec serverCodec, Codec clientCodec) {
+        this(protocol, endpoints, serverCodec, clientCodec, new BaseClientChannelHandlerChain(), new BaseServerChannelHandlerChain());
+    }
+
+    protected AbstractProtocol(String protocol, Endpoints endpoints, Codec serverCodec, Codec clientCodec,
                                ChannelHandler clientHandler, ChannelHandler serverHandler) {
         this.protocol = protocol;
+        this.endpoints = endpoints;
         this.serverCodec = serverCodec;
         this.clientCodec = clientCodec;
         this.clientHandler = clientHandler;
@@ -79,25 +81,17 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
         this.virtue = virtue;
         String transportName = virtue.configManager().applicationConfig().transport();
         transporter = loadTransporter(transportName);
+        virtue.register(endpoints);
     }
 
     @Override
     public Client openClient(URL url) {
-        boolean isMultiplex = url.getBooleanParam(Key.MULTIPLEX, false);
-        Client client;
-        if (isMultiplex) {
-            String key = url.authority();
-            client = getClient(url, key, multiplexClients);
-        } else {
-            String key = url.uri();
-            client = getClient(url, key, customClients);
-        }
-        return client;
+        return endpoints.getClient(url, () -> transporter.connect(url, clientHandler, clientCodec));
     }
 
     @Override
     public Server openServer(URL url) {
-        return transporter.bind(url, serverHandler, serverCodec);
+        return endpoints.getServer(url, () -> transporter.bind(url, serverHandler, serverCodec));
     }
 
     @Override
@@ -147,6 +141,11 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
     @Override
     public String protocol() {
         return protocol;
+    }
+
+    @Override
+    public Endpoints endpoints() {
+        return endpoints;
     }
 
     @SuppressWarnings("unchecked")
@@ -218,13 +217,5 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
         clientUrl.addParam(Key.CLIENT_VIRTUE, virtue.name());
         clientUrl.addParam(Key.MULTIPLEX, String.valueOf(caller.multiplex()));
         return openClient(clientUrl);
-    }
-
-    private Client getClient(URL url, String key, Map<String, Client> clients) {
-        Client client = clients.computeIfAbsent(key, k -> transporter.connect(url, clientHandler, clientCodec));
-        if (!client.isActive()) {
-            client.connect();
-        }
-        return client;
     }
 }

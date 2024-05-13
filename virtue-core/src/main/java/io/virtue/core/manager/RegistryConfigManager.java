@@ -6,6 +6,7 @@ import io.virtue.core.Caller;
 import io.virtue.core.MatchScope;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.RegistryConfig;
+import org.intellij.lang.annotations.Language;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class RegistryConfigManager extends AbstractRuleManager<RegistryConfig> {
      * @param config
      * @param rules
      */
-    public void addProtocolRule(RegistryConfig config, String... rules) {
+    public void addProtocolRule(RegistryConfig config, @Language("RegExp") String... rules) {
         addProtocolRule(config, MatchScope.CALLER, rules);
     }
 
@@ -56,7 +57,7 @@ public class RegistryConfigManager extends AbstractRuleManager<RegistryConfig> {
      * @param config
      * @param rules
      */
-    public void addPathRule(RegistryConfig config, String... rules) {
+    public void addPathRule(RegistryConfig config, @Language("RegExp") String... rules) {
         addPathRule(config, MatchScope.CALLER, rules);
     }
 

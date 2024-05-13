@@ -77,10 +77,11 @@ public class ConsulRegistryService extends AbstractRegistryService {
     @Override
     public RegisterTask doRegister(URL url) {
         String serviceName = serviceName(url);
+        String serviceId = instanceId(url);
         Consumer<RegisterTask> task = registerTask -> {
             ServiceOptions opts = new ServiceOptions()
                     .setName(serviceName)
-                    .setId(instanceId(url))
+                    .setId(serviceId)
                     .setAddress(url.host())
                     .setPort(url.port())
                     .setMeta(metaInfo(url));
@@ -88,16 +89,16 @@ public class ConsulRegistryService extends AbstractRegistryService {
                 int healthCheckInterval = url.getIntParam(Key.HEALTH_CHECK_INTERVAL, Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
                 CheckOptions checkOpts = new CheckOptions()
                         .setTcp(url.address())
-                        .setId(instanceId(url))
+                        .setId(serviceId)
                         .setDeregisterAfter((healthCheckInterval * 10) + "ms")
                         .setInterval(healthCheckInterval + "ms");
                 opts.setCheckOptions(checkOpts);
             }
             consulClient.registerService(opts, res -> {
                 if (res.succeeded() && !registerTask.isUpdate()) {
-                    logger.info("Registered {}: {}", serviceName, url.authority());
+                    logger.info("Registered {}: {}", serviceName, serviceId);
                 } else if (!res.succeeded()) {
-                    logger.error("Register " + serviceName + ": " + url.authority() + " failed", res.cause());
+                    logger.error("Register " + serviceName + ": " + serviceId + " failed", res.cause());
                 }
             });
         };
@@ -109,13 +110,20 @@ public class ConsulRegistryService extends AbstractRegistryService {
     @Override
     public void deregister(URL url) {
         String serviceId = instanceId(url);
+        CountDownLatch latch = new CountDownLatch(1);
         consulClient.deregisterService(serviceId, res -> {
             if (res.succeeded()) {
-                logger.info("Deregistered {}: {}", serviceId, url.authority());
+                logger.info("Deregistered {}: {}", serviceName(url), serviceId);
             } else {
-                logger.error("Deregister " + serviceId + ": " + url.authority() + " failed", res.cause());
+                logger.error("Deregister " + serviceName(url) + ": " + serviceId + " failed", res.cause());
             }
+            latch.countDown();
         });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            logger.error("", e);
+        }
     }
 
     @Override
@@ -123,7 +131,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
         String serviceName = serviceName(url);
         ArrayList<URL> urls = new ArrayList<>();
         CountDownLatch latch = new CountDownLatch(1);
-        // 获取所有健康检查的节点的URL
+        // Get the urls of all nodes for health checks
         consulClient.healthServiceNodes(serviceName, true).onComplete(res -> {
             if (res.succeeded()) {
                 List<ServiceEntry> serviceEntries = res.result().getList();
@@ -137,7 +145,7 @@ public class ConsulRegistryService extends AbstractRegistryService {
                         Service service = entry.getService();
                         String protocol = service.getMeta().get(Key.PROTOCOL);
                         if (!StringUtil.isBlank(protocol) && protocol.equalsIgnoreCase(url.protocol())) {
-                            urls.add(serviceEntryToUrl(url.protocol(), entry));
+                            urls.add(serviceEntryToUrl(entry));
                         }
                     }
                     latch.countDown();
@@ -163,21 +171,24 @@ public class ConsulRegistryService extends AbstractRegistryService {
                 List<String> healthServerUrls = serviceEntries.stream()
                         .filter(instance -> instance.aggregatedStatus() == CheckStatus.PASSING
                                 && instance.getService().getMeta().containsKey(Key.PROTOCOL))
-                        .map(instance -> serviceEntryToUrl(instance.getService().getMeta().get(Key.PROTOCOL), instance).toString())
+                        .map(instance -> serviceEntryToUrl(instance).toString())
                         .toList();
                 discoverHealthServices.put(serviceName, healthServerUrls);
             }
         }).start();
+        logger.info("Subscribe service['{}']", serviceName);
     }
 
     @Override
     public void close() {
+        super.close();
         consulClient.close();
     }
 
-    private URL serviceEntryToUrl(String protocol, ServiceEntry entry) {
+    private URL serviceEntryToUrl(ServiceEntry entry) {
         Service service = entry.getService();
         Map<String, String> meta = service.getMeta();
+        String protocol = meta.get(Key.PROTOCOL).toLowerCase();
         URL serverUrl = new URL(protocol, service.getAddress(), service.getPort());
         serverUrl.addParams(meta);
         return serverUrl;

@@ -35,6 +35,10 @@ public final class StringUtil {
         return isBlank(target) ? defaultValue : target;
     }
 
+    public static boolean equals(CharSequence c1, CharSequence c2) {
+        return CharSequence.compare(c1, c2) == 0;
+    }
+
     /**
      * Normalize the path to remove the beginning '/', the end '/', and the redundant '/'.
      *

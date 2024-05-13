@@ -1,6 +1,7 @@
 package io.virtue.registry;
 
 import io.virtue.common.url.URL;
+import io.virtue.core.Virtue;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +20,8 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
         if (registryService == null) {
             registryService = create(url);
             registries.put(uri, registryService);
+            Virtue virtue = Virtue.ofLocal(url);
+            virtue.register(registryService);
         } else {
             if (!registryService.isActive()) {
                 registryService.connect(url);

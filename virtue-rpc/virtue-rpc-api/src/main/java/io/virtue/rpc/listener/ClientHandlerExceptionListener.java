@@ -2,6 +2,7 @@ package io.virtue.rpc.listener;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.StringUtil;
 import io.virtue.event.EventListener;
 import io.virtue.rpc.event.ClientHandlerExceptionEvent;
 import io.virtue.transport.RpcFuture;
@@ -21,10 +22,13 @@ public class ClientHandlerExceptionListener implements EventListener<ClientHandl
         Throwable cause = event.source();
         logger.error("Client: {} exception: {}", event.channel(), cause.getMessage());
         if (url != null) {
-            RpcFuture future = RpcFuture.getFuture(url.getLongParam(Key.UNIQUE_ID));
-            // if timeout the future will is null
-            if (future != null) {
-                future.completeExceptionally(event.source());
+            String id = url.getParam(Key.UNIQUE_ID);
+            if (!StringUtil.isBlank(id)) {
+                RpcFuture future = RpcFuture.getFuture(Long.parseLong(id));
+                // if timeout the future will is null
+                if (future != null) {
+                    future.completeExceptionally(event.source());
+                }
             }
         }
     }
