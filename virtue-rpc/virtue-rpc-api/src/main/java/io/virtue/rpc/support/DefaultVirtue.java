@@ -159,6 +159,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
         @Override
         public void run() {
+            Virtue.JVM_SHUTTING_DOWN.set(true);
             DefaultVirtue.this.stop();
         }
     }

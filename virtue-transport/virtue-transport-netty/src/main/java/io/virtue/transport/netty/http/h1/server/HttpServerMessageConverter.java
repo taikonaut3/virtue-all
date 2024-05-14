@@ -5,7 +5,6 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
@@ -14,33 +13,23 @@ import io.virtue.transport.Response;
 import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.http.VirtueHttpHeaderNames;
 import io.virtue.transport.http.h1.HttpResponse;
-import io.virtue.transport.netty.ByteBufUtil;
+import io.virtue.transport.netty.NettySupport;
 import io.virtue.transport.netty.http.NettyHttpRequest;
 import io.virtue.transport.netty.http.h1.NettyHttpHeaders;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 
 import java.util.Optional;
 
+import static io.netty.channel.ChannelHandler.Sharable;
 import static io.netty.handler.codec.http.DefaultHttpHeadersFactory.trailersFactory;
 
 /**
- * EnvelopeConverter.
+ * Http server message converter.
  */
-@Getter
-@Accessors(fluent = true)
+
 public final class HttpServerMessageConverter {
 
-    private static final AttributeKey<URL> urlKey = AttributeKey.newInstance(Key.URL);
-    private final ChannelHandler requestConverter;
-    private final ChannelHandler responseConvert;
-
-    public HttpServerMessageConverter(URL url) {
-        this.requestConverter = new RequestConverter(url);
-        this.responseConvert = new ResponseConvert();
-    }
-
-    static class RequestConverter extends ChannelInboundHandlerAdapter {
+    @Sharable
+    public static class RequestConverter extends ChannelInboundHandlerAdapter {
         private final URL url;
 
         public RequestConverter(URL url) {
@@ -61,7 +50,7 @@ public final class HttpServerMessageConverter {
                         HttpVersion.HTTP_1_1,
                         requestUrl,
                         new NettyHttpHeaders(fullHttpRequest.headers()),
-                        ByteBufUtil.getBytes(fullHttpRequest.content()));
+                        NettySupport.getBytes(fullHttpRequest.content()));
                 CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL);
                 URL url = requestUrl;
                 if (!StringUtil.isBlank(virtueUrlStr)) {
@@ -74,7 +63,8 @@ public final class HttpServerMessageConverter {
         }
     }
 
-    static class ResponseConvert extends ChannelOutboundHandlerAdapter {
+    @Sharable
+    public static class ResponseConvert extends ChannelOutboundHandlerAdapter {
         @Override
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
             if (msg instanceof Response response) {

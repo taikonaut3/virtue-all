@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -61,6 +62,10 @@ public class RpcFuture extends CompletableFuture<Object> {
 
     public static RpcFuture getFuture(long id) {
         return futures.get(id);
+    }
+
+    public static Collection<RpcFuture> unCompletedFutures() {
+        return futures.values();
     }
 
     /**

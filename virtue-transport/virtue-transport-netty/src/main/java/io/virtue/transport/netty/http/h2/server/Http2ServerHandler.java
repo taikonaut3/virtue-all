@@ -6,19 +6,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http2.Http2DataFrame;
 import io.netty.handler.codec.http2.Http2HeadersFrame;
 import io.virtue.common.url.URL;
-import io.virtue.common.util.StringUtil;
-import io.virtue.transport.Request;
-import io.virtue.transport.http.HttpVersion;
-import io.virtue.transport.http.VirtueHttpHeaderNames;
 import io.virtue.transport.netty.NettyChannel;
-import io.virtue.transport.netty.http.NettyHttpRequest;
+import io.virtue.transport.netty.NettySupport;
 import io.virtue.transport.netty.http.h2.NettyHttp2Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.netty.channel.ChannelHandler.Sharable;
-import static io.virtue.transport.netty.http.h2.Util.currentStream;
-import static io.virtue.transport.netty.http.h2.Util.removeCurrentStream;
+import static io.virtue.transport.netty.NettySupport.currentStream;
+import static io.virtue.transport.netty.NettySupport.removeCurrentStream;
 
 /**
  * Http2 Server Handler.
@@ -28,16 +24,16 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(Http2ServerHandler.class);
     private final URL url;
-    private final ChannelHandler handler;
+    private final ChannelHandler[] handlers;
 
     Http2ServerHandler(URL url, ChannelHandler handler) {
         this.url = url;
-        this.handler = handler;
+        this.handlers = NettySupport.createHttp2ServerHandlers(handler);
     }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        ctx.pipeline().addLast(handler);
+        ctx.pipeline().addLast(handlers);
     }
 
     @Override
@@ -74,8 +70,7 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
         var currentStream = currentStream(ctx, headersFrame.stream().id(), url);
         currentStream.parseHeaderFrame(headersFrame);
         if (currentStream.endStream()) {
-            removeCurrentStream(ctx, currentStream);
-            fireChannelRead(ctx, currentStream);
+            readEnd(ctx, currentStream);
         }
     }
 
@@ -91,22 +86,15 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
         // todo There appears to be a copy of the data twice?
         currentStream.parseDataFrame(dataFrame);
         if (currentStream.endStream()) {
-            removeCurrentStream(ctx, currentStream);
-            fireChannelRead(ctx, currentStream);
+            readEnd(ctx, currentStream);
         }
         dataFrame.release();
     }
 
-    private void fireChannelRead(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
+    private void readEnd(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
+        removeCurrentStream(ctx, stream);
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         nettyChannel.set(URL.ATTRIBUTE_KEY, this.url);
-        URL url = stream.url();
-        NettyHttpRequest httpRequest = new NettyHttpRequest(HttpVersion.HTTP_2_0, stream.url(), stream.headers(), stream.data());
-        CharSequence virtueUrlStr = httpRequest.headers().get(VirtueHttpHeaderNames.VIRTUE_URL);
-        if (!StringUtil.isBlank(virtueUrlStr)) {
-            url = URL.valueOf(virtueUrlStr.toString());
-        }
-        Request request = new Request(url, httpRequest);
-        ctx.fireChannelRead(request);
+        ctx.fireChannelRead(stream);
     }
 }

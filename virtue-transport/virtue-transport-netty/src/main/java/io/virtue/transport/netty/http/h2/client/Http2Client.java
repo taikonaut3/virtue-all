@@ -1,26 +1,22 @@
 package io.virtue.transport.netty.http.h2.client;
 
-import io.netty.handler.codec.http2.Http2Frame;
 import io.netty.handler.codec.http2.Http2StreamChannel;
 import io.netty.handler.codec.http2.Http2StreamChannelBootstrap;
 import io.virtue.common.exception.ConnectException;
 import io.virtue.common.url.URL;
-import io.virtue.transport.RpcFuture;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyChannel;
+import io.virtue.transport.netty.NettySupport;
 import io.virtue.transport.netty.client.NettyClient;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Http2Client Base on Netty.
  */
 public class Http2Client extends NettyClient {
 
-    private final Map<Http2StreamChannel, RpcFuture> streamChannelFutureMap = new ConcurrentHashMap<>();
     private Http2StreamChannelBootstrap streamChannelBootstrap;
+    private io.netty.channel.ChannelHandler[] handlers;
 
     public Http2Client(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
         super(url, channelHandler, codec);
@@ -28,39 +24,23 @@ public class Http2Client extends NettyClient {
     }
 
     @Override
+    protected void doInit() throws ConnectException {
+        super.doInit();
+        handlers = NettySupport.createHttp2ClientHandlers(nettyHandler);
+    }
+
+    @Override
     protected void doConnect() throws ConnectException {
         super.doConnect();
         streamChannelBootstrap = new Http2StreamChannelBootstrap(channel);
-        Http2ClientHandler http2ClientHandler = new Http2ClientHandler(this, url, nettyHandler);
+        Http2ClientHandler http2ClientHandler = new Http2ClientHandler(url, handlers);
         streamChannelBootstrap.handler(http2ClientHandler);
     }
 
     @Override
     public void send(Object message) {
         Http2StreamChannel streamChannel = newStreamChannel();
-        if (message instanceof Http2Frame frame) {
-            streamChannel.writeAndFlush(frame);
-        }
-    }
-
-    /**
-     * Send the frames to the server.
-     *
-     * @param future
-     * @param frames
-     */
-    public void send(RpcFuture future, Http2Frame... frames) {
-        Http2StreamChannel streamChannel = newStreamChannel();
-        for (Http2Frame frame : frames) {
-            streamChannel.writeAndFlush(frame);
-        }
-        streamChannelFutureMap.put(streamChannel, future);
-    }
-
-    public RpcFuture getRpcFuture(Http2StreamChannel streamChannel) {
-        RpcFuture rpcFuture = streamChannelFutureMap.get(streamChannel);
-        streamChannelFutureMap.remove(streamChannel);
-        return rpcFuture;
+        streamChannel.writeAndFlush(message);
     }
 
     /**

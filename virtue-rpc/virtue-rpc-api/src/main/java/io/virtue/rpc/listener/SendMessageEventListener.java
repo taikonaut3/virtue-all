@@ -4,17 +4,21 @@ import io.virtue.common.executor.RpcThreadPool;
 import io.virtue.event.EventListener;
 import io.virtue.rpc.event.SendMessageEvent;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Send Message EventListener.
  */
 public class SendMessageEventListener implements EventListener<SendMessageEvent> {
 
-    private final Executor executor = RpcThreadPool.defaultCPUExecutor("message-sender");
+    private final ExecutorService executor = RpcThreadPool.defaultCPUExecutor("message-sender");
 
     @Override
     public void onEvent(SendMessageEvent event) {
-        executor.execute(event.source());
+        if (!executor.isShutdown()) {
+            executor.execute(event.source());
+        } else {
+            event.source().run();
+        }
     }
 }

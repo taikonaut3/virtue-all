@@ -89,7 +89,8 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
                 .addLast(idleStateHandler.handler())
                 .addLast(sourceCodec)
                 .addLast(new HttpServerUpgradeHandler(sourceCodec, upgradeCodecFactory))
-                .addLast(new Http2ToHttpHandler());
+                .addLast(new Http2ToHttpHandler())
+                .addLast(new UserEventLogger());
     }
 
     class Http2ToHttpHandler extends SimpleChannelInboundHandler<HttpMessage> {
@@ -100,7 +101,8 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
         Http2ToHttpHandler() {
             int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);
             httpObjectAggregator = new HttpObjectAggregator(maxReceiveSize);
-            requestHandler = new HttpServerMessageConverter(url).requestConverter();
+            requestHandler = new HttpServerMessageConverter.RequestConverter(url);
+
         }
 
         @Override
@@ -109,9 +111,21 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
             logger.error("Directly talking: " + msg.protocolVersion() + " (no upgrade was attempted)");
             ChannelPipeline pipeline = ctx.pipeline();
             pipeline.addAfter(ctx.name(), "requestConverter", requestHandler)
-                    .addAfter("requestConverter", "handler", handler);
+                    .addAfter("requestConverter", "responseConvert", new HttpServerMessageConverter.ResponseConvert())
+                    .addAfter("responseConvert", "handler", handler);
             pipeline.replace(this, null, httpObjectAggregator);
             ctx.fireChannelRead(ReferenceCountUtil.retain(msg));
+        }
+    }
+
+    /**
+     * Class that logs any User Events triggered on this channel.
+     */
+    private static class UserEventLogger extends ChannelInboundHandlerAdapter {
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
+            System.out.println("User Event Triggered: " + evt);
+            ctx.fireUserEventTriggered(evt);
         }
     }
 }

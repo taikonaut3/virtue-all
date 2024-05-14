@@ -176,6 +176,9 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
+        if(Virtue.JVM_SHUTTING_DOWN.get()){
+            throw new RpcException("JVM is shutting down");
+        }
         try {
             String faultToleranceName = invocation.url().getParam(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
             FaultTolerance faultTolerance = ExtensionLoader.loadExtension(FaultTolerance.class, faultToleranceName);

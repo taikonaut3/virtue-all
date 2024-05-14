@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClient extends AbstractClient {
 
-    private static final NioEventLoopGroup NIO_EVENT_LOOP_GROUP = new NioEventLoopGroup(
+    protected static final NioEventLoopGroup NIO_EVENT_LOOP_GROUP = new NioEventLoopGroup(
             Constant.DEFAULT_IO_THREADS, new DefaultThreadFactory("netty-client-worker", true)
     );
 
@@ -67,7 +67,6 @@ public class NettyClient extends AbstractClient {
     @Override
     protected void doClose() throws NetWorkException {
         try {
-            NIO_EVENT_LOOP_GROUP.shutdownGracefully();
             NettyChannel.removeChannel(channel);
         } catch (Throwable e) {
             throw new NetWorkException(e);
@@ -77,6 +76,13 @@ public class NettyClient extends AbstractClient {
     @Override
     public boolean isActive() {
         return channel != null && channel.isActive();
+    }
+
+    /**
+     * close NioEventLoopGroup.
+     */
+    public static void closeNioEventLoopGroup() {
+        NIO_EVENT_LOOP_GROUP.shutdownGracefully();
     }
 
 }

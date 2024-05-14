@@ -9,8 +9,8 @@ import io.virtue.common.exception.RpcException;
 
 import javax.net.ssl.SSLException;
 
-import static io.virtue.transport.netty.http.h2.Util.getSslBytes;
-import static io.virtue.transport.netty.http.h2.Util.readBytes;
+import static io.virtue.transport.netty.NettySupport.getSslBytes;
+import static io.virtue.transport.netty.NettySupport.readBytes;
 
 /**
  * SslContext Factory

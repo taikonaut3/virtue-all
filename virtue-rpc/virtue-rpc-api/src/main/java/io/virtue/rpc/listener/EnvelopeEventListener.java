@@ -3,7 +3,7 @@ package io.virtue.rpc.listener;
 import io.virtue.event.Event;
 import io.virtue.event.EventListener;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Abstract envelope support listener.
@@ -12,17 +12,25 @@ import java.util.concurrent.Executor;
  */
 public abstract class EnvelopeEventListener<T extends Event<?>> implements EventListener<T> {
 
-    protected Executor executor;
+    protected ExecutorService executor;
 
-    public EnvelopeEventListener(Executor executor) {
+    public EnvelopeEventListener(ExecutorService executor) {
         this.executor = executor;
     }
 
     @Override
     public void onEvent(T event) {
-        executor.execute(() -> handEnvelopeEvent(event));
+        if (!executor.isShutdown()) {
+            executor.execute(() -> handEnvelopeEvent(event));
+        } else {
+            jvmShuttingDown(event);
+        }
     }
 
     protected abstract void handEnvelopeEvent(T event);
+
+    protected void jvmShuttingDown(T event) {
+
+    }
 
 }

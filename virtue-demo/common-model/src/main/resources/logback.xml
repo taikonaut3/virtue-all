@@ -21,6 +21,6 @@
     </root>
 
     <!-- 定义要打印的包 -->
-    <logger name="io.virtue" level="INFO"/>
+    <logger name="io.virtue" level="DEBUG"/>
 
 </configuration>

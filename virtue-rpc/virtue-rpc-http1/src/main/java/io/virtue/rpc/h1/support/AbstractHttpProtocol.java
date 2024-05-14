@@ -9,7 +9,10 @@ import io.virtue.core.Invocation;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
+import io.virtue.transport.RpcFuture;
 import io.virtue.transport.Transporter;
+import io.virtue.transport.channel.Channel;
+import io.virtue.transport.client.Client;
 import io.virtue.transport.http.HttpTransporter;
 import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.http.MediaType;
@@ -80,6 +83,21 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
         headers.put(CONTENT_TYPE, MediaType.APPLICATION_JSON.getName());
         headers.putAll(HttpUtil.regularResponseHeaders());
         return httpTransporter().newResponse(version, url, statusCode, headers, errorMessage.getBytes());
+    }
+
+    @Override
+    protected void doSendRequest(RpcFuture future, HttpRequest httpRequest) {
+        Client client = future.client();
+        Request request = new Request(future.url(), httpRequest);
+        client.send(request);
+    }
+
+    @Override
+    protected void doSendResponse(Channel channel, HttpResponse httpResponse) {
+        Response response = httpResponse.statusCode() == 200
+                ? Response.success(httpResponse.url(), httpResponse)
+                : Response.error(httpResponse.url(), httpResponse);
+        channel.send(response);
     }
 
     @Override

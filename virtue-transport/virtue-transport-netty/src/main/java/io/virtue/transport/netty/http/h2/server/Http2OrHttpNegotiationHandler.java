@@ -26,6 +26,7 @@ import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.netty.NettyIdleStateHandler;
+import io.virtue.transport.netty.NettySupport;
 
 /**
  * Negotiates with the browser if HTTP2 or HTTP is going to be used. Once decided, the Netty
@@ -54,12 +55,13 @@ public class Http2OrHttpNegotiationHandler extends ApplicationProtocolNegotiatio
                     .addLast(new Http2MultiplexHandler(new Http2ServerHandler(url, handler)));
         } else if (ApplicationProtocolNames.HTTP_1_1.equals(protocol)) {
             int maxReceiveSize = url.getIntParam(Key.MAX_RECEIVE_SIZE, Constant.DEFAULT_MAX_MESSAGE_SIZE);
+            ChannelHandler[] handlers = NettySupport.createHttpServerHandlers(url, handler);
             ctx.pipeline()
                     .addLast(idleStateHandler)
                     .addLast(idleStateHandler.handler())
                     .addLast(new HttpServerCodec())
                     .addLast(new HttpObjectAggregator(maxReceiveSize))
-                    .addLast(handler);
+                    .addLast(handlers);
         } else {
             throw new IllegalStateException("unknown protocol: " + protocol);
         }

@@ -32,7 +32,7 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     protected URL url;
 
-    private boolean isInit = false;
+    protected boolean isInit = false;
 
     protected AbstractClient(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
         super(url.host(), url.port());

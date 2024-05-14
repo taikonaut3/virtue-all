@@ -17,23 +17,14 @@ package io.virtue.transport.netty.http.h2.client;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http2.Http2DataFrame;
 import io.netty.handler.codec.http2.Http2HeadersFrame;
-import io.netty.handler.codec.http2.Http2StreamChannel;
 import io.netty.handler.codec.http2.Http2StreamFrame;
-import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
-import io.virtue.transport.Response;
-import io.virtue.transport.RpcFuture;
-import io.virtue.transport.http.HttpVersion;
-import io.virtue.transport.netty.http.NettyHttpResponse;
+import io.virtue.transport.netty.NettySupport;
 import io.virtue.transport.netty.http.h2.NettyHttp2Stream;
 
 import static io.netty.channel.ChannelHandler.Sharable;
-import static io.netty.handler.codec.http.HttpResponseStatus.OK;
-import static io.virtue.transport.netty.http.h2.Util.currentStream;
-import static io.virtue.transport.netty.http.h2.Util.removeCurrentStream;
 
 /**
  * Handles HTTP/2 stream frame responses. This is a useful approach if you specifically want to check
@@ -43,19 +34,17 @@ import static io.virtue.transport.netty.http.h2.Util.removeCurrentStream;
 @Sharable
 public final class Http2ClientHandler extends SimpleChannelInboundHandler<Http2StreamFrame> {
 
-    private final Http2Client http2Client;
     private final URL url;
-    private final ChannelHandler handler;
+    private final ChannelHandler[] handlers;
 
-    Http2ClientHandler(Http2Client http2Client, URL url, ChannelHandler handler) {
-        this.http2Client = http2Client;
+    Http2ClientHandler(URL url, ChannelHandler... handlers) {
         this.url = url;
-        this.handler = handler;
+        this.handlers = handlers;
     }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        ctx.pipeline().addLast(handler);
+        ctx.pipeline().addLast(handlers);
     }
 
     @Override
@@ -75,11 +64,10 @@ public final class Http2ClientHandler extends SimpleChannelInboundHandler<Http2S
      * @throws Exception
      */
     private void onHeadersRead(ChannelHandlerContext ctx, Http2HeadersFrame headersFrame) throws Exception {
-        var currentStream = currentStream(ctx, headersFrame.stream().id(), url);
+        var currentStream = NettySupport.currentStream(ctx, headersFrame.stream().id(), url);
         currentStream.parseHeaderFrame(headersFrame);
         if (currentStream.endStream()) {
-            removeCurrentStream(ctx, currentStream);
-            fireChannelRead(ctx, currentStream);
+            readEnd(ctx, currentStream);
         }
     }
 
@@ -91,28 +79,16 @@ public final class Http2ClientHandler extends SimpleChannelInboundHandler<Http2S
      * @throws Exception
      */
     private void onDataRead(ChannelHandlerContext ctx, Http2DataFrame dataFrame) throws Exception {
-        var currentStream = currentStream(ctx, dataFrame.stream().id(), url);
+        var currentStream = NettySupport.currentStream(ctx, dataFrame.stream().id(), url);
         // todo There appears to be a copy of the data twice?
         currentStream.parseDataFrame(dataFrame);
         if (currentStream.endStream()) {
-            removeCurrentStream(ctx, currentStream);
-            fireChannelRead(ctx, currentStream);
+            readEnd(ctx, currentStream);
         }
     }
 
-    private void fireChannelRead(ChannelHandlerContext ctx, NettyHttp2Stream message) {
-        URL url = message.url();
-        RpcFuture rpcFuture = http2Client.getRpcFuture((Http2StreamChannel) ctx.channel());
-        url.addParam(Key.UNIQUE_ID, String.valueOf(rpcFuture.id()));
-        HttpResponseStatus responseStatus = HttpResponseStatus.parseLine(message.http2Headers().status());
-        NettyHttpResponse httpResponse =
-                new NettyHttpResponse(HttpVersion.HTTP_2_0, message.url(), responseStatus, message.headers(), message.data());
-        Response response;
-        if (responseStatus == OK) {
-            response = Response.success(url, httpResponse);
-        } else {
-            response = Response.error(url, httpResponse);
-        }
-        ctx.fireChannelRead(response);
+    private void readEnd(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
+        NettySupport.removeCurrentStream(ctx, stream);
+        ctx.fireChannelRead(stream);
     }
 }

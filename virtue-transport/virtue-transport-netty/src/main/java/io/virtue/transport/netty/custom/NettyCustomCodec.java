@@ -1,6 +1,7 @@
 package io.virtue.transport.netty.custom;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -9,7 +10,7 @@ import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.codec.Codec;
-import io.virtue.transport.netty.ByteBufUtil;
+import io.virtue.transport.netty.NettySupport;
 import lombok.Getter;
 
 /**
@@ -55,7 +56,7 @@ public final class NettyCustomCodec {
         protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
             ByteBuf byteBuf = (ByteBuf) super.decode(ctx, in);
             if (byteBuf != null) {
-                byte[] bytes = ByteBufUtil.getBytes(byteBuf);
+                byte[] bytes = NettySupport.getBytes(byteBuf);
                 try {
                     return codec.decode(bytes);
                 } finally {

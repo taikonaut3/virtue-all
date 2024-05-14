@@ -1,5 +1,6 @@
 package io.virtue.rpc.h1.support;
 
+import io.virtue.common.constant.Key;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.serialization.Serializer;
@@ -109,6 +110,7 @@ public final class HttpUtil extends TransportUtil {
         requestURL.addPaths(url.paths());
         invocation.params().forEach((k, v) -> requestURL.addParam(k.toString(), v.toString()));
         requestURL.set(HttpMethod.ATTRIBUTE_KEY, invocation.method());
+        url.set(Key.HTTP_URL, requestURL);
         return requestURL;
     }
 }

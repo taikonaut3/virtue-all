@@ -53,10 +53,10 @@ public class ConsumerController {
             var future = CompletableFuture.supplyAsync(() -> consumer.http2Test(ParentObject.getObjList()), executorService);
             futures.add(future);
         }
-//        for (int i = 0; i < 100; i++) {
-//            var future = CompletableFuture.supplyAsync(() -> consumer.httpTest(ParentObject.getObjList()), executorService);
-//            futures.add(future);
-//        }
+        for (int i = 0; i < 100; i++) {
+            var future = CompletableFuture.supplyAsync(() -> consumer.httpTest(ParentObject.getObjList()), executorService);
+            futures.add(future);
+        }
         try {
             CompletableFuture<Void> future = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
             future.get();

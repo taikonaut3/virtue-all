@@ -1,76 +1,79 @@
-package io.virtue.transport.netty.http.h1.client;
+package io.virtue.transport.netty.http.h2.client;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http2.Http2Headers;
+import io.netty.handler.codec.http2.Http2StreamFrame;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.transport.Request;
 import io.virtue.transport.Response;
-import io.virtue.transport.http.h1.HttpRequest;
+import io.virtue.transport.http.HttpMethod;
+import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.netty.NettySupport;
+import io.virtue.transport.netty.http.NettyHttpRequest;
 import io.virtue.transport.netty.http.NettyHttpResponse;
-import io.virtue.transport.netty.http.h1.NettyHttpHeaders;
+import io.virtue.transport.netty.http.h2.NettyHttp2Headers;
+import io.virtue.transport.netty.http.h2.NettyHttp2Stream;
 
 import static io.netty.channel.ChannelHandler.Sharable;
-import static io.netty.handler.codec.http.DefaultHttpHeadersFactory.trailersFactory;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.virtue.transport.util.TransportUtil.getScheme;
 
 /**
- * Http client message converter.
+ * Http2 client message converter.
  */
-public final class HttpClientMessageConverter {
+public class Http2ClientMessageConverter {
 
     @Sharable
     public static class RequestConverter extends ChannelOutboundHandlerAdapter {
+
         @Override
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
             if (msg instanceof Request request) {
-                HttpRequest httpRequest = (HttpRequest) request.message();
-                msg = new DefaultFullHttpRequest(
-                        HttpVersion.HTTP_1_1,
-                        HttpMethod.valueOf(httpRequest.method().name()),
-                        httpRequest.url().pathAndParams(),
-                        Unpooled.wrappedBuffer(httpRequest.data()),
-                        ((NettyHttpHeaders) httpRequest.headers()).httpHeaders(),
-                        trailersFactory().newHeaders()
-                );
+                NettyHttpRequest httpRequest = (NettyHttpRequest) request.message();
+                URL url = httpRequest.url();
+                Http2Headers headers = ((NettyHttp2Headers) httpRequest.headers()).headers();
+                headers.scheme(getScheme(url));
+                headers.method(HttpMethod.getOf(url).name());
+                headers.path(url.pathAndParams());
+                ByteBuf data = Unpooled.wrappedBuffer(httpRequest.data());
+                Http2StreamFrame[] frames = NettySupport.convertToHttp2StreamFrames(headers, data);
                 NettySupport.bindUrlToChannel(request.url(), ctx.channel());
+                for (Http2StreamFrame frame : frames) {
+                    ctx.write(frame);
+                }
+                ctx.flush();
+            } else {
+                super.write(ctx, msg, promise);
             }
-            super.write(ctx, msg, promise);
         }
     }
 
     @Sharable
     public static class ResponseConverter extends ChannelInboundHandlerAdapter {
 
-        private final HttpClient httpClient;
-
-        public ResponseConverter(HttpClient httpClient) {
-            this.httpClient = httpClient;
-        }
-
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            if (msg instanceof FullHttpResponse fullHttpResponse) {
+            if (msg instanceof NettyHttp2Stream http2Stream) {
                 URL url = NettySupport.getUrlFormChannel(ctx.channel());
                 URL requestUrl = url.get(Key.HTTP_URL);
-                HttpResponseStatus responseStatus = fullHttpResponse.status();
+                HttpResponseStatus responseStatus = HttpResponseStatus.parseLine(http2Stream.http2Headers().status());
                 NettyHttpResponse httpResponse = new NettyHttpResponse(
-                        io.virtue.transport.http.HttpVersion.HTTP_1_1,
+                        HttpVersion.HTTP_2_0,
                         requestUrl,
                         responseStatus,
-                        new NettyHttpHeaders(fullHttpResponse.headers()),
-                        NettySupport.getBytes(fullHttpResponse.content()));
+                        http2Stream.headers(),
+                        http2Stream.data());
                 msg = responseStatus == OK
                         ? Response.success(url, httpResponse)
                         : Response.error(url, httpResponse);
                 NettySupport.removeUrlFromChannel(ctx.channel());
-                fullHttpResponse.release();
-                httpClient.release(ctx.channel());
             }
             super.channelRead(ctx, msg);
         }

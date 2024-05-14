@@ -1,6 +1,7 @@
 package io.virtue.common.constant;
 
 import io.virtue.common.extension.AttributeKey;
+import io.virtue.common.url.URL;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -167,6 +168,9 @@ public interface Key {
     AttributeKey<AtomicInteger> LAST_CALL_INDEX_ATTRIBUTE_KEY = AttributeKey.of(LAST_CALL_INDEX);
     AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.of("callException");
     AttributeKey<Object> SERVICE_RESPONSE = AttributeKey.of("serviceResponse");
+
+    AttributeKey<URL> HTTP_URL = AttributeKey.of("httpUrl");
+
     String VERTX = "vertx";
     String SUBSCRIBES = "subscribes";
 

@@ -12,7 +12,7 @@ import io.virtue.transport.http.HttpMethod;
 import io.virtue.transport.http.HttpVersion;
 import io.virtue.transport.http.h1.HttpHeaders;
 import io.virtue.transport.http.h2.Http2Envelope;
-import io.virtue.transport.netty.ByteBufUtil;
+import io.virtue.transport.netty.NettySupport;
 
 import java.util.Map;
 
@@ -58,7 +58,7 @@ public class NettyHttp2Stream implements Http2Envelope {
      */
     public void parseDataFrame(Http2DataFrame dataFrame) {
         ByteBuf byteBuf = dataFrame.content();
-        byte[] bytes = ByteBufUtil.getBytes(byteBuf);
+        byte[] bytes = NettySupport.getBytes(byteBuf);
         writeData(bytes);
         if (dataFrame.isEndStream()) {
             end();
@@ -149,6 +149,7 @@ public class NettyHttp2Stream implements Http2Envelope {
         CharSequence pathAndParams = headers.headers().path();
         url.set(HttpMethod.ATTRIBUTE_KEY, method());
         if (pathAndParams != null) {
+            // server endpoint
             String paramsString = pathAndParams.toString();
             String path = URL.parsePath(paramsString);
             url.addPaths(URL.pathToList(path));

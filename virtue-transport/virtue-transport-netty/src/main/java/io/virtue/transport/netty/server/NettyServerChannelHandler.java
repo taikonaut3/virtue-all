@@ -42,7 +42,6 @@ public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapte
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         channelHandler.caught(nettyChannel, cause);
-        //NettyChannel.removeChannel(ctx.channel());
     }
 
 }

@@ -22,11 +22,13 @@ public class RequestEvent extends AbstractEvent<Request> {
 
     private final Invocation invocation;
 
+    private final Protocol protocol;
+
     public RequestEvent(Request request, Channel channel) {
         super(request);
         this.channel = channel;
         URL url = request.url();
-        var protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
+        this.protocol = ExtensionLoader.loadExtension(Protocol.class, url.protocol());
         this.invocation = protocol.parseOfRequest(request);
         invocation.url().set(Channel.ATTRIBUTE_KEY, channel);
     }

@@ -11,7 +11,8 @@ import io.virtue.transport.http.h1.HttpHeaders;
 import io.virtue.transport.netty.client.NettyClient;
 import io.virtue.transport.netty.custom.CustomChannelInitializer;
 import io.virtue.transport.netty.http.h1.NettyHttpHeaders;
-import io.virtue.transport.netty.http.h1.client.HttpClientChannelInitializer;
+import io.virtue.transport.netty.http.h1.client.HttpClient;
+import io.virtue.transport.netty.http.h1.server.HttpServer;
 import io.virtue.transport.netty.http.h1.server.HttpServerChannelInitializer;
 import io.virtue.transport.netty.http.h2.NettyHttp2Headers;
 import io.virtue.transport.netty.http.h2.client.Http2Client;
@@ -40,8 +41,8 @@ public class ProtocolAdapter {
      */
     public static ChannelInitializer<SocketChannel> forClientChannelInitializer(URL url, ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
+        // http1.1 use HttpChannelPoolHandler init channel
         return switch (protocol) {
-            case HTTP, HTTPS -> new HttpClientChannelInitializer(url, handler);
             case H2, H2C -> new Http2ClientChannelInitializer(url);
             default -> new CustomChannelInitializer(url, handler, codec, false);
         };
@@ -90,6 +91,7 @@ public class ProtocolAdapter {
     public static Server bindServer(URL url, io.virtue.transport.channel.ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
+            case HTTP, HTTPS -> new HttpServer(url, handler, codec);
             case H2, H2C -> new Http2Server(url, handler, codec);
             default -> new NettyServer(url, handler, codec);
         };
@@ -106,6 +108,7 @@ public class ProtocolAdapter {
     public static Client connectClient(URL url, io.virtue.transport.channel.ChannelHandler handler, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
+            case HTTP, HTTPS -> new HttpClient(url, handler, codec);
             case H2, H2C -> new Http2Client(url, handler, codec);
             default -> new NettyClient(url, handler, codec);
         };

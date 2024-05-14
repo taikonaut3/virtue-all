@@ -1,11 +1,13 @@
 package io.virtue.rpc.listener;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.executor.RpcThreadPool;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.url.URL;
 import io.virtue.core.Callee;
 import io.virtue.core.Invocation;
 import io.virtue.rpc.event.RequestEvent;
+import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
 
     @Override
     protected void handEnvelopeEvent(RequestEvent event) {
-        logger.debug("Received <{}>", simpleClassName(event));
+        logger.info("Received <{}>", simpleClassName(event));
         Request request = event.source();
         URL url = request.url();
         RpcContext.currentContext().set(Request.ATTRIBUTE_KEY, request);
@@ -33,5 +35,14 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
         Invocation invocation = event.invocation();
         Callee<?> callee = (Callee<?>) invocation.invoker();
         callee.invoke(invocation);
+
+    }
+
+    @Override
+    protected void jvmShuttingDown(RequestEvent event) {
+        logger.info("Received <{}> but jvm is shutting down", simpleClassName(event));
+        Protocol protocol = event.protocol();
+        RpcException e = new RpcException("Server closing and no longer processing requests");
+        protocol.sendResponse(event.channel(), event.source().url(), e);
     }
 }
