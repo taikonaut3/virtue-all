@@ -1,8 +1,8 @@
-package io.virtue.rpc.objectpool;
+package objectpool.objectpool;
 
 import io.virtue.core.Virtue;
-import io.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
-import io.virtue.rpc.objectpool.listener.PooledObjectInvalidListener;
+import objectpool.objectpool.listener.PooledObjectInvalidEvent;
+import objectpool.objectpool.listener.PooledObjectInvalidListener;
 
 /**
  * DefaultPooledObject.

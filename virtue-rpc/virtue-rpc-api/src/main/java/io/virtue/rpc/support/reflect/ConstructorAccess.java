@@ -22,11 +22,16 @@ import java.lang.reflect.Modifier;
 
 import static org.objectweb.asm.Opcodes.*;
 
-abstract public class ConstructorAccess<T> {
+/**
+ * Constructor Access.
+ *
+ * @param <T>
+ */
+public abstract class ConstructorAccess<T> {
     boolean isNonStaticMemberClass;
 
     @SuppressWarnings("unchecked")
-    static public <T> ConstructorAccess<T> get(Class<T> type) {
+    public static <T> ConstructorAccess<T> get(Class<T> type) {
         Class<?> enclosingType = type.getEnclosingClass();
         boolean isNonStaticMemberClass = enclosingType != null && type.isMemberClass() && !Modifier.isStatic(type.getModifiers());
 
@@ -102,7 +107,7 @@ abstract public class ConstructorAccess<T> {
         return access;
     }
 
-    static private void insertConstructor(ClassWriter cw, String superclassNameInternal) {
+    private static void insertConstructor(ClassWriter cw, String superclassNameInternal) {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
@@ -159,7 +164,7 @@ abstract public class ConstructorAccess<T> {
      * this$0 synthetic reference. The instantiated object will work as long as it actually don't use any member variable or method
      * fron the enclosing instance.
      */
-    abstract public T newInstance();
+    public abstract T newInstance();
 
     /**
      * Constructor for inner classes (non-static nested classes).
@@ -167,5 +172,5 @@ abstract public class ConstructorAccess<T> {
      * @param enclosingInstance The instance of the enclosing type to which this inner instance is related to (assigned to its
      *                          synthetic this$0 field).
      */
-    abstract public T newInstance(Object enclosingInstance);
+    public abstract T newInstance(Object enclosingInstance);
 }

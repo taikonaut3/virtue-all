@@ -13,7 +13,6 @@ import io.virtue.core.config.ServerConfig;
 import io.virtue.rpc.protocol.Protocol;
 import org.example.Message;
 import org.example.model1.ParentObject;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -44,8 +43,8 @@ public class ConsumerMain {
 //            });
 //
 //        }
-        SpringApplication.run(ConsumerMain.class, args);
-        //simpleTest();
+        //SpringApplication.run(ConsumerMain.class, args);
+        simpleTest();
     }
 
     public static void simpleTest() throws Exception {

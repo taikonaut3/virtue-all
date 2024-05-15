@@ -49,6 +49,11 @@ public class RpcThreadPool extends ThreadPoolExecutor {
         return new RpcThreadPool(Constant.DEFAULT_CPU_THREADS, Constant.DEFAULT_CPU_MAX_THREADS, namePrefix);
     }
 
+    /**
+     * Get all thread pool.
+     *
+     * @return
+     */
     public static Set<ThreadPoolExecutor> executors() {
         return EXECUTORS;
     }

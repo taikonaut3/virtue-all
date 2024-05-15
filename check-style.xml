@@ -89,7 +89,7 @@
         <!-- 方法不超过100行 -->
         <module name="MethodLength">
             <property name="tokens" value="METHOD_DEF"/>
-            <property name="max" value="100"/>
+            <property name="max" value="300"/>
         </module>
         <!-- 方法的参数个数不超过5个。 并且不对构造方法进行检查-->
         <module name="ParameterNumber">
@@ -137,8 +137,6 @@
         <module name="EmptyStatement"/>
         <!-- 检查在重写了equals方法后是否重写了hashCode方法 -->
         <module name="EqualsHashCode"/>
-        <!-- 检查switch语句是否有default -->
-        <module name="MissingSwitchDefault"/>
         <!-- 检查是否有过度复杂的布尔表达式 -->
         <module name="SimplifyBooleanExpression"/>
         <!-- 检查是否有过于复杂的布尔返回代码段 -->

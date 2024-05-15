@@ -1,8 +1,8 @@
-package io.virtue.rpc.objectpool;
+package objectpool.objectpool;
 
 import io.virtue.event.Event;
-import io.virtue.rpc.objectpool.listener.PooledObjectEvent;
-import io.virtue.rpc.objectpool.listener.PooledObjectInvalidEvent;
+import objectpool.objectpool.listener.PooledObjectEvent;
+import objectpool.objectpool.listener.PooledObjectInvalidEvent;
 
 /**
  * 池中对象的状态.

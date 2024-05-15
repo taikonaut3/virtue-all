@@ -3,7 +3,7 @@ package io.virtue.transport.http;
 /**
  * Common http Header names.
  */
-public class HttpHeaderNames extends VirtueHttpHeaderNames{
+public class HttpHeaderNames extends VirtueHttpHeaderNames {
 
     // 常用的HTTP请求头常量
     public static final CharSequence ACCEPT = "accept";

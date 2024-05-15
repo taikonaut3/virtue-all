@@ -64,7 +64,6 @@ public interface Consumer {
     @VirtueCall(service = "345", callMethod = "list2")
     List<ParentObject> list(List<ParentObject> list1, List<ParentObject> list2);
 
-    @Options(timeout = 600000)
     @Http2Call(path = "/http2Test/{id}?aaa=123&bbb=321")
     List<ParentObject> http2Test(@PathParam("id") String id,
                                  @HeaderParam("token") String token,
@@ -72,12 +71,10 @@ public interface Consumer {
                                  @BeanParam MyBean myBean,
                                  @Body List<ParentObject> list);
 
-    @Options(timeout = 600000)
     @Http2Call(path = "/http2Test")
     List<ParentObject> http2Test(@Body List<ParentObject> list);
 
     @HttpCall(path = "httpTest")
-    @Options(timeout = 600000)
     List<ParentObject> httpTest(@Body List<ParentObject> list);
 
 }

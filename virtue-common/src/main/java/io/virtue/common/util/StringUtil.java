@@ -35,6 +35,13 @@ public final class StringUtil {
         return isBlank(target) ? defaultValue : target;
     }
 
+    /**
+     * Determines whether the two CharSequences value are equal.
+     *
+     * @param c1
+     * @param c2
+     * @return
+     */
     public static boolean equals(CharSequence c1, CharSequence c2) {
         return CharSequence.compare(c1, c2) == 0;
     }

@@ -1,4 +1,4 @@
-package io.virtue.rpc.objectpool;
+package objectpool.objectpool;
 
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.url.URL;

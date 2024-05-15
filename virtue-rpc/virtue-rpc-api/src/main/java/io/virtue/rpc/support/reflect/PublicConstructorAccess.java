@@ -13,6 +13,9 @@
 
 package io.virtue.rpc.support.reflect;
 
+/**
+ * Public Constructor Access.
+ */
 public abstract class PublicConstructorAccess extends ConstructorAccess<Object> {
 
 }

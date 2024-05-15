@@ -18,7 +18,7 @@ import static io.netty.handler.ssl.ApplicationProtocolNames.HTTP_1_1;
 import static io.virtue.transport.util.TransportUtil.sslEnabled;
 
 /**
- * HttpChannelPoolHandler
+ * HttpClient ChannelInitializer.
  */
 public class HttpClientChannelInitializer extends AbstractChannelPoolHandler {
 

@@ -27,7 +27,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
  * Manage all entry configurations.
  */
 @Extensible(DEFAULT)
-public interface Virtue extends Accessor, Lifecycle{
+public interface Virtue extends Accessor, Lifecycle {
     AttributeKey<Virtue> LOCAL_VIRTUE = AttributeKey.of(Key.LOCAL_VIRTUE);
     AttributeKey<Virtue> CLIENT_VIRTUE = AttributeKey.of(Key.CLIENT_VIRTUE);
     AttributeKey<Virtue> SERVER_VIRTUE = AttributeKey.of(Key.SERVER_VIRTUE);

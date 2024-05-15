@@ -24,6 +24,9 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
  */
 public final class HttpClientMessageConverter {
 
+    /**
+     * Request convert to FullHttpRequest.
+     */
     @Sharable
     public static class RequestConverter extends ChannelOutboundHandlerAdapter {
         @Override
@@ -44,6 +47,9 @@ public final class HttpClientMessageConverter {
         }
     }
 
+    /**
+     * FullHttpResponse convert to response.
+     */
     @Sharable
     public static class ResponseConverter extends ChannelInboundHandlerAdapter {
 

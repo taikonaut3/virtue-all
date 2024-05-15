@@ -30,6 +30,9 @@ import static io.virtue.transport.util.TransportUtil.getScheme;
  */
 public class Http2ClientMessageConverter {
 
+    /**
+     * Request convert to http2 frames.
+     */
     @Sharable
     public static class RequestConverter extends ChannelOutboundHandlerAdapter {
 
@@ -55,6 +58,9 @@ public class Http2ClientMessageConverter {
         }
     }
 
+    /**
+     * Http2Stream convert to response.
+     */
     @Sharable
     public static class ResponseConverter extends ChannelInboundHandlerAdapter {
 

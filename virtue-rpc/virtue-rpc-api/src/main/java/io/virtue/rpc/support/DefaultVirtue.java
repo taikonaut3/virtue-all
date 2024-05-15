@@ -135,7 +135,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     class VirtueShutdownHook extends Thread {
 
-        public VirtueShutdownHook() {
+        VirtueShutdownHook() {
             setName(simpleClassName(this));
         }
 

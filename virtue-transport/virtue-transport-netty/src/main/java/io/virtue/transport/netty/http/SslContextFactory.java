@@ -13,7 +13,7 @@ import static io.virtue.transport.netty.NettySupport.getSslBytes;
 import static io.virtue.transport.netty.NettySupport.readBytes;
 
 /**
- * SslContext Factory
+ * SslContext Factory.
  */
 public class SslContextFactory {
 
@@ -35,6 +35,12 @@ public class SslContextFactory {
         }
     }
 
+    /**
+     * Create ssl context for server.
+     *
+     * @param supportedProtocols
+     * @return
+     */
     public static SslContext createForServer(String... supportedProtocols) {
         SslProvider provider = SslProvider.isAlpnSupported(SslProvider.OPENSSL) ? SslProvider.OPENSSL : SslProvider.JDK;
         //SelfSignedCertificate ssc = new SelfSignedCertificate();
@@ -59,6 +65,12 @@ public class SslContextFactory {
         }
     }
 
+    /**
+     * Create ssl context for client.
+     *
+     * @param supportedProtocols
+     * @return
+     */
     public static SslContext createForClient(String... supportedProtocols) {
         SslProvider provider = SslProvider.isAlpnSupported(SslProvider.OPENSSL) ? SslProvider.OPENSSL : SslProvider.JDK;
         try {

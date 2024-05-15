@@ -19,18 +19,18 @@ import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.WeakHashMap;
 
-class AccessClassLoader extends ClassLoader {
+final class AccessClassLoader extends ClassLoader {
     // Weak-references to class loaders, to avoid perm gen memory leaks, for example in app servers/web containters if the
     // reflectasm library (including this class) is loaded outside the deployed applications (WAR/EAR) using ReflectASM/Kryo (exts,
     // user classpath, etc).
     // The key is the parent class loader and the value is the AccessClassLoader, both are weak-referenced in the hash table.
-    static private final WeakHashMap<ClassLoader, WeakReference<AccessClassLoader>> accessClassLoaders = new WeakHashMap<>();
+    private static final WeakHashMap<ClassLoader, WeakReference<AccessClassLoader>> accessClassLoaders = new WeakHashMap<>();
 
     // Fast-path for classes loaded in the same ClassLoader as this class.
-    static private final ClassLoader selfContextParentClassLoader = getParentClassLoader(AccessClassLoader.class);
-    static private volatile AccessClassLoader selfContextAccessClassLoader = new AccessClassLoader(selfContextParentClassLoader);
+    private static final ClassLoader selfContextParentClassLoader = getParentClassLoader(AccessClassLoader.class);
+    private static volatile AccessClassLoader selfContextAccessClassLoader = new AccessClassLoader(selfContextParentClassLoader);
 
-    static private volatile Method defineClassMethod;
+    private static volatile Method defineClassMethod;
 
     private final HashSet<String> localClassNames = new HashSet<>();
 
@@ -55,13 +55,13 @@ class AccessClassLoader extends ClassLoader {
         return loader1 == loader2;
     }
 
-    static private ClassLoader getParentClassLoader(Class<?> type) {
+    private static ClassLoader getParentClassLoader(Class<?> type) {
         ClassLoader parent = type.getClassLoader();
         if (parent == null) parent = ClassLoader.getSystemClassLoader();
         return parent;
     }
 
-    static private Method getDefineClassMethod() throws Exception {
+    private static Method getDefineClassMethod() throws Exception {
         if (defineClassMethod == null) {
             synchronized (accessClassLoaders) {
                 if (defineClassMethod == null) {
@@ -105,7 +105,7 @@ class AccessClassLoader extends ClassLoader {
         }
     }
 
-    static public void remove(ClassLoader parent) {
+    public static void remove(ClassLoader parent) {
         // 1. fast-path:
         if (selfContextParentClassLoader.equals(parent)) {
             selfContextAccessClassLoader = null;
@@ -117,7 +117,7 @@ class AccessClassLoader extends ClassLoader {
         }
     }
 
-    static public int activeAccessClassLoaders() {
+    public static int activeAccessClassLoaders() {
         int sz = accessClassLoaders.size();
         if (selfContextAccessClassLoader != null) sz++;
         return sz;
@@ -125,6 +125,9 @@ class AccessClassLoader extends ClassLoader {
 
     /**
      * Returns null if the access class has not yet been defined.
+     *
+     * @param name
+     * @return
      */
     Class<?> loadAccessClass(String name) {
         // No need to check the parent class loader if the access class hasn't been defined yet.

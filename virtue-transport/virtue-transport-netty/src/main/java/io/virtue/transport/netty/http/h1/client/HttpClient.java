@@ -72,6 +72,11 @@ public class HttpClient extends NettyClient {
         channelPool.close();
     }
 
+    /**
+     * Release the channel.
+     *
+     * @param channel
+     */
     public void release(Channel channel) {
         channelPool.release(channel);
     }

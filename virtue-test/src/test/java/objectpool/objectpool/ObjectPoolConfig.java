@@ -1,4 +1,4 @@
-package io.virtue.rpc.objectpool;
+package objectpool.objectpool;
 
 import lombok.Getter;
 import lombok.Setter;

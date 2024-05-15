@@ -1,4 +1,4 @@
-package io.virtue.rpc.objectpool;
+package objectpool.objectpool;
 
 import io.virtue.common.constant.Key;
 import io.virtue.common.exception.ResourceException;

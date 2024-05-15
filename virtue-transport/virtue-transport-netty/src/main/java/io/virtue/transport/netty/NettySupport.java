@@ -32,7 +32,6 @@ public class NettySupport {
 
     private static final AttributeKey<URL> URL_KEY = AttributeKey.newInstance(Key.URL);
 
-
     /**
      * Get current channel's http2 stream.
      *
@@ -64,6 +63,13 @@ public class NettySupport {
         streamMessageAttribute.set(null);
     }
 
+    /**
+     * Convert to http2 stream frames.
+     *
+     * @param headers
+     * @param data
+     * @return
+     */
     public static Http2StreamFrame[] convertToHttp2StreamFrames(Http2Headers headers, ByteBuf data) {
         boolean headersEndStream = !data.isReadable();
         Http2StreamFrame headersFrame = new DefaultHttp2HeadersFrame(headers, headersEndStream);
@@ -84,18 +90,30 @@ public class NettySupport {
     /**
      * Remove url from current channel.
      *
-     * @param url
      * @param channel
      */
     public static void removeUrlFromChannel(Channel channel) {
         channel.attr(URL_KEY).set(null);
     }
 
+    /**
+     * Get url from current channel.
+     *
+     * @param channel
+     * @return
+     */
     public static URL getUrlFormChannel(Channel channel) {
         return channel.attr(URL_KEY).get();
     }
 
-
+    /**
+     * Get ssl bytes.
+     *
+     * @param systemDir
+     * @param defaultPath
+     * @return
+     * @throws Exception
+     */
     public static byte[] getSslBytes(String systemDir, String defaultPath) throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String caPath = System.getProperty(systemDir);
@@ -136,10 +154,23 @@ public class NettySupport {
         return new ByteArrayInputStream(bytes);
     }
 
+    /**
+     * ByteBuf convert to byte[].
+     *
+     * @param buf
+     * @return
+     */
     public static byte[] getBytes(ByteBuf buf) {
         return io.netty.buffer.ByteBufUtil.getBytes(buf, buf.readerIndex(), buf.readableBytes(), false);
     }
 
+    /**
+     * Create http client handlers.
+     *
+     * @param client
+     * @param adapterHandler
+     * @return
+     */
     public static ChannelHandler[] createHttpClientHandlers(HttpClient client, ChannelHandler adapterHandler) {
         return new ChannelHandler[]{
                 new HttpClientMessageConverter.RequestConverter(),
@@ -148,6 +179,13 @@ public class NettySupport {
         };
     }
 
+    /**
+     * Create http server handlers.
+     *
+     * @param serverUrl
+     * @param adapterHandler
+     * @return
+     */
     public static ChannelHandler[] createHttpServerHandlers(URL serverUrl, ChannelHandler adapterHandler) {
         return new ChannelHandler[]{
                 new HttpServerMessageConverter.RequestConverter(serverUrl),
@@ -156,6 +194,12 @@ public class NettySupport {
         };
     }
 
+    /**
+     * Create http2 client handlers.
+     *
+     * @param adapterHandler
+     * @return
+     */
     public static ChannelHandler[] createHttp2ClientHandlers(ChannelHandler adapterHandler) {
         return new ChannelHandler[]{
                 new Http2ClientMessageConverter.RequestConverter(),
@@ -164,6 +208,12 @@ public class NettySupport {
         };
     }
 
+    /**
+     * Create http2 server handlers.
+     *
+     * @param adapterHandler
+     * @return
+     */
     public static ChannelHandler[] createHttp2ServerHandlers(ChannelHandler adapterHandler) {
         return new ChannelHandler[]{
                 new Http2ServerMessageConverter.RequestConverter(),

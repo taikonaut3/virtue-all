@@ -30,4 +30,14 @@ public class ScheduledThreadPool implements Scheduler {
     public void addPeriodic(Runnable runnable, long delay, long interval, TimeUnit unit) {
         executorService.scheduleAtFixedRate(runnable, delay, interval, unit);
     }
+
+    @Override
+    public void close() {
+        executorService.shutdown();
+    }
+
+    @Override
+    public boolean isActive() {
+        return !executorService.isShutdown();
+    }
 }

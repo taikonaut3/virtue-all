@@ -30,14 +30,27 @@ public final class Platform {
     private Platform() {
     }
 
+    /**
+     * Get current version of virtue.
+     *
+     * @return
+     */
     public static String virtueVersion() {
         return VIRTUE_VERSION;
     }
 
+    /**
+     * The modified status indicates that the JVM is currently being shut down.
+     */
     public static void jvmShuttingDown() {
         JVM_SHUTTING_DOWN.compareAndSet(false, true);
     }
 
+    /**
+     * Check whether the current JVM is being shut down.
+     *
+     * @return
+     */
     public static boolean isJvmShuttingDown() {
         return JVM_SHUTTING_DOWN.get();
     }

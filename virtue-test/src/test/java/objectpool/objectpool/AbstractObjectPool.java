@@ -1,4 +1,4 @@
-package io.virtue.rpc.objectpool;
+package objectpool.objectpool;
 
 import io.virtue.common.util.AssertUtil;
 import io.virtue.core.Virtue;

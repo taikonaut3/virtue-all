@@ -1,7 +1,7 @@
 package objectpool;
 
 import io.virtue.core.Virtue;
-import io.virtue.rpc.objectpool.ArrayObjectPool;
+import objectpool.objectpool.ArrayObjectPool;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

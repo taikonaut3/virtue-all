@@ -64,6 +64,11 @@ public class RpcFuture extends CompletableFuture<Object> {
         return futures.get(id);
     }
 
+    /**
+     * Get un completed futures.
+     *
+     * @return
+     */
     public static Collection<RpcFuture> unCompletedFutures() {
         return futures.values();
     }

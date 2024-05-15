@@ -1,7 +1,5 @@
 package io.virtue.transport.http;
 
-import lombok.Getter;
-
 /**
  * Internal HTTP/2 header names.
  */

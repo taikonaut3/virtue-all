@@ -19,11 +19,17 @@ public enum MediaType {
 
     private final String serialization;
 
-    private MediaType(String name, String serialization) {
+    MediaType(String name, String serialization) {
         this.name = name;
         this.serialization = serialization;
     }
 
+    /**
+     * Get MediaType by name.
+     *
+     * @param name
+     * @return
+     */
     public static MediaType of(CharSequence name) {
         for (MediaType value : MediaType.values()) {
             if (StringUtil.equals(name, value.getName())) {

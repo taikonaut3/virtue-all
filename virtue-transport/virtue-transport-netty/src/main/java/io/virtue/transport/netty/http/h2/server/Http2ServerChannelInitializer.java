@@ -89,8 +89,7 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
                 .addLast(idleStateHandler.handler())
                 .addLast(sourceCodec)
                 .addLast(new HttpServerUpgradeHandler(sourceCodec, upgradeCodecFactory))
-                .addLast(new Http2ToHttpHandler())
-                .addLast(new UserEventLogger());
+                .addLast(new Http2ToHttpHandler());
     }
 
     class Http2ToHttpHandler extends SimpleChannelInboundHandler<HttpMessage> {
@@ -118,14 +117,4 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
         }
     }
 
-    /**
-     * Class that logs any User Events triggered on this channel.
-     */
-    private static class UserEventLogger extends ChannelInboundHandlerAdapter {
-        @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
-            System.out.println("User Event Triggered: " + evt);
-            ctx.fireUserEventTriggered(evt);
-        }
-    }
 }

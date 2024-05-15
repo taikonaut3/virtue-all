@@ -28,6 +28,9 @@ import static io.netty.channel.ChannelHandler.Sharable;
  */
 public class Http2ServerMessageConverter {
 
+    /**
+     * Http2Stream convert to request.
+     */
     @Sharable
     public static class RequestConverter extends ChannelInboundHandlerAdapter {
 
@@ -50,6 +53,9 @@ public class Http2ServerMessageConverter {
         }
     }
 
+    /**
+     * Response convert to http2 frames.
+     */
     @Sharable
     public static class ResponseConverter extends ChannelOutboundHandlerAdapter {
         @Override

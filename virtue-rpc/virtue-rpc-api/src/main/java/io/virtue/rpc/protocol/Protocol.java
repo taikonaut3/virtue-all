@@ -94,5 +94,4 @@ public interface Protocol extends ProtocolParser, ProtocolAdapter, Cleanable {
         endpoints().clear();
     }
 
-    ;
 }

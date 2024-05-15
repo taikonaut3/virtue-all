@@ -1,7 +1,10 @@
 package io.virtue.transport.netty.http.h1.server;
 
 import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -28,6 +31,9 @@ import static io.netty.handler.codec.http.DefaultHttpHeadersFactory.trailersFact
 
 public final class HttpServerMessageConverter {
 
+    /**
+     * FullHttpRequest convert request.
+     */
     @Sharable
     public static class RequestConverter extends ChannelInboundHandlerAdapter {
         private final URL url;
@@ -63,6 +69,9 @@ public final class HttpServerMessageConverter {
         }
     }
 
+    /**
+     * Response convert fullHttpResponse.
+     */
     @Sharable
     public static class ResponseConvert extends ChannelOutboundHandlerAdapter {
         @Override

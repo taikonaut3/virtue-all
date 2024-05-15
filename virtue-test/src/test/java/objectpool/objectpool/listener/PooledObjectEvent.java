@@ -1,7 +1,7 @@
-package io.virtue.rpc.objectpool.listener;
+package objectpool.objectpool.listener;
 
 import io.virtue.event.AbstractEvent;
-import io.virtue.rpc.objectpool.PooledObject;
+import objectpool.objectpool.PooledObject;
 
 /**
  * PooledObjectEvent.

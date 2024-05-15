@@ -27,6 +27,9 @@ import java.util.Arrays;
 
 import static org.objectweb.asm.Opcodes.*;
 
+/**
+ * Method Access.
+ */
 @Getter
 public abstract class MethodAccess {
     private String[] methodNames;
@@ -38,7 +41,7 @@ public abstract class MethodAccess {
      *
      * @param type Must not be a primitive type, or void.
      */
-    static public MethodAccess get(Class<?> type) {
+    public static MethodAccess get(Class<?> type) {
         boolean isInterface = type.isInterface();
         if (!isInterface && type.getSuperclass() == null && type != Object.class)
             throw new IllegalArgumentException("The type must not be an interface, a primitive type, or void.");
@@ -80,154 +83,153 @@ public abstract class MethodAccess {
                 MethodVisitor mv;
                 cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, accessClassNameInternal, null, "io/virtue/rpc/support/reflect/MethodAccess",
                         null);
-                {
-                    mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-                    mv.visitCode();
-                    mv.visitVarInsn(ALOAD, 0);
-                    mv.visitMethodInsn(INVOKESPECIAL, "io/virtue/rpc/support/reflect/MethodAccess", "<init>", "()V", false);
-                    mv.visitInsn(RETURN);
-                    mv.visitMaxs(0, 0);
-                    mv.visitEnd();
-                }
-                {
-                    mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "invoke",
-                            "(Ljava/lang/Object;I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
-                    mv.visitCode();
 
-                    if (!methods.isEmpty()) {
-                        mv.visitVarInsn(ALOAD, 1);
-                        mv.visitTypeInsn(CHECKCAST, classNameInternal);
-                        mv.visitVarInsn(ASTORE, 4);
+                mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+                mv.visitCode();
+                mv.visitVarInsn(ALOAD, 0);
+                mv.visitMethodInsn(INVOKESPECIAL, "io/virtue/rpc/support/reflect/MethodAccess", "<init>", "()V", false);
+                mv.visitInsn(RETURN);
+                mv.visitMaxs(0, 0);
+                mv.visitEnd();
 
-                        mv.visitVarInsn(ILOAD, 2);
-                        Label[] labels = new Label[n];
-                        for (int i = 0; i < n; i++)
-                            labels[i] = new Label();
-                        Label defaultLabel = new Label();
-                        mv.visitTableSwitchInsn(0, labels.length - 1, defaultLabel, labels);
+                mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "invoke",
+                        "(Ljava/lang/Object;I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+                mv.visitCode();
 
-                        StringBuilder buffer = new StringBuilder(128);
-                        for (int i = 0; i < n; i++) {
-                            mv.visitLabel(labels[i]);
-                            if (i == 0)
-                                mv.visitFrame(F_APPEND, 1, new Object[]{classNameInternal}, 0, null);
-                            else
-                                mv.visitFrame(F_SAME, 0, null, 0, null);
-                            mv.visitVarInsn(ALOAD, 4);
+                if (!methods.isEmpty()) {
+                    mv.visitVarInsn(ALOAD, 1);
+                    mv.visitTypeInsn(CHECKCAST, classNameInternal);
+                    mv.visitVarInsn(ASTORE, 4);
 
-                            buffer.setLength(0);
-                            buffer.append('(');
+                    mv.visitVarInsn(ILOAD, 2);
+                    Label[] labels = new Label[n];
+                    for (int i = 0; i < n; i++)
+                        labels[i] = new Label();
+                    Label defaultLabel = new Label();
+                    mv.visitTableSwitchInsn(0, labels.length - 1, defaultLabel, labels);
 
-                            Class<?>[] paramTypes = parameterTypes[i];
-                            Class<?> returnType = returnTypes[i];
-                            for (int paramIndex = 0; paramIndex < paramTypes.length; paramIndex++) {
-                                mv.visitVarInsn(ALOAD, 3);
-                                mv.visitIntInsn(BIPUSH, paramIndex);
-                                mv.visitInsn(AALOAD);
-                                Type paramType = Type.getType(paramTypes[paramIndex]);
-                                switch (paramType.getSort()) {
-                                    case Type.BOOLEAN:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", isInterface);
-                                        break;
-                                    case Type.BYTE:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Byte");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", isInterface);
-                                        break;
-                                    case Type.CHAR:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Character");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", isInterface);
-                                        break;
-                                    case Type.SHORT:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", isInterface);
-                                        break;
-                                    case Type.INT:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Integer");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", isInterface);
-                                        break;
-                                    case Type.FLOAT:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Float");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", isInterface);
-                                        break;
-                                    case Type.LONG:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Long");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", isInterface);
-                                        break;
-                                    case Type.DOUBLE:
-                                        mv.visitTypeInsn(CHECKCAST, "java/lang/Double");
-                                        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", isInterface);
-                                        break;
-                                    case Type.ARRAY:
-                                        mv.visitTypeInsn(CHECKCAST, paramType.getDescriptor());
-                                        break;
-                                    case Type.OBJECT:
-                                        mv.visitTypeInsn(CHECKCAST, paramType.getInternalName());
-                                        break;
-                                }
-                                buffer.append(paramType.getDescriptor());
-                            }
+                    StringBuilder buffer = new StringBuilder(128);
+                    for (int i = 0; i < n; i++) {
+                        mv.visitLabel(labels[i]);
+                        if (i == 0)
+                            mv.visitFrame(F_APPEND, 1, new Object[]{classNameInternal}, 0, null);
+                        else
+                            mv.visitFrame(F_SAME, 0, null, 0, null);
+                        mv.visitVarInsn(ALOAD, 4);
 
-                            buffer.append(')');
-                            buffer.append(Type.getDescriptor(returnType));
-                            int invoke;
-                            if (isInterface)
-                                invoke = INVOKEINTERFACE;
-                            else if (Modifier.isStatic(methods.get(i).getModifiers()))
-                                invoke = INVOKESTATIC;
-                            else
-                                invoke = INVOKEVIRTUAL;
-                            mv.visitMethodInsn(invoke, classNameInternal, methodNames[i], buffer.toString(), isInterface);
+                        buffer.setLength(0);
+                        buffer.append('(');
 
-                            switch (Type.getType(returnType).getSort()) {
-                                case Type.VOID:
-                                    mv.visitInsn(ACONST_NULL);
-                                    break;
+                        Class<?>[] paramTypes = parameterTypes[i];
+                        Class<?> returnType = returnTypes[i];
+                        for (int paramIndex = 0; paramIndex < paramTypes.length; paramIndex++) {
+                            mv.visitVarInsn(ALOAD, 3);
+                            mv.visitIntInsn(BIPUSH, paramIndex);
+                            mv.visitInsn(AALOAD);
+                            Type paramType = Type.getType(paramTypes[paramIndex]);
+                            switch (paramType.getSort()) {
                                 case Type.BOOLEAN:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", isInterface);
                                     break;
                                 case Type.BYTE:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Byte", "valueOf", "(B)Ljava/lang/Byte;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Byte");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", isInterface);
                                     break;
                                 case Type.CHAR:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character", "valueOf", "(C)Ljava/lang/Character;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Character");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", isInterface);
                                     break;
                                 case Type.SHORT:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", isInterface);
                                     break;
                                 case Type.INT:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Integer");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", isInterface);
                                     break;
                                 case Type.FLOAT:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Float");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", isInterface);
                                     break;
                                 case Type.LONG:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Long");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", isInterface);
                                     break;
                                 case Type.DOUBLE:
-                                    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", isInterface);
+                                    mv.visitTypeInsn(CHECKCAST, "java/lang/Double");
+                                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", isInterface);
+                                    break;
+                                case Type.ARRAY:
+                                    mv.visitTypeInsn(CHECKCAST, paramType.getDescriptor());
+                                    break;
+                                case Type.OBJECT:
+                                    mv.visitTypeInsn(CHECKCAST, paramType.getInternalName());
                                     break;
                             }
-
-                            mv.visitInsn(ARETURN);
+                            buffer.append(paramType.getDescriptor());
                         }
-                        mv.visitLabel(defaultLabel);
-                        mv.visitFrame(F_SAME, 0, null, 0, null);
+
+                        buffer.append(')');
+                        buffer.append(Type.getDescriptor(returnType));
+                        int invoke;
+                        if (isInterface)
+                            invoke = INVOKEINTERFACE;
+                        else if (Modifier.isStatic(methods.get(i).getModifiers()))
+                            invoke = INVOKESTATIC;
+                        else
+                            invoke = INVOKEVIRTUAL;
+                        mv.visitMethodInsn(invoke, classNameInternal, methodNames[i], buffer.toString(), isInterface);
+
+                        switch (Type.getType(returnType).getSort()) {
+                            case Type.VOID:
+                                mv.visitInsn(ACONST_NULL);
+                                break;
+                            case Type.BOOLEAN:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", isInterface);
+                                break;
+                            case Type.BYTE:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Byte", "valueOf", "(B)Ljava/lang/Byte;", isInterface);
+                                break;
+                            case Type.CHAR:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character", "valueOf", "(C)Ljava/lang/Character;", isInterface);
+                                break;
+                            case Type.SHORT:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", isInterface);
+                                break;
+                            case Type.INT:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", isInterface);
+                                break;
+                            case Type.FLOAT:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", isInterface);
+                                break;
+                            case Type.LONG:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", isInterface);
+                                break;
+                            case Type.DOUBLE:
+                                mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", isInterface);
+                                break;
+                        }
+
+                        mv.visitInsn(ARETURN);
                     }
-                    mv.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
-                    mv.visitInsn(DUP);
-                    mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-                    mv.visitInsn(DUP);
-                    mv.visitLdcInsn("Method not found: ");
-                    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "(Ljava/lang/String;)V", isInterface);
-                    mv.visitVarInsn(ILOAD, 2);
-                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", isInterface);
-                    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", isInterface);
-                    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", isInterface);
-                    mv.visitInsn(ATHROW);
-                    mv.visitMaxs(0, 0);
-                    mv.visitEnd();
+                    mv.visitLabel(defaultLabel);
+                    mv.visitFrame(F_SAME, 0, null, 0, null);
                 }
+                mv.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+                mv.visitInsn(DUP);
+                mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+                mv.visitInsn(DUP);
+                mv.visitLdcInsn("Method not found: ");
+                mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "(Ljava/lang/String;)V", isInterface);
+                mv.visitVarInsn(ILOAD, 2);
+                mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", isInterface);
+                mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", isInterface);
+                mv.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", isInterface);
+                mv.visitInsn(ATHROW);
+                mv.visitMaxs(0, 0);
+                mv.visitEnd();
+
                 cw.visitEnd();
                 byte[] data = cw.toByteArray();
                 accessClass = loader.defineAccessClass(accessClassName, data);
@@ -244,7 +246,7 @@ public abstract class MethodAccess {
         }
     }
 
-    static private void addDeclaredMethodsToList(Class<?> type, ArrayList<Method> methods) {
+    private static void addDeclaredMethodsToList(Class<?> type, ArrayList<Method> methods) {
         Method[] declaredMethods = type.getDeclaredMethods();
         for (Method method : declaredMethods) {
             int modifiers = method.getModifiers();
@@ -254,16 +256,30 @@ public abstract class MethodAccess {
         }
     }
 
-    static private void recursiveAddInterfaceMethodsToList(Class<?> interfaceType, ArrayList<Method> methods) {
+    private static void recursiveAddInterfaceMethodsToList(Class<?> interfaceType, ArrayList<Method> methods) {
         addDeclaredMethodsToList(interfaceType, methods);
         for (Class<?> nextInterface : interfaceType.getInterfaces())
             recursiveAddInterfaceMethodsToList(nextInterface, methods);
     }
 
-    abstract public Object invoke(Object object, int methodIndex, Object... args);
+    /**
+     * Invokes the method with the specified index.
+     *
+     * @param object
+     * @param methodIndex
+     * @param args
+     * @return
+     */
+    public abstract Object invoke(Object object, int methodIndex, Object... args);
 
     /**
      * Invokes the method with the specified name and the specified param types.
+     *
+     * @param object
+     * @param methodName
+     * @param paramTypes
+     * @param args
+     * @return
      */
     public Object invoke(Object object, String methodName, Class<?>[] paramTypes, Object... args) {
         return invoke(object, getIndex(methodName, paramTypes), args);
@@ -271,6 +287,11 @@ public abstract class MethodAccess {
 
     /**
      * Invokes the first method with the specified name and the specified number of arguments.
+     *
+     * @param object
+     * @param methodName
+     * @param args
+     * @return
      */
     public Object invoke(Object object, String methodName, Object... args) {
         return invoke(object, getIndex(methodName, args == null ? 0 : args.length), args);
@@ -278,6 +299,9 @@ public abstract class MethodAccess {
 
     /**
      * Returns the index of the first method with the specified name.
+     *
+     * @param methodName
+     * @return
      */
     public int getIndex(String methodName) {
         for (int i = 0, n = methodNames.length; i < n; i++)
@@ -287,6 +311,10 @@ public abstract class MethodAccess {
 
     /**
      * Returns the index of the first method with the specified name and param types.
+     *
+     * @param methodName
+     * @param paramTypes
+     * @return
      */
     public int getIndex(String methodName, Class<?>... paramTypes) {
         for (int i = 0, n = methodNames.length; i < n; i++)
@@ -296,6 +324,10 @@ public abstract class MethodAccess {
 
     /**
      * Returns the index of the first method with the specified name and the specified number of arguments.
+     *
+     * @param methodName
+     * @param paramsCount
+     * @return
      */
     public int getIndex(String methodName, int paramsCount) {
         for (int i = 0, n = methodNames.length; i < n; i++)

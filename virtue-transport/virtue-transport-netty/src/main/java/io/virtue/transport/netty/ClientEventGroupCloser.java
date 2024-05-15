@@ -5,6 +5,9 @@ import io.virtue.core.Virtue;
 import io.virtue.core.VirtueConfiguration;
 import io.virtue.transport.netty.client.NettyClient;
 
+/**
+ * Close netty client event loop group.
+ */
 @Extension("clientEventGroupCloser")
 public class ClientEventGroupCloser implements VirtueConfiguration {
 
