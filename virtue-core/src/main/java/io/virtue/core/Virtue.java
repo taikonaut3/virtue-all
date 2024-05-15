@@ -20,7 +20,6 @@ import org.intellij.lang.annotations.Language;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.virtue.common.constant.Components.DEFAULT;
 
@@ -29,9 +28,6 @@ import static io.virtue.common.constant.Components.DEFAULT;
  */
 @Extensible(DEFAULT)
 public interface Virtue extends Accessor, Lifecycle{
-
-    AtomicBoolean JVM_SHUTTING_DOWN = new AtomicBoolean(false);
-
     AttributeKey<Virtue> LOCAL_VIRTUE = AttributeKey.of(Key.LOCAL_VIRTUE);
     AttributeKey<Virtue> CLIENT_VIRTUE = AttributeKey.of(Key.CLIENT_VIRTUE);
     AttributeKey<Virtue> SERVER_VIRTUE = AttributeKey.of(Key.SERVER_VIRTUE);
@@ -176,14 +172,6 @@ public interface Virtue extends Accessor, Lifecycle{
         configManager().routerConfigManager().register(urlRegex, targetRegex);
         return this;
     }
-
-    /**
-     * Register closeable into current instance.
-     *
-     * @param closeable
-     * @return
-     */
-    Virtue register(Closeable... closeables);
 
     /**
      * Register remoteService into current instance.

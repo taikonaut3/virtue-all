@@ -1,5 +1,6 @@
 package io.virtue.event;
 
+import io.virtue.common.extension.resoruce.Closeable;
 import io.virtue.common.extension.spi.Extensible;
 
 import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
@@ -8,10 +9,10 @@ import static io.virtue.common.constant.Components.EventDispatcher.DISRUPTOR;
  * Event dispatcher that can register, remove,and dispatch support listeners for specific types of events.
  */
 @Extensible(DISRUPTOR)
-public interface EventDispatcher {
+public interface EventDispatcher extends Closeable {
 
     /**
-     * Registers an support listener for the specified support type. The listener will receive
+     * Registers a support listener for the specified support type. The listener will receive
      * all events of the specified or subclass type  that are dispatched by this dispatcher.
      *
      * @param eventType the class object representing the support type
@@ -21,7 +22,7 @@ public interface EventDispatcher {
     <E extends Event<?>> void addListener(Class<E> eventType, EventListener<E> listener);
 
     /**
-     * Removes an support listener for the specified support type. If the listener is not currently
+     * Removes a support listener for the specified support type. If the listener is not currently
      * registered, this method has no effect.
      *
      * @param eventType the class object representing the support type

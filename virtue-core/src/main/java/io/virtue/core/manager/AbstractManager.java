@@ -59,4 +59,8 @@ public abstract class AbstractManager<T> {
         return map;
     }
 
+    public void clear() {
+        map.clear();
+    }
+
 }

@@ -21,6 +21,12 @@ public class RemoteCallerManager extends AbstractManager<List<RemoteCaller<?>>> 
         super(virtue);
     }
 
+    @Override
+    public void clear() {
+        remoteCallers().forEach(RemoteCaller::stop);
+        super.clear();
+    }
+
     /**
      * Get all remote callers.
      *

@@ -1,6 +1,7 @@
 package io.virtue.rpc.protocol;
 
 import io.virtue.common.constant.Key;
+import io.virtue.common.constant.Platform;
 import io.virtue.common.exception.ResourceException;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.extension.spi.LoadedListener;
@@ -81,17 +82,16 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
         this.virtue = virtue;
         String transportName = virtue.configManager().applicationConfig().transport();
         transporter = loadTransporter(transportName);
-        virtue.register(endpoints);
     }
 
     @Override
     public Client openClient(URL url) {
-        return endpoints.getClient(url, () -> transporter.connect(url, clientHandler, clientCodec));
+        return endpoints.acquireClient(url, () -> transporter.connect(url, clientHandler, clientCodec));
     }
 
     @Override
     public Server openServer(URL url) {
-        return endpoints.getServer(url, () -> transporter.bind(url, serverHandler, serverCodec));
+        return endpoints.acquireServer(url, () -> transporter.bind(url, serverHandler, serverCodec));
     }
 
     @Override
@@ -104,7 +104,11 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
             invocation.url().addParam(Key.TIMESTAMP, timestamp);
             Client client = getClient(invocation);
             future.client(client);
-            doSendRequest(future, request);
+            if (!Platform.isJvmShuttingDown()) {
+                doSendRequest(future, request);
+            } else {
+                RpcFuture.removeFuture(future.id());
+            }
         });
         virtue.eventDispatcher().dispatch(event);
         return future;

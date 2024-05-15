@@ -70,6 +70,7 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     public void stop() {
         super.stop();
         mappingCallee.clear();
+        methodIndex.clear();
     }
 
     @Override

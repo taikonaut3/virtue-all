@@ -68,6 +68,14 @@ public class RpcFuture extends CompletableFuture<Object> {
         return futures.values();
     }
 
+    public static void clear() {
+        try {
+            CompletableFuture.allOf(unCompletedFutures().toArray(new RpcFuture[0])).get();
+        } catch (Exception e) {
+            throw new RpcException(e);
+        }
+    }
+
     /**
      * Returns a null if no value is returned.
      *

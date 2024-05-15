@@ -53,4 +53,8 @@ public class RpcThreadPool extends ThreadPoolExecutor {
         return EXECUTORS;
     }
 
+    public static void clear() {
+        executors().forEach(ExecutorService::shutdown);
+    }
+
 }

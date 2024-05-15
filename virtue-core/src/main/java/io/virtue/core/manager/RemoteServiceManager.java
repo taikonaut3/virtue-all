@@ -19,6 +19,12 @@ public class RemoteServiceManager extends AbstractManager<RemoteService<?>> {
         super(virtue);
     }
 
+    @Override
+    public void clear() {
+        remoteServices().forEach(RemoteService::stop);
+        super.clear();
+    }
+
     /**
      * Get all remote services.
      *

@@ -19,10 +19,9 @@ public class MultiplexEndpoints implements Endpoints {
     private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
     private final Map<String, Client> customClients = new ConcurrentHashMap<>();
     private final Map<String, Server> servers = new ConcurrentHashMap<>();
-    private volatile boolean active = true;
 
     @Override
-    public Client getClient(URL remoteUrl, Supplier<Client> createFunction) {
+    public Client acquireClient(URL remoteUrl, Supplier<Client> createFunction) {
         boolean isMultiplex = remoteUrl.getBooleanParam(Key.MULTIPLEX, false);
         if (isMultiplex) {
             String key = remoteUrl.authority();
@@ -34,7 +33,7 @@ public class MultiplexEndpoints implements Endpoints {
     }
 
     @Override
-    public Server getServer(URL url, Supplier<Server> createFunction) {
+    public Server acquireServer(URL url, Supplier<Server> createFunction) {
         return servers.computeIfAbsent(url.authority(), k -> createFunction.get());
     }
 
@@ -60,19 +59,12 @@ public class MultiplexEndpoints implements Endpoints {
     }
 
     @Override
-    public synchronized void close() {
-        if (active) {
+    public synchronized void clear() {
             clients().forEach(Client::close);
             servers().forEach(Server::close);
             customClients.clear();
             multiplexClients.clear();
             servers.clear();
-            active = false;
-        }
     }
 
-    @Override
-    public boolean isActive() {
-        return active;
-    }
 }

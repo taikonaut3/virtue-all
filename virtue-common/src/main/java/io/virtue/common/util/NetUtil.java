@@ -68,6 +68,20 @@ public final class NetUtil {
     }
 
     /**
+     * Determine whether two InetSocketAddress objects are the same.
+     *
+     * @param addr1
+     * @param addr2
+     * @return
+     */
+    public static boolean isSameAddress(InetSocketAddress addr1, InetSocketAddress addr2) {
+        if (addr1 == null || addr2 == null) {
+            return false;
+        }
+        return addr1.getAddress().equals(addr2.getAddress()) && addr1.getPort() == addr2.getPort();
+    }
+
+    /**
      * If it is a loopback address.
      *
      * @param host

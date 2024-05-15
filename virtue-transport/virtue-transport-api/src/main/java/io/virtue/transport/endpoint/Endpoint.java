@@ -1,5 +1,6 @@
 package io.virtue.transport.endpoint;
 
+import io.virtue.common.extension.resoruce.Closeable;
 import io.virtue.common.util.NetUtil;
 
 import java.net.InetSocketAddress;
@@ -7,7 +8,7 @@ import java.net.InetSocketAddress;
 /**
  * Network endpoint,including Host and Port information.
  */
-public interface Endpoint {
+public interface Endpoint extends Closeable {
 
     /**
      * Get the host name of the endpoint.

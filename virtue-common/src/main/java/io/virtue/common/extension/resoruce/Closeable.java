@@ -1,7 +1,7 @@
-package io.virtue.core;
+package io.virtue.common.extension.resoruce;
 
 /**
- * Close and check Resource.
+ * Close and check resource.
  */
 public interface Closeable {
 

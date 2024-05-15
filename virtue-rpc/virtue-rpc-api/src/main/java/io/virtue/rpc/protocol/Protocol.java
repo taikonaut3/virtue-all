@@ -1,5 +1,6 @@
 package io.virtue.rpc.protocol;
 
+import io.virtue.common.extension.resoruce.Cleanable;
 import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
@@ -17,8 +18,7 @@ import static io.virtue.common.constant.Components.Protocol.VIRTUE;
  * Communication protocol used to exchange data between client and server.
  */
 @Extensible(value = VIRTUE)
-public interface Protocol extends ProtocolParser, ProtocolAdapter {
-
+public interface Protocol extends ProtocolParser, ProtocolAdapter, Cleanable {
     /**
      * This protocol.
      *
@@ -89,4 +89,10 @@ public interface Protocol extends ProtocolParser, ProtocolAdapter {
      */
     Endpoints endpoints();
 
+    @Override
+    default void clear() {
+        endpoints().clear();
+    }
+
+    ;
 }

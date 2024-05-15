@@ -2,6 +2,7 @@ package io.virtue.rpc.support;
 
 import io.virtue.common.constant.Constant;
 import io.virtue.common.constant.Key;
+import io.virtue.common.constant.Platform;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.extension.spi.ExtensionLoader;
@@ -176,7 +177,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     @Override
     public Object invoke(Invocation invocation) throws RpcException {
-        if(Virtue.JVM_SHUTTING_DOWN.get()){
+        if (Platform.isJvmShuttingDown()) {
             throw new RpcException("JVM is shutting down");
         }
         try {

@@ -1,6 +1,8 @@
 package io.virtue.common.extension.spi;
 
 import io.virtue.common.exception.RpcException;
+import io.virtue.common.extension.resoruce.Cleanable;
+import io.virtue.common.extension.resoruce.Closeable;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.ReflectionUtil;
 import lombok.Getter;
@@ -24,7 +26,7 @@ import static java.lang.String.format;
  *
  * @param <S>
  */
-public final class ExtensionLoader<S> {
+public final class ExtensionLoader<S> implements Cleanable {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);
 
@@ -134,6 +136,15 @@ public final class ExtensionLoader<S> {
         }
     }
 
+    /**
+     * Clear loader.
+     */
+    public static void clearLoader() {
+        LISTENERMAP.clear();
+        LOADED_MAP.values().forEach(ExtensionLoader::clear);
+        LOADED_MAP.clear();
+    }
+
     @SuppressWarnings("unchecked")
     private void loadExtensionWrappers(Class<S> type) {
         /**========================load extensions from {@link PREFIX}========================*/
@@ -239,6 +250,19 @@ public final class ExtensionLoader<S> {
             }
         }
         return extension;
+    }
+
+    @Override
+    public void clear() {
+        extensionWrappers.clear();
+        for (S value : extensions.values()) {
+            if (value instanceof Closeable closeable) {
+                closeable.close();
+            } else if (value instanceof Cleanable cleanable) {
+                cleanable.clear();
+            }
+        }
+        extensions.clear();
     }
 
     @Getter

@@ -21,16 +21,17 @@ public final class NettyChannel extends AbstractChannel {
 
     private final Channel channel;
 
-    public NettyChannel(InetSocketAddress remoteAddress, Channel channel) {
-        super(remoteAddress);
+    public NettyChannel(InetSocketAddress localAddress, InetSocketAddress remoteAddress, Channel channel) {
+        super(localAddress, remoteAddress);
         this.channel = channel;
     }
 
     public static NettyChannel getChannel(Channel channel) {
         NettyChannel nettyChannel = CHANNEL_MAP.get(channel);
         if (nettyChannel == null) {
+            InetSocketAddress localAddress = (InetSocketAddress) channel.localAddress();
             InetSocketAddress remoteAddress = (InetSocketAddress) channel.remoteAddress();
-            nettyChannel = new NettyChannel(remoteAddress, channel);
+            nettyChannel = new NettyChannel(localAddress, remoteAddress, channel);
             CHANNEL_MAP.put(channel, nettyChannel);
         }
         return nettyChannel;

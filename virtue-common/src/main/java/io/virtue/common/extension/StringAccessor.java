@@ -1,5 +1,7 @@
 package io.virtue.common.extension;
 
+import io.virtue.common.extension.resoruce.Cleanable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +11,7 @@ import java.util.Map;
  * @param <T> current instance
  */
 @SuppressWarnings("unchecked")
-public abstract class StringAccessor<T> {
+public abstract class StringAccessor<T> implements Cleanable {
 
     protected Map<String, String> accessor = new HashMap<>();
 
@@ -44,5 +46,10 @@ public abstract class StringAccessor<T> {
      */
     public String get(String key) {
         return accessor.get(key);
+    }
+
+    @Override
+    public void clear() {
+        accessor.clear();
     }
 }

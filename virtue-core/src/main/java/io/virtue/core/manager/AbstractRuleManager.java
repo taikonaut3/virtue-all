@@ -20,6 +20,12 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
         super(virtue);
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        ruleMap.clear();
+    }
+
     /**
      * Add protocol rule.
      *

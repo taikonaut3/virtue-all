@@ -1,11 +1,13 @@
 package io.virtue.common.extension;
 
+import io.virtue.common.extension.resoruce.Cleanable;
+
 /**
  * Object accessor.
  *
  * @see AttributeKey
  */
-public interface Accessor {
+public interface Accessor extends Cleanable {
 
     /**
      * Get attribute value by attributeKey.
@@ -32,10 +34,5 @@ public interface Accessor {
      * @return
      */
     Accessor remove(AttributeKey<?> key);
-
-    /**
-     * Remove all attributes.
-     */
-    void clear();
 
 }

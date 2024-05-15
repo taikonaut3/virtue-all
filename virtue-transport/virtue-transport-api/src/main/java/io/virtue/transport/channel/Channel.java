@@ -3,22 +3,28 @@ package io.virtue.transport.channel;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.extension.Accessor;
 import io.virtue.common.extension.AttributeKey;
-import io.virtue.core.Closeable;
-import io.virtue.transport.endpoint.Endpoint;
+import io.virtue.common.extension.resoruce.Closeable;
 
 import java.net.InetSocketAddress;
 
 /**
  * Net channel interface that extends the Endpoint and Closeable interfaces.
  */
-public interface Channel extends Endpoint, Accessor, Closeable {
+public interface Channel extends Accessor, Closeable {
 
     AttributeKey<Channel> ATTRIBUTE_KEY = AttributeKey.of("channel");
 
     /**
+     * Returns the local address associated with the channel.
+     *
+     * @return
+     */
+    InetSocketAddress localAddress();
+
+    /**
      * Returns the remote address associated with the channel.
      *
-     * @return The remote address associated with the channel.
+     * @return
      */
     InetSocketAddress remoteAddress();
 

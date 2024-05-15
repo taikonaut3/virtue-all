@@ -63,4 +63,13 @@ public class DefaultEventDispatcher extends AbstractEventDispatcher implements E
         }
     }
 
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
 }

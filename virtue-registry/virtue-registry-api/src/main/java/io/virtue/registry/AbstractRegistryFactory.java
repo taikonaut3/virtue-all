@@ -1,7 +1,6 @@
 package io.virtue.registry;
 
 import io.virtue.common.url.URL;
-import io.virtue.core.Virtue;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractRegistryFactory implements RegistryFactory {
 
-    private static final Map<String, RegistryService> registries = new ConcurrentHashMap<>();
+    private final Map<String, RegistryService> registries = new ConcurrentHashMap<>();
 
     @Override
     public RegistryService get(URL url) {
@@ -20,14 +19,18 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
         if (registryService == null) {
             registryService = create(url);
             registries.put(uri, registryService);
-            Virtue virtue = Virtue.ofLocal(url);
-            virtue.register(registryService);
         } else {
             if (!registryService.isActive()) {
                 registryService.connect(url);
             }
         }
         return registryService;
+    }
+
+    @Override
+    public void clear() {
+        registries.values().forEach(RegistryService::close);
+        registries.clear();
     }
 
     protected abstract RegistryService create(URL url);

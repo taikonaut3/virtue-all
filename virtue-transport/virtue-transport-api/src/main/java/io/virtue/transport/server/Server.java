@@ -1,7 +1,6 @@
 package io.virtue.transport.server;
 
 import io.virtue.common.exception.BindException;
-import io.virtue.core.Closeable;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.endpoint.Endpoint;
 
@@ -10,7 +9,7 @@ import java.net.InetSocketAddress;
 /**
  * Net server.
  */
-public interface Server extends Endpoint, Closeable {
+public interface Server extends Endpoint {
 
     /**
      * Binds the server to the specified host and port.

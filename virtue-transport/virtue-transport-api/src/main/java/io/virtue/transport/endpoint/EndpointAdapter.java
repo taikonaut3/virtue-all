@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 /**
  * EndpointAdapter.
  */
-public class EndpointAdapter implements Endpoint {
+public abstract class EndpointAdapter implements Endpoint {
 
     protected InetSocketAddress address;
 

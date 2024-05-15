@@ -1,6 +1,7 @@
 package io.virtue.rpc.h1.support;
 
 import io.virtue.common.constant.Key;
+import io.virtue.common.constant.Platform;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
 import io.virtue.serialization.Serializer;
@@ -15,7 +16,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import static io.virtue.common.constant.Components.Compression.*;
-import static io.virtue.common.constant.Version.version;
 import static io.virtue.common.util.StringUtil.getStringMap;
 import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 
@@ -24,7 +24,7 @@ import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
  */
 public final class HttpUtil extends TransportUtil {
 
-    private static final String IDENTIFY = "virtue-rpc/" + version();
+    private static final String IDENTIFY = "virtue-rpc/" + Platform.virtueVersion();
 
     private static final String ACCEPT_TYPE = String.join(",", Arrays.stream(MediaType.values()).map(MediaType::getName).toList());
 

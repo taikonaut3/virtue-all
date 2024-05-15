@@ -1,7 +1,6 @@
 package io.virtue.rpc;
 
 import io.virtue.common.constant.Key;
-import io.virtue.common.executor.RpcThreadPool;
 import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
@@ -19,7 +18,6 @@ import io.virtue.rpc.event.*;
 import io.virtue.rpc.listener.*;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.protocol.Protocol;
-import io.virtue.transport.RpcFuture;
 import io.virtue.transport.server.Server;
 import io.virtue.transport.supprot.IdleEvent;
 import io.virtue.transport.supprot.IdleEventListener;
@@ -28,10 +26,7 @@ import io.virtue.transport.supprot.RefreshHeartBeatCountEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import static io.virtue.common.util.StringUtil.simpleClassName;
 
@@ -93,21 +88,6 @@ public class BootStrapConfiguration implements VirtueConfiguration {
             var protocol = ExtensionLoader.loadExtension(Protocol.class, serverUrl.protocol());
             Server server = protocol.openServer(serverUrl);
             logger.info("Opened <{}>{},bind port(s) {}", serverUrl.protocol(), simpleClassName(server), server.port());
-        }
-    }
-
-    @Override
-    public void stopBefore(Virtue virtue) {
-        for (ThreadPoolExecutor executor : RpcThreadPool.executors()) {
-            if (!executor.isShutdown()) {
-                executor.shutdownNow();
-            }
-        }
-        Collection<RpcFuture> unCompletedFutures = RpcFuture.unCompletedFutures();
-        try {
-            CompletableFuture.allOf(unCompletedFutures.toArray(new RpcFuture[0])).get();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

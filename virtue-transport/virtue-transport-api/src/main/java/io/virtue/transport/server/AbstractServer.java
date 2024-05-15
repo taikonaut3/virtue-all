@@ -84,7 +84,7 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
     @Override
     public Channel getChannel(InetSocketAddress remoteAddress) {
         for (Channel channel : channels) {
-            if (channel.address().equals(NetUtil.getAddress(remoteAddress))) {
+            if (NetUtil.isSameAddress(channel.remoteAddress(), remoteAddress)) {
                 return channel;
             }
         }
