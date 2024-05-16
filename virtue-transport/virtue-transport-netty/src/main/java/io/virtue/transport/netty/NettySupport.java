@@ -4,16 +4,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http2.DefaultHttp2DataFrame;
-import io.netty.handler.codec.http2.DefaultHttp2HeadersFrame;
-import io.netty.handler.codec.http2.Http2Headers;
-import io.netty.handler.codec.http2.Http2StreamFrame;
+import io.netty.handler.codec.http2.*;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.StringUtil;
-import io.virtue.transport.netty.http.h1.client.HttpClient;
+import io.virtue.transport.netty.client.NettyPoolClient;
 import io.virtue.transport.netty.http.h1.client.HttpClientMessageConverter;
 import io.virtue.transport.netty.http.h1.server.HttpServerMessageConverter;
 import io.virtue.transport.netty.http.h2.NettyHttp2Stream;
@@ -31,6 +28,8 @@ import java.io.InputStream;
 public class NettySupport {
 
     private static final AttributeKey<URL> URL_KEY = AttributeKey.newInstance(Key.URL);
+
+    public static final AttributeKey<Http2StreamChannelBootstrap> H2_STREAM_BOOTSTRAP_KEY = AttributeKey.newInstance("h2-stream-bootstrap");
 
     /**
      * Get current channel's http2 stream.
@@ -171,7 +170,7 @@ public class NettySupport {
      * @param adapterHandler
      * @return
      */
-    public static ChannelHandler[] createHttpClientHandlers(HttpClient client, ChannelHandler adapterHandler) {
+    public static ChannelHandler[] createHttpClientHandlers(NettyPoolClient client, ChannelHandler adapterHandler) {
         return new ChannelHandler[]{
                 new HttpClientMessageConverter.RequestConverter(),
                 new HttpClientMessageConverter.ResponseConverter(client),
@@ -220,5 +219,19 @@ public class NettySupport {
                 new Http2ServerMessageConverter.ResponseConverter(),
                 adapterHandler
         };
+    }
+
+    /**
+     * Create http2 stream channel.
+     *
+     * @param bootstrap
+     * @param url
+     * @return
+     */
+    public static Http2StreamChannel newStreamChannel(Http2StreamChannelBootstrap bootstrap, URL url) {
+        Http2StreamChannel streamChannel = bootstrap.open().syncUninterruptibly().getNow();
+        NettyChannel nettyChannel = NettyChannel.getChannel(streamChannel);
+        nettyChannel.set(URL.ATTRIBUTE_KEY, url);
+        return streamChannel;
     }
 }

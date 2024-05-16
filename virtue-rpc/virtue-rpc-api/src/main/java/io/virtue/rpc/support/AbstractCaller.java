@@ -64,7 +64,6 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     protected List<URL> registryConfigUrls;
 
-    @Setter
     @Parameter(Key.GROUP)
     protected String group;
 
@@ -95,8 +94,9 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
     @Parameter(Key.MULTIPLEX)
     protected boolean multiplex;
 
-    @Parameter(Key.CLIENT)
     protected String clientConfig;
+
+    protected URL clientConfigUrl;
 
     protected AbstractCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
         super(method, remoteCaller, protocol, annoType);
@@ -132,8 +132,8 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
                         .map(configManager.registryConfigManager()::get)
                         .filter(Objects::nonNull)
                         .forEach(this::addRegistryConfig));
-        ClientConfig clientConfig = checkAndGetClientConfig();
-        url = createUrl(clientConfig.toUrl());
+        clientConfigUrl = checkAndGetClientConfigUrl();
+        url = createUrl(clientConfigUrl);
     }
 
     @Override
@@ -307,7 +307,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         }
     }
 
-    private ClientConfig checkAndGetClientConfig() {
+    private URL checkAndGetClientConfigUrl() {
         ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
         ClientConfig clientConfig = clientConfigManager.get(this.clientConfig);
         if (clientConfig == null) {
@@ -317,7 +317,11 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             clientConfig = new ClientConfig(protocol);
             clientConfigManager.register(clientConfig);
         }
-        return clientConfig;
+        URL clientUrl = clientConfig.toUrl();
+        clientUrl.set(Virtue.CLIENT_VIRTUE, virtue);
+        clientUrl.addParam(Key.CLIENT_VIRTUE, virtue.name());
+        clientUrl.addParam(Key.MULTIPLEX, String.valueOf(multiplex));
+        return clientUrl;
     }
 
 }

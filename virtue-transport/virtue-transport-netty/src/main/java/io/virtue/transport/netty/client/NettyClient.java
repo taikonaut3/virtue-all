@@ -10,7 +10,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.virtue.common.constant.Constant;
 import io.virtue.common.exception.ConnectException;
-import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.url.URL;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.client.AbstractClient;
@@ -54,7 +53,7 @@ public class NettyClient extends AbstractClient {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .handler(ProtocolAdapter.forClientChannelInitializer(url, nettyHandler, codec));
+                .handler(ProtocolAdapter.acquireClientChannelInitializer(url, nettyHandler, codec));
     }
 
     @Override
@@ -68,15 +67,6 @@ public class NettyClient extends AbstractClient {
             throw new ConnectException(future.cause());
         } else {
             throw new ConnectException("Unknown Exception");
-        }
-    }
-
-    @Override
-    protected void doClose() throws NetWorkException {
-        try {
-            NettyChannel.removeChannel(channel);
-        } catch (Throwable e) {
-            throw new NetWorkException(e);
         }
     }
 

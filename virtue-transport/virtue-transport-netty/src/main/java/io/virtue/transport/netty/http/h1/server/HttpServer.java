@@ -10,6 +10,7 @@ import io.virtue.transport.netty.server.NettyServer;
  * Http Server.
  */
 public class HttpServer extends NettyServer {
+
     public HttpServer(URL url, ChannelHandler handler, Codec codec) throws BindException {
         super(url, handler, codec);
     }

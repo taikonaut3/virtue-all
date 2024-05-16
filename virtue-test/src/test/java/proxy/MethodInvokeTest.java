@@ -5,6 +5,9 @@ import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.proxy.ProxyFactory;
 import org.junit.jupiter.api.Test;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
 /**
@@ -14,7 +17,7 @@ import java.lang.reflect.Method;
 public class MethodInvokeTest {
 
     @Test
-    public void test() throws Exception {
+    public void test() throws Throwable {
         Cat cat = new Cat();
         String food = "food";
         Method eatMethod = Cat.class.getMethod("eat", String.class);
@@ -66,6 +69,15 @@ public class MethodInvokeTest {
             time5 += (end - start);
         }
         System.out.println("普通调用：总" + time5 + "-" + time5 / num + "ms");
+        MethodHandle methodHandle = MethodHandles.lookup().findVirtual(Cat.class, "eat", MethodType.methodType(String.class, String.class));
+        long time6 = 0;
+        for (int i = 0; i < num; i++) {
+            long start = System.currentTimeMillis();
+            Object invoke = methodHandle.invoke(cat, food);
+            long end = System.currentTimeMillis();
+            time6 += (end - start);
+        }
+        System.out.println("方法句柄调用：总" + time6 + "-" + time6 / num + "ms");
 
     }
 
@@ -77,5 +89,14 @@ public class MethodInvokeTest {
         Cat cat1 = cglib.createProxy(new Cat(), (proxy, method, args, superInvoker) -> superInvoker.invoke());
         cat.eat("aaaa");
         System.out.println(cat);
+    }
+
+    @Test
+    public void test3() throws Throwable {
+        Cat cat = new Cat();
+        MethodHandle methodHandle = MethodHandles.lookup().findVirtual(Cat.class, "eat", MethodType.methodType(String.class, String.class));
+        Object invoke = methodHandle.invoke(cat, "food");
+        System.out.println(invoke);
+        System.in.read();
     }
 }

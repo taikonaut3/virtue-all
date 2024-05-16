@@ -37,9 +37,9 @@ public final class Http2ClientHandler extends SimpleChannelInboundHandler<Http2S
     private final URL url;
     private final ChannelHandler[] handlers;
 
-    Http2ClientHandler(URL url, ChannelHandler... handlers) {
+    Http2ClientHandler(URL url, ChannelHandler handler) {
         this.url = url;
-        this.handlers = handlers;
+        this.handlers = NettySupport.createHttp2ClientHandlers(handler);
     }
 
     @Override

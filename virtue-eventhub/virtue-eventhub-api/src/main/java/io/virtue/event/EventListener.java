@@ -9,7 +9,7 @@ package io.virtue.event;
 public interface EventListener<E extends Event<?>> {
 
     /**
-     * This method is called when an support of type E is dispatched.
+     * This method is called when a support of type E is dispatched.
      *
      * @param event the support that occurred
      */

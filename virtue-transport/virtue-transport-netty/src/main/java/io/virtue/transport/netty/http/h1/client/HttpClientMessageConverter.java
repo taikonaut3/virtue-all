@@ -12,6 +12,7 @@ import io.virtue.transport.Request;
 import io.virtue.transport.Response;
 import io.virtue.transport.http.h1.HttpRequest;
 import io.virtue.transport.netty.NettySupport;
+import io.virtue.transport.netty.client.NettyPoolClient;
 import io.virtue.transport.netty.http.NettyHttpResponse;
 import io.virtue.transport.netty.http.h1.NettyHttpHeaders;
 
@@ -53,10 +54,10 @@ public final class HttpClientMessageConverter {
     @Sharable
     public static class ResponseConverter extends ChannelInboundHandlerAdapter {
 
-        private final HttpClient httpClient;
+        private final NettyPoolClient client;
 
-        public ResponseConverter(HttpClient httpClient) {
-            this.httpClient = httpClient;
+        public ResponseConverter(NettyPoolClient client) {
+            this.client = client;
         }
 
         @Override
@@ -76,7 +77,7 @@ public final class HttpClientMessageConverter {
                         : Response.error(url, httpResponse);
                 NettySupport.removeUrlFromChannel(ctx.channel());
                 fullHttpResponse.release();
-                httpClient.release(ctx.channel());
+                client.release(ctx.channel());
             }
             super.channelRead(ctx, msg);
         }

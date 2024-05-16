@@ -30,6 +30,7 @@ public final class NettyClientChannelHandler extends SimpleChannelInboundHandler
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         channelHandler.disconnected(nettyChannel);
+        NettyChannel.removeChannel(ctx.channel());
     }
 
     @Override
@@ -42,7 +43,6 @@ public final class NettyClientChannelHandler extends SimpleChannelInboundHandler
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         channelHandler.caught(nettyChannel, cause);
-        NettyChannel.removeChannel(ctx.channel());
     }
 
 }

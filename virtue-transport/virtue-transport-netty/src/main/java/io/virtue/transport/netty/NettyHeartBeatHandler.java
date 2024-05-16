@@ -57,6 +57,7 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         nettyChannel.remove(URL.ATTRIBUTE_KEY);
         super.channelInactive(ctx);
+        NettyChannel.removeChannel(ctx.channel());
     }
 
     @Override

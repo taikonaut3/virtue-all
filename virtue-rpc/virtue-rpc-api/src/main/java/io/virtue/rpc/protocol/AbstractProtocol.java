@@ -11,8 +11,6 @@ import io.virtue.core.Callee;
 import io.virtue.core.Caller;
 import io.virtue.core.Invocation;
 import io.virtue.core.Virtue;
-import io.virtue.core.config.ClientConfig;
-import io.virtue.core.manager.ClientConfigManager;
 import io.virtue.rpc.event.SendMessageEvent;
 import io.virtue.rpc.handler.BaseClientChannelHandlerChain;
 import io.virtue.rpc.handler.BaseServerChannelHandlerChain;
@@ -208,18 +206,9 @@ public abstract class AbstractProtocol<Req, Resp> implements Protocol {
     protected abstract Resp createResponse(URL url, Throwable cause);
 
     private Client getClient(Invocation invocation) {
-        URL url = invocation.url();
         Caller<?> caller = (Caller<?>) invocation.invoker();
-        ClientConfigManager clientConfigManager = virtue.configManager().clientConfigManager();
-        ClientConfig clientConfig = clientConfigManager.get(caller.clientConfig());
-        if (clientConfig == null) {
-            clientConfig = clientConfigManager.get(url.protocol());
-        }
-        URL clientUrl = new URL(url.protocol(), url.address());
-        clientUrl.addParams(clientConfig.parameterization());
-        clientUrl.set(Virtue.CLIENT_VIRTUE, virtue);
-        clientUrl.addParam(Key.CLIENT_VIRTUE, virtue.name());
-        clientUrl.addParam(Key.MULTIPLEX, String.valueOf(caller.multiplex()));
-        return openClient(clientUrl);
+        URL url = caller.clientConfigUrl().replicate();
+        url.address(invocation.url().address());
+        return openClient(url);
     }
 }

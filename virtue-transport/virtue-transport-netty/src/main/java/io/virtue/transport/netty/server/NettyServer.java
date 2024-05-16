@@ -47,7 +47,7 @@ public class NettyServer extends AbstractServer {
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childHandler(ProtocolAdapter.forServerChannelInitializer(url, handler, codec));
+                .childHandler(ProtocolAdapter.acquireServerChannelInitializer(url, handler, codec));
     }
 
     @Override

@@ -43,17 +43,17 @@ public class ConsumerController {
 
     @GetMapping("testTime")
     public Map<String, TimeCountFilter.Wrapper> testTime() {
-        ExecutorService executorService = Executors.newFixedThreadPool(300);
+        ExecutorService executorService = Executors.newFixedThreadPool(3000);
         ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             var future = CompletableFuture.supplyAsync(() -> consumer.list(ParentObject.getObjList()), executorService);
             futures.add(future);
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             var future = CompletableFuture.supplyAsync(() -> consumer.http2Test(ParentObject.getObjList()), executorService);
             futures.add(future);
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             var future = CompletableFuture.supplyAsync(() -> consumer.httpTest(ParentObject.getObjList()), executorService);
             futures.add(future);
         }

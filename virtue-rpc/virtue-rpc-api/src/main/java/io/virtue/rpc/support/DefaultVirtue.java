@@ -35,20 +35,17 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultVirtue.class);
-    private final ConfigManager configManager;
-    private final MonitorManager monitorManager;
-    private final List<VirtueConfiguration> configurations;
-    private final Scheduler scheduler;
     private final String name;
+    private final List<VirtueConfiguration> configurations;
+    private ConfigManager configManager;
+    private MonitorManager monitorManager;
+    private Scheduler scheduler;
     private EventDispatcher eventDispatcher;
-    private volatile boolean started = false;
+    private volatile State state;
 
     public DefaultVirtue() {
         name = DEFAULT;
-        configManager = new ConfigManager(this);
-        monitorManager = new MonitorManager();
         configurations = ExtensionLoader.loadExtensions(VirtueConfiguration.class);
-        scheduler = ExtensionLoader.loadExtension(Scheduler.class);
         init();
     }
 
@@ -78,17 +75,25 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public void init() {
-        RpcContext.currentContext().set(LOCAL_VIRTUE, this);
-        for (VirtueConfiguration configuration : configurations) {
-            configuration.initBefore(this);
-        }
-        initApplicationComponents();
-        for (VirtueConfiguration configuration : configurations) {
-            configuration.initAfter(this);
+        if (state == null) {
+            RpcContext.currentContext().set(LOCAL_VIRTUE, this);
+            for (VirtueConfiguration configuration : configurations) {
+                configuration.initBefore(this);
+            }
+            initApplicationComponents();
+            for (VirtueConfiguration configuration : configurations) {
+                configuration.initAfter(this);
+            }
+            state = State.INITIALIZED;
+        } else {
+            throw new IllegalStateException("init() can only be invoked when constructing");
         }
     }
 
     private void initApplicationComponents() {
+        configManager = new ConfigManager(this);
+        monitorManager = new MonitorManager();
+        scheduler = ExtensionLoader.loadExtension(Scheduler.class);
         ApplicationConfig applicationConfig = configManager.applicationConfig();
         EventDispatcherConfig eventDispatcherConfig = applicationConfig.eventDispatcherConfig();
         eventDispatcher = ExtensionLoader.loadExtension(EventDispatcher.class, eventDispatcherConfig.type());
@@ -98,7 +103,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     @Override
     public synchronized void start() {
-        if (!started) {
+        if (state == State.INITIALIZED || state == State.STOPPED) {
             RpcContext.currentContext().set(LOCAL_VIRTUE, this);
             for (VirtueConfiguration configuration : configurations) {
                 configuration.startBefore(this);
@@ -107,15 +112,17 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
             for (VirtueConfiguration configuration : configurations) {
                 configuration.startAfter(this);
             }
-            started = true;
-            logger.info("Virtue started v{}", Platform.virtueVersion());
             Runtime.getRuntime().addShutdownHook(new VirtueShutdownHook());
+            state = State.STARTED;
+            logger.info("Virtue started v{}", Platform.virtueVersion());
+        } else {
+            throw new IllegalStateException("start() can only be invoked when State is (INITIALIZED|STOPPED)");
         }
     }
 
     @Override
     public synchronized void stop() {
-        if (started) {
+        if (state == State.STARTED) {
             RpcContext.currentContext().set(LOCAL_VIRTUE, this);
             for (VirtueConfiguration configuration : configurations) {
                 configuration.stopBefore(this);
@@ -128,9 +135,15 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
                 configuration.stopAfter(this);
             }
             eventDispatcher.close();
-            started = false;
+            state = State.STOPPED;
             logger.info("Virtue stopped");
+        }else {
+            throw new IllegalStateException("start() can only be invoked when State is STARTED");
         }
+    }
+
+    enum State {
+        INITIALIZED, STARTED, STOPPED
     }
 
     class VirtueShutdownHook extends Thread {

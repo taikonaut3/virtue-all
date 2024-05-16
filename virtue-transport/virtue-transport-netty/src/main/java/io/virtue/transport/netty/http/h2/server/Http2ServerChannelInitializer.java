@@ -34,14 +34,12 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
     private static final Logger logger = LoggerFactory.getLogger(Http2ServerChannelInitializer.class);
     private final URL url;
     private final ChannelHandler handler;
-    private final NettyIdleStateHandler idleStateHandler;
     private final HttpServerUpgradeHandler.UpgradeCodecFactory upgradeCodecFactory;
     private final SslContext sslContext;
 
     public Http2ServerChannelInitializer(URL url, ChannelHandler handler) {
         this.url = url;
         this.handler = handler;
-        this.idleStateHandler = NettyIdleStateHandler.createForServer(url);
         this.sslContext = sslEnabled(url) ? SslContextFactory.createForServer(HTTP_2, HTTP_1_1) : null;
         this.upgradeCodecFactory = protocol -> {
             if (AsciiString.contentEquals(Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME, protocol)) {
@@ -57,10 +55,11 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
+        NettyIdleStateHandler idleStateHandler = NettyIdleStateHandler.createForServer(url);
         if (sslContext != null) {
-            configureSsl(sslContext, socketChannel);
+            configureSsl(sslContext, socketChannel, idleStateHandler);
         } else {
-            configureClearText(socketChannel);
+            configureClearText(socketChannel, idleStateHandler);
         }
 
     }
@@ -70,8 +69,9 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
      *
      * @param sslCtx
      * @param ch
+     * @param idleStateHandler
      */
-    private void configureSsl(SslContext sslCtx, SocketChannel ch) {
+    private void configureSsl(SslContext sslCtx, SocketChannel ch, NettyIdleStateHandler idleStateHandler) {
         ch.pipeline()
                 .addLast(sslCtx.newHandler(ch.alloc()))
                 .addLast(new Http2OrHttpNegotiationHandler(url, idleStateHandler, handler));
@@ -81,8 +81,9 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
      * Configure the pipeline for a cleartext upgrade from HTTP to HTTP/2.0.
      *
      * @param ch
+     * @param idleStateHandler
      */
-    private void configureClearText(SocketChannel ch) {
+    private void configureClearText(SocketChannel ch, NettyIdleStateHandler idleStateHandler) {
         final HttpServerCodec sourceCodec = new HttpServerCodec();
         ch.pipeline()
                 .addLast(idleStateHandler)

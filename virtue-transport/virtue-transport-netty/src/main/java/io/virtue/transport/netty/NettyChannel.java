@@ -54,11 +54,10 @@ public final class NettyChannel extends AbstractChannel {
             ChannelFuture channelFuture = channel.close();
             channelFuture.addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {
-                    if (CHANNEL_MAP.containsKey(channel)) {
-                        removeChannel(channel);
-                        if (logger.isDebugEnabled()) {
+                    if (CHANNEL_MAP.containsKey(channel)
+                            && CHANNEL_MAP.remove(channel, this)
+                            && logger.isDebugEnabled()) {
                             logger.debug("{} closed", this);
-                        }
                     }
                 } else {
                     logger.error(this + " closure failed", future.cause());

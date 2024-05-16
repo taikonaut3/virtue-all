@@ -40,6 +40,9 @@ public class ClientConfig extends UrlTypeConfig {
     @Parameter(Key.KEEPALIVE)
     private boolean keepAlive = true;
 
+    @Parameter(Key.MAX_CONNECTIONS)
+    private int maxConnections = Constant.DEFAULT_CLIENT_MAX_CONNECTIONS;
+
     public ClientConfig(String type) {
         type(type);
         name(type);

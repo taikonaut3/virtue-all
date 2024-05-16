@@ -1,5 +1,6 @@
 package io.virtue.core;
 
+import io.virtue.common.url.URL;
 import io.virtue.core.config.RegistryConfig;
 
 import java.util.List;
@@ -75,6 +76,13 @@ public interface Options {
      * @return clientConfig instance
      */
     String clientConfig();
+
+    /**
+     * Gets the client core for the call.
+     *
+     * @return clientConfig instance
+     */
+    URL clientConfigUrl();
 
     /**
      * Add RegistryConfigs.

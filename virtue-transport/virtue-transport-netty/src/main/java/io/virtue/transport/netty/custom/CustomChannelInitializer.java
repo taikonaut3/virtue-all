@@ -6,6 +6,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.virtue.common.url.URL;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyIdleStateHandler;
+import io.virtue.transport.netty.ProtocolAdapter;
 
 /**
  * Initializes the channel of Netty for Custom Codec.
@@ -13,30 +14,24 @@ import io.virtue.transport.netty.NettyIdleStateHandler;
 public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private final URL url;
-
-    private final ChannelHandler handler;
-
     private final Codec codec;
-
+    private final ChannelHandler handler;
     private final boolean isServer;
 
     public CustomChannelInitializer(URL url, ChannelHandler handler, Codec codec, boolean isServer) {
         this.url = url;
-        this.handler = handler;
         this.codec = codec;
+        this.handler = handler;
         this.isServer = isServer;
     }
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        NettyCustomCodec nettyCustomCodec = new NettyCustomCodec(url, codec, isServer);
-        NettyIdleStateHandler idleStateHandler = isServer ? NettyIdleStateHandler.createForServer(url)
-                : NettyIdleStateHandler.createForClient(url);
-        socketChannel.pipeline()
-                .addLast("decoder", nettyCustomCodec.getDecoder())
-                .addLast("encoder", nettyCustomCodec.getEncoder())
-                .addLast("idleState", idleStateHandler)
-                .addLast("heartbeat", idleStateHandler.handler())
-                .addLast("handler", handler);
+        NettyIdleStateHandler idleStateHandler = NettyIdleStateHandler.createForClient(url);
+        if (isServer) {
+            ProtocolAdapter.configServerChannelPipeline(url, socketChannel, null, codec, idleStateHandler, handler);
+        } else {
+            ProtocolAdapter.configClientChannelPipeline(url, socketChannel, null, codec, idleStateHandler, handler);
+        }
     }
 }

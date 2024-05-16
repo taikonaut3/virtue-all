@@ -69,8 +69,6 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
             channel.close();
         } catch (Throwable e) {
             throw new NetWorkException(e);
-        } finally {
-            doClose();
         }
     }
 
@@ -88,6 +86,5 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     protected abstract void doConnect() throws ConnectException;
 
-    protected abstract void doClose() throws NetWorkException;
 
 }
