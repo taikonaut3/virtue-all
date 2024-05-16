@@ -61,7 +61,9 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
             channelHandler.connected(channel);
         }
         // todo 优化注册中心健康检查时频繁打印日志
-        logger.trace("Connected {}", channel);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Connected {}", channel);
+        }
     }
 
     @Override
@@ -70,7 +72,9 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.disconnected(channel);
         }
-        logger.trace("Disconnected {}", channel);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Disconnected {}", channel);
+        }
     }
 
     @Override

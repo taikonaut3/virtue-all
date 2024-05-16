@@ -239,7 +239,7 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
      * @param path
      */
     public URL addPath(String path) {
-        if (StringUtil.isBlank(path)) {
+        if (StringUtil.isBlank(path) && logger.isWarnEnabled()) {
             logger.warn("Add empty path, will skip");
         } else {
             path = StringUtil.normalizePath(path);
@@ -255,7 +255,7 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
      * @param path
      */
     public URL addPath(int index, String path) {
-        if (StringUtil.isBlank(path)) {
+        if (StringUtil.isBlank(path) && logger.isWarnEnabled()) {
             logger.warn("Add empty path, will skip");
         } else {
             path = StringUtil.normalizePath(path);

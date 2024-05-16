@@ -16,7 +16,9 @@ public abstract class AbstractFaultTolerance implements FaultTolerance {
 
     @Override
     public Object operation(Invocation invocation) throws RpcException {
-        logger.debug("Used FaultTolerance<{}>", simpleClassName(this));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Used FaultTolerance<{}>", simpleClassName(this));
+        }
         // todo 限流、熔断
         return doOperation(invocation);
     }

@@ -72,7 +72,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
         List<RegistryConfig> registryConfigs = virtue.configManager().registryConfigManager().globalConfigs();
         List<URL> serverUrls = serverConfigManager.neededOpenServer();
         for (URL serverUrl : serverUrls) {
-            if (registryConfigs.isEmpty()) {
+            if (registryConfigs.isEmpty() && logger.isWarnEnabled()) {
                 logger.warn("No globally available RegistryConfig(s)");
             } else {
                 for (RegistryConfig registryConfig : registryConfigs) {

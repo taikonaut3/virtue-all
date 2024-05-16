@@ -46,7 +46,9 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
         if (serverConfig != null) {
             url = createUrl(serverConfig.toUrl());
         } else {
-            logger.warn("Can't find <{}>ServerConfig", protocol);
+            if (logger.isWarnEnabled()) {
+                logger.warn("Can't find <{}>ServerConfig", protocol);
+            }
         }
     }
 

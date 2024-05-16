@@ -191,8 +191,10 @@ public class VirtueCodec implements Codec {
         Serializer serializer = virtueEnvelope.serializer();
         Compressor compressor = virtueEnvelope.compression();
         byte[] bytes = serializer.serialize(virtueEnvelope.body());
-        logger.debug("{}: [serialization: {}],[compression: {}]",
-                simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
+        if (logger.isDebugEnabled()) {
+            logger.debug("{}: [serialization: {}],[compression: {}]",
+                    simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
+        }
         return compressor.compress(bytes);
     }
 
@@ -208,8 +210,10 @@ public class VirtueCodec implements Codec {
             bodyType = Object.class;
         }
         byte[] decompress = compressor.decompress(bodyBytes);
-        logger.debug("{}: [deserialization: {}],[decompression: {}]",
-                simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
+        if (logger.isDebugEnabled()) {
+            logger.debug("{}: [deserialization: {}],[decompression: {}]",
+                    simpleClassName(this), simpleClassName(serializer), simpleClassName(compressor));
+        }
         return serializer.deserialize(decompress, bodyType);
     }
 

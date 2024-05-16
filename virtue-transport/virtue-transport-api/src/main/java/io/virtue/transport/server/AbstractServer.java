@@ -42,7 +42,9 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
         this.channels = channelHandler.getChannels();
         try {
             bind();
-            logger.debug("Create <{}>{} succeeded,bind port(s): {}", url.protocol(), simpleClassName(this), port());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Create <{}>{} succeeded,bind port(s): {}", url.protocol(), simpleClassName(this), port());
+            }
         } catch (Throwable e) {
             throw new BindException(String.format("Create <%s>%s succeeded,bind port(s): %s", url.protocol(), simpleClassName(this), port()), e);
         }

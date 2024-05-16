@@ -27,7 +27,9 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
 
     @Override
     protected void handEnvelopeEvent(RequestEvent event) {
-        logger.debug("Received <{}>", simpleClassName(event));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received <{}>", simpleClassName(event));
+        }
         Request request = event.source();
         URL url = request.url();
         RpcContext.currentContext().set(Request.ATTRIBUTE_KEY, request);
@@ -40,7 +42,9 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
 
     @Override
     protected void jvmShuttingDown(RequestEvent event) {
-        logger.debug("Received <{}> but jvm is shutting down", simpleClassName(event));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received <{}> but jvm is shutting down", simpleClassName(event));
+        }
         Protocol protocol = event.protocol();
         RpcException e = new RpcException("Server closing and no longer processing requests");
         protocol.sendResponse(event.channel(), event.source().url(), e);

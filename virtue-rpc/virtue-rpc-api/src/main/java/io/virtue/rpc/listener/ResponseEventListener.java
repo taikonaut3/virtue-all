@@ -25,7 +25,9 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
 
     @Override
     protected void handEnvelopeEvent(ResponseEvent event) {
-        logger.debug("Received <{}>", simpleClassName(event));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received <{}>", simpleClassName(event));
+        }
         long id = event.source().id();
         RpcFuture future = RpcFuture.getFuture(id);
         Response response = event.source();

@@ -101,6 +101,7 @@ public class ComplexRemoteService<T> extends AbstractInvokerContainer implements
     }
 
     private boolean match(String str, String pattern) {
+        // todo 优化正则表达式的编译?
         // 将模式中的 {} 替换为正则表达式的匹配规则，其中 \\{([^{}]*)\\} 表示匹配 { 和 } 之间的任意内容
         String regex = pattern.replaceAll("\\{([^{}]*)\\}", "([^/]+)")
                 .replaceAll("\\{([^{}]*)$", "\\\\$0")

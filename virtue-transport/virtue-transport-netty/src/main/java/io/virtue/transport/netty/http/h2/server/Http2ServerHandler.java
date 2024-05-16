@@ -94,7 +94,7 @@ public final class Http2ServerHandler extends ChannelDuplexHandler {
     private void readEnd(ChannelHandlerContext ctx, NettyHttp2Stream stream) {
         removeCurrentStream(ctx, stream);
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
-        nettyChannel.set(URL.ATTRIBUTE_KEY, this.url);
+        nettyChannel.set(URL.ATTRIBUTE_KEY, url);
         ctx.fireChannelRead(stream);
     }
 }
