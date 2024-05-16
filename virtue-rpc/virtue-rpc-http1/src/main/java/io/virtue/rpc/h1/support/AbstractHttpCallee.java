@@ -25,6 +25,8 @@ import static io.virtue.rpc.h1.support.HttpUtil.regularResponseHeaders;
 
 /**
  * Standard Abstract Http Callee.
+ *
+ * @param <T>
  */
 @Accessors(fluent = true)
 public abstract class AbstractHttpCallee<T extends Annotation> extends AbstractCallee<T> {

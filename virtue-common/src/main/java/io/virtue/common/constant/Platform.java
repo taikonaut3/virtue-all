@@ -10,9 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class Platform {
 
-    private static final String VIRTUE_VERSION;
-
     public static final AtomicBoolean JVM_SHUTTING_DOWN = new AtomicBoolean(false);
+    private static final String VIRTUE_VERSION;
 
     static {
         try {

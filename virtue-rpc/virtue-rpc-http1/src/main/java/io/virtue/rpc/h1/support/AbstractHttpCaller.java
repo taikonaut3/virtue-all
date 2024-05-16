@@ -23,6 +23,8 @@ import static io.virtue.rpc.h1.support.HttpUtil.regularRequestHeaders;
 
 /**
  * Standard Abstract Http Caller.
+ *
+ * @param <T>
  */
 @Accessors(fluent = true)
 public abstract class AbstractHttpCaller<T extends Annotation> extends AbstractCaller<T> {

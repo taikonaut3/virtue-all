@@ -60,11 +60,11 @@ public class MultiplexEndpoints implements Endpoints {
 
     @Override
     public synchronized void clear() {
-            clients().forEach(Client::close);
-            servers().forEach(Server::close);
-            customClients.clear();
-            multiplexClients.clear();
-            servers.clear();
+        clients().forEach(Client::close);
+        servers().forEach(Server::close);
+        customClients.clear();
+        multiplexClients.clear();
+        servers.clear();
     }
 
 }

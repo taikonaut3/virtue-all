@@ -7,7 +7,8 @@ import io.virtue.rpc.h1.support.AbstractHttpCaller;
 
 import java.lang.reflect.Method;
 
-import static io.virtue.common.constant.Components.Protocol.*;
+import static io.virtue.common.constant.Components.Protocol.HTTP;
+import static io.virtue.common.constant.Components.Protocol.HTTPS;
 import static io.virtue.rpc.h1.support.HttpUtil.parseHeaders;
 import static io.virtue.transport.http.HttpHeaderNames.CONTENT_TYPE;
 

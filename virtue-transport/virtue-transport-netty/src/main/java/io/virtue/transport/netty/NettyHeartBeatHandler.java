@@ -72,9 +72,9 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
             if (idleTimes != null) {
                 idleTimes.incrementAndGet();
             }
-            if (state == IdleState.ALL_IDLE ||
-                    (isServer && state == IdleState.READER_IDLE) ||
-                    (!isServer && state == IdleState.WRITER_IDLE)) {
+            if (state == IdleState.ALL_IDLE
+                    || (isServer && state == IdleState.READER_IDLE)
+                    || (!isServer && state == IdleState.WRITER_IDLE)) {
                 virtue.eventDispatcher().dispatch(new IdleEvent(nettyChannel));
             }
         }

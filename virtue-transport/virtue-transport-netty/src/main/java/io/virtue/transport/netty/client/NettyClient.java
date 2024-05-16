@@ -37,6 +37,13 @@ public class NettyClient extends AbstractClient {
         super(url, channelHandler, codec);
     }
 
+    /**
+     * close NioEventLoopGroup.
+     */
+    public static void closeNioEventLoopGroup() {
+        NIO_EVENT_LOOP_GROUP.shutdownGracefully();
+    }
+
     @Override
     protected void doInit() throws ConnectException {
         bootstrap = new Bootstrap();
@@ -76,13 +83,6 @@ public class NettyClient extends AbstractClient {
     @Override
     public boolean isActive() {
         return channel != null && channel.isActive();
-    }
-
-    /**
-     * close NioEventLoopGroup.
-     */
-    public static void closeNioEventLoopGroup() {
-        NIO_EVENT_LOOP_GROUP.shutdownGracefully();
     }
 
 }

@@ -110,9 +110,9 @@ public abstract class AbstractHttpProtocol extends AbstractProtocol<HttpRequest,
     }
 
     @Override
-    protected Object[] parseToInvokeArgs(Request request, HttpRequest HttpRequest, Callee<?> callee) {
+    protected Object[] parseToInvokeArgs(Request request, HttpRequest httpRequest, Callee<?> callee) {
         if (callee instanceof AbstractHttpCallee<?> httpCallee) {
-            return httpCallee.restInvocationParser().parse(HttpRequest, callee);
+            return httpCallee.restInvocationParser().parse(httpRequest, callee);
         }
         throw new UnsupportedOperationException("Unsupported parsed");
     }

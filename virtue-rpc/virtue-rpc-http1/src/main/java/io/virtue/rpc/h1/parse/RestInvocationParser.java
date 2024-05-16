@@ -14,7 +14,21 @@ import static io.virtue.common.constant.Components.RestParser.JAX_RS;
 @Extensible(JAX_RS)
 public interface RestInvocationParser {
 
+    /**
+     * Parse http's dynamic parameters.
+     *
+     * @param invocation
+     * @throws RpcException
+     */
     void parse(Invocation invocation) throws RpcException;
 
+    /**
+     * Convert method parameters from http request.
+     *
+     * @param httpRequest
+     * @param callee
+     * @return
+     * @throws RpcException
+     */
     Object[] parse(HttpRequest httpRequest, Callee<?> callee) throws RpcException;
 }

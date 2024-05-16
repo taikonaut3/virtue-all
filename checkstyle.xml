@@ -4,10 +4,8 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <!--checkStyle -->
 <module name="Checker">
-    <!-- 配置不需要检查的模块 -->
-    <module name="BeforeExecutionExclusionFileFilter">
-        <property name="fileNamePattern"
-                  value=".*[\\/]((virtue-demo)|(virtue-test)|(virtue-eventhub-flow)|(virtue-rpc-http1))[\\/].*|ExtensionAnnotationProcessor\.java"/>
+    <module name="SuppressionFilter">
+        <property name="file" value="checkstyle-suppressions.xml"/>
     </module>
 
     <!-- 文件长度不超过1500行 -->

@@ -19,6 +19,7 @@ public class TestFilter implements Filter {
         FilterManager manager = virtue.configManager().filterManager();
         manager.addProtocolRule(this, MatchScope.CALLER, "h2");
     }
+
     @Override
     public Object doFilter(Invocation invocation) {
         try {
