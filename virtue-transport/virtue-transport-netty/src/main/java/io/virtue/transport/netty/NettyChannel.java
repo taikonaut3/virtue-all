@@ -1,6 +1,8 @@
 package io.virtue.transport.netty;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.transport.channel.AbstractChannel;
 import org.slf4j.Logger;
@@ -49,10 +51,21 @@ public final class NettyChannel extends AbstractChannel {
     @Override
     public void doClose() throws NetWorkException {
         try {
-            channel.close();
+            ChannelFuture channelFuture = channel.close();
+            channelFuture.addListener((ChannelFutureListener) future -> {
+                if (future.isSuccess()) {
+                    if (CHANNEL_MAP.containsKey(channel)) {
+                        removeChannel(channel);
+                        logger.debug("{} closed", this);
+                    }
+                } else {
+                    logger.error(this + " closure failed", future.cause());
+                }
+            });
         } catch (Throwable e) {
             throw new NetWorkException(e);
         }
+
     }
 
     @Override

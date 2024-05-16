@@ -109,7 +109,9 @@ public class DisruptorEventDispatcher extends AbstractEventDispatcher {
 
     @Override
     public synchronized void close() {
-        disruptor.shutdown();
+        if (disruptor != null) {
+            disruptor.shutdown();
+        }
         started = false;
     }
 

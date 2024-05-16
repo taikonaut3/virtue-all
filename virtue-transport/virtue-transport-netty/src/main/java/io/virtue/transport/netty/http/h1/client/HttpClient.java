@@ -33,12 +33,12 @@ public class HttpClient extends NettyClient {
         bootstrap = new Bootstrap();
         bootstrap.group(NIO_EVENT_LOOP_GROUP)
                 .channel(NioSocketChannel.class)
-                .remoteAddress(toInetSocketAddress())
+                .remoteAddress(inetSocketAddress())
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-        channelPool = new FixedChannelPool(bootstrap, new HttpClientChannelInitializer(url, nettyHandler, this), 50);
+        channelPool = new FixedChannelPool(bootstrap, new HttpClientChannelInitializer(url, nettyHandler, this), 2);
     }
 
     @Override

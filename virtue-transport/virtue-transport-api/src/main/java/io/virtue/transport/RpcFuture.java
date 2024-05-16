@@ -94,10 +94,11 @@ public class RpcFuture extends CompletableFuture<Object> {
             return super.get(timeout(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             if (e instanceof TimeoutException) {
-                throw new RpcException("RPC call timeout: " + timeout() + "ms", e);
+                throw new RpcException(url.authority() + " rpc call timeout: " + timeout() + "ms", e);
             }
             throw RpcException.unwrap(e);
         } finally {
+            removeFuture(id);
             if (response != null) {
                 RpcContext.currentContext().set(Response.ATTRIBUTE_KEY, response);
                 RpcContext.ResponseContext.parse(response.url());

@@ -49,4 +49,8 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
         }
     }
 
+    @Override
+    protected void jvmShuttingDown(ResponseEvent event) {
+        handEnvelopeEvent(event);
+    }
 }

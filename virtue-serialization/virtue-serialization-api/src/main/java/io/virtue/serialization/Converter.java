@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 public interface Converter {
 
     /**
-     * Converts an array of objects to the specified types.
+     * Convert an array of objects to the specified types.
      *
      * @param args The array of objects to convert.
      * @param type The array of types to convert the objects to.
@@ -22,7 +22,7 @@ public interface Converter {
     }
 
     /**
-     * Converts an object to the specified type.
+     * Convert an object to the specified type.
      *
      * @param arg  The object to convert.
      * @param type The type to convert the object to.

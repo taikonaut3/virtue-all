@@ -52,7 +52,7 @@ public class NettyClient extends AbstractClient {
 
     @Override
     protected void doConnect() throws ConnectException {
-        ChannelFuture future = bootstrap.connect(toInetSocketAddress());
+        ChannelFuture future = bootstrap.connect(inetSocketAddress());
         boolean success = future.awaitUninterruptibly(connectTimeout, TimeUnit.MILLISECONDS);
         if (success && future.isSuccess()) {
             channel = future.channel();

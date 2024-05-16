@@ -26,8 +26,6 @@ public interface Key {
 
     String PROTOCOL_VERSION = "protocolVersion";
 
-    String LAST_CALL_INDEX = "lastCallIndex";
-
     String CLASS = "class";
 
     String BODY_TYPE = "bodyType";
@@ -59,12 +57,6 @@ public interface Key {
     String SPARE_CLOSE_TIMES = "spareCloseTimes";
 
     String HEARTBEAT_LOG_ENABLE = "heartbeatLogEnable";
-
-    String READER_IDLE_TIMES = "readeIdleTimes";
-
-    String WRITE_IDLE_TIMES = "writeIdleTimes";
-
-    String ALL_IDLE_TIMES = "allIdleTimes";
 
     String SO_BACKLOG = "soBacklog";
 
@@ -162,12 +154,11 @@ public interface Key {
     String CLIENT_VIRTUE = "clientVirtue";
 
     String SERVER_VIRTUE = "serverVirtue";
-    AttributeKey<AtomicInteger> ALL_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(ALL_IDLE_TIMES);
-    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(WRITE_IDLE_TIMES);
-    AttributeKey<AtomicInteger> READER_IDLE_TIMES_ATTRIBUTE_KEY = AttributeKey.of(READER_IDLE_TIMES);
-    AttributeKey<AtomicInteger> LAST_CALL_INDEX_ATTRIBUTE_KEY = AttributeKey.of(LAST_CALL_INDEX);
+    AttributeKey<AtomicInteger> ALL_IDLE_TIMES = AttributeKey.of("allIdleTimes");
+    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES = AttributeKey.of("writeIdleTimes");
+    AttributeKey<AtomicInteger> READER_IDLE_TIMES = AttributeKey.of("readeIdleTimes");
+    AttributeKey<AtomicInteger> LAST_CALL_INDEX = AttributeKey.of("lastCallIndex");
     AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.of("callException");
-    AttributeKey<Object> SERVICE_RESPONSE = AttributeKey.of("serviceResponse");
 
     AttributeKey<URL> HTTP_URL = AttributeKey.of("httpUrl");
 

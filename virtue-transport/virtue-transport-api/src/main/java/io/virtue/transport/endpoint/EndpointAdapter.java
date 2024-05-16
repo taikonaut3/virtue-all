@@ -28,7 +28,7 @@ public abstract class EndpointAdapter implements Endpoint {
     }
 
     @Override
-    public InetSocketAddress toInetSocketAddress() {
+    public InetSocketAddress inetSocketAddress() {
         return address;
     }
 

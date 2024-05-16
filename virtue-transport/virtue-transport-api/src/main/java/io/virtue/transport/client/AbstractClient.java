@@ -81,7 +81,7 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " connect to " + NetUtil.getAddress(toInetSocketAddress());
+        return simpleClassName(this) + " connect to " + NetUtil.getAddress(inetSocketAddress());
     }
 
     protected abstract void doInit() throws ConnectException;

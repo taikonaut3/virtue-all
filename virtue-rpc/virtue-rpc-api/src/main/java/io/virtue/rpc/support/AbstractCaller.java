@@ -227,7 +227,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         url.replacePaths(pathList());
         url.addParams(clientUrl.params());
         url.addParams(parameterization());
-        url.set(Key.LAST_CALL_INDEX_ATTRIBUTE_KEY, new AtomicInteger(-1));
+        url.set(Key.LAST_CALL_INDEX, new AtomicInteger(-1));
         return url;
     }
 
@@ -261,15 +261,17 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
 
     protected Object call(Invocation invocation) throws RpcException {
         List<Filter> postFilters = FilterScope.POST.filterScope(filters);
-        invocation.revise(() -> {
-            URL url = invocation.url();
-            String requestContextStr = RpcContext.requestContext().toString();
-            url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
-            url.addParam(Key.ENVELOPE, Key.REQUEST);
-            RpcFuture future = protocolInstance.sendRequest(invocation);
-            return async() ? future : future.get();
-        });
+        invocation.revise(() -> sendRequest(invocation));
         return filterChain.filter(invocation, postFilters);
+    }
+
+    protected Object sendRequest(Invocation invocation) {
+        URL url = invocation.url();
+        String requestContextStr = RpcContext.requestContext().toString();
+        url.addParam(Key.REQUEST_CONTEXT, requestContextStr);
+        url.addParam(Key.ENVELOPE, Key.REQUEST);
+        RpcFuture future = protocolInstance.sendRequest(invocation);
+        return async() ? future : future.get();
     }
 
     private Options options() {

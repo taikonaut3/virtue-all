@@ -18,13 +18,13 @@ public class RefreshHeartBeatCountEventListener implements EventListener<Refresh
         Integer readIdeTimes = event.readIdeTimes();
         Integer allIdeTimes = event.allIdeTimes();
         if (writeIdeTimes != null) {
-            channel.set(Key.WRITE_IDLE_TIMES_ATTRIBUTE_KEY, new AtomicInteger(writeIdeTimes));
+            channel.set(Key.WRITE_IDLE_TIMES, new AtomicInteger(writeIdeTimes));
         }
         if (readIdeTimes != null) {
-            channel.set(Key.READER_IDLE_TIMES_ATTRIBUTE_KEY, new AtomicInteger(readIdeTimes));
+            channel.set(Key.READER_IDLE_TIMES, new AtomicInteger(readIdeTimes));
         }
         if (allIdeTimes != null) {
-            channel.set(Key.ALL_IDLE_TIMES_ATTRIBUTE_KEY, new AtomicInteger(allIdeTimes));
+            channel.set(Key.ALL_IDLE_TIMES, new AtomicInteger(allIdeTimes));
         }
     }
 

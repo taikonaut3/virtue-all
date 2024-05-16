@@ -1,7 +1,7 @@
 package io.virtue.registry;
 
-import io.virtue.common.url.URL;
 import io.virtue.common.extension.resoruce.Closeable;
+import io.virtue.common.url.URL;
 
 import java.util.List;
 

@@ -29,7 +29,7 @@ public interface Endpoint extends Closeable {
      *
      * @return InetSocketAddress instance
      */
-    InetSocketAddress toInetSocketAddress();
+    InetSocketAddress inetSocketAddress();
 
     /**
      * Convert the endpoint to "host:port".

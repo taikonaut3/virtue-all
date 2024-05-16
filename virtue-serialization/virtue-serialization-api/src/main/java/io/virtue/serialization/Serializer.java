@@ -14,7 +14,7 @@ import static io.virtue.common.constant.Components.Serialization.KRYO;
 public interface Serializer extends Converter {
 
     /**
-     * serialize the input object into a byte array.
+     * Serialize the input object into a byte array.
      *
      * @param input The object to serialization.
      * @return The serialize byte array.
@@ -23,7 +23,7 @@ public interface Serializer extends Converter {
     byte[] serialize(Object input) throws SerializationException;
 
     /**
-     * deserialize a byte array into an object of the specified class.
+     * Deserialize a byte array into an object of the specified class.
      *
      * @param bytes The byte array to deserialization.
      * @param type  The class of the object to deserialization.

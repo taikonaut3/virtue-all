@@ -86,7 +86,7 @@
         <!-- 检查long型定义是否有大写的“L” -->
         <module name="UpperEll"/>
 
-        <!-- 方法不超过100行 -->
+        <!-- 方法不超过300行 -->
         <module name="MethodLength">
             <property name="tokens" value="METHOD_DEF"/>
             <property name="max" value="300"/>

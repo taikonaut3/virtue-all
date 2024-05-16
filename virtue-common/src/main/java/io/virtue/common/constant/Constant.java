@@ -55,7 +55,7 @@ public interface Constant {
 
     int DEFAULT_SUBSCRIBES = DEFAULT_CPU_THREADS;
 
-    int DEFAULT_SPARE_CLOSE_TIMES = 10;
+    int DEFAULT_SPARE_CLOSE_TIMES = 3;
 
     String DEFAULT_VERSION = "1.0.0";
 

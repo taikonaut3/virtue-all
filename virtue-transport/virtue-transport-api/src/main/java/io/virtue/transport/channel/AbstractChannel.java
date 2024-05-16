@@ -2,18 +2,16 @@ package io.virtue.transport.channel;
 
 import io.virtue.common.exception.NetWorkException;
 import io.virtue.common.extension.AbstractAccessor;
-import io.virtue.common.util.NetUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+
+import static io.virtue.common.util.NetUtil.getAddress;
+import static io.virtue.common.util.StringUtil.simpleClassName;
 
 /**
  * Abstract Channel.
  */
 public abstract class AbstractChannel extends AbstractAccessor implements Channel {
-
-    private static final Logger logger = LoggerFactory.getLogger(AbstractChannel.class);
 
     private final InetSocketAddress localAddress;
     private final InetSocketAddress remoteAddress;
@@ -25,9 +23,10 @@ public abstract class AbstractChannel extends AbstractAccessor implements Channe
 
     @Override
     public void close() {
-        doClose();
-        accessor.clear();
-        logger.debug("Closed {}", this);
+        if (isActive()) {
+            doClose();
+            accessor.clear();
+        }
     }
 
     protected abstract void doClose() throws NetWorkException;
@@ -44,6 +43,6 @@ public abstract class AbstractChannel extends AbstractAccessor implements Channe
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + NetUtil.getAddress(localAddress) + " connect to " + NetUtil.getAddress(remoteAddress);
+        return String.format("%s %s connect to %s", simpleClassName(this), getAddress(localAddress), getAddress(remoteAddress));
     }
 }

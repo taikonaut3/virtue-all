@@ -18,8 +18,6 @@ import org.example.model2.ParentObject;
 import java.util.Date;
 import java.util.List;
 
-import static io.virtue.common.constant.Components.Serialization.MSGPACK;
-
 @RemoteService("345")
 //@Service
 public class Provider {
@@ -40,12 +38,10 @@ public class Provider {
     }
 
     @VirtueCallable(name = "list")
-    @Config(serialization = MSGPACK, filters = "testFilter")
     public List<ParentObject> list(List<ParentObject> list) {
         return ParentObject.getObjList();
     }
 
-    @Config(serialization = MSGPACK)
     @VirtueCallable(name = "list2")
     public List<ParentObject> list2(List<ParentObject> list1, List<ParentObject> list2) {
         return ParentObject.getObjList("list server2");

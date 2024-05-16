@@ -92,8 +92,9 @@ public class RpcContext {
         /**
          * Clear context.
          */
+        @Override
         public void clear() {
-            accessor.clear();
+            super.clear();
             REQUEST_CONTEXT.remove();
         }
 
@@ -125,8 +126,9 @@ public class RpcContext {
         /**
          * Clear context.
          */
+        @Override
         public void clear() {
-            accessor.clear();
+            super.clear();
             RESPONSE_CONTEXT.remove();
         }
 

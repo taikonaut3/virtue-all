@@ -29,8 +29,6 @@ public abstract class EnvelopeEventListener<T extends Event<?>> implements Event
 
     protected abstract void handEnvelopeEvent(T event);
 
-    protected void jvmShuttingDown(T event) {
-
-    }
+    protected abstract void jvmShuttingDown(T event);
 
 }
