@@ -18,6 +18,7 @@ import io.virtue.transport.http.h1.HttpHeaders;
 import io.virtue.transport.netty.client.NettyClient;
 import io.virtue.transport.netty.client.NettyPoolClient;
 import io.virtue.transport.netty.custom.CustomChannelInitializer;
+import io.virtue.transport.netty.custom.CustomClientChannelInitializer;
 import io.virtue.transport.netty.custom.NettyCustomCodec;
 import io.virtue.transport.netty.http.h1.NettyHttpHeaders;
 import io.virtue.transport.netty.http.h1.client.HttpClient;
@@ -66,14 +67,15 @@ public class ProtocolAdapter {
      * @param url
      * @param handler
      * @param client
+     * @param codec
      * @return
      */
-    public static ChannelPoolHandler acquireClientChannelPoolHandler(URL url, ChannelHandler handler, NettyPoolClient client) {
+    public static ChannelPoolHandler acquireClientChannelPoolHandler(URL url, ChannelHandler handler, NettyPoolClient client, Codec codec) {
         String protocol = url.protocol();
         return switch (protocol) {
             case HTTP, HTTPS -> new HttpClientChannelPoolInitializer(url, handler, client);
             case H2, H2C -> new Http2ClientPoolChannelInitializer(url, handler, client);
-            default -> null;
+            default -> new CustomClientChannelInitializer(url, handler, codec);
         };
     }
 

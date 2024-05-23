@@ -9,7 +9,9 @@ import io.virtue.core.RemoteCaller;
 import io.virtue.rpc.h1.parse.JaxRsRestInvocationParser;
 import io.virtue.rpc.h1.parse.RestInvocationParser;
 import io.virtue.rpc.support.AbstractCaller;
+import io.virtue.transport.http.HttpHeaderNames;
 import io.virtue.transport.http.HttpMethod;
+import io.virtue.transport.http.MediaType;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -18,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.virtue.rpc.h1.support.HttpUtil.regularRequestHeaders;
 
@@ -46,6 +49,8 @@ public abstract class AbstractHttpCaller<T extends Annotation> extends AbstractC
     protected AbstractHttpCaller(Method method, RemoteCaller<?> remoteCaller, String protocol, Class<T> annoType) {
         super(method, remoteCaller, protocol, annoType);
         addRequestHeaders(REGULAR_REQUEST_HEADERS);
+        MediaType mediaType = MediaType.of(requestHeaders.get(HttpHeaderNames.CONTENT_TYPE));
+        Optional.ofNullable(mediaType).ifPresent(type -> serialization = type.getSerialization());
         restInvocationParser = new JaxRsRestInvocationParser();
     }
 

@@ -5,6 +5,7 @@ import io.virtue.core.Invocation;
 /**
  * Filter can interceptor rpc call.
  */
+@FunctionalInterface
 public interface Filter {
 
     /**

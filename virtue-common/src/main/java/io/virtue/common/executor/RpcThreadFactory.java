@@ -1,7 +1,7 @@
 package io.virtue.common.executor;
 
-import java.util.Objects;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Rpc ThreadFactory.
@@ -9,6 +9,8 @@ import java.util.concurrent.ThreadFactory;
 public class RpcThreadFactory implements ThreadFactory {
 
     private final ThreadExceptionHandler threadExceptionHandler = new ThreadExceptionHandler();
+
+    private final AtomicInteger num = new AtomicInteger(0);
 
     private final String namePrefix;
 
@@ -26,9 +28,8 @@ public class RpcThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable r) {
-        Objects.requireNonNull(r);
         Thread t = new Thread(r);
-        t.setName(namePrefix + "-" + t.threadId());
+        t.setName(namePrefix + "-" + num.incrementAndGet());
         t.setUncaughtExceptionHandler(threadExceptionHandler);
         t.setDaemon(isDaemon);
         return t;

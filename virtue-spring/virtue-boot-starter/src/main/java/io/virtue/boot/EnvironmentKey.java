@@ -7,6 +7,8 @@ public interface EnvironmentKey {
 
     String SPRING_APPLICATION_NAME = "spring.application.name";
 
+    String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
+
     String APPLICATION_NAME = "virtue.application-name";
 
     String REGISTER_ADDRESS = "virtue.register.address";

@@ -52,6 +52,7 @@
         <plugin.central-publishing.version>0.4.0</plugin.central-publishing.version>
         <plugin.flatten.version>1.6.0</plugin.flatten.version>
         <plugin.protobuf.version>0.6.1</plugin.protobuf.version>
+        <plugin.native.version>0.10.1</plugin.native.version>
     </properties>
 
     <build>
@@ -97,6 +98,11 @@
                     <artifactId>protobuf-maven-plugin</artifactId>
                     <version>${plugin.protobuf.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>${plugin.native.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -111,6 +117,10 @@
                     <deploymentName>virtue-${revision}</deploymentName>
                     <excludeArtifacts>virtue-test,virtue-demo,common-model,consumer,provider</excludeArtifacts>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

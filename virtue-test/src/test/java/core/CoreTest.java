@@ -1,5 +1,6 @@
 package core;
 
+import io.virtue.core.manager.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -31,7 +32,11 @@ public class CoreTest {
 
     @Test
     public void test1() {
-        System.out.println(match("dfasdasd:hello/222", "dfasdasd:hello/222"));
+        Environment environment = new Environment();
+        environment.set("name", "zwb")
+                .set("abc", "123");
+        String input = "dasdada-${name}-fasd-${name}-asda${abc}----${abc}-------${123}";
+        System.out.println(environment.replace(input));
     }
 
     @Test

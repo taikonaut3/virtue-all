@@ -12,6 +12,7 @@ import io.virtue.core.VirtueConfiguration;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.EventDispatcherConfig;
 import io.virtue.core.manager.ConfigManager;
+import io.virtue.core.manager.Environment;
 import io.virtue.core.manager.MonitorManager;
 import io.virtue.event.EventDispatcher;
 import io.virtue.governance.router.Router;
@@ -36,6 +37,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultVirtue.class);
     private final String name;
+    private final Environment environment;
     private final List<VirtueConfiguration> configurations;
     private ConfigManager configManager;
     private MonitorManager monitorManager;
@@ -45,18 +47,9 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     public DefaultVirtue() {
         name = DEFAULT;
+        environment = new Environment();
         configurations = ExtensionLoader.loadExtensions(VirtueConfiguration.class);
         init();
-    }
-
-    @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public Scheduler scheduler() {
-        return scheduler;
     }
 
     @Override

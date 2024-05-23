@@ -13,6 +13,7 @@ import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.manager.ConfigManager;
+import io.virtue.core.manager.Environment;
 import io.virtue.core.manager.MonitorManager;
 import io.virtue.event.EventDispatcher;
 import org.intellij.lang.annotations.Language;
@@ -113,6 +114,13 @@ public interface Virtue extends Accessor, Lifecycle {
      * @return scheduler
      */
     Scheduler scheduler();
+
+    /**
+     * Get environment.
+     *
+     * @return
+     */
+    Environment environment();
 
     /**
      * Get monitorManager.

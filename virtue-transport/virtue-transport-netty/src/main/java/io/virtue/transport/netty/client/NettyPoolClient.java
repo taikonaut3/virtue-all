@@ -41,7 +41,7 @@ public class NettyPoolClient extends NettyClient {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-        ChannelPoolHandler channelPoolHandler = ProtocolAdapter.acquireClientChannelPoolHandler(url, nettyHandler, this);
+        ChannelPoolHandler channelPoolHandler = ProtocolAdapter.acquireClientChannelPoolHandler(url, nettyHandler, this,codec);
         int maxConnections = url.getIntParam(Key.MAX_CONNECTIONS, Constant.DEFAULT_CLIENT_MAX_CONNECTIONS);
         channelPool = new FixedChannelPool(bootstrap, channelPoolHandler, maxConnections);
     }

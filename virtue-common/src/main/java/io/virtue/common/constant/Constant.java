@@ -57,7 +57,7 @@ public interface Constant {
 
     int DEFAULT_SPARE_CLOSE_TIMES = 3;
 
-    int DEFAULT_CLIENT_MAX_CONNECTIONS = 1;
+    int DEFAULT_CLIENT_MAX_CONNECTIONS = 3;
 
     String DEFAULT_VERSION = "1.0.0";
 

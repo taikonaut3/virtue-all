@@ -1,6 +1,7 @@
 package io.github.taikonaut3;
 
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.virtue.core.Virtue;
 import io.virtue.core.annotation.Config;
 import io.virtue.core.annotation.RemoteService;
 import io.virtue.rpc.h1.config.HttpCallable;
@@ -44,6 +45,8 @@ public class Provider {
 
     @VirtueCallable(name = "list2")
     public List<ParentObject> list2(List<ParentObject> list1, List<ParentObject> list2) {
+        Virtue virtue = Virtue.getDefault();
+
         return ParentObject.getObjList("list server2");
     }
 

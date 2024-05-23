@@ -71,8 +71,8 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     protected AbstractInvoker(Method method, InvokerContainer container, String protocol, Class<T> annoType) {
         AssertUtil.notNull(method, container, protocol, annoType);
         this.parsedAnnotation = parseAnnotation(method, annoType);
-        virtue = container.virtue();
-        virtueName = virtue.name();
+        this.virtue = container.virtue();
+        this.virtueName = virtue.name();
         this.method = method;
         this.container = container;
         this.remoteApplication = container.remoteApplication();
