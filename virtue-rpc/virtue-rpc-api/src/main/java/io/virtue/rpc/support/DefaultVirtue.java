@@ -130,7 +130,7 @@ public class DefaultVirtue extends AbstractAccessor implements Virtue {
             eventDispatcher.close();
             state = State.STOPPED;
             logger.info("Virtue stopped");
-        }else {
+        } else {
             throw new IllegalStateException("start() can only be invoked when State is STARTED");
         }
     }

@@ -12,7 +12,7 @@ public interface Filter {
      * Execute the filter logic.
      *
      * @param invocation
-     * @return Should always use {@link Invocation#invoke()} to return,Then can reflect next filter
+     * @return Should always use {@link Invocation#invoke()} to return,Then can invoke next filter
      */
     Object doFilter(Invocation invocation);
 

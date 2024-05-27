@@ -1,6 +1,7 @@
 package io.github.taikonaut3;
 
 import io.virtue.boot.EnableVirtue;
+import io.virtue.core.Invoker;
 import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
@@ -30,6 +31,11 @@ public class ProviderMain {
                 .register(new RegistryConfig("consul://127.0.0.1:8500"))
                 .wrap(new Provider())
                 .start();
+        virtue.configManager().remoteServiceManager().remoteServices().forEach(remoteService -> {
+            for (Invoker<?> invoker : remoteService.invokers()) {
+                invoker.addFilter();
+            }
+        });
     }
 //    @Bean
 //    public RegistryConfig nacosRegistryConfig() {

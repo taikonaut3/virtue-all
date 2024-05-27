@@ -13,6 +13,11 @@ public class Environment extends StringAccessor<Environment> {
 
     private static final Pattern PATTERN = Pattern.compile("\\$\\{([^}]+)\\}");
 
+    /**
+     * Try replacing ${} in the value with the key of the current environment.
+     * @param input
+     * @return
+     */
     public String replace(String input) {
         Matcher matcher = PATTERN.matcher(input);
         StringBuilder result = new StringBuilder();

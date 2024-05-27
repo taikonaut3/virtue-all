@@ -35,9 +35,11 @@ public final class AssertUtil {
      * Determine if an object is not null, and throw a NullPointerException exception when it is.
      *
      * @param object
+     * @param <T>
+     * @return
      */
-    public static void notNull(Object object) {
-        notNull(object, null);
+    public static <T> T notNull(T object) {
+        return notNull(object, null);
     }
 
     /**
@@ -56,13 +58,16 @@ public final class AssertUtil {
      *
      * @param object
      * @param message
+     * @param <T>
+     * @return
      */
-    public static void notNull(Object object, String message) {
+    public static <T> T notNull(T object, String message) {
         if (object == null) {
             if (StringUtil.isBlank(message))
                 message = "The object can't be null";
             throw new NullPointerException(message);
         }
+        return object;
     }
 
     /**
