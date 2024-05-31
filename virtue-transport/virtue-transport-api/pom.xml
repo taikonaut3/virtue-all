@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-core</artifactId>
+            <artifactId>virtue-metrics</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.lz4/lz4-java -->
         <dependency>

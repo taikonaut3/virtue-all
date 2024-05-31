@@ -9,21 +9,12 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>virtue-governance</artifactId>
-    <description>Service governance, routing, load balancing, fault tolerance, etc.</description>
+    <artifactId>virtue-metrics</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-proxy-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-registry-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-metrics</artifactId>
+            <artifactId>virtue-core</artifactId>
         </dependency>
     </dependencies>
 

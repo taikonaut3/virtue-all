@@ -5,10 +5,8 @@ import io.virtue.core.MatchScope;
 import io.virtue.core.Virtue;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.manager.FilterManager;
+import io.virtue.metrics.CallerMetrics;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static io.virtue.common.constant.Components.Protocol.*;
 
@@ -19,11 +17,11 @@ import static io.virtue.common.constant.Components.Protocol.*;
 @Component
 public class TimeCountFilter implements Filter {
 
-    public static final Wrapper h2Wrapper = new Wrapper();
+    public static CallerMetrics h2Wrapper;
 
-    public static final Wrapper httpWrapper = new Wrapper();
+    public static CallerMetrics httpWrapper;
 
-    public static final Wrapper virtueWrapper = new Wrapper();
+    public static CallerMetrics virtueWrapper;
 
     public TimeCountFilter(Virtue virtue) {
         FilterManager manager = virtue.configManager().filterManager();
@@ -32,34 +30,13 @@ public class TimeCountFilter implements Filter {
 
     @Override
     public Object doFilter(Invocation invocation) {
-        long start = System.currentTimeMillis();
-        try {
-            return invocation.invoke();
-        } finally {
-            long end = System.currentTimeMillis();
-            long t = end - start;
-            String protocol = invocation.url().protocol();
-            System.out.println(protocol + "耗时:" + t);
-            switch (protocol) {
-                case H2 -> {
-                    h2Wrapper.totalTime.addAndGet(t);
-                    h2Wrapper.count.incrementAndGet();
-                }
-                case HTTPS -> {
-                    httpWrapper.totalTime.addAndGet(t);
-                    httpWrapper.count.incrementAndGet();
-                }
-                case VIRTUE -> {
-                    virtueWrapper.totalTime.addAndGet(t);
-                    virtueWrapper.count.incrementAndGet();
-                }
-            }
+        String protocol = invocation.url().protocol();
+        CallerMetrics callerMetrics = invocation.invoker().get(CallerMetrics.ATTRIBUTE_KEY);
+        switch (protocol) {
+            case H2 -> h2Wrapper = callerMetrics;
+            case HTTPS -> httpWrapper = callerMetrics;
+            case VIRTUE -> virtueWrapper = callerMetrics;
         }
-    }
-
-    public static class Wrapper {
-        public AtomicLong totalTime = new AtomicLong(0);
-
-        public AtomicInteger count = new AtomicInteger(0);
+        return invocation.invoke();
     }
 }

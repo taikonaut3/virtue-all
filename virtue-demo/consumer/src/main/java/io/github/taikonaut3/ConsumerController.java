@@ -42,7 +42,7 @@ public class ConsumerController {
     }
 
     @GetMapping("testTime")
-    public Map<String, TimeCountFilter.Wrapper> testTime() {
+    public Map<String, String> testTime() {
         ExecutorService executorService = Executors.newFixedThreadPool(3000);
         ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
@@ -64,9 +64,9 @@ public class ConsumerController {
             throw new RuntimeException(e);
         }
         return Map.of(
-                "virtue", TimeCountFilter.virtueWrapper,
-                "h2", TimeCountFilter.h2Wrapper,
-                "http", TimeCountFilter.httpWrapper
+                "virtue", TimeCountFilter.virtueWrapper.toString(),
+                "h2", TimeCountFilter.h2Wrapper.toString(),
+                "http", TimeCountFilter.httpWrapper.toString()
         );
     }
 }

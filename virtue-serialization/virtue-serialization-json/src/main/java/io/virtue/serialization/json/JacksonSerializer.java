@@ -1,6 +1,8 @@
 package io.virtue.serialization.json;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.virtue.common.exception.ConversionException;
 import io.virtue.common.extension.spi.Extension;
@@ -23,6 +25,11 @@ public class JacksonSerializer extends AbstractSerializer {
     public JacksonSerializer() {
         this.jsonMapper = JsonMapper.builder()
                 .enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
+                .visibility(
+                        VisibilityChecker.Std.defaultInstance()
+                                .withGetterVisibility(JsonAutoDetect.Visibility.ANY)
+                                .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
+                                .withFieldVisibility(JsonAutoDetect.Visibility.ANY))
                 .build();
     }
 

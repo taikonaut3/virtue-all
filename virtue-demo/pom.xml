@@ -27,10 +27,10 @@
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-serialization-msgpack</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.github.taikonaut3</groupId>
-            <artifactId>virtue-registry-nacos</artifactId>
-        </dependency>
+        <!--         <dependency> -->
+        <!--             <groupId>io.github.taikonaut3</groupId> -->
+        <!--             <artifactId>virtue-registry-nacos</artifactId> -->
+        <!--         </dependency> -->
         <dependency>
             <groupId>io.github.taikonaut3</groupId>
             <artifactId>virtue-proxy-cglib</artifactId>

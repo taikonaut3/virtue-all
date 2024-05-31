@@ -127,6 +127,7 @@ public interface Key {
     String HTTP_REQUEST_WRAPPER = "httpRequestWrapper";
 
     String ENVELOPE = "envelope";
+
     String RESPONSE_CODE = "responseCode";
 
     String INVOKER = "invoker";
@@ -146,7 +147,9 @@ public interface Key {
     String DESCRIPTION = "description";
 
     String CLIENT = "client";
+
     String FUTURE_FACTORY = "futureFactory";
+
     String HTTP_METHOD = "httpMethod";
 
     String LOCAL_VIRTUE = "localVirtue";
@@ -154,15 +157,9 @@ public interface Key {
     String CLIENT_VIRTUE = "clientVirtue";
 
     String SERVER_VIRTUE = "serverVirtue";
-    AttributeKey<AtomicInteger> ALL_IDLE_TIMES = AttributeKey.of("allIdleTimes");
-    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES = AttributeKey.of("writeIdleTimes");
-    AttributeKey<AtomicInteger> READER_IDLE_TIMES = AttributeKey.of("readeIdleTimes");
-    AttributeKey<AtomicInteger> LAST_CALL_INDEX = AttributeKey.of("lastCallIndex");
-    AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.of("callException");
-
-    AttributeKey<URL> HTTP_URL = AttributeKey.of("httpUrl");
 
     String VERTX = "vertx";
+
     String SUBSCRIBES = "subscribes";
 
     String CA_PATH = "virtue.h2.ca.path";
@@ -174,4 +171,16 @@ public interface Key {
     String SERVER_CERT_PATH = "virtue.http.server.cert.path";
 
     String SERVER_KEY_PATH = "virtue.http.server.key.path";
+
+    AttributeKey<AtomicInteger> ALL_IDLE_TIMES = AttributeKey.of("allIdleTimes");
+
+    AttributeKey<AtomicInteger> WRITE_IDLE_TIMES = AttributeKey.of("writeIdleTimes");
+
+    AttributeKey<AtomicInteger> READER_IDLE_TIMES = AttributeKey.of("readeIdleTimes");
+
+    AttributeKey<AtomicInteger> LAST_CALL_INDEX = AttributeKey.of("lastCallIndex");
+
+    AttributeKey<Throwable> CALL_EXCEPTION = AttributeKey.of("callException");
+
+    AttributeKey<URL> HTTP_URL = AttributeKey.of("httpUrl");
 }

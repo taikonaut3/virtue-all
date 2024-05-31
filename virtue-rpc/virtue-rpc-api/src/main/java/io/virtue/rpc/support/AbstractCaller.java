@@ -22,11 +22,12 @@ import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.filter.FilterScope;
 import io.virtue.core.manager.ClientConfigManager;
-import io.virtue.core.manager.ConfigManager;
+import io.virtue.core.manager.RegistryConfigManager;
 import io.virtue.governance.discovery.ServiceDiscovery;
 import io.virtue.governance.faulttolerance.FaultTolerance;
 import io.virtue.governance.loadbalance.LoadBalancer;
 import io.virtue.governance.router.Router;
+import io.virtue.metrics.CallerMetrics;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
 import io.virtue.transport.RpcFuture;
@@ -122,18 +123,18 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         // subclass init
         doInit();
         // parse core
-        ConfigManager configManager = virtue.configManager();
-        for (RegistryConfig registryConfig : configManager.registryConfigManager().globalConfigs()) {
-            addRegistryConfig(registryConfig);
-        }
+        RegistryConfigManager registryConfigManager = virtue.configManager().registryConfigManager();
+        registryConfigManager.globalConfigs().forEach(this::addRegistryConfig);
         String[] registryNames = ops.registries();
         Optional.ofNullable(registryNames)
                 .ifPresent(names -> Arrays.stream(names)
-                        .map(configManager.registryConfigManager()::get)
+                        .map(registryConfigManager::get)
                         .filter(Objects::nonNull)
                         .forEach(this::addRegistryConfig));
         clientConfigUrl = checkAndGetClientConfigUrl();
         url = createUrl(clientConfigUrl);
+        // add init data
+        addInitData();
     }
 
     @Override
@@ -227,8 +228,12 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         url.replacePaths(pathList());
         url.addParams(clientUrl.params());
         url.addParams(parameterization());
-        url.set(Key.LAST_CALL_INDEX, new AtomicInteger(-1));
         return url;
+    }
+
+    protected void addInitData() {
+        set(Key.LAST_CALL_INDEX, new AtomicInteger(-1));
+        set(CallerMetrics.ATTRIBUTE_KEY, new CallerMetrics());
     }
 
     protected Object doRpcCall(Invocation invocation) {

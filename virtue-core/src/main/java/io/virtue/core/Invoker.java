@@ -1,6 +1,7 @@
 package io.virtue.core;
 
 import io.virtue.common.exception.RpcException;
+import io.virtue.common.extension.Accessor;
 import io.virtue.common.url.URL;
 
 import java.lang.annotation.Annotation;
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @param <T> Method Annotation
  */
-public interface Invoker<T extends Annotation> extends Config, Lifecycle {
+public interface Invoker<T extends Annotation> extends Config, Lifecycle, Accessor {
 
     /**
      * The associated annotation instance.

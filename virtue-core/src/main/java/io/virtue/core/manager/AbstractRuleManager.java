@@ -85,6 +85,9 @@ public abstract class AbstractRuleManager<T> extends AbstractManager<T> {
         return invokers.stream().filter(invoker -> {
             boolean protocolResult = protocolRules.isEmpty();
             boolean pathResult = pathRules.isEmpty();
+            if (protocolResult && pathResult) {
+                return false;
+            }
             for (String protocolRule : protocolRules) {
                 if (isMatch(protocolRule, invoker.protocol())) {
                     protocolResult = true;

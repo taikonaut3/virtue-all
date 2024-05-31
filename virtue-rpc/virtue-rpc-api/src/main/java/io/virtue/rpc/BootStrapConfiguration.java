@@ -10,6 +10,14 @@ import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.manager.ServerConfigManager;
 import io.virtue.event.EventDispatcher;
 import io.virtue.event.disruptor.DisruptorEventDispatcher;
+import io.virtue.metrics.CalleeMetrics;
+import io.virtue.metrics.CallerMetrics;
+import io.virtue.metrics.event.CalleeMetricsEvent;
+import io.virtue.metrics.event.CalleeMetricsEventListener;
+import io.virtue.metrics.event.CallerMetricsEvent;
+import io.virtue.metrics.event.CallerMetricsEventListener;
+import io.virtue.metrics.filter.CalleeMetricsFilter;
+import io.virtue.metrics.filter.CallerMetricsFilter;
 import io.virtue.registry.RegistryFactory;
 import io.virtue.registry.RegistryService;
 import io.virtue.registry.support.RegisterServiceEvent;
@@ -64,6 +72,11 @@ public class BootStrapConfiguration implements VirtueConfiguration {
         eventDispatcher.addListener(IdleEvent.class, new IdleEventListener());
         eventDispatcher.addListener(SendMessageEvent.class, new SendMessageEventListener());
         eventDispatcher.addListener(RegisterServiceEvent.class, new RegisterServiceEventListener());
+        eventDispatcher.addListener(CallerMetricsEvent.class, new CallerMetricsEventListener());
+        eventDispatcher.addListener(CalleeMetricsEvent.class, new CalleeMetricsEventListener());
+
+        virtue.register(CalleeMetrics.ATTRIBUTE_KEY.name().toString(), new CalleeMetricsFilter(virtue))
+                .register(CallerMetrics.ATTRIBUTE_KEY.name().toString(), new CallerMetricsFilter(virtue));
     }
 
     @Override

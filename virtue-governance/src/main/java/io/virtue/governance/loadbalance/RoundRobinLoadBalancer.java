@@ -3,6 +3,7 @@ package io.virtue.governance.loadbalance;
 import io.virtue.common.constant.Key;
 import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.AtomicUtil;
 import io.virtue.core.Invocation;
 
 import java.util.List;
@@ -21,12 +22,8 @@ public class RoundRobinLoadBalancer extends AbstractLoadBalancer {
 
     @Override
     protected URL doChoose(Invocation invocation, List<URL> urls) {
-        URL url = invocation.invoker().url();
-        AtomicInteger lastIndex = url.get(Key.LAST_CALL_INDEX);
-        int current;
-        do {
-            current = (lastIndex.get() + 1) % urls.size();
-        } while (!lastIndex.compareAndSet(lastIndex.get(), current));
+        AtomicInteger lastIndex = invocation.invoker().get(Key.LAST_CALL_INDEX);
+        int current = AtomicUtil.updateAtomicInteger(lastIndex, old -> (old + 1) % urls.size());
         return urls.get(current);
     }
 

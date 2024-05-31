@@ -115,7 +115,7 @@
         <module name="WhitespaceAround"/>
 
         <!-- 修饰符检查 -->
-        <!-- 检查修饰符的顺序是否遵照java语言规范，默认public、protected、private、abstract、static、final、transient、volatile、synchronized、native、strictfp -->
+        <!-- 检查修饰符的顺序是否遵照java语言规范，默认public、protected、private、abstract、static、final、transient、volatile、synchronized、aot、strictfp -->
         <module name="ModifierOrder"/>
         <!-- 检查接口和annotation中是否有多余修饰符，如接口方法不必使用public -->
         <module name="RedundantModifier"/>

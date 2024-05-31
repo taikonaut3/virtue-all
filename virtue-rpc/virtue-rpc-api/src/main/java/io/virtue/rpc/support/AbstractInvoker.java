@@ -1,6 +1,7 @@
 package io.virtue.rpc.support;
 
 import io.virtue.common.constant.Key;
+import io.virtue.common.extension.AbstractAccessor;
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.Parameter;
 import io.virtue.common.url.URL;
@@ -32,7 +33,7 @@ import java.util.*;
  */
 @Getter
 @Accessors(fluent = true, chain = true)
-public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T> {
+public abstract class AbstractInvoker<T extends Annotation> extends AbstractAccessor implements Invoker<T> {
 
     protected final Virtue virtue;
 
@@ -61,9 +62,11 @@ public abstract class AbstractInvoker<T extends Annotation> implements Invoker<T
     @Setter
     @Parameter(Key.APPLICATION)
     protected String remoteApplication;
+
     @Setter
     @Parameter(Key.SERIALIZATION)
     protected String serialization;
+
     @Setter
     @Parameter(Key.COMPRESSION)
     protected String compression;

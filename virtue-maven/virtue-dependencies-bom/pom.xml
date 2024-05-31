@@ -253,6 +253,11 @@
             </dependency>
             <dependency>
                 <groupId>io.github.taikonaut3</groupId>
+                <artifactId>virtue-metrics</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.taikonaut3</groupId>
                 <artifactId>virtue-proxy-api</artifactId>
                 <version>${revision}</version>
             </dependency>

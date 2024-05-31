@@ -1,5 +1,6 @@
 package io.virtue.core;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 
 import java.lang.reflect.Type;
@@ -50,7 +51,7 @@ public interface Invocation {
      *
      * @return invocation behavior (could be null)
      */
-    Object invoke();
+    Object invoke() throws RpcException;
 
     /**
      * Revise current invocation behavior.

@@ -5,6 +5,7 @@ import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.RpcContext;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
+import io.virtue.metrics.CallerMetrics;
 import io.virtue.transport.client.Client;
 import lombok.Getter;
 import lombok.Setter;
@@ -94,6 +95,8 @@ public class RpcFuture extends CompletableFuture<Object> {
             return super.get(timeout(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             if (e instanceof TimeoutException) {
+                CallerMetrics callerMetrics = invocation.invoker().get(CallerMetrics.ATTRIBUTE_KEY);
+                callerMetrics.timeoutCount().increment();
                 throw new RpcException(url.authority() + " rpc call timeout: " + timeout() + "ms", e);
             }
             throw RpcException.unwrap(e);

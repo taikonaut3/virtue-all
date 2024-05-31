@@ -6,6 +6,7 @@ import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.spi.Extension;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
+import io.virtue.metrics.CallerMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,8 @@ public class FailRetry extends AbstractFaultTolerance {
                 return invocation.invoke();
             } catch (Exception e) {
                 logger.error("An exception occurred in the calling service: " + e.getMessage() + ",Start retry: " + start, e);
+                CallerMetrics callerMetrics = invocation.invoker().get(CallerMetrics.ATTRIBUTE_KEY);
+                callerMetrics.retryCount().increment();
             }
         }
         throw new RpcException("An exception occurred in the calling service,Retry times: " + retries);

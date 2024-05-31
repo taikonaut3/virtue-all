@@ -37,16 +37,18 @@ public final class CollectionUtil {
      * @param <T>             The type of the items in the collection.
      */
     public static <T> void addToList(Collection<T> collection, BiPredicate<T, T> predicate, Consumer<T> successCallBack, T... items) {
-        loop:
-        for (T item : items) {
-            for (T collect : collection) {
-                if (predicate.test(collect, item)) {
-                    continue loop;
+        if (items != null && items.length > 0) {
+            loop:
+            for (T item : items) {
+                for (T collect : collection) {
+                    if (predicate.test(collect, item)) {
+                        continue loop;
+                    }
                 }
-            }
-            collection.add(item);
-            if (successCallBack != null) {
-                successCallBack.accept(item);
+                collection.add(item);
+                if (successCallBack != null) {
+                    successCallBack.accept(item);
+                }
             }
         }
     }

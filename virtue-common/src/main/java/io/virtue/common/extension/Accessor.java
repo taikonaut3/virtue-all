@@ -18,6 +18,8 @@ public interface Accessor extends Cleanable {
      */
     <T> T get(AttributeKey<T> key);
 
+    <T> T getOrSet(AttributeKey<T> key, T value);
+
     /**
      * Set attribute value by attributeKey.
      *
@@ -25,7 +27,7 @@ public interface Accessor extends Cleanable {
      * @param value
      * @param <T>
      */
-    <T> void set(AttributeKey<T> key, T value);
+    <T> Attribute<T> set(AttributeKey<T> key, T value);
 
     /**
      * Remove attribute by attributeKey.

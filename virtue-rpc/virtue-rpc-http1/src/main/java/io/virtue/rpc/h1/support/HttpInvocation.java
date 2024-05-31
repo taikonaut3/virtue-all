@@ -1,5 +1,6 @@
 package io.virtue.rpc.h1.support;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.core.Callee;
 import io.virtue.core.Caller;
@@ -69,7 +70,7 @@ public class HttpInvocation extends HttpStructure implements Invocation {
     }
 
     @Override
-    public Object invoke() {
+    public Object invoke() throws RpcException {
         return invocation.invoke();
     }
 

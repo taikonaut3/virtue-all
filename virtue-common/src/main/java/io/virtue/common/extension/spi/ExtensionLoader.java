@@ -7,8 +7,6 @@ import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.ReflectionUtil;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -27,8 +25,6 @@ import static java.lang.String.format;
  * @param <S>
  */
 public final class ExtensionLoader<S> implements Cleanable {
-
-    private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);
 
     private static final String PREFIX = SPI_FIX_PATH;
 
@@ -186,7 +182,6 @@ public final class ExtensionLoader<S> implements Cleanable {
                 }
             }
         } catch (Exception e) {
-            logger.error("Load " + type + " failed", e);
             throw RpcException.unwrap(e);
         }
 

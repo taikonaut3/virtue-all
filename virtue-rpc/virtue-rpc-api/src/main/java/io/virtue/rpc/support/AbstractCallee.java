@@ -10,6 +10,7 @@ import io.virtue.core.RemoteService;
 import io.virtue.core.config.ServerConfig;
 import io.virtue.core.filter.Filter;
 import io.virtue.core.filter.FilterScope;
+import io.virtue.metrics.CalleeMetrics;
 import io.virtue.transport.channel.Channel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -50,6 +51,7 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
                 logger.warn("Can't find <{}>ServerConfig", protocol);
             }
         }
+        addInitData();
     }
 
     @Override
@@ -89,6 +91,10 @@ public abstract class AbstractCallee<T extends Annotation> extends AbstractInvok
         serverUrl.addParams(parameterization());
         serverUrl.addParam(Key.CLASS, remoteService().target().getClass().getName());
         return serverUrl;
+    }
+
+    protected void addInitData() {
+        set(CalleeMetrics.ATTRIBUTE_KEY, new CalleeMetrics());
     }
 
     protected Object doInvoke(Invocation invocation) {

@@ -1,5 +1,6 @@
 package io.virtue.core.support;
 
+import io.virtue.common.exception.RpcException;
 import io.virtue.common.url.URL;
 import io.virtue.core.Callee;
 import io.virtue.core.Caller;
@@ -48,7 +49,7 @@ public class TransferableInvocation implements Invocation {
     }
 
     @Override
-    public Object invoke() {
+    public Object invoke() throws RpcException {
         if (invoke != null) {
             return invoke.get();
         }
