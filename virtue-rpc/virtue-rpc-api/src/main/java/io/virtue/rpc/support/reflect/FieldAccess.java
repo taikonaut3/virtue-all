@@ -32,7 +32,9 @@ import static org.objectweb.asm.Opcodes.*;
 @Getter
 public abstract class FieldAccess {
     private String[] fieldNames;
+
     private Class<?>[] fieldTypes;
+
     private Field[] fields;
 
     /**

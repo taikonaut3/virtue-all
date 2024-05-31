@@ -86,5 +86,4 @@ public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     protected abstract void doConnect() throws ConnectException;
 
-
 }

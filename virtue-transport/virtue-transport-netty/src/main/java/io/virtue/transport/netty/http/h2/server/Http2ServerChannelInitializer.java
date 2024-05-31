@@ -32,9 +32,13 @@ import static io.virtue.transport.util.TransportUtil.sslEnabled;
 public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private static final Logger logger = LoggerFactory.getLogger(Http2ServerChannelInitializer.class);
+
     private final URL url;
+
     private final ChannelHandler handler;
+
     private final HttpServerUpgradeHandler.UpgradeCodecFactory upgradeCodecFactory;
+
     private final SslContext sslContext;
 
     public Http2ServerChannelInitializer(URL url, ChannelHandler handler) {
@@ -96,6 +100,7 @@ public class Http2ServerChannelInitializer extends ChannelInitializer<SocketChan
     class Http2ToHttpHandler extends SimpleChannelInboundHandler<HttpMessage> {
 
         private final ChannelHandler requestHandler;
+
         private final ChannelHandler httpObjectAggregator;
 
         Http2ToHttpHandler() {

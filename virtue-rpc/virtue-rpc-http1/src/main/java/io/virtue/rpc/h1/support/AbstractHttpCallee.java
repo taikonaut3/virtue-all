@@ -34,12 +34,16 @@ public abstract class AbstractHttpCallee<T extends Annotation> extends AbstractC
     private static final Map<CharSequence, CharSequence> REGULAR_RESPONSE_HEADERS = regularResponseHeaders();
 
     protected String path;
+
     @Getter
     protected HttpMethod httpMethod;
+
     @Parameter(Key.SSL)
     protected boolean ssl;
+
     @Getter
     protected Map<CharSequence, CharSequence> responseHeaders;
+
     @Getter
     protected RestInvocationParser restInvocationParser;
 

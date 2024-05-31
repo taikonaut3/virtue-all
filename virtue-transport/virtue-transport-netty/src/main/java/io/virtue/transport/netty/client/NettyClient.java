@@ -29,7 +29,9 @@ public class NettyClient extends AbstractClient {
     );
 
     protected Bootstrap bootstrap;
+
     protected Channel channel;
+
     protected io.netty.channel.ChannelHandler nettyHandler;
 
     public NettyClient(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {

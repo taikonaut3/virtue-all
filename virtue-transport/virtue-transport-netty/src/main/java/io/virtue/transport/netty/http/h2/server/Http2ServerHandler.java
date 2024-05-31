@@ -23,7 +23,9 @@ import static io.virtue.transport.netty.NettySupport.removeCurrentStream;
 public final class Http2ServerHandler extends ChannelDuplexHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(Http2ServerHandler.class);
+
     private final URL url;
+
     private final ChannelHandler[] handlers;
 
     Http2ServerHandler(URL url, ChannelHandler handler) {

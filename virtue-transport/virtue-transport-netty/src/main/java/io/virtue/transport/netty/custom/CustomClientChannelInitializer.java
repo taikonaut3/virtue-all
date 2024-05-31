@@ -14,7 +14,9 @@ import io.virtue.transport.netty.ProtocolAdapter;
 public class CustomClientChannelInitializer extends AbstractChannelPoolHandler {
 
     private final URL url;
+
     private final Codec codec;
+
     private final ChannelHandler handler;
 
     public CustomClientChannelInitializer(URL url, ChannelHandler handler, Codec codec) {

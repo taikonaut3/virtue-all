@@ -14,8 +14,11 @@ import io.virtue.transport.netty.ProtocolAdapter;
 public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private final URL url;
+
     private final Codec codec;
+
     private final ChannelHandler handler;
+
     private final boolean isServer;
 
     public CustomChannelInitializer(URL url, ChannelHandler handler, Codec codec, boolean isServer) {

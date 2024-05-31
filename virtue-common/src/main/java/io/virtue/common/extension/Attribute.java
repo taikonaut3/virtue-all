@@ -8,6 +8,7 @@ package io.virtue.common.extension;
 public class Attribute<T> {
 
     private final AttributeKey<T> key;
+
     private T attribute;
 
     public Attribute(AttributeKey<T> key) {

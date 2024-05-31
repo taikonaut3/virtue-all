@@ -39,14 +39,23 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 public abstract class AbstractProtocol<Req, Resp> implements Protocol {
 
     protected static final String SERVER_INVOKE_EXCEPTION = "Server reflect exception: ";
+
     protected static final String SERVER_EXCEPTION = "Server exception: ";
+
     protected Endpoints endpoints;
+
     protected String protocol;
+
     protected Codec serverCodec;
+
     protected Codec clientCodec;
+
     protected ChannelHandler clientHandler;
+
     protected ChannelHandler serverHandler;
+
     protected Transporter transporter;
+
     protected Virtue virtue;
 
     protected AbstractProtocol(String protocol) {

@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 public class RegisterTask implements Runnable {
 
     private final Consumer<RegisterTask> task;
+
     private final boolean isUpdate;
 
     public RegisterTask(Consumer<RegisterTask> task, boolean isUpdate) {

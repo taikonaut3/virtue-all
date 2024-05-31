@@ -27,9 +27,9 @@ import java.io.InputStream;
  */
 public class NettySupport {
 
-    private static final AttributeKey<URL> URL_KEY = AttributeKey.newInstance(Key.URL);
-
     public static final AttributeKey<Http2StreamChannelBootstrap> H2_STREAM_BOOTSTRAP_KEY = AttributeKey.newInstance("h2-stream-bootstrap");
+
+    private static final AttributeKey<URL> URL_KEY = AttributeKey.newInstance(Key.URL);
 
     /**
      * Get current channel's http2 stream.

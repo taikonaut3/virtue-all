@@ -38,8 +38,11 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 public final class Http2FrameClient {
 
     static final boolean SSL = true;
+
     static final String HOST = System.getProperty("host", "127.0.0.1");
+
     static final int PORT = Integer.parseInt(System.getProperty("port", SSL ? "8443" : "8080"));
+
     static final String PATH = System.getProperty("path", "/");
 
     private Http2FrameClient() {

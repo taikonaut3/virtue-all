@@ -19,7 +19,9 @@ import static io.virtue.transport.util.TransportUtil.sslEnabled;
 public class Http2ClientPoolChannelInitializer extends AbstractChannelPoolHandler {
 
     private final URL url;
+
     private final SslContext sslContext;
+
     private final ChannelHandler handler;
 
     public Http2ClientPoolChannelInitializer(URL url, ChannelHandler handler, NettyPoolClient client) {

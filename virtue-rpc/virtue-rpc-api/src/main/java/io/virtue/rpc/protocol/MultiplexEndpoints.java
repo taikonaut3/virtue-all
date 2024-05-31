@@ -17,7 +17,9 @@ import java.util.function.Supplier;
 public class MultiplexEndpoints implements Endpoints {
 
     private final Map<String, Client> multiplexClients = new ConcurrentHashMap<>();
+
     private final Map<String, Client> customClients = new ConcurrentHashMap<>();
+
     private final Map<String, Server> servers = new ConcurrentHashMap<>();
 
     @Override

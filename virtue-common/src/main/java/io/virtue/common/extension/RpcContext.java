@@ -12,7 +12,9 @@ import java.util.Map;
 public class RpcContext {
 
     private static final ThreadLocal<CurrentContext> CURRENT_CONTEXT = ThreadLocal.withInitial(CurrentContext::new);
+
     private static final ThreadLocal<RequestContext> REQUEST_CONTEXT = ThreadLocal.withInitial(RequestContext::new);
+
     private static final ThreadLocal<ResponseContext> RESPONSE_CONTEXT = ThreadLocal.withInitial(ResponseContext::new);
 
     /**

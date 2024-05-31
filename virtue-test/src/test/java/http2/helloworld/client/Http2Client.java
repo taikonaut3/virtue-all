@@ -51,10 +51,15 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 public final class Http2Client {
 
     static final boolean SSL = true;
+
     static final String HOST = System.getProperty("host", "127.0.0.1");
+
     static final int PORT = Integer.parseInt(System.getProperty("port", SSL ? "8443" : "8080"));
+
     static final String URL = System.getProperty("url", "/whatever");
+
     static final String URL2 = System.getProperty("url2");
+
     static final String URL2DATA = System.getProperty("url2data", "test data!");
 
     public static void main(String[] args) throws Exception {

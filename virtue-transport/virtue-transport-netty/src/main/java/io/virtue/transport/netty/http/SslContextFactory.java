@@ -18,9 +18,13 @@ import static io.virtue.transport.netty.NettySupport.readBytes;
 public class SslContextFactory {
 
     private static final byte[] CA_BYTES;
+
     private static final byte[] SERVER_CERT_BYTES;
+
     private static final byte[] SERVER_KEY_BYTES;
+
     private static final byte[] CLIENT_CERT_BYTES;
+
     private static final byte[] CLIENT_KEY_BYTES;
 
     static {

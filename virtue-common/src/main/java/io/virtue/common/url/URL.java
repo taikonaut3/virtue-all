@@ -38,13 +38,18 @@ public class URL extends AbstractAccessor implements Replicable<URL> {
     private static final Logger logger = LoggerFactory.getLogger(URL.class);
 
     private final List<String> paths;
+
     @Setter
     protected String host;
+
     @Setter
     protected int port;
+
     @Setter
     protected String protocol;
+
     protected String address;
+
     private Map<String, String> params;
 
     public URL() {

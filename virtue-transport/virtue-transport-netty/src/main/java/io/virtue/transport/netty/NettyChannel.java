@@ -57,7 +57,7 @@ public final class NettyChannel extends AbstractChannel {
                     if (CHANNEL_MAP.containsKey(channel)
                             && CHANNEL_MAP.remove(channel, this)
                             && logger.isDebugEnabled()) {
-                            logger.debug("{} closed", this);
+                        logger.debug("{} closed", this);
                     }
                 } else {
                     logger.error(this + " closure failed", future.cause());

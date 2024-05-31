@@ -60,29 +60,48 @@ public class HashedWheelTimer implements Timer {
     private static final Logger logger = LoggerFactory.getLogger(HashedWheelTimer.class);
 
     private static final AtomicInteger INSTANCE_COUNTER = new AtomicInteger();
+
     private static final AtomicBoolean WARNED_TOO_MANY_INSTANCES = new AtomicBoolean();
+
     private static final int INSTANCE_COUNT_LIMIT = 64;
+
     private static final AtomicIntegerFieldUpdater<HashedWheelTimer> WORKER_STATE_UPDATER =
             AtomicIntegerFieldUpdater.newUpdater(HashedWheelTimer.class, "workerState");
+
     private static final int WORKER_STATE_INIT = 0;
+
     private static final int WORKER_STATE_STARTED = 1;
+
     private static final int WORKER_STATE_SHUTDOWN = 2;
+
     private static final boolean IS_OS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
+
     private final Worker worker = new Worker();
+
     private final Thread workerThread;
+
     private final long tickDuration;
+
     private final HashedWheelBucket[] wheel;
+
     private final int mask;
+
     private final CountDownLatch startTimeInitialized = new CountDownLatch(1);
+
     private final Queue<HashedWheelTimeout> timeouts = new LinkedBlockingQueue<>();
+
     private final Queue<HashedWheelTimeout> cancelledTimeouts = new LinkedBlockingQueue<>();
+
     private final AtomicLong pendingTimeouts = new AtomicLong(0);
+
     private final long maxPendingTimeouts;
+
     /**
      * 0 - init, 1 - started, 2 - shut down.
      */
     @SuppressWarnings({"unused", "FieldMayBeFinal"})
     private volatile int workerState;
+
     private volatile long startTime;
 
     /**
@@ -383,29 +402,39 @@ public class HashedWheelTimer implements Timer {
     private static final class HashedWheelTimeout implements Timeout {
 
         private static final int ST_INIT = 0;
+
         private static final int ST_CANCELLED = 1;
+
         private static final int ST_EXPIRED = 2;
+
         private static final AtomicIntegerFieldUpdater<HashedWheelTimeout> STATE_UPDATER =
                 AtomicIntegerFieldUpdater.newUpdater(HashedWheelTimeout.class, "state");
 
         private final HashedWheelTimer timer;
+
         private final TimerTask task;
+
         private final long deadline;
+
         /**
          * RemainingRounds will be calculated and set by Worker.transferTimeoutsToBuckets() before the
          * HashedWheelTimeout will be added to the correct HashedWheelBucket.
          */
         long remainingRounds;
+
         /**
          * This will be used to chain timeouts in HashedWheelTimerBucket via a double-linked-list.
          * As only the workerThread will act on it there is no need for synchronization / volatile.
          */
         HashedWheelTimeout next;
+
         HashedWheelTimeout prev;
+
         /**
          * The bucket to which the timeout was added.
          */
         HashedWheelBucket bucket;
+
         @SuppressWarnings({"unused", "FieldMayBeFinal", "RedundantFieldInitialization"})
         private volatile int state = ST_INIT;
 
@@ -521,6 +550,7 @@ public class HashedWheelTimer implements Timer {
          * Used for the linked-list datastructure.
          */
         private HashedWheelTimeout head;
+
         private HashedWheelTimeout tail;
 
         /**

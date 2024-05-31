@@ -49,6 +49,7 @@ public class Http2ServerInitializer extends ChannelInitializer<SocketChannel> {
     };
 
     private final SslContext sslCtx;
+
     private final int maxHttpContentLength;
 
     public Http2ServerInitializer(SslContext sslCtx) {

@@ -15,6 +15,7 @@ public class Environment extends StringAccessor<Environment> {
 
     /**
      * Try replacing ${} in the value with the key of the current environment.
+     *
      * @param input
      * @return
      */

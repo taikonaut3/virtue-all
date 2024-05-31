@@ -37,9 +37,13 @@ public class Http2ClientInitializer extends ChannelInitializer<SocketChannel> {
     private static final Http2FrameLogger logger = new Http2FrameLogger(INFO, Http2ClientInitializer.class);
 
     private final SslContext sslCtx;
+
     private final int maxContentLength;
+
     private HttpToHttp2ConnectionHandler connectionHandler;
+
     private HttpResponseHandler responseHandler;
+
     private Http2SettingsHandler settingsHandler;
 
     public Http2ClientInitializer(SslContext sslCtx, int maxContentLength) {

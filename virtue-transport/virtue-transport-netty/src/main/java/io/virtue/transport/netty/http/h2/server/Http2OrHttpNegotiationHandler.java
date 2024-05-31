@@ -35,7 +35,9 @@ import io.virtue.transport.netty.NettySupport;
 public class Http2OrHttpNegotiationHandler extends ApplicationProtocolNegotiationHandler {
 
     private final URL url;
+
     private final NettyIdleStateHandler idleStateHandler;
+
     private final ChannelHandler handler;
 
     protected Http2OrHttpNegotiationHandler(URL url, NettyIdleStateHandler idleStateHandler, ChannelHandler handler) {

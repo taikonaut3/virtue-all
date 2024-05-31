@@ -18,8 +18,11 @@ import java.util.function.Supplier;
 @SuppressWarnings("unchecked")
 public class ArrayObjectPool<T> extends AbstractObjectPool<T> {
     private static final String LOCK_KEY_FORMAT = "pool-lock-%d";
+
     private final PooledObject<T>[] pooledObjectArr;
+
     private final ReentrantLock mainLock = new ReentrantLock();
+
     private final Condition available = mainLock.newCondition();
 
     public ArrayObjectPool(Virtue virtue, PooledObjectFactory<T> factory, ObjectPoolConfig poolConfig) {

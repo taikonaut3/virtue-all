@@ -33,7 +33,9 @@ import static org.objectweb.asm.Opcodes.*;
 @Getter
 public abstract class MethodAccess {
     private String[] methodNames;
+
     private Class<?>[][] parameterTypes;
+
     private Class<?>[] returnTypes;
 
     /**

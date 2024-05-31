@@ -14,6 +14,7 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 public abstract class AbstractChannel extends AbstractAccessor implements Channel {
 
     private final InetSocketAddress localAddress;
+
     private final InetSocketAddress remoteAddress;
 
     protected AbstractChannel(InetSocketAddress localAddress, InetSocketAddress remoteAddress) {

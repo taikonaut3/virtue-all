@@ -36,13 +36,21 @@ import static io.virtue.common.util.StringUtil.simpleClassName;
 public class DefaultVirtue extends AbstractAccessor implements Virtue {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultVirtue.class);
+
     private final String name;
+
     private final Environment environment;
+
     private final List<VirtueConfiguration> configurations;
+
     private ConfigManager configManager;
+
     private MonitorManager monitorManager;
+
     private Scheduler scheduler;
+
     private EventDispatcher eventDispatcher;
+
     private volatile State state;
 
     public DefaultVirtue() {

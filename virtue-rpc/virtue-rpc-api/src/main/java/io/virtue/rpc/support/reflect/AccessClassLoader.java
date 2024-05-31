@@ -28,6 +28,7 @@ final class AccessClassLoader extends ClassLoader {
 
     // Fast-path for classes loaded in the same ClassLoader as this class.
     private static final ClassLoader selfContextParentClassLoader = getParentClassLoader(AccessClassLoader.class);
+
     private static volatile AccessClassLoader selfContextAccessClassLoader = new AccessClassLoader(selfContextParentClassLoader);
 
     private static volatile Method defineClassMethod;

@@ -16,9 +16,13 @@ import java.util.Map;
 public class HttpStructure {
 
     private final Map<CharSequence, CharSequence> headers = new LinkedHashMap<>();
+
     private final Map<CharSequence, CharSequence> params = new LinkedHashMap<>();
+
     private String path;
+
     private HttpMethod method;
+
     private Object body;
 
     public HttpStructure() {

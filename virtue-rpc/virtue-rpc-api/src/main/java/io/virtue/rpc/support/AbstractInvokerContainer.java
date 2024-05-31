@@ -22,8 +22,10 @@ public abstract class AbstractInvokerContainer implements InvokerContainer {
 
     @Getter
     protected Virtue virtue;
+
     @Setter
     protected String remoteApplication;
+
     @Getter
     protected String proxy;
 

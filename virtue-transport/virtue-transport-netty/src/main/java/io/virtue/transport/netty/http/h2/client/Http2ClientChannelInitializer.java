@@ -18,7 +18,9 @@ import static io.virtue.transport.util.TransportUtil.sslEnabled;
 public class Http2ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private final URL url;
+
     private final SslContext sslContext;
+
     private final ChannelHandler handler;
 
     public Http2ClientChannelInitializer(URL url, ChannelHandler handler) {

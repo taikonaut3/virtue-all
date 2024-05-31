@@ -35,6 +35,7 @@ import static io.netty.channel.ChannelHandler.Sharable;
 public final class Http2ClientHandler extends SimpleChannelInboundHandler<Http2StreamFrame> {
 
     private final URL url;
+
     private final ChannelHandler[] handlers;
 
     Http2ClientHandler(URL url, ChannelHandler handler) {
