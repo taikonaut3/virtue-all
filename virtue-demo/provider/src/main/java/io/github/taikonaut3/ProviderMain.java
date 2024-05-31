@@ -5,6 +5,7 @@ import io.virtue.core.Virtue;
 import io.virtue.core.config.ApplicationConfig;
 import io.virtue.core.config.RegistryConfig;
 import io.virtue.core.config.ServerConfig;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -15,8 +16,8 @@ import static io.virtue.common.constant.Components.Registry.CONSUL;
 @EnableVirtue(scanBasePackages = "io.github.taikonaut3")
 public class ProviderMain {
     public static void main(String[] args) throws Exception {
-        //SpringApplication.run(ProviderMain.class, args);
-        simpleTest();
+        SpringApplication.run(ProviderMain.class, args);
+        //simpleTest();
     }
 
     public static void simpleTest() {
@@ -58,6 +59,11 @@ public class ProviderMain {
     @Bean
     public ServerConfig httpServerConfig() {
         return new ServerConfig("http", 8085);
+    }
+
+    @Bean
+    public ServerConfig httpsServerConfig() {
+        return new ServerConfig("https", 8086);
     }
 
     @Bean

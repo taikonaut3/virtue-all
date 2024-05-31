@@ -75,8 +75,8 @@ public class BootStrapConfiguration implements VirtueConfiguration {
         eventDispatcher.addListener(CallerMetricsEvent.class, new CallerMetricsEventListener());
         eventDispatcher.addListener(CalleeMetricsEvent.class, new CalleeMetricsEventListener());
 
-        virtue.register(CalleeMetrics.ATTRIBUTE_KEY.name().toString(), new CalleeMetricsFilter(virtue))
-                .register(CallerMetrics.ATTRIBUTE_KEY.name().toString(), new CallerMetricsFilter(virtue));
+        virtue.register(CalleeMetrics.ATTRIBUTE_KEY.name().toString(), new CalleeMetricsFilter(virtue));
+        virtue.register(CallerMetrics.ATTRIBUTE_KEY.name().toString(), new CallerMetricsFilter(virtue));
     }
 
     @Override

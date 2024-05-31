@@ -1,13 +1,17 @@
 package io.github.taikonaut3;
 
-import io.github.taikonaut3.filter.TimeCountFilter;
+import io.github.taikonaut3.filter.CallerMetricsExportFilter;
+import io.virtue.common.util.GenerateUtil;
+import io.virtue.core.Invoker;
 import io.virtue.core.Virtue;
+import io.virtue.metrics.CallerMetrics;
 import jakarta.annotation.Resource;
 import org.example.model1.ParentObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -64,9 +68,21 @@ public class ConsumerController {
             throw new RuntimeException(e);
         }
         return Map.of(
-                "virtue", TimeCountFilter.virtueWrapper.toString(),
-                "h2", TimeCountFilter.h2Wrapper.toString(),
-                "http", TimeCountFilter.httpWrapper.toString()
+                "virtue", CallerMetricsExportFilter.virtueWrapper.toString(),
+                "h2", CallerMetricsExportFilter.h2Wrapper.toString(),
+                "http", CallerMetricsExportFilter.httpWrapper.toString()
         );
+    }
+
+    @GetMapping("callerMetrics")
+    public Map<String, String> callerMetrics() {
+        LinkedHashMap<String, String> result = new LinkedHashMap<>();
+        virtue.configManager().remoteCallerManager().remoteCallers().forEach(remoteCaller -> {
+            for (Invoker<?> invoker : remoteCaller.invokers()) {
+                CallerMetrics callerMetrics = invoker.get(CallerMetrics.ATTRIBUTE_KEY);
+                result.put(GenerateUtil.generateCalleeMapping(invoker.protocol(), invoker.path()), callerMetrics.toString());
+            }
+        });
+        return result;
     }
 }
