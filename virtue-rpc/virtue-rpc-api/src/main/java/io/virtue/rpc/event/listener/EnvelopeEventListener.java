@@ -1,4 +1,4 @@
-package io.virtue.rpc.listener;
+package io.virtue.rpc.event.listener;
 
 import io.virtue.event.Event;
 import io.virtue.event.EventListener;

@@ -2,7 +2,6 @@ package io.virtue.rpc.handler;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.util.AssertUtil;
-import io.virtue.common.util.NetUtil;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.channel.ChannelHandlerAdapter;
@@ -12,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * DefaultChannelHandlerChain.
@@ -24,7 +21,6 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     private final List<ChannelHandler> channelHandlers = new LinkedList<>();
 
-    private final Map<String, Channel> channels = new ConcurrentHashMap<>();
 
     public DefaultChannelHandlerChain() {
 
@@ -50,13 +46,7 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
     }
 
     @Override
-    public Channel[] getChannels() {
-        return channels.values().toArray(Channel[]::new);
-    }
-
-    @Override
     public void connected(Channel channel) throws RpcException {
-        channels.putIfAbsent(NetUtil.getAddress(channel.remoteAddress()), channel);
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.connected(channel);
         }
@@ -68,7 +58,6 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     @Override
     public void disconnected(Channel channel) throws RpcException {
-        channels.remove(NetUtil.getAddress(channel.remoteAddress()));
         for (ChannelHandler channelHandler : channelHandlers) {
             channelHandler.disconnected(channel);
         }

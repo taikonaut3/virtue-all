@@ -1,4 +1,4 @@
-package io.virtue.rpc.listener;
+package io.virtue.rpc.event.listener;
 
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.executor.RpcThreadPool;

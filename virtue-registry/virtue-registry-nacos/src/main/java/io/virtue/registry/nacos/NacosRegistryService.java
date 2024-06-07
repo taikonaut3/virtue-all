@@ -16,7 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * RegistryService based on nacos-client.
@@ -53,14 +54,14 @@ public class NacosRegistryService extends AbstractRegistryService {
     }
 
     @Override
-    public RegisterTask doRegister(URL url) {
+    public BiConsumer<RegisterTask, Map<String, String>> createRegisterTask(URL url) {
         String serviceName = serviceName(url);
-        Consumer<RegisterTask> task = registerTask -> {
+        return (registerTask, metaData) -> {
             Instance instance = new Instance();
             instance.setInstanceId(instanceId(url));
             instance.setIp(url.host());
             instance.setPort(url.port());
-            instance.setMetadata(metaInfo(url));
+            instance.setMetadata(metaData);
             try {
                 namingService.registerInstance(serviceName, instance);
             } catch (NacosException e) {
@@ -68,9 +69,6 @@ public class NacosRegistryService extends AbstractRegistryService {
                 throw RpcException.unwrap(e);
             }
         };
-        RegisterTask registerTask = new RegisterTask(task, false);
-        registerTask.run();
-        return registerTask;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.virtue.governance.loadbalance;
 
+import io.virtue.common.constant.Key;
 import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
@@ -11,7 +12,7 @@ import static io.virtue.common.constant.Components.LoadBalance.RANDOM;
 /**
  * Load balancing interface.
  */
-@Extensible(RANDOM)
+@Extensible(value = RANDOM, key = Key.LOAD_BALANCE)
 public interface LoadBalancer {
 
     /**

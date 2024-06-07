@@ -182,8 +182,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             throw new RpcException("JVM is shutting down");
         }
         try {
-            String faultToleranceName = invocation.url().getParam(Key.FAULT_TOLERANCE, Constant.DEFAULT_FAULT_TOLERANCE);
-            FaultTolerance faultTolerance = ExtensionLoader.loadExtension(FaultTolerance.class, faultToleranceName);
+            FaultTolerance faultTolerance = ExtensionLoader.loadExtension(FaultTolerance.class, invocation.url());
             List<Filter> preFilters = FilterScope.PRE.filterScope(filters);
             invocation.revise(() -> {
                 invocation.revise(() -> doRpcCall(invocation));
@@ -241,9 +240,9 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
         Caller<?> caller = (Caller<?>) invocation.invoker();
         if (!isDirectInvoke()) {
             // ServiceDiscovery
-            String serviceDiscoveryName = url.getParam(Key.SERVICE_DISCOVERY, Constant.DEFAULT_SERVICE_DISCOVERY);
-            ServiceDiscovery serviceDiscovery = ExtensionLoader.loadExtension(ServiceDiscovery.class, serviceDiscoveryName);
-            URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls()).stream()
+            ServiceDiscovery serviceDiscovery = ExtensionLoader.loadExtension(ServiceDiscovery.class, url);
+            URL[] registryConfigUrls = Optional.ofNullable(caller.registryConfigUrls())
+                    .stream()
                     .flatMap(Collection::stream)
                     .toArray(URL[]::new);
             List<URL> availableServiceUrls = serviceDiscovery.discover(invocation, registryConfigUrls);
@@ -256,8 +255,7 @@ public abstract class AbstractCaller<T extends Annotation> extends AbstractInvok
             }
             List<URL> finalServiceUrls = router.route(invocation, availableServiceUrls);
             // LoadBalance
-            String loadBalancerName = url.getParam(Key.LOAD_BALANCE, Constant.DEFAULT_LOAD_BALANCE);
-            LoadBalancer loadBalancer = ExtensionLoader.loadExtension(LoadBalancer.class, loadBalancerName);
+            LoadBalancer loadBalancer = ExtensionLoader.loadExtension(LoadBalancer.class, url);
             URL selectedServiceUrl = loadBalancer.choose(invocation, finalServiceUrls);
             url.address(selectedServiceUrl.address()).addParams(selectedServiceUrl.params());
         }

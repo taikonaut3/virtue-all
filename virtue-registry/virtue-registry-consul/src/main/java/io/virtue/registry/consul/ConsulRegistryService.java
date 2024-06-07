@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * RegistryService based on vertx-consul.
@@ -75,16 +75,16 @@ public class ConsulRegistryService extends AbstractRegistryService {
     }
 
     @Override
-    public RegisterTask doRegister(URL url) {
+    public BiConsumer<RegisterTask, Map<String, String>> createRegisterTask(URL url) {
         String serviceName = serviceName(url);
         String serviceId = instanceId(url);
-        Consumer<RegisterTask> task = registerTask -> {
+        return (registerTask, metaData) -> {
             ServiceOptions opts = new ServiceOptions()
                     .setName(serviceName)
                     .setId(serviceId)
                     .setAddress(url.host())
                     .setPort(url.port())
-                    .setMeta(metaInfo(url));
+                    .setMeta(metaData);
             if (enableHealthCheck) {
                 int healthCheckInterval = url.getIntParam(Key.HEALTH_CHECK_INTERVAL, Constant.DEFAULT_HEALTH_CHECK_INTERVAL);
                 CheckOptions checkOpts = new CheckOptions()
@@ -95,16 +95,14 @@ public class ConsulRegistryService extends AbstractRegistryService {
                 opts.setCheckOptions(checkOpts);
             }
             consulClient.registerService(opts, res -> {
-                if (res.succeeded() && !registerTask.isUpdate()) {
+                if (res.succeeded() && registerTask.isFirstRun()) {
                     logger.info("Registered {}: {}", serviceName, serviceId);
+                    registerTask.isFirstRun(false);
                 } else if (!res.succeeded()) {
                     logger.error("Register " + serviceName + ": " + serviceId + " failed", res.cause());
                 }
             });
         };
-        RegisterTask registerTask = new RegisterTask(task, false);
-        registerTask.run();
-        return registerTask;
     }
 
     @Override

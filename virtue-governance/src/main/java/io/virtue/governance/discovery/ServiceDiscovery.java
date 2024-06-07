@@ -1,5 +1,6 @@
 package io.virtue.governance.discovery;
 
+import io.virtue.common.constant.Key;
 import io.virtue.common.extension.spi.Extensible;
 import io.virtue.common.url.URL;
 import io.virtue.core.Invocation;
@@ -11,7 +12,7 @@ import static io.virtue.common.constant.Components.DEFAULT;
 /**
  * ServiceDiscovery for discover available services from the registry.
  */
-@Extensible(DEFAULT)
+@Extensible(value = DEFAULT, key = Key.SERVICE_DISCOVERY)
 public interface ServiceDiscovery {
 
     /**

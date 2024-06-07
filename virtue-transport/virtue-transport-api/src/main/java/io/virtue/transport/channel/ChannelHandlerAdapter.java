@@ -26,9 +26,4 @@ public class ChannelHandlerAdapter implements ChannelHandler {
     public void caught(Channel channel, Throwable cause) throws RpcException {
 
     }
-
-    @Override
-    public Channel[] getChannels() {
-        return new Channel[0];
-    }
 }

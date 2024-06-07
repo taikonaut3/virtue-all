@@ -73,10 +73,12 @@ public class SystemInfo {
      * @return
      */
     public Map<String, String> toMap() {
-        return Map.of("cpuUsage", String.valueOf(cpuUsage),
+        return Map.of(
+                "cpuUsage", String.valueOf(cpuUsage),
                 "memoryUsage", String.valueOf(memoryUsage),
                 "connections", String.valueOf(connections),
                 "services", String.valueOf(services),
-                "loadAverage", String.valueOf(loadAverage));
+                "loadAverage", String.valueOf(loadAverage)
+        );
     }
 }

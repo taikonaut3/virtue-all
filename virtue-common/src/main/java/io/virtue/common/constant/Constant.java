@@ -19,7 +19,7 @@ public interface Constant {
 
     int DEFAULT_CPU_MAX_THREADS = Runtime.getRuntime().availableProcessors() * 2;
 
-    int DEFAULT_CONNECT_TIMEOUT = 3 * 1000;
+    int DEFAULT_CONNECT_TIMEOUT = 6 * 1000;
 
     int DEFAULT_MAX_CONNECT_TIMEOUT = 10 * 1000;
 

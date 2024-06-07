@@ -17,11 +17,11 @@ import static io.virtue.common.constant.Components.Protocol.*;
 @Component
 public class CallerMetricsExportFilter implements Filter {
 
-    public static CallerMetrics h2Wrapper;
+    public static CallerMetrics h2Wrapper = new CallerMetrics();
 
-    public static CallerMetrics httpWrapper;
+    public static CallerMetrics httpWrapper = new CallerMetrics();
 
-    public static CallerMetrics virtueWrapper;
+    public static CallerMetrics virtueWrapper = new CallerMetrics();
 
     public CallerMetricsExportFilter(Virtue virtue) {
         FilterManager manager = virtue.configManager().filterManager();

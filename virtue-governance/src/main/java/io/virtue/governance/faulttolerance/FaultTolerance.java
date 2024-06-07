@@ -1,5 +1,6 @@
 package io.virtue.governance.faulttolerance;
 
+import io.virtue.common.constant.Key;
 import io.virtue.common.exception.RpcException;
 import io.virtue.common.extension.spi.Extensible;
 import io.virtue.core.Invocation;
@@ -9,7 +10,7 @@ import static io.virtue.common.constant.Components.FaultTolerance.FAIL_FAST;
 /**
  * Represents a fault tolerance interface.
  */
-@Extensible(FAIL_FAST)
+@Extensible(value = FAIL_FAST, key = Key.FAULT_TOLERANCE)
 public interface FaultTolerance {
 
     /**

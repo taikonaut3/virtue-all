@@ -68,7 +68,7 @@ public class NettyClient extends AbstractClient {
         } else if (future.cause() != null) {
             throw new ConnectException(future.cause());
         } else {
-            throw new ConnectException("Unknown Exception");
+            throw new ConnectException("Connect to " + url.address() + " timeout");
         }
     }
 

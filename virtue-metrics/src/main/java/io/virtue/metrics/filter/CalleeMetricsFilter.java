@@ -25,7 +25,7 @@ public class CalleeMetricsFilter implements Filter {
         Invoker<?> invoker = invocation.invoker();
         CalleeMetrics calleeMetrics = invoker.get(CalleeMetrics.ATTRIBUTE_KEY);
         boolean hasException = false;
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         try {
             return invocation.invoke();
         } catch (RpcException e) {
@@ -34,8 +34,7 @@ public class CalleeMetricsFilter implements Filter {
         } finally {
             long currentDuration = 0;
             if (!hasException) {
-                long end = System.currentTimeMillis();
-                currentDuration = end - start;
+                currentDuration = (System.nanoTime() - start) / 1_000_000;
             }
             invoker.virtue().eventDispatcher().dispatch(new CalleeMetricsEvent(calleeMetrics, hasException, currentDuration));
         }

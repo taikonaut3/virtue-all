@@ -23,7 +23,7 @@ import io.virtue.registry.RegistryService;
 import io.virtue.registry.support.RegisterServiceEvent;
 import io.virtue.registry.support.RegisterServiceEventListener;
 import io.virtue.rpc.event.*;
-import io.virtue.rpc.listener.*;
+import io.virtue.rpc.event.listener.*;
 import io.virtue.rpc.protocol.AbstractProtocol;
 import io.virtue.rpc.protocol.Protocol;
 import io.virtue.transport.server.Server;
@@ -63,6 +63,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
 
     @Override
     public void initAfter(Virtue virtue) {
+        // register default event listeners
         EventDispatcher eventDispatcher = virtue.eventDispatcher();
         eventDispatcher.addListener(RequestEvent.class, new RequestEventListener());
         eventDispatcher.addListener(ResponseEvent.class, new ResponseEventListener());
@@ -75,6 +76,7 @@ public class BootStrapConfiguration implements VirtueConfiguration {
         eventDispatcher.addListener(CallerMetricsEvent.class, new CallerMetricsEventListener());
         eventDispatcher.addListener(CalleeMetricsEvent.class, new CalleeMetricsEventListener());
 
+        // register default filter
         virtue.register(CalleeMetrics.ATTRIBUTE_KEY.name().toString(), new CalleeMetricsFilter(virtue));
         virtue.register(CallerMetrics.ATTRIBUTE_KEY.name().toString(), new CallerMetricsFilter(virtue));
     }

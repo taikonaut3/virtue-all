@@ -5,6 +5,7 @@ import io.virtue.common.extension.resoruce.Cleanable;
 import io.virtue.common.extension.resoruce.Closeable;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.ReflectionUtil;
+import io.virtue.common.util.StringUtil;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -42,10 +43,14 @@ public final class ExtensionLoader<S> implements Cleanable {
 
     private final boolean lazyLoad;
 
+    private final String key;
+
     private ExtensionLoader(Class<S> type) {
         this.type = type;
-        this.defaultExtension = type.getAnnotation(Extensible.class).value();
-        this.lazyLoad = type.getAnnotation(Extensible.class).lazyLoad();
+        Extensible extensible = type.getAnnotation(Extensible.class);
+        this.defaultExtension = extensible.value();
+        this.lazyLoad = extensible.lazyLoad();
+        this.key = extensible.key();
         this.extensions = new ConcurrentHashMap<>();
         this.extensionWrappers = new ConcurrentHashMap<>();
         loadExtensionWrappers(type);
@@ -75,6 +80,26 @@ public final class ExtensionLoader<S> implements Cleanable {
         ExtensionLoader<?> extensionLoader = LOADED_MAP.computeIfAbsent(type.getTypeName(), k -> new ExtensionLoader<>(type));
         addListener(type, loadedListeners);
         return (ExtensionLoader<S>) extensionLoader;
+    }
+
+    /**
+     * Load extension from url.
+     *
+     * @param type
+     * @param url
+     * @param loadedListeners
+     * @param <S>
+     * @return
+     */
+    @SafeVarargs
+    public static <S> S loadExtension(Class<S> type, io.virtue.common.url.URL url, LoadedListener<S>... loadedListeners) {
+        ExtensionLoader<S> extensionLoader = load(type, loadedListeners);
+        String key = extensionLoader.key;
+        String name = StringUtil.isBlank(key)
+                ? extensionLoader.defaultExtension
+                : url.getParam(key, extensionLoader.defaultExtension);
+        return extensionLoader.getExtension(name);
+
     }
 
     /**

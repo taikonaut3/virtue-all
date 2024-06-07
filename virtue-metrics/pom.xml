@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>virtue-metrics</artifactId>
+    <description>Provide rpc metrics.</description>
 
     <dependencies>
         <dependency>

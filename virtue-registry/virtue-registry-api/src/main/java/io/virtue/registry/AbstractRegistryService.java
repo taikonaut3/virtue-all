@@ -4,16 +4,14 @@ import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
 import io.virtue.common.util.CollectionUtil;
 import io.virtue.common.util.StringUtil;
-import io.virtue.core.SystemInfo;
 import io.virtue.core.Virtue;
-import io.virtue.core.config.ApplicationConfig;
 import io.virtue.registry.support.RegisterServiceEvent;
 import io.virtue.registry.support.RegisterTask;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 /**
  * Abstract RegistryService.
@@ -38,8 +36,8 @@ public abstract class AbstractRegistryService implements RegistryService {
     public void register(URL url) {
         Virtue virtue = Virtue.ofLocal(url);
         if (!registeredUrls.containsKey(url.authority())) {
-            RegisterTask registerTask = doRegister(url);
-            registerTask = new RegisterTask(registerTask.task(), true);
+            var task = createRegisterTask(url);
+            RegisterTask registerTask = new RegisterTask(url, task);
             RegisterServiceEvent event = new RegisterServiceEvent(url, registerTask);
             virtue.eventDispatcher().dispatch(event);
             registeredUrls.put(url.authority(), url);
@@ -76,17 +74,6 @@ public abstract class AbstractRegistryService implements RegistryService {
         registeredUrls.clear();
     }
 
-    protected Map<String, String> metaInfo(URL url) {
-        Virtue virtue = Virtue.ofLocal(url);
-        ApplicationConfig applicationConfig = virtue.configManager().applicationConfig();
-        Map<String, String> systemInfo = new SystemInfo(virtue).toMap();
-        HashMap<String, String> registryMeta = new HashMap<>(systemInfo);
-        registryMeta.put(Key.PROTOCOL, url.protocol());
-        registryMeta.put(Key.WEIGHT, String.valueOf(applicationConfig.weight()));
-        registryMeta.put(Key.GROUP, applicationConfig.group());
-        return registryMeta;
-    }
-
     protected String instanceId(URL url) {
         return "<" + url.protocol() + ">" + url.address();
     }
@@ -101,7 +88,7 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     protected abstract void subscribeService(URL url);
 
-    protected abstract RegisterTask doRegister(URL url);
+    protected abstract BiConsumer<RegisterTask, Map<String, String>> createRegisterTask(URL url);
 
     protected abstract List<URL> doDiscover(URL url);
 

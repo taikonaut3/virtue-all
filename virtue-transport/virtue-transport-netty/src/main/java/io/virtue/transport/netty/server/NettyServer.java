@@ -16,6 +16,7 @@ import io.virtue.common.url.URL;
 import io.virtue.transport.channel.ChannelHandler;
 import io.virtue.transport.codec.Codec;
 import io.virtue.transport.netty.NettyChannel;
+import io.virtue.transport.netty.NettyHeartBeatHandler;
 import io.virtue.transport.netty.ProtocolAdapter;
 import io.virtue.transport.server.AbstractServer;
 
@@ -77,4 +78,10 @@ public class NettyServer extends AbstractServer {
         return channel != null && channel.isActive();
     }
 
+    @Override
+    public io.virtue.transport.channel.Channel[] channels() {
+        return NettyHeartBeatHandler.activeChannels()
+                .values()
+                .toArray(new io.virtue.transport.channel.Channel[0]);
+    }
 }

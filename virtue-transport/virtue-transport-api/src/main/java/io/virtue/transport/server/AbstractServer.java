@@ -22,8 +22,6 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractServer.class);
 
-    protected final Channel[] channels;
-
     protected int soBacklog;
 
     protected ChannelHandler channelHandler;
@@ -39,7 +37,6 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
         this.url = url;
         this.channelHandler = channelHandler;
         this.codec = codec;
-        this.channels = channelHandler.getChannels();
         try {
             bind();
             if (logger.isDebugEnabled()) {
@@ -79,13 +76,8 @@ public abstract class AbstractServer extends EndpointAdapter implements Server {
     }
 
     @Override
-    public Channel[] channels() {
-        return channels;
-    }
-
-    @Override
     public Channel getChannel(InetSocketAddress remoteAddress) {
-        for (Channel channel : channels) {
+        for (Channel channel : channels()) {
             if (NetUtil.isSameAddress(channel.remoteAddress(), remoteAddress)) {
                 return channel;
             }

@@ -6,12 +6,15 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.virtue.common.constant.Key;
 import io.virtue.common.url.URL;
+import io.virtue.common.util.NetUtil;
 import io.virtue.core.Virtue;
 import io.virtue.event.Event;
 import io.virtue.transport.channel.Channel;
 import io.virtue.transport.supprot.IdleEvent;
 import io.virtue.transport.supprot.RefreshHeartBeatCountEvent;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.netty.channel.ChannelHandler.Sharable;
@@ -21,6 +24,8 @@ import static io.netty.channel.ChannelHandler.Sharable;
  */
 @Sharable
 public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
+
+    private static final Map<String, Channel> ACTIVE_CHANNEL = new ConcurrentHashMap<>();
 
     private final URL url;
 
@@ -34,11 +39,16 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
         this.virtue = Virtue.ofLocal(url);
     }
 
+    public static Map<String, Channel> activeChannels() {
+        return ACTIVE_CHANNEL;
+    }
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         nettyChannel.set(URL.ATTRIBUTE_KEY, url);
         super.channelActive(ctx);
+        ACTIVE_CHANNEL.putIfAbsent(NetUtil.getAddress(nettyChannel.remoteAddress()), nettyChannel);
     }
 
     @Override
@@ -48,6 +58,7 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
         // todo why channel's url can is null
         if (nettyChannel.get(URL.ATTRIBUTE_KEY) == null) {
             nettyChannel.set(URL.ATTRIBUTE_KEY, url);
+            ACTIVE_CHANNEL.putIfAbsent(NetUtil.getAddress(nettyChannel.remoteAddress()), nettyChannel);
         }
         super.channelRead(ctx, msg);
     }
@@ -58,6 +69,7 @@ public class NettyHeartBeatHandler extends ChannelInboundHandlerAdapter {
         nettyChannel.remove(URL.ATTRIBUTE_KEY);
         super.channelInactive(ctx);
         NettyChannel.removeChannel(ctx.channel());
+        ACTIVE_CHANNEL.remove(NetUtil.getAddress(nettyChannel.remoteAddress()));
     }
 
     @Override
