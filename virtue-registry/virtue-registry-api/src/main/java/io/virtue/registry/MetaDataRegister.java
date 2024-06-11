@@ -10,7 +10,7 @@ import java.util.Map;
  * <p>Registered Meta Data can be extended when you sign up for the service.</p>
  */
 @Extensible(lazyLoad = false)
-public interface RegisterMetaData {
+public interface MetaDataRegister {
 
     /**
      * The service is invoked before it is registered。

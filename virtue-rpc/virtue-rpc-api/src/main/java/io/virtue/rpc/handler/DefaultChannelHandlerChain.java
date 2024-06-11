@@ -21,7 +21,6 @@ public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements
 
     private final List<ChannelHandler> channelHandlers = new LinkedList<>();
 
-
     public DefaultChannelHandlerChain() {
 
     }

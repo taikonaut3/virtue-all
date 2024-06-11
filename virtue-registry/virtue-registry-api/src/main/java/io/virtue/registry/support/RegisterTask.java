@@ -2,7 +2,7 @@ package io.virtue.registry.support;
 
 import io.virtue.common.extension.spi.ExtensionLoader;
 import io.virtue.common.url.URL;
-import io.virtue.registry.RegisterMetaData;
+import io.virtue.registry.MetaDataRegister;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ import java.util.function.BiConsumer;
 @Accessors(fluent = true)
 public class RegisterTask implements Runnable {
 
-    private static final List<RegisterMetaData> REGISTER_META_DATA = ExtensionLoader.loadExtensions(RegisterMetaData.class);
+    private static final List<MetaDataRegister> REGISTER_META_DATA = ExtensionLoader.loadExtensions(MetaDataRegister.class);
 
     private final URL url;
 
@@ -37,7 +37,7 @@ public class RegisterTask implements Runnable {
     @Override
     public void run() {
         Map<String, String> metaData = new LinkedHashMap<>();
-        REGISTER_META_DATA.forEach(registerMetaData -> registerMetaData.process(url, metaData));
+        REGISTER_META_DATA.forEach(metaDataRegister -> metaDataRegister.process(url, metaData));
         task.accept(this, metaData);
     }
 

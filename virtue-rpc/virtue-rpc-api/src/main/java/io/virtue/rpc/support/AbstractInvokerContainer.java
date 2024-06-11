@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Abstract CallerContainer.
@@ -52,6 +53,13 @@ public abstract class AbstractInvokerContainer implements InvokerContainer {
     @Override
     public Invoker<?>[] invokers() {
         return invokers.values().toArray(Invoker[]::new);
+    }
+
+    @Override
+    public Invoker<?>[] getInvokers(String protocol) {
+        return invokers.values().stream()
+                .filter(invoker -> Objects.equals(invoker.protocol(), protocol))
+                .toArray(Invoker[]::new);
     }
 
     @Override
